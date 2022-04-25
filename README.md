@@ -12,7 +12,7 @@ There are a few ways to deploy PERLS, but the simplest way would be to just use 
 
 Assuming you are on an Ubuntu 20+ machine with Docker and Docker-Compose installed:
 
-- Download the [Starter Content](https://github.com/adlnet/perls/releases/download/v3.0.0/starter-content.zip)
+- Download the [Starter Content](https://github.com/adlnet/perls/releases/download/v3.0.0b/starter-content.zip)
 - `git clone https://github.com/adlnet/perls`
 - `cd perls`
 - From the Starter Content, add the `files` folder and `db_backup.sql` to the project root
