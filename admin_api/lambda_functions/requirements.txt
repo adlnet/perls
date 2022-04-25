@@ -1,0 +1,5 @@
+python-decouple
+boto3
+requests
+mysql-connector-python
+regex

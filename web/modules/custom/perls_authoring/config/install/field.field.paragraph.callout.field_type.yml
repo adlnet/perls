@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_type
+    - paragraphs.paragraphs_type.callout
+  module:
+    - options
+id: paragraph.callout.field_type
+field_name: field_type
+entity_type: paragraph
+bundle: callout
+label: Type
+description: 'The type of the callout will determine how it looks.'
+required: true
+translatable: true
+default_value:
+  -
+    value: tip
+default_value_callback: ''
+settings: {  }
+field_type: list_string

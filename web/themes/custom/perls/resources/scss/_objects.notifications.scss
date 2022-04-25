@@ -1,0 +1,71 @@
+/* ------------------------------------ *\
+    Push Notifications
+\* ------------------------------------ */
+
+.push-notification-wrapper {
+  > * + * {
+    margin: $space 0;
+  }
+
+  details {
+    .c-field {
+      margin: $space-half;
+    }
+  }
+}
+
+.push-notifications-list {
+  table {
+    td:first-child {
+      width: 50%;
+    }
+  }
+}
+
+.push-notification {
+  background: $c-gray--light;
+  border-radius: $border-radius;
+  box-shadow: $box-shadow;
+  max-width: 500px;
+  overflow: hidden;
+
+  > * {
+    display: flex;
+    padding: $space-half;
+
+    > :first-child {
+      flex: 1;
+    }
+  }
+
+  &__header {
+    background: $c-gray-2;
+    font-size: var(--font-size-xs, $font-size-xs);
+  }
+
+  &__content {
+    h3 {
+      font-size: var(--font-size-m, $font-size-m);
+      margin-bottom: $space-quarter;
+    }
+  }
+
+  &__image {
+    overflow: hidden;
+    width: 15%;
+
+    img {
+      max-width: 100%;
+    }
+  }
+
+  &__item {
+    h4 {
+      margin: $space-quarter 0;
+    }
+
+    .c-node--tile {
+      width: 300px;
+    }
+  }
+}

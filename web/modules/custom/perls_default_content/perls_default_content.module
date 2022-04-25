@@ -1,0 +1,36 @@
+<?php
+
+/**
+ * @file
+ * Contains perls_default_content.module.
+ */
+
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function perls_default_content_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the perls_default_content module.
+    case 'help.page.perls_default_content':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Perls Default Content') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_entity_view_mode_alter().
+ */
+function perls_default_content_entity_view_mode_alter(&$view_mode, EntityInterface $entity, $context) {
+  $card_types = ['flash_card', 'tip_card', 'quiz', 'test'];
+  // Forces card view when directly viewing a node.
+  if ($view_mode == 'full' && $entity->getEntityTypeId() == 'node' && in_array($entity->getType(), $card_types)) {
+    $view_mode = 'card';
+  }
+}

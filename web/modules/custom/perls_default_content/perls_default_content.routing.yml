@@ -1,0 +1,7 @@
+perls_default_content.manager_config_form:
+  path: 'manage/auto-email-approval'
+  defaults:
+    _form: Drupal\auto_account_approval\Form\AutoAccountApproveConfigForm
+    _title: 'Email Whitelist'
+  requirements:
+    _custom_access: '\Drupal\auto_account_approval\Controller\AutoAccountApproveController::configFormAccess'

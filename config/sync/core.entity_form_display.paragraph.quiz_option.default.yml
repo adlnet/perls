@@ -1,0 +1,61 @@
+uuid: 6105d6db-a6da-418f-b4fe-b27aba1a688a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.quiz_option.field_answer
+    - field.field.paragraph.quiz_option.field_correct
+    - field.field.paragraph.quiz_option.field_rationale
+    - paragraphs.paragraphs_type.quiz_option
+  module:
+    - allowed_formats
+    - field_layout
+    - layout_discovery
+    - text
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings:
+      label: ''
+id: paragraph.quiz_option.default
+targetEntityType: paragraph
+bundle: quiz_option
+mode: default
+content:
+  field_answer:
+    type: text_textarea
+    weight: 0
+    region: content
+    settings:
+      rows: 1
+      placeholder: 'Type the answer option'
+    third_party_settings:
+      allowed_formats:
+        hide_help: '1'
+        hide_guidelines: '1'
+      maxlength:
+        maxlength_js: 255
+        maxlength_js_label: 'Content limited to @limit characters, remaining: <strong>@remaining</strong>'
+        maxlength_js_enforce: false
+        maxlength_js_truncate_html: false
+  field_correct:
+    type: boolean_checkbox
+    weight: 2
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  field_rationale:
+    type: text_textarea
+    weight: 1
+    region: content
+    settings:
+      rows: 2
+      placeholder: 'Optionally, provide some feedback for when the user selects this option'
+    third_party_settings:
+      allowed_formats:
+        hide_help: '1'
+        hide_guidelines: '1'
+hidden:
+  created: true
+  status: true

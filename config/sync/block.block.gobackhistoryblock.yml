@@ -1,0 +1,43 @@
+uuid: 7f312f21-eaf6-47ad-b0d3-0aa01804d2cc
+langcode: en
+status: true
+dependencies:
+  module:
+    - entity_access_condition
+    - go_back_history
+    - node
+  theme:
+    - perls_learner
+id: gobackhistoryblock
+theme: perls_learner
+region: content
+weight: -4
+provider: null
+plugin: go_back_history_block
+settings:
+  id: go_back_history_block
+  label: 'Go back history block'
+  label_display: '0'
+  provider: go_back_history
+visibility:
+  node_access:
+    id: node_access
+    negate: false
+    context_mapping:
+      node: '@node.node_route_context:node'
+    entity_operation: '0'
+  user_access:
+    id: user_access
+    negate: false
+    context_mapping:
+      user: '@user.current_user_context:current_user'
+    entity_operation: '0'
+  'entity_bundle:node':
+    id: 'entity_bundle:node'
+    negate: false
+    context_mapping:
+      node: '@node.node_route_context:node'
+    bundles:
+      flash_card: flash_card
+      quiz: quiz
+      tip_card: tip_card

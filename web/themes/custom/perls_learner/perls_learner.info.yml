@@ -1,0 +1,13 @@
+name: 'Perls: Learner'
+type: theme
+description: This a subtheme of learner role.
+core: 8.x
+base theme: perls
+core_version_requirement: ^8 || ^9
+# Regions
+regions:
+  header_top: Header Top
+  header: Header
+  content: Content
+  footer: Footer
+  inactive: 'Inactive (this region is not printed, blocks here are placed programatically).'

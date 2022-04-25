@@ -1,0 +1,14 @@
+uuid: 469752d8-4af1-4d15-99d2-aad68f1cbaf7
+langcode: en
+status: true
+dependencies: {  }
+id: demote_from_front_page_action
+label: 'Demote from front page.'
+description: 'Demote Event entities from the front page if they are promoted.'
+type: demote_from_front_page_action
+target_entity_type: node
+target_bundle: event
+tags: {  }
+settings:
+  field: promote
+  promoted: '1'

@@ -1,0 +1,109 @@
+diff --git a/src/Plugin/Recommendations/PadResultsRecommendationEnginePlugin.php b/src/Plugin/Recommendations/PadResultsRecommendationEnginePlugin.php
+index a602f7c..0ff1677 100644
+--- a/src/Plugin/Recommendations/PadResultsRecommendationEnginePlugin.php
++++ b/src/Plugin/Recommendations/PadResultsRecommendationEnginePlugin.php
+@@ -135,32 +135,6 @@ class PadResultsRecommendationEnginePlugin extends RecommendationEnginePluginBas
+   }
+ 
+   /**
+-   * Get Previously Stored score entities.
+-   */
+-  protected function getScoreEntity($user_id, $node_id) {
+-    $entity = $this->entityTypeManager
+-      ->getStorage('recommendation_plugin_score')
+-      ->loadByProperties(
+-        [
+-          'user_id' => $user_id,
+-          'nid' => $node_id,
+-          'plugin_id' => $this->getPluginId(),
+-          'status' => RecommendationPluginScore::STATUS_PROCESSING,
+-        ]
+-      );
+-
+-    if (!empty($entity)) {
+-      $entity = reset($entity);
+-      $entity->setStatus(RecommendationPluginScore::STATUS_READY);
+-      $entity->save();
+-      return $entity;
+-    }
+-    else {
+-      return FALSE;
+-    }
+-  }
+-
+-  /**
+    * Calculate Score.
+    *
+    * Since this is the random recommendation engine it simply
+diff --git a/src/Plugin/Recommendations/TrendingContentRecommendationEnginePlugin.php b/src/Plugin/Recommendations/TrendingContentRecommendationEnginePlugin.php
+index c098359..52dbedd 100644
+--- a/src/Plugin/Recommendations/TrendingContentRecommendationEnginePlugin.php
++++ b/src/Plugin/Recommendations/TrendingContentRecommendationEnginePlugin.php
+@@ -152,30 +152,6 @@ class TrendingContentRecommendationEnginePlugin extends RecommendationEnginePlug
+     return 1 / $position;
+   }
+ 
+-  /**
+-   * Get Previously Stored score entities.
+-   */
+-  protected function getScoreEntity($user_id, $node_id) {
+-    $entity = $this->entityTypeManager
+-      ->getStorage('recommendation_plugin_score')
+-      ->loadByProperties(
+-        [
+-          'user_id' => $user_id,
+-          'nid' => $node_id,
+-          'plugin_id' => $this->getPluginId(),
+-          'status' => RecommendationPluginScore::STATUS_PROCESSING,
+-        ]
+-      );
+ 
+-    if (!empty($entity)) {
+-      $entity = reset($entity);
+-      $entity->setStatus(RecommendationPluginScore::STATUS_READY);
+-      $entity->save();
+-      return $entity;
+-    }
+-    else {
+-      return FALSE;
+-    }
+-  }
+ 
+ }
+diff --git a/src/RecommendationEnginePluginBase.php b/src/RecommendationEnginePluginBase.php
+index b908e0f..578d0d7 100644
+--- a/src/RecommendationEnginePluginBase.php
++++ b/src/RecommendationEnginePluginBase.php
+@@ -349,4 +349,32 @@ abstract class RecommendationEnginePluginBase extends PluginBase implements Reco
+     return $entity;
+   }
+ 
++
++  /**
++   * Get Previously Stored score entities.
++   */
++  protected function getScoreEntity($user_id, $node_id) {
++    $entity = $this->entityTypeManager
++      ->getStorage('recommendation_plugin_score')
++      ->loadByProperties(
++        [
++          'user_id' => $user_id,
++          'nid' => $node_id,
++          'plugin_id' => $this->getPluginId(),
++          'status' => RecommendationPluginScore::STATUS_PROCESSING,
++        ]
++      );
++
++    if (!empty($entity)) {
++      $entity = reset($entity);
++      $entity->setStatus(RecommendationPluginScore::STATUS_READY);
++      $entity->save();
++      return $entity;
++    }
++    else {
++      return FALSE;
++    }
++  }
++
++
+ }

@@ -1,0 +1,27 @@
+xapi-reporting.xapi-lib:
+  version: 1.x
+  js:
+    js/xapiwrapper.min.js: {}
+
+xapi-reporting.lib-common:
+  version: 1.x
+  js:
+    js/xapi-reporting_xapi-common.js: {}
+    js/xapi-verbs.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupalSettings
+    - xapi_reporting/xapi-reporting.xapi-lib
+  drupalSettings:
+    # These placeholder values will be set by xapi_reporting_js_settings_alter().
+    Xapi:
+      systemName: null
+      templateStatement: null
+
+xapi-reporting:
+  version: 1.x
+  js:
+    js/xapi-reporting.js: {}
+  dependencies:
+    - core/jquery.once
+    - xapi_reporting/xapi-reporting.lib-common

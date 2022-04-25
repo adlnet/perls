@@ -1,0 +1,7 @@
+simple_oauth_revoke.revoke:
+  path: '/oauth/revoke'
+  defaults:
+    _controller: 'Drupal\simple_oauth_revoke\Controller\Oauth2Revoke::revoke'
+  methods: [POST]
+  requirements:
+    _access: 'TRUE'

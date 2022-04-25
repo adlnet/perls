@@ -1,0 +1,9 @@
+.veracity-result-render {
+  height: 500px;
+  margin: 10px 0;
+}
+
+.veracity-result-render .empty-message {
+  padding: 1em;
+  text-align: center;
+}

@@ -1,0 +1,18 @@
+uuid: ce02c824-df0a-4e92-8a83-9b1b3683cff4
+langcode: en
+status: true
+dependencies:
+  module:
+    - serialization
+    - simple_oauth
+    - perls_dashboard
+id: site_dashboard_resource
+plugin_id: site_dashboard_resource
+granularity: resource
+configuration:
+  methods:
+    - GET
+  formats:
+    - json
+  authentication:
+    - oauth2

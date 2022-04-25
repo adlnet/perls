@@ -1,0 +1,8 @@
+user_task.my_list:
+  path: '/user/{user}/tasks'
+  defaults:
+    _controller: '\Drupal\user_task\Controller\TaskListController::view'
+    _title: 'My Custom Goals'
+  requirements:
+    _custom_access: '\Drupal\user_task\Controller\TaskListController::access'
+    user: \d+

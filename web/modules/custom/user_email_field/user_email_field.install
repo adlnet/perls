@@ -1,0 +1,17 @@
+<?php
+
+/**
+ * @file
+ * Module related hooks.
+ */
+
+use Drupal\user_email_field\EmailDescription;
+
+/**
+ * Implements hook_install().
+ */
+function user_email_field_install() {
+  $config = \Drupal::configFactory()->getEditable('user.settings');
+  $config->set('email_description', EmailDescription::DEFAULT_DESCRIPTION);
+  $config->save();
+}

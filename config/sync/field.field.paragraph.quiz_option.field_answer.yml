@@ -1,0 +1,30 @@
+uuid: e729c8c5-1055-41db-9678-fdc1028af88a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_answer
+    - paragraphs.paragraphs_type.quiz_option
+  module:
+    - allowed_formats
+    - text
+third_party_settings:
+  allowed_formats:
+    plain_text: plain_text
+    basic_filter: '0'
+    card_styling: '0'
+    inline_styling: '0'
+    list: '0'
+    table: '0'
+id: paragraph.quiz_option.field_answer
+field_name: field_answer
+entity_type: paragraph
+bundle: quiz_option
+label: Answer
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

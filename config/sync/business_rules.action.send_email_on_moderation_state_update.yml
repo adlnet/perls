@@ -1,0 +1,20 @@
+uuid: a1e0e1fc-a781-44e3-9e99-d07287520c3e
+langcode: en
+status: true
+dependencies: {  }
+id: send_email_on_moderation_state_update
+label: 'Send email on moderation state update'
+description: 'Sends an email when the moderation state changes for the entity.'
+type: send_email
+target_entity_type: null
+target_bundle: null
+tags: {  }
+settings:
+  subject: 'Your article has changed to [node:moderation_state:value]'
+  use_site_mail_as_sender: false
+  from: '[node:revision_uid:entity:mail]'
+  to: '[node:author:mail]'
+  format: text
+  body:
+    format: basic_filter
+    value: "Hi, [node:author:display-name],\r\n\r\nYour article, [node:title] has changed to [node:moderation_state:value].\r\n\r\n[node:log]\r\n\r\nYou can view your article here:\r\n[node:url:absolute]\r\n\r\n— [site:name] team"

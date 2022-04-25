@@ -1,0 +1,4 @@
+notifications_goals.notification_messages:
+  route_name: notifications_goals.settings
+  title: 'Notification messages'
+  base_route: perls_goals.settings

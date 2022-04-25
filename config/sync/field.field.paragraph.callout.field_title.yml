@@ -1,0 +1,21 @@
+uuid: ed78cff0-670c-493f-9385-44577cfe2475
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_title
+    - paragraphs.paragraphs_type.callout
+_core:
+  default_config_hash: IywiysfZ-QsCGWzFpw3pK0qB7m4yjlttVIXss8eFHW4
+id: paragraph.callout.field_title
+field_name: field_title
+entity_type: paragraph
+bundle: callout
+label: Title
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

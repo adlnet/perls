@@ -1,0 +1,41 @@
+/* ------------------------------------ *\
+    $TABS
+\* ------------------------------------ */
+
+.layout--tabs .tabs {
+  margin-top: $space + $space-double;
+  margin-bottom: $space + $space-quarter;
+
+  a {
+    color: var(--foreground-color, #231f20);
+    padding: 0;
+
+    &.is-active {
+      background: none;
+      color: var(--foreground-color, #231f20);
+      border-bottom: 3px solid $c-secondary;
+
+      .label {
+        font-weight: bold;
+      }
+    }
+
+    &:hover {
+      background: none;
+
+      .label {
+        transition: font-weight 0.25s $hard-ease-in;
+      }
+    }
+
+    .label {
+      font-size: var(--font-size-m, $font-size-m);
+      text-transform: capitalize;
+      font-weight: normal;
+    }
+  }
+
+  & > li.tabs__tab {
+    margin-right: $space-double - $space-quarter;
+  }
+}

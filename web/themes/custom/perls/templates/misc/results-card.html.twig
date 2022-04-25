@@ -1,0 +1,37 @@
+{#
+/**
+ * @file
+ * Results card.
+ *
+ * Available variables:
+ * - result_title: The title to display on the results card.
+ * - result_status: The status of the test (e.g. "Completed").
+ * - result_type: The type of results being shown (e.g. "Test").
+ * - feedback: The feedback to display to the user.
+ */
+#}
+
+{%
+  set classes = [
+    'c-card',
+    'c-card--results',
+    'c-card--results-' ~ result_type|clean_class,
+  ]
+%}
+
+<div{{ attributes.addClass(classes) }}>
+  <div class="c-card__header">
+    <p class="status">{{ result_status }}</p>
+    <h5>{{ result_type }}</h5>
+    <h3>{{ result_title }}</h3>
+  </div>
+  <div class="c-card__content">
+    <div class="feedback">
+      {{ feedback }}
+    </div>
+    <button class="c-quiz__button o-button--card stack-restart">{{ 'Try Again'|t }}</button>
+  </div>
+  
+  <div class="c-card__footer">&nbsp;</div>
+</div>
+

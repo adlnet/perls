@@ -1,0 +1,19 @@
+uuid: e117fe9c-0ca2-4b80-b44b-0e98d9866701
+langcode: en
+status: true
+dependencies:
+  module:
+    - serialization
+    - simple_oauth
+    - config_resource
+_core:
+  default_config_hash: jSg1fv1RDWmT58-FBu-hxBTFuVtXwnIW77X9LDs1qz0
+id: configuration_settings_resource
+plugin_id: configuration_settings_resource
+granularity: method
+configuration:
+  GET:
+    supported_formats:
+      - json
+    supported_auth:
+      - oauth2

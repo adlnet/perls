@@ -1,0 +1,33 @@
+uuid: 0d425293-3a22-4655-9432-e8a3c5b4dca7
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_parent_content
+    - node.type.learn_article
+    - node.type.learn_link
+    - node.type.learn_package
+    - node.type.tip_card
+id: node.tip_card.field_parent_content
+field_name: field_parent_content
+entity_type: node
+bundle: tip_card
+label: 'Parent Content'
+description: 'A link to all Learning Content that name this tipcard as a child element.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      learn_article: learn_article
+      learn_link: learn_link
+      learn_package: learn_package
+    sort:
+      field: title
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: learn_article
+field_type: entity_reference

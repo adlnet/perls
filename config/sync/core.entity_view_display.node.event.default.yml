@@ -1,0 +1,114 @@
+uuid: 5df7dc08-93d8-4d89-b13f-369f3c510c7b
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.date_format.medium
+    - core.date_format.time_only
+    - field.field.node.event.field_additional_details
+    - field.field.node.event.field_course
+    - field.field.node.event.field_description
+    - field.field.node.event.field_media_image
+    - field.field.node.event.field_related_content
+    - field.field.node.event.field_schedule
+    - field.field.node.event.field_tags
+    - field.field.node.event.field_topic
+    - field.field.node.event.field_type_description
+    - field.field.node.event.field_virtual_meeting_room
+    - node.type.event
+  module:
+    - block_field
+    - date_recur_ical
+    - media
+    - text
+    - user
+id: node.event.default
+targetEntityType: node
+bundle: event
+mode: default
+content:
+  field_additional_details:
+    type: text_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 6
+    region: content
+  field_description:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 6
+    region: content
+  field_media_image:
+    type: media_thumbnail
+    label: hidden
+    settings:
+      image_link: ''
+      image_style: ''
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_related_content:
+    type: entity_reference_entity_view
+    label: above
+    settings:
+      view_mode: tile
+      link: false
+    third_party_settings: {  }
+    weight: 8
+    region: content
+  field_schedule:
+    type: formatter_date_recur_ical
+    label: above
+    settings:
+      format_type: medium
+      occurrence_format_type: medium
+      same_end_date_format_type: time_only
+      separator: '-'
+      timezone_override: ''
+      interpreter: ''
+      show_next: '3'
+      count_per_item: true
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_tags:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_virtual_meeting_room:
+    type: block_field
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 7
+    region: content
+  flag_bookmark:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  flag_completed:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+hidden:
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  entitygroupfield: true
+  field_course: true
+  field_topic: true
+  field_type_description: true
+  flag_recommendation: true
+  langcode: true
+  links: true
+  recommendation_reason: true
+  search_api_excerpt: true

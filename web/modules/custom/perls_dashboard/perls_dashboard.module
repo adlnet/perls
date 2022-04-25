@@ -1,0 +1,22 @@
+<?php
+
+/**
+ * @file
+ * Module related hooks.
+ */
+
+use Drupal\Core\Url;
+
+/**
+ * Implements template_preprocess_block().
+ */
+function perls_dashboard_preprocess_block(&$variables) {
+  if (!empty($variables['configuration']['more_url'])) {
+    $variables['more_url'] = [
+      '#type' => 'link',
+      '#title' => t('More content'),
+      '#url' => Url::fromUserInput($variables['configuration']['more_url']),
+    ];
+  }
+
+}

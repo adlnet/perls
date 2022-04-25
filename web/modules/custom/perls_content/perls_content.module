@@ -1,0 +1,187 @@
+<?php
+
+/**
+ * @file
+ * Adds necessary hooks for core perls functionality.
+ */
+
+use Drupal\block\Entity\Block;
+use Drupal\taxonomy\Entity\Term;
+use Drupal\views\ViewExecutable;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Url;
+use Drupal\node\NodeInterface;
+use Drupal\user\Entity\User;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Session\AccountInterface;
+
+/**
+ * Implements hook_ENTITY_TYPE_access().
+ */
+function perls_content_user_access(EntityInterface $entity, $operation, AccountInterface $account) {
+  // Prevents any other users with the permission "administer users" from being
+  // able to edit user 1 account information.
+  if ($entity->id() == 1) {
+    $account = \Drupal::currentUser();
+    if ($account->id() != 1 && $operation !== 'view label') {
+      return AccessResult::forbidden();
+    }
+  }
+  return AccessResult::neutral();
+}
+
+/**
+ * Implements hook_user_format_name_alter().
+ */
+function perls_content_user_format_name_alter(&$name, $account) {
+  $user = User::load($account->id());
+  if (!$user) {
+    return;
+  }
+
+  $display_name = $user->get('field_name')->first();
+  if ($display_name) {
+    $name = $display_name->getString();
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_view().
+ */
+function perls_content_user_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+  if ($view_mode != 'full') {
+    return;
+  }
+
+  $build['#title'] = $entity->getDisplayName();
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function perls_content_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if ($form_id == 'user_register_form') {
+    unset($form['account']['notify']);
+  }
+  if ($form_id == 'comment_public_discussion_form') {
+    $form['actions']['submit']['#submit'][] = 'perls_content_comment_public_discussion_form_submit';
+  }
+}
+
+/**
+ * Implements hook_views_pre_execute().
+ *
+ * Alters the taxonony term view for tags to include a #.
+ */
+function perls_content_views_pre_execute(ViewExecutable $view) {
+  if ($view->id() !== 'taxonomy_term') {
+    return;
+  }
+  $tid = reset($view->args);
+  $term = Term::load($tid);
+  if (!$term || $term->bundle() !== 'tags') {
+    return;
+  }
+
+  $view->setTitle('#' . $term->getName());
+  $view->empty['area']->options['content']['value'] = t("There's nothing tagged with @tag", [
+    '@tag' => '#' . $term->getName(),
+  ]);
+}
+
+/**
+ * Implements hook_views_pre_view().
+ */
+function perls_content_views_pre_view(ViewExecutable $view) {
+  if ($view->id() === 'taxonomy_term') {
+    $term = Term::load(reset($view->args));
+    if (!$term || $term->bundle() !== 'tags') {
+      return;
+    }
+    // Remove the related courses filter to show orphan content on tags page.
+    $filters = $view->display_handler->getOption('filters');
+    unset($filters['field_course_target_id']);
+    $view->display_handler->overrideOption('filters', $filters);
+  }
+}
+
+/**
+ * Disable comment form's redirect.
+ */
+function perls_content_comment_public_discussion_form_submit(&$form, FormStateInterface $form_state) {
+  $entity = Drupal::routeMatch()->getParameter('entity');
+  if ($entity instanceof NodeInterface) {
+    if ($entity->bundle() === 'learn_article') {
+      $cid = $form_state->getValue('cid');
+      $url = Url::fromRoute('perls_content.learn_article_comments', ['node' => $entity->id()], ['fragment' => 'comment-' . $cid]);
+      $form_state->setRedirectUrl($url);
+    }
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for taxonomy tags.
+ */
+function perls_content_form_taxonomy_term_tags_form_alter(&$form, &$form_state, $form_id) {
+  $form['description']['widget']['#after_build'][] = 'perls_content_allowed_formats_remove_textarea_help';
+}
+
+/**
+ * Implements perls_allowed_formats_remove_textarea_help functions.
+ */
+function perls_content_allowed_formats_remove_textarea_help($form_element, FormStateInterface $form_state) {
+  if (isset($form_element[0]['format'])) {
+    $form_element[0]['format']['format']['#access'] = FALSE;
+  }
+  return $form_element;
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for status_report_general_info.
+ *
+ * Removes "more information" links if user does not have permission to
+ * administer the site configuration.
+ */
+function perls_content_preprocess_status_report_general_info(&$variables) {
+  if (\Drupal::currentUser()->hasPermission('administer site configuration')) {
+    return;
+  }
+
+  $variables['php']['value'] = phpversion();
+  unset($variables['php']['description']);
+  array_shift($variables['cron']['description'][0]);
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for status_report_page.
+ *
+ * Hides specific requirement information since some of these
+ * contain specific configuration information.
+ */
+function perls_content_preprocess_status_report_page(&$variables) {
+  if (\Drupal::currentUser()->hasPermission('administer site configuration')) {
+    return;
+  }
+
+  unset($variables['counters']);
+  unset($variables['requirements']);
+}
+
+/**
+ * Implements hook_block_access().
+ */
+function perls_content_block_access(Block $block, $operation, AccountInterface $account) {
+  // Hide some block for packager user.
+  $blocks = [
+    'perls_learner_primary_local_tasks',
+    'search_block_learner',
+  ];
+  $roles = $account->getRoles(TRUE);
+
+  if (in_array($block->id(), $blocks) &&
+    in_array('packager', $roles)) {
+    return AccessResult::forbidden();
+  }
+}

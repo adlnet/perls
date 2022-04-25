@@ -1,0 +1,9 @@
+perls_search-lib:
+  version: 1.x
+  css:
+    theme:
+      css/search.css: { weight: 12000 }
+  js:
+    js/perls_search-lib.js: {}
+  dependencies:
+    - core/jQuery

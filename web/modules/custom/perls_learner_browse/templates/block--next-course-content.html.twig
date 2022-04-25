@@ -1,0 +1,35 @@
+{#
+/**
+ * @file
+ * next_course_item_block template.
+ *
+ * course_content: array of content related to the viewed content item.
+ */
+#}
+
+{% if course_content %}
+{% set base_class = 'related-course-content' %}
+
+<div class="{{base_class}}">
+  {% for next_item in course_content %}
+  <div class="{{base_class}}__course-info">
+    <p class="{{base_class}}__course-title">
+      {{'Next in'|t }} <span class="{{base_class}}__course-title-text">{{ next_item.course_title }}</span>
+    </p>
+    <span class="{{base_class}}__course-link"> {{ next_item.course_link }}</span>
+  </div>
+  <div class="{{base_class}}__courses js-slick-slider">
+    <ul class="{{base_class}}__list">
+      {% for item in next_item.items %}
+        {% if item.content %}
+          <li class="{{base_class}}__list-item">
+            <div class="{{base_class}}__list-item-content">
+              {{ item.content }}
+            </div>
+          </li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+  </div>
+  {% endfor %}
+{% endif %}

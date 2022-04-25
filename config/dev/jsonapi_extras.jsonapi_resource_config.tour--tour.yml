@@ -1,0 +1,77 @@
+uuid: fa4f6f2e-9251-407b-a2a1-fd402674427e
+langcode: en
+status: true
+dependencies:
+  module:
+    - tour
+id: tour--tour
+disabled: true
+path: tour/tour
+resourceType: tour--tour
+resourceFields:
+  uuid:
+    disabled: false
+    fieldName: uuid
+    publicName: uuid
+    enhancer:
+      id: ''
+  langcode:
+    disabled: false
+    fieldName: langcode
+    publicName: langcode
+    enhancer:
+      id: ''
+  status:
+    disabled: false
+    fieldName: status
+    publicName: status
+    enhancer:
+      id: ''
+  dependencies:
+    disabled: false
+    fieldName: dependencies
+    publicName: dependencies
+    enhancer:
+      id: ''
+  third_party_settings:
+    disabled: false
+    fieldName: third_party_settings
+    publicName: third_party_settings
+    enhancer:
+      id: ''
+  _core:
+    disabled: false
+    fieldName: _core
+    publicName: _core
+    enhancer:
+      id: ''
+  id:
+    disabled: false
+    fieldName: id
+    publicName: id
+    enhancer:
+      id: ''
+  label:
+    disabled: false
+    fieldName: label
+    publicName: label
+    enhancer:
+      id: ''
+  module:
+    disabled: false
+    fieldName: module
+    publicName: module
+    enhancer:
+      id: ''
+  routes:
+    disabled: false
+    fieldName: routes
+    publicName: routes
+    enhancer:
+      id: ''
+  tips:
+    disabled: false
+    fieldName: tips
+    publicName: tips
+    enhancer:
+      id: ''

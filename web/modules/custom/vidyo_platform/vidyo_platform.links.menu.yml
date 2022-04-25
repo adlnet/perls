@@ -1,0 +1,6 @@
+vidyo_platform.vidyo_platform_settings_form:
+  title: 'Vidyo Platform API'
+  route_name: vidyo_platform.vidyo_platform_settings_form
+  description: 'Configure the API connection for VidyoPlatform'
+  parent: system.admin_config_services
+  weight: 99

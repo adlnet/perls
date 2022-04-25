@@ -1,0 +1,46 @@
+uuid: af5819d4-b3a1-4dac-98b8-9b0d9848f7cf
+langcode: en
+status: true
+dependencies:
+  config:
+    - page_manager.page.groups
+    - views.view.group_index
+  module:
+    - views
+id: groups-block_display-0
+label: Groups
+weight: 0
+variant: block_display
+variant_settings:
+  id: block_display
+  label: null
+  weight: 0
+  uuid: adfcb3ef-5614-46af-a793-10f2de1c96f3
+  blocks:
+    cdad4e37-7595-4742-a267-2391c7469a4b:
+      id: 'views_block:group_index-my_groups'
+      label: ''
+      label_display: '0'
+      provider: views
+      context_mapping: {  }
+      views_label: ''
+      items_per_page: none
+      region: top
+      weight: 0
+      uuid: cdad4e37-7595-4742-a267-2391c7469a4b
+    17510be2-a737-4b29-9e66-d4a025886308:
+      id: 'views_block:group_index-open_groups'
+      label: 'More Groups'
+      label_display: visible
+      provider: views
+      context_mapping: {  }
+      views_label: 'More Groups'
+      items_per_page: none
+      region: top
+      weight: 0
+      uuid: 17510be2-a737-4b29-9e66-d4a025886308
+  page_title: 'My Groups'
+page: groups
+selection_criteria: {  }
+selection_logic: and
+static_context: {  }

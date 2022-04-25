@@ -1,0 +1,6 @@
+name: 'Simple Oauth Revoke'
+type: module
+description: "This module adds the '\\oauth\\revoke' method to the site. This gives users the ability to log out."
+dependencies:
+  - simple_oauth:simple_oauth
+core: 8.x

@@ -1,0 +1,6 @@
+access course stat:
+  title: 'Access to course stat'
+  description: 'A user allow to check courses stats.'
+  restrict access: TRUE
+promote content:
+  title: 'Promote content to all users'

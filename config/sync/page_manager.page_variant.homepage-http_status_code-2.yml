@@ -1,0 +1,30 @@
+uuid: 4f01086f-7ed1-4af4-b767-8a90f72a930f
+langcode: en
+status: true
+dependencies:
+  config:
+    - page_manager.page.homepage
+  module:
+    - user
+id: homepage-http_status_code-2
+label: 'Unauthenticated Homepage'
+weight: 0
+variant: http_status_code
+variant_settings:
+  id: http_status_code
+  label: null
+  weight: 0
+  uuid: ae1a1c97-b952-42b5-b3d1-20a7aee69ba8
+  status_code: 302
+  redirect_location: '/user/login?destination=/home'
+page: homepage
+selection_criteria:
+  -
+    id: user_role
+    negate: false
+    context_mapping:
+      user: '@user.current_user_context:current_user'
+    roles:
+      anonymous: anonymous
+selection_logic: and
+static_context: {  }

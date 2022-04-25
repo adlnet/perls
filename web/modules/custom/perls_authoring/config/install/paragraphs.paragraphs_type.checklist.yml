@@ -1,0 +1,8 @@
+langcode: en
+status: true
+dependencies: {  }
+id: checklist
+label: Checklist
+icon_uuid: null
+description: 'Add a checklist.'
+behavior_plugins: {  }

@@ -1,0 +1,5 @@
+name: 'Health Check'
+type: module
+description: 'Provides public /ping route to check health status.'
+core: 8.x
+core_version_requirement: ^8 || ^9

@@ -1,0 +1,24 @@
+uuid: c26d67df-c323-4ed5-b057-1e28ce628a78
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_type_description
+    - node.type.learn_file
+  module:
+    - description_field
+id: node.learn_file.field_type_description
+field_name: field_type_description
+entity_type: node
+bundle: learn_file
+label: 'Type Description'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  long_description:
+    value: 'Use a <strong>document</strong> to upload content authored somewhere else. Learners can download and share documents making them useful for quick reference materials.'
+    format: basic_filter
+field_type: description_field

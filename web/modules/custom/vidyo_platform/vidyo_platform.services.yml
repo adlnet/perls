@@ -1,0 +1,10 @@
+services:
+  logger.channel.vidyo_platform:
+    parent: logger.channel_base
+    arguments: ['vidyo_platform']
+  vidyo_platform.rooms:
+    class: Drupal\vidyo_platform\VidyoRoomManager
+    arguments: ['@config.factory']
+  plugin.manager.vidyo_room_renderer:
+    class: Drupal\vidyo_platform\Plugin\VidyoRoomRendererPluginManager
+    parent: default_plugin_manager

@@ -1,0 +1,47 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.goal_log.field_goal_log_goal_name
+    - field.field.paragraph.goal_log.field_goal_log_time_indicator
+    - field.field.paragraph.goal_log.field_goal_log_timeframe
+    - paragraphs.paragraphs_type.goal_log
+  module:
+    - field_layout
+    - layout_discovery
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings:
+      label: ''
+id: paragraph.goal_log.default
+targetEntityType: paragraph
+bundle: goal_log
+mode: default
+content:
+  field_goal_log_goal_name:
+    weight: 0
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_goal_log_time_indicator:
+    weight: 2
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
+  field_goal_log_timeframe:
+    weight: 1
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+hidden:
+  created: true
+  status: true

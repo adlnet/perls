@@ -1,0 +1,282 @@
+uuid: f4e259f6-7e71-49b1-84db-0879bc8be354
+langcode: en
+status: true
+dependencies:
+  config:
+    - filter.format.table
+    - media.type.image
+    - node.type.course
+    - node.type.event
+    - node.type.flash_card
+    - node.type.learn_article
+    - node.type.learn_file
+    - node.type.learn_link
+    - node.type.learn_package
+    - node.type.podcast
+    - node.type.podcast_episode
+    - node.type.quiz
+    - node.type.test
+    - node.type.tip_card
+    - taxonomy.vocabulary.category
+    - taxonomy.vocabulary.tags
+    - workflows.workflow.content_moderation
+  module:
+    - achievements
+    - administerusersbyrole
+    - auto_account_approval
+    - bulk_user_upload
+    - comment
+    - content_moderation
+    - disable_messages
+    - entity_browser
+    - entity_clone
+    - externalauth_additions
+    - field_permissions
+    - filter
+    - flag
+    - form_mode_manager
+    - group
+    - media
+    - node
+    - notifications
+    - perls_content
+    - perls_content_management
+    - perls_user
+    - perls_user_management
+    - scheduler
+    - statistics
+    - system
+    - task
+    - taxonomy
+    - vidyo_platform
+    - webform
+    - xapi
+id: perls_system_admin
+label: Owner
+weight: -6
+is_admin: null
+permissions:
+  - 'access author_browser entity browser pages'
+  - 'access content overview'
+  - 'access content_browser entity browser pages'
+  - 'access course stat'
+  - 'access course_browser entity browser pages'
+  - 'access flash_card_browser entity browser pages'
+  - 'access group overview'
+  - 'access learning_content entity browser pages'
+  - 'access media overview'
+  - 'access media_image_browser entity browser pages'
+  - 'access own webform configuration'
+  - 'access podcast_episode_browser entity browser pages'
+  - 'access quiz_browser entity browser pages'
+  - 'access site in maintenance mode'
+  - 'access taxonomy overview'
+  - 'access tip_card_browser entity browser pages'
+  - 'access user profiles'
+  - 'access users overview'
+  - 'access webform overview'
+  - 'access webform submission user'
+  - 'administer achievements'
+  - 'administer auto account approval'
+  - 'administer comments'
+  - 'administer externalauth_additions configuration'
+  - 'administer flaggings'
+  - 'administer nodes'
+  - 'administer perls'
+  - 'administer perls theme'
+  - 'administer taxonomy'
+  - 'administer vidyo rooms'
+  - 'administer xapi content'
+  - 'bulk upload users'
+  - 'bypass group access'
+  - 'bypass node access'
+  - 'cancel users by role'
+  - 'cancel users with role content_manager'
+  - 'cancel users with role perls_system_admin'
+  - 'clone file entity'
+  - 'clone node entity'
+  - 'clone paragraph entity'
+  - 'clone taxonomy_term entity'
+  - 'create audience group'
+  - 'create course content'
+  - 'create event content'
+  - 'create field_completion_strategy'
+  - 'create field_difficulty'
+  - 'create field_flash_card'
+  - 'create field_quiz'
+  - 'create field_tip_card'
+  - 'create flash_card content'
+  - 'create image media'
+  - 'create learn_article content'
+  - 'create learn_file content'
+  - 'create learn_link content'
+  - 'create learn_package content'
+  - 'create media'
+  - 'create podcast content'
+  - 'create podcast_episode content'
+  - 'create quiz content'
+  - 'create terms in category'
+  - 'create terms in tags'
+  - 'create test content'
+  - 'create tip_card content'
+  - 'create users'
+  - 'delete any course content'
+  - 'delete any event content'
+  - 'delete any flash_card content'
+  - 'delete any image media'
+  - 'delete any learn_article content'
+  - 'delete any learn_file content'
+  - 'delete any learn_link content'
+  - 'delete any learn_package content'
+  - 'delete any media'
+  - 'delete any podcast content'
+  - 'delete any podcast_episode content'
+  - 'delete any quiz content'
+  - 'delete any test content'
+  - 'delete any tip_card content'
+  - 'delete any user_task task'
+  - 'delete course revisions'
+  - 'delete event revisions'
+  - 'delete flash_card revisions'
+  - 'delete learn_article revisions'
+  - 'delete learn_file revisions'
+  - 'delete learn_link revisions'
+  - 'delete learn_package revisions'
+  - 'delete media'
+  - 'delete own course content'
+  - 'delete own event content'
+  - 'delete own flash_card content'
+  - 'delete own image media'
+  - 'delete own learn_article content'
+  - 'delete own learn_file content'
+  - 'delete own learn_link content'
+  - 'delete own learn_package content'
+  - 'delete own podcast content'
+  - 'delete own podcast_episode content'
+  - 'delete own quiz content'
+  - 'delete own test content'
+  - 'delete own tip_card content'
+  - 'delete podcast revisions'
+  - 'delete podcast_episode revisions'
+  - 'delete quiz revisions'
+  - 'delete terms in category'
+  - 'delete terms in tags'
+  - 'delete test revisions'
+  - 'delete tip_card revisions'
+  - 'delete user_task revisions'
+  - 'disable email autofill from browser'
+  - 'edit any course content'
+  - 'edit any event content'
+  - 'edit any flash_card content'
+  - 'edit any image media'
+  - 'edit any learn_article content'
+  - 'edit any learn_file content'
+  - 'edit any learn_link content'
+  - 'edit any learn_package content'
+  - 'edit any podcast content'
+  - 'edit any podcast_episode content'
+  - 'edit any quiz content'
+  - 'edit any test content'
+  - 'edit any tip_card content'
+  - 'edit any user_task task'
+  - 'edit field_completion_strategy'
+  - 'edit field_difficulty'
+  - 'edit field_flash_card'
+  - 'edit field_quiz'
+  - 'edit field_tip_card'
+  - 'edit own comments'
+  - 'edit own course content'
+  - 'edit own event content'
+  - 'edit own field_completion_strategy'
+  - 'edit own field_difficulty'
+  - 'edit own field_flash_card'
+  - 'edit own field_quiz'
+  - 'edit own field_tip_card'
+  - 'edit own flash_card content'
+  - 'edit own image media'
+  - 'edit own learn_article content'
+  - 'edit own learn_file content'
+  - 'edit own learn_link content'
+  - 'edit own learn_package content'
+  - 'edit own podcast content'
+  - 'edit own podcast_episode content'
+  - 'edit own quiz content'
+  - 'edit own test content'
+  - 'edit own tip_card content'
+  - 'edit terms in category'
+  - 'edit terms in tags'
+  - 'edit users by role'
+  - 'edit users with role content_manager'
+  - 'edit users with role perls_system_admin'
+  - 'exclude from message filtering'
+  - 'flag bookmark'
+  - 'flag completed'
+  - 'flag recommendation'
+  - 'flag topic_completed'
+  - 'grant manual achievements'
+  - 'manually grant achievements'
+  - 'moderate any vidyo room'
+  - 'promote content'
+  - 'remove user history'
+  - 'revert course revisions'
+  - 'revert event revisions'
+  - 'revert flash_card revisions'
+  - 'revert learn_article revisions'
+  - 'revert learn_file revisions'
+  - 'revert learn_link revisions'
+  - 'revert learn_package revisions'
+  - 'revert podcast revisions'
+  - 'revert podcast_episode revisions'
+  - 'revert quiz revisions'
+  - 'revert test revisions'
+  - 'revert tip_card revisions'
+  - 'revert user_task revisions'
+  - 'role-assign users by role'
+  - 'role-assign users with role content_manager'
+  - 'role-assign users with role perls_system_admin'
+  - 'schedule publishing of nodes'
+  - 'send push notifications'
+  - 'unflag attended'
+  - 'unflag bookmark'
+  - 'unflag completed'
+  - 'unflag recommendation'
+  - 'unflag test_results'
+  - 'unflag topic_completed'
+  - 'update any media'
+  - 'update media'
+  - 'use content_moderation transition approve_and_publish'
+  - 'use content_moderation transition archive'
+  - 'use content_moderation transition publish'
+  - 'use media.default form mode'
+  - 'use media.media_library form mode'
+  - 'use node.contents form mode'
+  - 'use node.default form mode'
+  - 'use text format table'
+  - 'view all media revisions'
+  - 'view all revisions'
+  - 'view any unpublished content'
+  - 'view any user_task task'
+  - 'view any webform submission'
+  - 'view course revisions'
+  - 'view error messages'
+  - 'view event revisions'
+  - 'view flash_card revisions'
+  - 'view latest version'
+  - 'view learn_article revisions'
+  - 'view learn_file revisions'
+  - 'view learn_link revisions'
+  - 'view learn_package revisions'
+  - 'view own unpublished content'
+  - 'view own unpublished media'
+  - 'view podcast revisions'
+  - 'view podcast_episode revisions'
+  - 'view post access counter'
+  - 'view quiz revisions'
+  - 'view scheduled content'
+  - 'view status messages'
+  - 'view test revisions'
+  - 'view tip_card revisions'
+  - 'view users by role'
+  - 'view users with role content_manager'
+  - 'view users with role perls_system_admin'
+  - 'view warning messages'

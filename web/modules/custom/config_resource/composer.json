@@ -1,0 +1,14 @@
+{
+    "name": "float/config_resource",
+    "description": "Provides an API to expose configurations in JSON format.",
+    "type": "drupal-module",
+    "version": "1.0.0-rc1",
+    "keywords": [
+        "Drupal",
+        "config_resource",
+        "api"
+    ],
+    "require": {
+        "drupal/achievements": "*"
+    }
+}

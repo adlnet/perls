@@ -1,0 +1,16 @@
+<?php
+
+/**
+ * @file
+ * Custom hooks.
+ */
+
+use Drupal\Component\Utility\Html;
+
+/**
+ * Implements hook_preprocess_html().
+ */
+function theme_switcher_preprocess_html(&$variables) {
+  $active_theme_name = \Drupal::service('theme.manager')->getActiveTheme()->getName();
+  $variables['attributes']['class'][] = Html::cleanCssIdentifier($active_theme_name);
+}

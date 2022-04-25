@@ -1,0 +1,16 @@
+<?php
+
+/**
+ * @file
+ * Module file for Auto account approval.
+ */
+
+/**
+ * Implements hook_uninstall().
+ */
+function auto_account_approval_uninstall() {
+  $config = \Drupal::configFactory()->getEditable('auto_account_approval.settings');
+  if (isset($config)) {
+    $config->delete();
+  }
+}

@@ -1,0 +1,132 @@
+/* ------------------------------------ *\
+    $COLOR MODIFIERS
+\* ------------------------------------ */
+
+/**
+ * Text Colors
+ */
+.u-color--black,
+.u-color--black a {
+  color: $c-black;
+}
+
+.u-color--white,
+.u-color--white a {
+  color: $c-white;
+}
+
+.u-color--gray,
+.u-color--gray a {
+  color: $c-gray;
+}
+
+.u-color--gray--light,
+.u-color--gray--light a {
+  color: $c-gray--light;
+}
+
+.u-color--gray--dark,
+.u-color--gray--dark a {
+  color: $c-gray--dark;
+}
+
+.u-color--primary,
+.u-color--primary a {
+  color: $c-primary;
+}
+
+.u-color--secondary,
+.u-color--secondary a {
+  color: $c-secondary;
+}
+
+.u-color--tertiary,
+.u-color--tertiary a {
+  color: $c-secondary;
+}
+
+.u-color--blue {
+  color: $c-primary;
+}
+
+.u-color--blue a {
+  color: $c-secondary;
+}
+
+/**
+ * Background Colors
+ */
+.u-background-color--none {
+  background: none;
+}
+
+.u-background-color--black {
+  background-color: $c-black;
+}
+
+.u-background-color--white {
+  background-color: $c-white;
+}
+
+.u-background-color--gray {
+  background-color: $c-gray;
+}
+
+.u-background-color--gray--light {
+  background-color: $c-gray--light;
+}
+
+.u-background-color--gray--dark {
+  background-color: $c-gray--dark;
+}
+
+.u-background-color--primary {
+  background-color: $c-primary;
+}
+
+.u-background-color--secondary {
+  background-color: $c-secondary;
+}
+
+.u-background-color--tertiary {
+  background-color: $c-tertiary;
+}
+
+/**
+ * SVG Fill Colors
+ */
+.u-path-fill--black {
+  path {
+    fill: $c-black;
+  }
+}
+
+.u-path-fill--white {
+  path {
+    fill: $c-white;
+  }
+}
+
+.u-path-fill--gray {
+  path {
+    fill: $c-gray;
+  }
+}
+
+.u-path-fill--primary {
+  path {
+    fill: $c-primary;
+  }
+}
+
+.u-path-fill--secondary {
+  path {
+    fill: $c-secondary;
+  }
+}
+
+.u-path-fill--tertiary {
+  path {
+    fill: $c-tertiary;
+  }
+}

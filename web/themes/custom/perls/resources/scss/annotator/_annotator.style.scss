@@ -1,0 +1,224 @@
+/**
+  General Adjustments
+  =============================================
+ */
+
+// stylelint-disable
+.rotate {
+  // !important => to override inline styles.
+  height: 48px !important;
+  width: unset !important;
+  top: auto !important;
+  bottom: 10px !important;
+  left: -1px !important;
+  padding: 0 12px 0 48px !important;
+  background-color: $color-primary !important;
+  font-size: 0;
+  transform: translateX(-100%);
+  background-image: url($icon-edit);
+  background-position: left 12px center;
+  background-size: 24px 24px;
+  background-repeat: no-repeat;
+  box-shadow: $box-shadow-base;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  word-break: keep-all;
+
+  .label-counter {
+    float: none !important;
+    padding: 0 !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 48px;
+  }
+}
+
+.annotator-hl-error {
+  background: #ffcfbf;
+  cursor: pointer;
+}
+
+.annotator-hl-good {
+  background: #dfffbf;
+  cursor: pointer;
+}
+
+.annotator-hl-highlight {
+  background: rgba(255, 255, 10, 0.3);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.wrong {
+  background: #ffcfbf;
+  border: 1px solid #b3b3b3;
+  height: 20px;
+}
+
+.good {
+  background: #dfffbf;
+  border: 1px solid #b3b3b3;
+  height: 20px;
+}
+
+.highlight,
+.hightlight { // todo - looks like a typo in the javascript classing.
+  display: none; // TODO - hide it - not needed.
+}
+
+.annotations-list-uoc {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100%;
+  z-index: 1000;
+  margin-top: 0 !important;
+  background-color: #fff !important;
+  color: #000;
+  border-left: 3px solid $color-primary;
+  box-shadow: -6px 6px 6px rgba(0, 0, 0, 0.16);
+}
+
+.label-compartit {
+  border: 1px solid #676767;
+  padding: 1px 4px 2px;
+  background-color: #666666;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: bold;
+  line-height: 14px;
+  vertical-align: baseline;
+  white-space: nowrap;
+  margin-top: 4px;
+}
+
+.label-counter {
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 400;
+  background-color: transparent;
+
+}
+
+.label-counter-alert {
+  background-color: #b20000;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.container-anotacions {
+  list-style: none;
+  position: relative;
+  width: 100%;
+  padding: 0 0 10px 0;
+}
+
+.annotator-viewer-delete {
+  background-image: url($icon-delete-black);
+  background-repeat: no-repeat;
+  background-size: auto;
+  width: 20px;
+  height: 20px;
+  transition: transform .3s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+}
+
+.annotator-viewer-edit {
+  background-image: url($icon-edit-black);
+  background-repeat: no-repeat;
+  background-size: auto;
+  width: 20px;
+  height: 20px;
+  transition: transform .3s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+}
+
+.annotator-viewer-share {
+  display: none !important; // TODO - hide this, no need for this feature.
+  background-repeat: no-repeat;
+  background-size: auto;
+  width: 20px;
+  height: 20px;
+}
+
+.annotator-marginviewer-element {
+  width: 227px;
+  margin: 10px 0;
+  padding: 10px;
+  cursor: pointer;
+
+  > * {
+    &:not(:last-child) {
+      margin-bottom: 5px;
+    }
+  }
+
+  &:hover {
+    background-color: rgba($color-primary, .1);
+  }
+}
+
+.annotator-marginviewer-header {
+  height: 26px;
+}
+
+.annotator-marginviewer-footer {
+  border-bottom: 1px solid #d6d6d6;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  > * {
+    margin: 5px !important;
+    float: none !important;
+    display: inline-block;
+  }
+}
+
+.annotator-marginviewer-date {
+  font-size: 12px;
+  font-weight: 100;
+}
+
+.panelTextArea {
+  width: 100%;
+  margin: 0;
+  padding: 5px;
+}
+
+.annotator-marginviewer-quote {
+  display: none;
+  background-color: rgba($color-highlight, .5);
+}
+
+.anotador_text {
+  &:empty:before {
+    content: "No Comment";
+    font-style: italic;
+  }
+}
+
+.filter-panel {
+  display: none;
+}
+
+.annotator-user,
+.annotator-marginviewer-footer>.label {
+  display: none;
+}
+
+.annotations-init {
+  pointer-events: none;
+  border-color: $c-disabled;
+  .rotate {
+    background-color: $c-disabled !important;
+  }
+}

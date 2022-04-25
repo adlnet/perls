@@ -1,0 +1,59 @@
+uuid: 2fc0bc0d-a32b-449c-a806-467370b38b2d
+langcode: en
+status: true
+dependencies:
+  module:
+    - notifications
+id: push_notification_token--push_notification_token
+disabled: true
+path: push_notification_token/push_notification_token
+resourceType: push_notification_token--push_notification_token
+resourceFields:
+  id:
+    disabled: false
+    fieldName: id
+    publicName: id
+    enhancer:
+      id: ''
+  uuid:
+    disabled: false
+    fieldName: uuid
+    publicName: uuid
+    enhancer:
+      id: ''
+  auth_user_id:
+    disabled: false
+    fieldName: auth_user_id
+    publicName: auth_user_id
+    enhancer:
+      id: ''
+  value:
+    disabled: false
+    fieldName: value
+    publicName: value
+    enhancer:
+      id: ''
+  device:
+    disabled: false
+    fieldName: device
+    publicName: device
+    enhancer:
+      id: ''
+  created:
+    disabled: false
+    fieldName: created
+    publicName: created
+    enhancer:
+      id: ''
+  changed:
+    disabled: false
+    fieldName: changed
+    publicName: changed
+    enhancer:
+      id: ''
+  status:
+    disabled: false
+    fieldName: status
+    publicName: status
+    enhancer:
+      id: ''

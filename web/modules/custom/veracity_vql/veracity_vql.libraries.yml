@@ -1,0 +1,8 @@
+vql-renderer:
+  version: 1.x
+  css:
+    component:
+      css/chart.css: {}
+  js:
+    renderer: {type: external, minified: false}
+    js/chart.js: {}

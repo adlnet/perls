@@ -1,0 +1,10 @@
+uuid: 865dad61-ecd4-41ac-a48c-7eb688b1ce21
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.discussion
+label: Discussion
+targetEntityType: node
+cache: true

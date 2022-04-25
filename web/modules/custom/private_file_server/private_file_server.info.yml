@@ -1,0 +1,4 @@
+name: 'Private file server'
+description: 'This module improves the file handling on the site.'
+type: module
+core_version_requirement: ^8.8 || ^9

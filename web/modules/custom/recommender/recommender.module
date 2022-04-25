@@ -1,0 +1,206 @@
+<?php
+
+/**
+ * @file
+ * Hooks and stuff for perls recommendation engine.
+ */
+
+use Drupal\Core\Database\Query\AlterableInterface;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\flag\FlaggingInterface;
+use Drupal\recommender\Entity\UserRecommendationStatus;
+use Drupal\user\UserInterface;
+use Drupal\views\ViewExecutable;
+
+/**
+ * Add random order to entity queries taged with sort_by_random.
+ */
+function recommender_query_sort_by_random_alter(AlterableInterface $query) {
+  $query->orderRandom();
+}
+
+/**
+ * Hook cron.
+ */
+function recommender_cron() {
+  $recommendationService = \Drupal::service('recommender.recommendation_service');
+  // Try to get recommendations.
+  // Set a time limit on this operation in seconds.
+  $limit = 20;
+  $recommendationService->processRecommendationQueue($limit);
+
+  // Clean up old recommendations history.
+  $limit = 5;
+  $recommendationService->cleanUpRecommendationHistory($limit);
+  $recommendationService->markRecommendationStatusAsStale();
+}
+
+/**
+ * Implements hook_user_insert().
+ *
+ * Get recommendations for user when they first login.
+ */
+function recommender_user_insert(UserInterface $user) {
+  $recommendationService = \Drupal::service('recommender.recommendation_service');
+  if ($recommendationService->shouldBuildOnRegistration()) {
+    $recommendationService->buildUserRecommendations($user, 100, TRUE);
+  }
+}
+
+/**
+ * Implements hook_user_update().
+ *
+ * Get recommendations for users when they update their profile.
+ */
+function recommender_user_update(UserInterface $user) {
+  $recommendationService = \Drupal::service('recommender.recommendation_service');
+  if ($recommendationService->shouldBuildOnUserUpdate()) {
+    $recommendationService->buildUserRecommendations($user, 50);
+  }
+}
+
+/**
+ * Implements hook_user_login().
+ *
+ * Get recommendations for user on login.
+ */
+function recommender_user_login(UserInterface $user) {
+  $recommendationService = \Drupal::service('recommender.recommendation_service');
+  if ($recommendationService->shouldBuildOnUserLogin() && !$recommendationService->hasRecommendations($user)) {
+    $recommendationService->buildUserRecommendations($user, 100, TRUE);
+  }
+
+}
+
+/**
+ * Implements hook_views_pre_render().
+ *
+ * Add recommendation ajax javascript to view.
+ */
+function recommender_views_pre_render(ViewExecutable $view) {
+  $recommendationService = \Drupal::service('recommender.recommendation_service');
+  if (isset($view)
+    &&($view->storage->id() == $recommendationService->getRecommendationAjaxView())
+    &&($view->current_display == $recommendationService->getRecommendationAjaxViewDisplayId())
+    && $recommendationService->shouldBuildWithAjax()) {
+    $view->display_handler->setOption('css_class', 'recommendation_ajax_view');
+    $view->element['#attached']['library'][] = 'recommender/build_recommendations_with_ajax';
+  }
+}
+
+/**
+ * Implements hook_flagging_insert().
+ *
+ * This method monitors completed flags to queue users for recommendations.
+ */
+function recommender_flagging_insert(FlaggingInterface $flag) {
+  if ($flag->bundle() !== 'completed') {
+    return;
+  }
+  $recommendationService = \Drupal::service('recommender.recommendation_service');
+  // Flag is a completed flag.
+  // Load the user status associated with the flag.
+  $status = $recommendationService->getUserStatus($flag->getOwner());
+  $status->setStatus(UserRecommendationStatus::STATUS_QUEUED);
+  $status->increasePriority(1);
+  $status->save();
+}
+
+/**
+ * Implements hook_entity_extra_field_info().
+ */
+function recommender_entity_extra_field_info() {
+  $extra = [];
+  $node_bundles = \Drupal::entityTypeManager()
+    ->getStorage('node_type')
+    ->loadMultiple();
+  $node_bundles = array_keys($node_bundles);
+  foreach ($node_bundles as $bundle) {
+    $extra['node'][$bundle]['display']['recommendation_reason'] = [
+      'label' => t('Recommendation reason'),
+      'description' => t('Provides more info about why this content is recommended'),
+      'weight' => 100,
+      'visible' => FALSE,
+    ];
+  }
+  return $extra;
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_view().
+ */
+function recommender_node_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+  if (\Drupal::currentUser()->isAuthenticated() && $display->getComponent('recommendation_reason')) {
+    /** @var \Drupal\flag\FlagService $flag */
+    $flag = \Drupal::service('flag');
+    $recommendation_flag = $flag->getFlagById('recommendation');
+    $flagging = $flag->getFlagging($recommendation_flag, $entity);
+    if (isset($flagging) &&
+    $flagging->hasField('field_recommendation_reason') &&
+    !empty($flagging->get('field_recommendation_reason')->getString())) {
+      $build['recommendation_reason'] = [
+        '#type' => 'item',
+        '#title' => t('Why are you seeing this?'),
+        '#markup' => $flagging->get('field_recommendation_reason')->getString(),
+        '#attached' => [
+          'library' => ['recommender/recommendation-tip-box'],
+        ],
+      ];
+    }
+  }
+}
+
+/**
+ * Implements hook_token_info().
+ *
+ * Provides tokens for retrieving recommendation reasons for a candidate.
+ */
+function recommender_token_info() {
+  return [
+    'types' => [
+      'recommendation_reason' => [
+        'name' => t('Recommendation Reason'),
+        'description' => t('Reasons why a candidate is relevant to the user'),
+        'needs-data' => ['recommendation_reasons'],
+      ],
+    ],
+    'tokens' => [
+      'recommendation_reason' => [
+        'primary' => [
+          'name' => t('Primary recommendation reason'),
+        ],
+        'secondary' => [
+          'name' => t('Secondary recommendation reason'),
+        ],
+      ],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_tokens().
+ */
+function recommender_tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
+  if ($type !== 'recommendation_reason' || empty($data['recommendation_reasons'])) {
+    return [];
+  }
+
+  $reasons = $data['recommendation_reasons'];
+  $replacements = [];
+
+  foreach ($tokens as $name => $original) {
+    switch ($name) {
+      case 'primary':
+        $replacements[$original] = $reasons[0];
+        break;
+
+      case 'secondary':
+        $replacements[$original] = $reasons[1];
+        break;
+    }
+  }
+
+  return $replacements;
+}

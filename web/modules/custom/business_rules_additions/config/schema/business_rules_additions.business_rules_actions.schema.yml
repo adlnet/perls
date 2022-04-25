@@ -1,0 +1,23 @@
+business_rules.action.type.business_rules_additions_promote_to_front_page_action:
+  type: mapping
+  label: 'Promote to front page'
+  mapping:
+    promoted:
+      type: integer
+      label: 'Promoted'
+
+business_rules.action.type.business_rules_additions_demote_from_front_page_action:
+  type: mapping
+  label: 'Promote to front page'
+  mapping:
+    promoted:
+      type: integer
+      label: 'Promoted'
+
+business_rules.condition.type.business_rules_additions_moderation_state_changes_condition:
+  type: mapping
+  label: 'Moderation State Changes'
+  mapping:
+    moderation_state_changes:
+      type: boolean
+      label: 'Moderation State Changes'

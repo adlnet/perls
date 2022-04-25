@@ -1,0 +1,27 @@
+<section class="annotationApp">
+  <div class="annotation-list">
+    <div v-if="annotations.length === 0" class="empty-message">
+      <span class="message">You have not created any notes yet.</span>
+    </div>
+    <div v-for="annotation in annotations" class="annotation-container" :key="annotation.id">
+      <div class="information" v-on:click="goTo(annotation.node_url)">
+        <div>
+          <p>
+            {{ annotation.text }}
+          </p>
+        </div>
+        <div class="quote">
+          <p>
+            <i>{{ annotation.quote }}</i>
+          </p>
+        </div>
+        <div class="subtitle">
+            {{ annotation.node_title }} <i>{{annotation.date}}</i>
+        </div>
+      </div>
+      <div class="delete">
+        <button class="destroy" v-on:click="removeAnnotation(annotation)"> </button>
+      </div>
+    </div>
+  </div>
+</section>

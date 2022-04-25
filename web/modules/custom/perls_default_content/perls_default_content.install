@@ -1,0 +1,290 @@
+<?php
+
+/**
+ * @file
+ * Installation functions for Perls Default Conentent module.
+ */
+
+use Drupal\file\Entity\File;
+use Drupal\file\FileInterface;
+use Drupal\media\Entity\Media;
+use Drupal\Core\Menu\MenuTreeParameters;
+use Drupal\Core\File\FileSystemInterface;
+
+/**
+ * Implements hook_install().
+ *
+ * Creates the necessary path aliases.
+ */
+function perls_default_content_install() {
+  // 1. Create path aliases and redirects.
+  _perls_default_content_update_aliases();
+  _perls_default_content_update_redirects();
+
+  // 2. Create default difficulty levels.
+  $term_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+
+  $term_storage->create([
+    'vid' => 'difficulty',
+    'name' => 'Novice',
+    'weight' => 0,
+  ])->save();
+
+  $term_storage->create([
+    'vid' => 'difficulty',
+    'name' => 'Intermediate',
+    'weight' => 1,
+  ])->save();
+
+  $term_storage->create([
+    'vid' => 'difficulty',
+    'name' => 'Expert',
+    'weight' => 2,
+  ])->save();
+
+  // 3. Create the default avatar
+  $path = implode(DIRECTORY_SEPARATOR, [
+    realpath('.'),
+    drupal_get_path('module', 'perls_default_content'),
+    'content',
+    'avatar.png',
+  ]);
+
+  $avatar_uri = \Drupal::service('file_system')->copy($path, 'public://avatar.png', FileSystemInterface::EXISTS_REPLACE);
+
+  File::create([
+    'uuid' => '21bd5927-b494-486f-9fd3-672c888e8d06',
+    'uid' => 0,
+    'filename' => 'avatar.png',
+    'uri' => 'public://avatar.png',
+    'status' => 1,
+  ])->save();
+
+}
+
+/**
+ * Implements hook_update_N().
+ *
+ * Deletes content menu definitions from the database.
+ */
+function perls_default_content_update_8026() {
+  $menuIds = [3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 18, 19, 20, 21, 22];
+  $menuLinkContentStorage = \Drupal::entityTypeManager()
+    ->getStorage('menu_link_content');
+  $menus = $menuLinkContentStorage->loadMultiple($menuIds);
+  $menuLinkContentStorage->delete($menus);
+  // Delete menu_link_content references fro menu_tree table.
+  \Drupal::database()
+    ->delete('menu_tree')
+    ->condition('id', 'menu_link_content%', 'LIKE')
+    ->execute();
+  $menuNames = [
+    'learner',
+  ];
+  foreach ($menuNames as $menuName) {
+    $parameters = new MenuTreeParameters();
+    $active_trail = \Drupal::service('menu.active_trail')
+      ->getActiveTrailIds($menuName);
+    $parameters->setActiveTrail($active_trail);
+  }
+}
+
+/**
+ * Implements hook_update_N().
+ *
+ * Deletes content menu definitions from the database.
+ */
+function perls_default_content_update_8027() {
+  $menus = \Drupal::entityTypeManager()
+    ->getStorage('menu_link_content')
+    ->loadMultiple([16, 23]);
+  foreach ($menus as $menu) {
+    $menu->delete();
+  }
+  // Delete menu_link_content references from menu_tree table.
+  \Drupal::database()
+    ->delete('menu_tree')
+    ->condition('id', 'menu_link_content%', 'LIKE')
+    ->execute();
+  // Rebuild active trail.
+  $parameters = new MenuTreeParameters();
+  $active_trail = \Drupal::service('menu.active_trail')
+    ->getActiveTrailIds('learner');
+  $parameters->setActiveTrail($active_trail);
+}
+
+/**
+ * Ensures all path aliases are up-to-date.
+ */
+function perls_default_content_update_8030() {
+  _perls_default_content_update_aliases();
+  _perls_default_content_update_redirects();
+}
+
+/**
+ * Defines path aliases.
+ *
+ * Helps ensure a consistent path structure for pages/routes
+ * that might be provided by other modules.
+ */
+function _perls_default_content_update_aliases() {
+  $aliases = [
+    // Collections.
+    '/manage-taxonomy/category' => '/manage/courses-and-content-library/topics',
+    '/manage-content/course' => '/manage/courses-and-content-library/courses',
+    '/manage-content/test' => '/manage/courses-and-content-library/tests',
+    '/manage-taxonomy/tags' => '/manage/courses-and-content-library/tags',
+    // Content.
+    '/manage-learning-content/learn_article,learn_link,learn_file,learn_package' => '/manage/courses-and-content-library/learning-objects',
+    '/manage-content/event' => '/manage/courses-and-content-library/events',
+    '/manage-content/tip_card' => '/manage/courses-and-content-library/tip-cards',
+    '/manage-content/flash_card' => '/manage/courses-and-content-library/flash-cards',
+    '/manage-content/quiz' => '/manage/courses-and-content-library/quizzes',
+    '/manage/podcasts' => '/manage/courses-and-content-library/podcasts',
+    // Users/Groups.
+    '/admin/people/import' => '/manage/users/import',
+    // Analytics.
+    '/admin/structure/webform/submissions/manage' => '/manage/webform/submissions',
+    '/feedback-rating' => '/manage/webform/feedback-rating',
+    // System info.
+    '/webform/content_suggestions' => '/suggestions',
+    '/admin/config/system/perls' => '/manage/settings',
+    '/admin/appearance/settings/perls' => '/manage/theme',
+    '/admin/config/system/xapi-content' => '/manage/xapi-settings',
+    '/admin/config/development/maintenance' => '/manage/maintenance',
+    '/admin/reports/dblog' => '/manage/dblog',
+    '/admin/reports/status' => '/manage/status',
+    '/admin/flush' => '/manage/flush',
+    '/run-cron' => '/manage/run-cron',
+  ];
+
+  $alias_storage = \Drupal::entityTypeManager()->getStorage('path_alias');
+  $logger = \Drupal::logger('perls_default_content');
+
+  $logger->notice('Preparing aliases...');
+  foreach ($aliases as $path => $alias) {
+    // First, look up if there's any existing aliases that need to be deleted.
+    $aliases_to_delete = array_merge(
+      $alias_storage->loadByProperties([
+        'path' => $path,
+      ]),
+      $alias_storage->loadByProperties([
+        'alias' => $alias,
+      ]),
+    );
+
+    foreach ($aliases_to_delete as $alias_to_delete) {
+      $logger->notice('Deleting alias %alias which led to %path', [
+        '%alias' => $alias_to_delete->getAlias(),
+        '%path' => $alias_to_delete->getPath(),
+      ]);
+      $alias_to_delete->delete();
+    }
+
+    $alias_storage->create([
+      'path' => $path,
+      'alias' => $alias,
+      'langcode' => 'und',
+    ])->save();
+
+    $logger->notice('Created alias %alias for %path', [
+      '%alias' => $alias,
+      '%path' => $path,
+    ]);
+  }
+}
+
+/**
+ * Defines site redirects.
+ */
+function _perls_default_content_update_redirects() {
+  $redirects = [
+    '/manage-content/learn_link' => '/manage/courses-and-content-library/learning-objects',
+    '/manage-content/learn_article' => '/manage/courses-and-content-library/learning-objects',
+    '/manage-content/learn_package' => '/manage/courses-and-content-library/learning-objects',
+    '/manage-content/learn_file' => '/manage/courses-and-content-library/learning-objects',
+    '/manage-content/podcast' => '/manage/courses-and-content-library/podcasts',
+  ];
+
+  $redirect_storage = \Drupal::entityTypeManager()->getStorage('redirect');
+
+  foreach ($redirects as $from => $to) {
+    $redirects_to_delete = $redirect_storage->loadByProperties([
+      'redirect_source' => ltrim($from, '/'),
+    ]);
+    foreach ($redirects_to_delete as $redirect_to_delete) {
+      $redirect_to_delete->delete();
+    }
+
+    $redirect_storage->create([
+      'redirect_source' => ltrim($from, '/'),
+      'redirect_redirect' => "internal:$to",
+      'language' => 'und',
+      'status_code' => 301,
+    ])->save();
+  }
+}
+
+/**
+ * Install config.
+ */
+function perls_default_install_config(array $storage, array $config_name) {
+  $source = \Drupal::service('config.storage.sync');
+  $config_storage = \Drupal::service('config.storage');
+
+  foreach ($storage as $key => $entity_type_id) {
+    if (empty($config_name[$key])) {
+      continue;
+    }
+    if (!$config_storage->exists($config_name[$key])) {
+      \Drupal::entityTypeManager()->getStorage($entity_type_id)
+        ->create($source->read($config_name[$key]))
+        ->save();
+    }
+  }
+}
+
+/**
+ * Create media entities from existing file fields for Image paragraph.
+ *
+ * @param mixed $taxonomy_term
+ *   Taxonomy term object.
+ */
+function _perls_default_content_image_migration($taxonomy_term) {
+  // Verify that the file field has a value.
+  if (!empty($taxonomy_term->field_image->entity) && empty($taxonomy_term->get('field_media_image')->entity)) {
+    // Create the new media entity and assign it to the new field.
+    $taxonomy_term->get('field_media_image')->entity = perls_default_content_create_media_image_entity(
+      $taxonomy_term->field_image->entity,
+      $taxonomy_term->field_image->alt
+    );
+    $taxonomy_term->save();
+  }
+}
+
+/**
+ * Creates a media image entity from a file entity.
+ *
+ * @param \Drupal\file\FileInterface $file
+ *   The existing file object.
+ * @param string $alt
+ *   The image alt text.
+ *
+ * @return \Drupal\media\Entity\Media
+ *   The media entity.
+ */
+function _perls_default_content_create_media_image_entity(FileInterface $file, $alt = NULL) {
+
+  $media_entity = Media::create([
+    'bundle' => 'image',
+    'uid' => $file->getOwnerId(),
+    'name' => $alt,
+    'status' => $file->get('status')->value,
+    'field_media_image' => [
+      'target_id' => $file->id(),
+      'alt' => $alt,
+    ],
+  ]);
+  $media_entity->save();
+  return $media_entity;
+}

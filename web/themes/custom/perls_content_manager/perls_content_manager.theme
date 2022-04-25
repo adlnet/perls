@@ -1,0 +1,77 @@
+<?php
+
+/**
+ * @file
+ * Functions to support management of PERLS content.
+ */
+
+use Drupal\node\NodeInterface;
+
+/**
+ * Implements template_preprocess_HOOK() for views_view_table.
+ *
+ * Adds additional row attributes to reflect the current node status.
+ */
+function perls_content_manager_preprocess_views_view_table(&$variables) {
+  /** @var \Drupal\views\ResultRow $result */
+  foreach ($variables['result'] as $row_index => $result) {
+    // If the result is not a node, then don't bother doing anything.
+    if (!($result->_entity instanceof NodeInterface) || !isset($variables['rows'][$row_index])) {
+      continue;
+    }
+
+    /** @var \Drupal\node\NodeInterface $node */
+    $node = $result->_entity;
+    $row = &$variables['rows'][$row_index];
+    $classes = [];
+
+    if ($node->isPromoted()) {
+      $classes[] = 'promoted';
+    }
+
+    if ($node->isSticky()) {
+      $classes[] = 'sticky';
+    }
+
+    if (!$node->isPublished()) {
+      $classes[] = 'unpublished';
+    }
+
+    if (isset($row['attributes']['class'])) {
+      array_unshift($classes, $row['attributes']['class']);
+    }
+
+    $row['attributes']['class'] = implode(' ', $classes);
+    $row['attributes']['title'] = _perls_content_manager_row_tip($node);
+  }
+}
+
+/**
+ * Generates a tooltip for a node.
+ *
+ * @param \Drupal\node\NodeInterface $node
+ *   The node.
+ *
+ * @return string|null
+ *   The tooltip to show when hovering over the node; NULL for no tip.
+ */
+function _perls_content_manager_row_tip(NodeInterface $node) {
+  $context = [
+    '@type' => $node->type->entity->label(),
+  ];
+
+  if (!$node->isPublished()) {
+    return t('This @type is not published; learners cannot see it.', $context);
+  }
+  elseif ($node->isPromoted() && $node->isSticky()) {
+    return t('This @type is both promoted and sticky; it is highly visible to learners.', $context);
+  }
+  elseif ($node->isPromoted()) {
+    return t('This @type is promoted; it is being recommended to learners.', $context);
+  }
+  elseif ($node->isSticky()) {
+    return t('This @type is sticky; it is being shown as trending content.', $context);
+  }
+
+  return NULL;
+}

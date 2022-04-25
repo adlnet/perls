@@ -1,0 +1,3 @@
+remove user history:
+  title: 'Remove user history'
+  description: "User can delete other user's history, like flagged content, browse history"

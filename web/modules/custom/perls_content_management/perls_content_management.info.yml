@@ -1,0 +1,11 @@
+name: "Perls content management"
+description: "Help to manage the content on the website"
+type: module
+core: 8.x
+core_version_requirement: ^8 || ^9
+package: 'Custom'
+dependencies:
+  - filename_transliteration
+  - perls_dashboard
+  - scheduler
+  - scheduler_content_moderation_integration

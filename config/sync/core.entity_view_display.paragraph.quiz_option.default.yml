@@ -1,0 +1,46 @@
+uuid: 2c0f2fa4-7396-49c6-a294-ed5a5fc24704
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.quiz_option.field_answer
+    - field.field.paragraph.quiz_option.field_correct
+    - field.field.paragraph.quiz_option.field_rationale
+    - paragraphs.paragraphs_type.quiz_option
+  module:
+    - field_layout
+    - layout_builder
+    - layout_discovery
+    - text
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings: {  }
+  layout_builder:
+    enabled: false
+    allow_custom: false
+id: paragraph.quiz_option.default
+targetEntityType: paragraph
+bundle: quiz_option
+mode: default
+content:
+  field_answer:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_rationale:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+hidden:
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  field_correct: true
+  search_api_excerpt: true

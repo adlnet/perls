@@ -1,0 +1,13 @@
+uuid: 722fee4e-a400-40b9-90d0-76ff73231bc9
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - switches
+id: podcast_support
+label: 'Podcast feature'
+description: 'Switch for podcast feature'
+activationConditions: {  }
+activationMethod: manual
+manualActivationStatus: false

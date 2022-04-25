@@ -1,0 +1,106 @@
+<?php
+
+/**
+ * @file
+ * Install scripts and requirements for xapi module.
+ */
+
+use Drupal\Core\Url;
+use Drupal\xapi\Controller\LRSController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+
+/**
+ * Implements hook_requirements().
+ */
+function xapi_requirements($phase) {
+  $requirements = [];
+
+  if ($phase == 'runtime') {
+    $requirements['xapi'] = [
+      'title' => t('LRS Server'),
+    ];
+
+    // Run our tests to ensure LRS is connected.
+    // 1 - Is Endpoint set.
+    $config = \Drupal::config('xapi.settings');
+    // Get the correct LRS settings. First check database then overrides.
+    // Data from the database.
+    $raw_data = $config->getRawData();
+    // Invalidate raw data if any fields are empty.
+    if (empty($raw_data) || empty($raw_data['lrs_url']) || empty($raw_data['lrs_username']) || empty($raw_data['lrs_password'])) {
+      $raw_data = NULL;
+    }
+    $lrs_server = (!empty($raw_data)) ? $raw_data['lrs_url'] : $config->get('lrs_url');
+    $lrs_username = (!empty($raw_data)) ? $raw_data['lrs_username'] : $config->get('lrs_username');
+    $lrs_password = (!empty($raw_data)) ? $raw_data['lrs_password'] : $config->get('lrs_password');
+
+    if (
+      empty($lrs_server) ||
+      empty($lrs_username) ||
+      empty($lrs_password)) {
+      $url = Url::fromRoute('xapi.admin_settings_form');
+      $requirements['xapi']['value'] = t('Not Connected');
+      $requirements['xapi']['description'] = t('LRS not configured. Please ensure you have added values to configuration for <a href=":url">endpoint, username and password</a> .', [':url' => $url->toString()]);
+      $requirements['xapi']['severity'] = REQUIREMENT_ERROR;
+      // Log connectivity issue.
+      \Drupal::logger('xapi')
+        ->warning('LRS Endpoint is not configured');
+      return $requirements;
+    }
+    // 2 - Check that LRS is reachable
+    // Although I could connect directly I am going to connect through
+    // LRSController to ensure that it is working too.
+    $lrsConnection = LRSController::create(\Drupal::getContainer());
+    try {
+      $request = Request::create('/lrs/statements');
+      $request->headers->set('x-experience-api-version', '1.0.3');
+      $response = $lrsConnection->statements($request);
+    }
+    catch (Exception $e) {
+      $requirements['xapi']['value'] = t('LRS configured incorrectly or unavailable.');
+      $requirements['xapi']['description'] = t('LRS endpoint return this Message: @message <br/> LRS server: @server, LRS username: @user.',
+       [
+         '@message' => $e->getMessage(),
+         '@server' => $lrs_server,
+         '@user' => $lrs_username,
+       ]);
+      $requirements['xapi']['severity'] = REQUIREMENT_ERROR;
+      return $requirements;
+    }
+    // 3 - Check for Content.
+    if ($response->getContent() === '') {
+      $requirements['xapi']['value'] = t('Not Connected');
+      $requirements['xapi']['description'] = t('LRS returned an empty response with code @code @text', [
+        '@code' => $response->getStatusCode(),
+        '@text' => Response::$statusTexts[$response->getStatusCode()],
+      ]);
+      $requirements['xapi']['severity'] = REQUIREMENT_ERROR;
+      // Log connectivity issue.
+      \Drupal::logger('xapi')
+        ->error('LRS Endpoint replied with no content. This is unusual and should be investigated');
+      return $requirements;
+    }
+    // 4 - Check Status code.
+    if ($response->getStatusCode() !== 200) {
+      $requirements['xapi']['value'] = t('Not Connected');
+      $requirements['xapi']['description'] = t('LRS returned a @code @text status code.', [
+        '@code' => $response->getStatusCode(),
+        '@text' => Response::$statusTexts[$response->getStatusCode()],
+      ]);
+      $requirements['xapi']['severity'] = REQUIREMENT_ERROR;
+      // Log connectivity issue.
+      \Drupal::logger('xapi')
+        ->error('LRS Endpoint returned an error with code ' . $response->getStatusCode() . ' ' . Response::$statusTexts[$response->getStatusCode()] . '. Content : ' . $response->getContent());
+      return $requirements;
+    }
+    $requirements['xapi']['value'] = t('Connected and ready to use');
+    $requirements['xapi']['description'] = t('LRS server: @server, LRS username: @user.', [
+      '@server' => $lrs_server,
+      '@user' => $lrs_username,
+    ]);
+    $requirements['xapi']['severity'] = REQUIREMENT_OK;
+
+  }
+  return $requirements;
+}

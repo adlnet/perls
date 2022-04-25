@@ -1,0 +1,60 @@
+/* ------------------------------------ *\
+    $WRAPPERS & CONTAINERS
+\* ------------------------------------ */
+
+/**
+ * Wrapping element to keep content contained and centered.
+ */
+.l-wrap {
+  @include u-center-block;
+
+  padding-left: $space;
+  padding-right: $space;
+
+  @include media(">medium") {
+    padding-left: $space-double;
+    padding-right: $space-double;
+  }
+}
+
+/**
+ * Layout containers - keep content centered and within a maximum width. Also
+ * adjusts left and right padding as the viewport widens.
+ */
+
+.l-container {
+  max-width: $max-width;
+
+  @include u-center-block;
+}
+
+.l-container--xxs {
+  max-width: 280px;
+
+  @include u-center-block;
+}
+
+.l-container--xs {
+  // 700px
+  max-width: $max-width-small;
+
+  @include u-center-block;
+}
+
+.l-container--s {
+  max-width: 960px;
+
+  @include u-center-block;
+}
+
+.l-container--m {
+  max-width: 1060px;
+
+  @include u-center-block;
+}
+
+.l-container--l {
+  max-width: 1260px;
+
+  @include u-center-block;
+}

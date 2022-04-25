@@ -1,0 +1,120 @@
+uuid: 55358d54-3eb3-4b0c-8c80-d5a6f3d726d3
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.podcast_episode.field_audio_file
+    - field.field.node.podcast_episode.field_description
+    - field.field.node.podcast_episode.field_duration
+    - field.field.node.podcast_episode.field_release_date
+    - field.field.node.podcast_episode.field_tags
+    - field.field.node.podcast_episode.field_type_description
+    - node.type.podcast_episode
+  module:
+    - audiofield
+    - datetime
+    - field_layout
+    - layout_builder
+    - layout_discovery
+    - text
+    - user
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings:
+      label: ''
+  layout_builder:
+    enabled: false
+    allow_custom: false
+id: node.podcast_episode.default
+targetEntityType: node
+bundle: podcast_episode
+mode: default
+content:
+  field_audio_file:
+    type: audiofield_audioplayer
+    label: hidden
+    settings:
+      audio_player: default_mp3_player
+      audio_player_jplayer_theme: none
+      audio_player_wavesurfer_combine_files: false
+      audio_player_wavesurfer_audiorate: 1
+      audio_player_wavesurfer_autocenter: true
+      audio_player_wavesurfer_bargap: 0
+      audio_player_wavesurfer_barheight: 1
+      audio_player_wavesurfer_barwidth: null
+      audio_player_wavesurfer_cursorcolor: '#333'
+      audio_player_wavesurfer_cursorwidth: 1
+      audio_player_wavesurfer_forcedecode: false
+      audio_player_wavesurfer_normalize: false
+      audio_player_wavesurfer_playnexttrack: true
+      audio_player_wavesurfer_progresscolor: '#555'
+      audio_player_wavesurfer_responsive: false
+      audio_player_wavesurfer_use_peakfile: false
+      audio_player_wavesurfer_wavecolor: '#999'
+      audio_player_wordpress_combine_files: false
+      audio_player_wordpress_animation: true
+      audio_player_soundmanager_theme: default
+      audio_player_initial_volume: 8
+      audio_player_autoplay: false
+      audio_player_lazyload: false
+      download_button: false
+      download_link: false
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_description:
+    type: text_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 6
+    region: content
+  field_duration:
+    type: number_integer
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    weight: 5
+    region: content
+  field_release_date:
+    type: datetime_default
+    label: above
+    settings:
+      timezone_override: ''
+      format_type: medium
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_tags:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  flag_bookmark:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  flag_completed:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+hidden:
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  entitygroupfield: true
+  field_type_description: true
+  flag_recommendation: true
+  group_content: true
+  langcode: true
+  links: true
+  recommendation_reason: true
+  search_api_excerpt: true

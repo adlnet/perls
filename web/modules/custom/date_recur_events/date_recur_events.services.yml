@@ -1,0 +1,12 @@
+services:
+  logger.channel.date_recur_events:
+    parent: logger.channel_base
+    arguments: ['date_recur_events']
+  date_recur.notifier:
+    class: Drupal\date_recur_events\DateRecurOccurrenceNotifier
+    arguments: [
+      '@logger.channel.date_recur_events',
+      '@entity_type.manager',
+      '@database',
+      '@event_dispatcher'
+      ]

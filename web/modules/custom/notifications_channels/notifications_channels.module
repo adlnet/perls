@@ -1,0 +1,141 @@
+<?php
+
+/**
+ * @file
+ * Notifications_channels module.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\notifications_channels\Event\ChannelNotifyEvent;
+
+/**
+ * Implements hook_form_node_form_alter().
+ *
+ * Add in notify element to nodes form.
+ */
+function notifications_channels_form_node_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $config = \Drupal::config('notifications_channels.settings');
+  $notify_type = ($config->get('notify_type') !== NULL) ? $config->get('notify_type') : [];
+
+  // Check if config allows push notifications.
+  $notify = ($config->get('send_notifications') !== NULL) ? $config->get('send_notifications') : 1;
+  if (!$notify) {
+    return;
+  }
+  $entity = $form_state->getFormObject()->getEntity();
+  if (!$entity->hasField('field_tags') || (!empty($notify_type) && !in_array($entity->bundle(), $notify_type))) {
+    return;
+  }
+  $description = t('When enabled, a push notification will be sent to learners following the tags specified above.');
+  $title = t('Notify learners following related tags');
+  $can_notify = \Drupal::currentUser()->hasPermission('send push notifications');
+  $default_value = $can_notify && $entity->isNew();
+  $form['notify'] = [
+    '#type' => 'details',
+    '#group' => 'advanced',
+    '#weight' => 100,
+    '#title' => t('Notify Learners'),
+    '#access' => $can_notify,
+  ];
+  $form['channels_notification'] = [
+    '#type' => 'checkbox',
+    '#title' => $title,
+    '#description' => $description,
+    '#default_value' => $default_value,
+    '#group' => 'notify',
+    '#weight' => 20,
+  ];
+  $form['actions']['submit']['#submit'][] = 'notifications_channels_submit_handler';
+}
+
+/**
+ * A submit handler for notifying channels.
+ */
+function notifications_channels_submit_handler(&$form, FormStateInterface $form_state) {
+  $config = \Drupal::config('notifications_channels.settings');
+  // Check if config allows push notifications.
+  $notify = ($config->get('send_notifications') !== NULL) ? $config->get('send_notifications') : 1;
+  if (!$notify || !\Drupal::currentUser()->hasPermission('send push notifications')) {
+    return;
+  }
+  $entity = $form_state->getFormObject()->getEntity();
+  if (!$form_state->getValue('channels_notification')) {
+    return;
+  }
+  // Only notify on published articles.
+  if (!$entity->isPublished()) {
+    return;
+  }
+  $event = new ChannelNotifyEvent($entity);
+  /** @var Drupal\Component\EventDispatcher\ContainerAwareEventDispatcher $event_dispatcher */
+  $event_dispatcher = \Drupal::service('event_dispatcher');
+  $event_dispatcher->dispatch(ChannelNotifyEvent::NOTIFICATIONS_CHANNELS_NOTIFY_EVENT, $event);
+
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function notifications_channels_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if ($form_id != 'firebase.settings') {
+    return;
+  }
+  $config = \Drupal::config('notifications_channels.settings');
+
+  $form['channels'] = [
+    '#type' => 'details',
+    '#title' => t('Channels'),
+    '#open' => TRUE,
+  ];
+
+  $form['channels']['send_notifications'] = [
+    '#type' => 'select',
+    '#title' => t('Enable notifications for followed content'),
+    '#description' => t('When enabled, content editors may choose to send push notifications about content updates to users following tags associated with that content.'),
+    '#options' => [
+      0 => t('No'),
+      1 => t('Yes'),
+    ],
+    '#default_value' => ($config->get('send_notifications') !== NULL) ? $config->get('send_notifications') : 1,
+  ];
+  // Allow admin to choose what file types get notifications.
+  $default_enabled = ($config->get('notify_type') !== NULL) ? $config->get('notify_type') : [];
+  $form['channels']['notify_type'] = [
+    '#type' => 'details',
+    '#title' => t('Notify Type'),
+    '#open' => FALSE,
+  ];
+  $types = \Drupal::entityTypeManager()
+    ->getStorage('node_type')
+    ->loadMultiple();
+  foreach ($types as $type) {
+    $form['channels']['notify_type'][$type->id()] = [
+      '#type' => 'checkbox',
+      '#title' => $type->label(),
+      '#default_value' => (!empty($default_enabled)) ? in_array($type->id(), $default_enabled) : TRUE,
+      '#description' => $type->getDescription(),
+    ];
+  }
+
+  $form['#submit'][] = 'notifications_channels_admin_form_submit';
+}
+
+/**
+ * A submit handler for updating config.
+ */
+function notifications_channels_admin_form_submit(&$form, FormStateInterface $form_state) {
+  $config = \Drupal::service('config.factory')->getEditable('notifications_channels.settings');
+  $config->set('send_notifications', $form_state->getValue('send_notifications'));
+
+  $types = \Drupal::entityTypeManager()
+    ->getStorage('node_type')
+    ->loadMultiple();
+  $notify_type = [];
+  foreach ($types as $type) {
+    if ($form_state->getValue($type->id())) {
+      $notify_type[] = $type->id();
+    }
+  }
+  $config->set('notify_type', $notify_type);
+  $config->save();
+}

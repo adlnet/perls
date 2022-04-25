@@ -1,0 +1,25 @@
+uuid: 6dd4cf55-5da5-4635-8337-07e51df50dab
+langcode: en
+status: true
+dependencies:
+  config:
+    - system.menu.content-management
+  module:
+    - system
+  theme:
+    - perls_content_manager
+id: perls_content_manager_contentmanagement
+theme: perls_content_manager
+region: sidebar_first
+weight: -5
+provider: null
+plugin: 'system_menu_block:content-management'
+settings:
+  id: 'system_menu_block:content-management'
+  label: 'Content Management'
+  label_display: visible
+  provider: system
+  level: 1
+  depth: 0
+  expand_all_items: false
+visibility: {  }

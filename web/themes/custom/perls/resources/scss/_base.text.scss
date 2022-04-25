@@ -1,0 +1,26 @@
+/* ------------------------------------ *\
+    $TEXT ELEMENTS
+\* ------------------------------------ */
+
+/**
+ * Text-Related Elements
+ */
+p {
+  @include p;
+}
+
+small {
+  font-size: 90%;
+}
+
+/**
+ * Bold
+ */
+strong,
+b {
+  font-weight: bold;
+}
+
+abbr[title] {
+  text-decoration: none;
+}

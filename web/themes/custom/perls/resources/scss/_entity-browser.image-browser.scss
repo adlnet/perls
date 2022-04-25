@@ -1,0 +1,128 @@
+#entity-browser-image-browser-form .form-actions {
+  display: block;
+  margin-left: $space-half;
+}
+
+#entity-browser-image-browser-form .is-entity-browser-submit {
+  margin-top: $space;
+}
+
+.view-media-entity-browser-view section.c-view__body .c-view__content {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+
+  .views-row {
+    margin: 2px 5px;
+    border: none;
+    float: left;
+    width: auto;
+
+    .views-field-thumbnail__target-id {
+      margin: auto;
+    }
+
+    .views-field-name {
+      margin: 0 auto;
+    }
+
+    img {
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
+      overflow: hidden;
+      object-fit: cover;
+      width: 100%;
+      height: 150px;
+
+      &:hover {
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.5);
+      }
+    }
+
+    .media-info {
+      position: relative;
+      background: none;
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 18px;
+      height: 40px;
+      overflow: hidden;
+      text-align: center;
+      color: $c-black;
+      max-width: 200px;
+
+      .media-info--Image {
+        display: none;
+      }
+    }
+  }
+}
+
+#views-exposed-form-media-entity-browser-media-browser-all .form-item-name::before,
+#unsplash-wrapper .form-item-search-key::before {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 475.08 475.08'%3E%3Ctitle%3Esearch%3C/title%3E%3Cpath d='M464.52 412.84l-97.93-97.92Q402 263.82 402 201a197.41 197.41 0 00-15.85-78.09q-15.84-37.26-42.83-64.24t-64.23-42.82a200.29 200.29 0 00-156.18 0Q85.65 31.69 58.67 58.67t-42.82 64.24a200.27 200.27 0 000 156.17q15.84 37.26 42.82 64.24t64.24 42.83A197.61 197.61 0 00201 402q62.82 0 113.92-35.4l97.93 97.64q10.27 10.84 25.69 10.85a36.54 36.54 0 0026-62.24zM291.36 291.36Q253.81 328.91 201 328.9t-90.36-37.54Q73.1 253.81 73.09 201t37.55-90.36Q148.18 73.08 201 73.09t90.36 37.55q37.56 37.53 37.55 90.36t-37.55 90.36z' fill='%23707070'/%3E%3C/svg%3E");
+  position: absolute;
+  margin: $space-and-half+$space-quarter $space-half;
+  content: "..........";
+  background-repeat: no-repeat;
+  color: rgba(0, 0, 0, 0);
+}
+
+#views-exposed-form-media-entity-browser-media-browser-all .form-item__content input[id^=edit-name] {
+  padding-left: $space-double;
+}
+
+#unsplash-wrapper input[id^=edit-search-key] {
+  padding-left: $space-double;
+}
+
+#entity-browser-image-browser-form .input--file__label.o-button.o-button--file {
+  margin: 0;
+  background-size: 30px 30px;
+  background-repeat: no-repeat;
+  background-position: 50% 40%;
+  padding: $space 0 $space-half 0;
+}
+#entity-browser-image-browser-form .unsplash-image-wrapper.unsplash-selected-image {
+  opacity: 1;
+}
+#entity-browser-image-browser-form .view-media-entity-browser-view .views-row.checked::after,
+#entity-browser-image-browser-form .unsplash-image-wrapper.unsplash-selected-image::after{
+  background-color: white;
+  background-image: none;
+  opacity: 0.6;
+  content: "\2713";
+  font-size: 100px;
+  color: #333;
+  top: 50%;
+  left: 50%;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  -webkit-transition: none;
+  transition: none;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+}
+
+#entity-browser-image-browser-form #edit-pictures-pager-pager-load-more {
+  height: 150px;
+  border-radius: $border-radius--card;
+  margin-top: 3px;
+}
+
+#entity-browser-image-browser-form .actions-bottom,
+#entity-browser-image-browser-form #edit-actions--2 {
+  position: fixed;
+  bottom: 0;
+  background-color: $c-admin--background;
+  width: 100%;
+  margin: 0;
+  padding: $space-half;
+  z-index: 10;
+}
+
+#entity-browser-image-browser-form #result-images #edit-pictures,
+#entity-browser-image-browser-form .view-media-entity-browser-view {
+  padding-bottom: $space-triple;
+}

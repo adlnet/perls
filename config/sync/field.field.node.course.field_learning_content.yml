@@ -1,0 +1,41 @@
+uuid: fad7b50f-3b72-4ad2-b84a-cc3d7094fbeb
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_learning_content
+    - node.type.course
+    - node.type.event
+    - node.type.learn_article
+    - node.type.learn_file
+    - node.type.learn_link
+    - node.type.learn_package
+    - node.type.podcast_episode
+    - node.type.test
+id: node.course.field_learning_content
+field_name: field_learning_content
+entity_type: node
+bundle: course
+label: 'Learning Content'
+description: 'Select articles, web links, or documents that are related to your course. You can also create one or multiple tests. These will appear as course lessons.'
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      learn_article: learn_article
+      learn_file: learn_file
+      event: event
+      podcast_episode: podcast_episode
+      test: test
+      learn_link: learn_link
+      learn_package: learn_package
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: learn_article
+field_type: entity_reference

@@ -1,0 +1,21 @@
+uuid: 2c75dd70-f3c3-4cc1-8b7a-74de5d48de45
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.user.field_notification_days
+  module:
+    - options
+    - user
+id: user.user.field_notification_days
+field_name: field_notification_days
+entity_type: user
+bundle: user
+label: 'Remind me on'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: list_string

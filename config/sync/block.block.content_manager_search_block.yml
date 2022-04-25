@@ -1,0 +1,30 @@
+uuid: 82bb5503-971e-4265-a7c7-40ac0b7d5757
+langcode: en
+status: true
+dependencies:
+  module:
+    - perls_search
+    - user
+  theme:
+    - perls_content_manager
+id: content_manager_search_block
+theme: perls_content_manager
+region: inactive
+weight: 0
+provider: null
+plugin: perls_views_search_block
+settings:
+  id: perls_views_search_block
+  label: 'Search Block for Perls Dashboard'
+  label_display: '0'
+  provider: perls_search
+  views_id: content_manager_search
+  views_display: content_manager_page
+visibility:
+  user_role:
+    id: user_role
+    negate: false
+    context_mapping:
+      user: '@user.current_user_context:current_user'
+    roles:
+      content_manager: content_manager

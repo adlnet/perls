@@ -1,0 +1,9 @@
+healthcheck.public_ping:
+  path: '/ping'
+  defaults:
+    _controller: '\Drupal\healthcheck\Controller\HealthCheckController::ping'
+    _title: 'Health Check'
+  requirements:
+    _access: 'TRUE'
+  options:
+    _maintenance_access: TRUE

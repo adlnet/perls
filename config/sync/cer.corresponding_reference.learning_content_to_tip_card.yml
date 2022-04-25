@@ -1,0 +1,16 @@
+uuid: a9d3809a-b398-4305-8877-17b804bf4b60
+langcode: en
+status: true
+dependencies: {  }
+id: learning_content_to_tip_card
+label: 'Learning Content to tip card'
+enabled: true
+first_field: field_tip_card
+second_field: field_parent_content
+bundles:
+  node:
+    - learn_article
+    - learn_file
+    - learn_link
+    - learn_package
+    - tip_card

@@ -1,0 +1,4 @@
+view any task entities:
+  title: 'View any task entities'
+permission_callbacks:
+  - \Drupal\task\TaskPermissions::generatePermissions

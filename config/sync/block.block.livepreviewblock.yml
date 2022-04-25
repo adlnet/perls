@@ -1,0 +1,58 @@
+uuid: 8d824330-4d80-455d-993d-99a28e8d3ea9
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - node_live_preview
+    - system
+  theme:
+    - perls_content_manager
+id: livepreviewblock
+theme: perls_content_manager
+region: sidebar_second
+weight: -10
+provider: null
+plugin: live_preview_block
+settings:
+  id: live_preview_block
+  label: 'Live Preview Block'
+  label_display: '0'
+  provider: node_live_preview
+  view_mode: card
+  nid_course: null
+  nid_flash_card: null
+  nid_learn_article: null
+  nid_learn_link: null
+  nid_learn_package: null
+  nid_quiz: null
+  nid_tip_card: null
+  nid_learn_file: null
+  nid_podcast: null
+  nid_podcast_episode: null
+  nid_test: null
+  nid_event: null
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    context_mapping: {  }
+    pages: "/node/add/*\r\n/node/*/edit"
+  'entity_bundle:node':
+    id: 'entity_bundle:node'
+    negate: false
+    context_mapping:
+      node: '@node.node_route_context:node'
+    bundles:
+      course: course
+      event: event
+      flash_card: flash_card
+      learn_article: learn_article
+      learn_file: learn_file
+      learn_link: learn_link
+      learn_package: learn_package
+      podcast: podcast
+      podcast_episode: podcast_episode
+      quiz: quiz
+      test: test
+      tip_card: tip_card

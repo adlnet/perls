@@ -1,0 +1,39 @@
+uuid: 304cfdfa-7f28-4123-a3f2-aa8bc09e473d
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: bookmark
+label: Bookmark
+bundles:
+  - course
+  - event
+  - flash_card
+  - learn_article
+  - learn_file
+  - learn_link
+  - learn_package
+  - podcast
+  - podcast_episode
+  - tip_card
+entity_type: node
+global: false
+flag_short: Bookmark
+flag_long: ''
+flag_message: ''
+unflag_short: Unbookmark
+unflag_long: ''
+unflag_message: ''
+unflag_denied_text: ''
+weight: 0
+flag_type: 'entity:node'
+link_type: ajax_link
+flagTypeConfig:
+  show_in_links: {  }
+  show_as_field: true
+  show_on_form: false
+  show_contextual_link: false
+  extra_permissions:
+    owner: '0'
+linkTypeConfig: {  }

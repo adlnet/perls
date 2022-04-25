@@ -1,0 +1,22 @@
+uuid: 2662d62d-2420-40f8-af28-f6f82149c800
+langcode: en
+status: true
+dependencies:
+  module:
+    - badges
+third_party_settings:
+  badges:
+    plugin_id: streak_badge_plugin
+    streak_badge_plugin:
+      days: '1'
+    badge_type: 'Log in Streak'
+id: daily_streak_1
+label: 'Daily Streak 1'
+description: 'Awarded to any user who achieves a one day streak.'
+secret: false
+invisible: false
+manual_only: null
+points: 1
+use_default_image: false
+locked_image_path: 'public://badges/lockedBadge.png'
+unlocked_image_path: 'public://badges/1daystreak.png'

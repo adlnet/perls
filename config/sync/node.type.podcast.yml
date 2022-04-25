@@ -1,0 +1,17 @@
+uuid: 44856292-4bef-49d9-ac5b-f9c694205758
+langcode: en
+status: true
+dependencies:
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus: {  }
+    parent: ''
+name: Podcast
+type: podcast
+description: 'Use a podcast to guide your learner through a set of audio episodes. Learners are shown episodes in descending order by date published (with the most recent episode first). Learners can subscribe to podcasts to receive notifications of new episodes.'
+help: ''
+new_revision: true
+preview_mode: 1
+display_submitted: false

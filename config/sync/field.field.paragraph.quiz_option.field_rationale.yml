@@ -1,0 +1,28 @@
+uuid: e7961107-b5a1-4043-b273-9b9527c7f95d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_rationale
+    - paragraphs.paragraphs_type.quiz_option
+  module:
+    - allowed_formats
+    - text
+third_party_settings:
+  allowed_formats:
+    plain_text: plain_text
+    basic_filter: '0'
+    inline_styling: '0'
+    list: '0'
+id: paragraph.quiz_option.field_rationale
+field_name: field_rationale
+entity_type: paragraph
+bundle: quiz_option
+label: Rationale
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

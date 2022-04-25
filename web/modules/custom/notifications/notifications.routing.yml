@@ -1,0 +1,96 @@
+# Oauth2Token routing definition
+entity.push_notification_token.canonical:
+  path: '/admin/config/people/notifications/push_notification_token/{push_notification_token}'
+  defaults:
+    _entity_view: 'push_notification_token'
+    _title: 'Push Notification Token'
+  requirements:
+    _entity_access: 'push_notification_token.view'
+  options:
+    _admin_route: TRUE
+
+entity.push_notification_token.collection:
+  path: '/admin/config/people/notifications/push_notification_token'
+  defaults:
+    _entity_list: 'push_notification_token'
+    _title: 'Push Notification Token list'
+  requirements:
+    _permission: 'administer push notifications'
+  base_route: system.admin_content
+
+entity.push_notification_token.delete_form:
+  path: '/admin/config/people/notifications/push_notification_token/{push_notification_token}/delete'
+  defaults:
+    _entity_form: push_notification_token.delete
+    _title: 'Delete Push Notification Token'
+  requirements:
+    _entity_access: 'push_notification_token.delete'
+
+entity.push_notification.canonical:
+  path: '/manage/push-notifications/notification/{push_notification}'
+  defaults:
+    _entity_view: 'push_notification'
+    _title: 'Push Notifications Message'
+  requirements:
+    _entity_access: 'push_notification.view'
+entity.push_notification.delete_form:
+  path: '/manage/push-notifications/notification/{push_notification}/delete'
+  defaults:
+    _entity_form: push_notification.delete
+    _title: 'Delete Push Notification'
+  requirements:
+    _entity_access: 'push_notification.delete'
+
+entity.push_notification.edit_form:
+  path: '/manage/push-notifications/notification/{push_notification}/edit'
+  defaults:
+    _entity_form: push_notification.edit
+    _title: 'Edit Push Notification'
+  requirements:
+    _entity_access: 'push_notification.update'
+entity.push_notification.cancel_form:
+  path: '/manage/push-notifications/notification/{push_notification}/cancel'
+  defaults:
+    _entity_form: push_notification.cancel
+    _title: 'Cancel Push Notification'
+  requirements:
+    _entity_access: 'push_notification.cancel'
+entity.push_notification.send_form:
+  path: '/manage/push-notifications/notification/{push_notification}/sendnow'
+  defaults:
+    _entity_form: push_notification.sendnow
+    _title: 'Send Push Notification Now'
+  requirements:
+    _entity_access: 'push_notification.sendnow'
+
+notifications.SendPushNotification.confirm:
+  path: '/manage/push-notifications/confirm/{view_id}/{display_id}'
+  defaults:
+    _form: '\Drupal\notifications\Form\ConfirmSendPushNotificationAction'
+    _title: 'Confirm Push Notification Details'
+  requirements:
+    _views_bulk_operation_access: 'TRUE'
+
+notifications.execute_configurable:
+  path: '/views-bulk-operations/configure/send_notifications_by_topic/page_1'
+  defaults:
+    _form: '\Drupal\views_bulk_operations\Form\ConfigureAction'
+    _title: 'Compose Notification'
+    view_id: 'send_notifications'
+    display_id: 'page_1'
+  requirements:
+    _views_bulk_operation_access: 'TRUE'
+  options:
+    _admin_route: FALSE
+
+notifications.execute_configurable2:
+  path: '/views-bulk-operations/configure/send_notifications/page_1'
+  defaults:
+    _form: '\Drupal\views_bulk_operations\Form\ConfigureAction'
+    _title: 'Compose Notification'
+    view_id: 'send_notifications'
+    display_id: 'page_1'
+  requirements:
+    _views_bulk_operation_access: 'TRUE'
+  options:
+    _admin_route: FALSE

@@ -1,0 +1,113 @@
+uuid: d94907b5-358f-4a2b-b953-7e475bc9d90a
+langcode: en
+status: true
+dependencies:
+  config:
+    - paragraphs.paragraphs_type.test_question_answer
+id: paragraph--test_question_answer
+disabled: true
+path: paragraph/test_question_answer
+resourceType: paragraph--test_question_answer
+resourceFields:
+  id:
+    disabled: false
+    fieldName: id
+    publicName: id
+    enhancer:
+      id: ''
+  uuid:
+    disabled: false
+    fieldName: uuid
+    publicName: uuid
+    enhancer:
+      id: ''
+  revision_id:
+    disabled: false
+    fieldName: revision_id
+    publicName: revision_id
+    enhancer:
+      id: ''
+  langcode:
+    disabled: false
+    fieldName: langcode
+    publicName: langcode
+    enhancer:
+      id: ''
+  type:
+    disabled: false
+    fieldName: type
+    publicName: type
+    enhancer:
+      id: ''
+  status:
+    disabled: false
+    fieldName: status
+    publicName: status
+    enhancer:
+      id: ''
+  created:
+    disabled: false
+    fieldName: created
+    publicName: created
+    enhancer:
+      id: ''
+  parent_id:
+    disabled: false
+    fieldName: parent_id
+    publicName: parent_id
+    enhancer:
+      id: ''
+  parent_type:
+    disabled: false
+    fieldName: parent_type
+    publicName: parent_type
+    enhancer:
+      id: ''
+  parent_field_name:
+    disabled: false
+    fieldName: parent_field_name
+    publicName: parent_field_name
+    enhancer:
+      id: ''
+  behavior_settings:
+    disabled: false
+    fieldName: behavior_settings
+    publicName: behavior_settings
+    enhancer:
+      id: ''
+  default_langcode:
+    disabled: false
+    fieldName: default_langcode
+    publicName: default_langcode
+    enhancer:
+      id: ''
+  revision_default:
+    disabled: false
+    fieldName: revision_default
+    publicName: revision_default
+    enhancer:
+      id: ''
+  revision_translation_affected:
+    disabled: false
+    fieldName: revision_translation_affected
+    publicName: revision_translation_affected
+    enhancer:
+      id: ''
+  field_answer_correct:
+    disabled: false
+    fieldName: field_answer_correct
+    publicName: field_answer_correct
+    enhancer:
+      id: ''
+  field_quiz_card:
+    disabled: false
+    fieldName: field_quiz_card
+    publicName: field_quiz_card
+    enhancer:
+      id: ''
+  field_user_answer:
+    disabled: false
+    fieldName: field_user_answer
+    publicName: field_user_answer
+    enhancer:
+      id: ''

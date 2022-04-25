@@ -1,0 +1,28 @@
+.colors-preview-items {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+}
+
+.colors-preview-items > * {
+  padding: 10px;
+  max-width: 320px;
+  width: 320px;
+  flex: 0 0 auto;
+}
+
+.c-node--card--quiz .c-node__card {
+  min-height: 400px;
+}
+
+.c-quiz__button.o-button--card {
+  color: #000 !important;
+}
+
+.o-background-image--article {
+  background-image: url("https://picsum.photos/600?random=1");
+}
+
+.o-background-image--course {
+  background-image: linear-gradient(0deg, var(--course-color) 20%, rgba(0, 0, 0, 0.42) 100%), url("https://picsum.photos/600?random=1");
+}

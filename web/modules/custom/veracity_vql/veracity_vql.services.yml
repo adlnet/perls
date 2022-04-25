@@ -1,0 +1,13 @@
+services:
+  logger.channel.veracity_vql:
+    parent: logger.channel_base
+    arguments: ['veracity_vql']
+  veracity_vql.api:
+    class: Drupal\veracity_vql\VeracityApi
+    arguments: ['@config.factory', '@http_client', '@logger.channel.veracity_vql', '@event_dispatcher']
+  plugin.manager.vql_post_process:
+    class: Drupal\veracity_vql\Plugin\VqlPostProcessManager
+    parent: default_plugin_manager
+  plugin.manager.vql_pre_process:
+    class: Drupal\veracity_vql\Plugin\VqlPreProcessManager
+    parent: default_plugin_manager

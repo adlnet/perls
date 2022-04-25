@@ -1,0 +1,21 @@
+uuid: e78d8aa3-54fb-4697-975b-ee8af8adeaa9
+langcode: en
+status: true
+dependencies:
+  module:
+    - serialization
+    - task
+    - user
+id: entity.task
+plugin_id: 'entity:task'
+granularity: resource
+configuration:
+  methods:
+    - GET
+    - POST
+    - DELETE
+    - PATCH
+  formats:
+    - json
+  authentication:
+    - cookie

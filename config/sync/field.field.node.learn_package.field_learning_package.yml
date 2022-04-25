@@ -1,0 +1,26 @@
+uuid: 09067b64-822e-484e-8f87-9df38b8dc395
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_learning_package
+    - node.type.learn_package
+  module:
+    - xapi
+id: node.learn_package.field_learning_package
+field_name: field_learning_package
+entity_type: node
+bundle: learn_package
+label: 'Learning Package'
+description: 'Upload a zip file from your eLearning authoring tool.'
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:file'
+  handler_settings: {  }
+  file_directory: '[date:custom:Y]-[date:custom:m]'
+  max_filesize: ''
+  description_required: 0
+field_type: field_xapi_content_file_item

@@ -1,0 +1,23 @@
+button_value: Save
+button_weight: '-1'
+dropbutton: 0
+hide_default_save: 1
+unpublish: 0
+unpublish_new_only: 0
+node_types:
+  learn_article: learn_article
+  course: 0
+  flash_card: 0
+  learn_file: 0
+  learn_link: 0
+  learn_package: 0
+  podcast: 0
+  podcast_episode: 0
+  quiz: 0
+  test: 0
+  tip_card: 0
+_core:
+  default_config_hash: nNcqzC75Ga_iQShU0PBJRKk48eiw1ArP7A3xAL5Lveg
+hide_default_publish: 1
+hide_default_preview: 0
+hide_default_delete: 0

@@ -1,0 +1,3 @@
+allow_date_only: false
+default_time: ''
+hide_seconds: true

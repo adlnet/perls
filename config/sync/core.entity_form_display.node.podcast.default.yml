@@ -1,0 +1,180 @@
+uuid: 5fdfabd7-53e0-4de8-af2e-91f9a9fe7849
+langcode: en
+status: true
+dependencies:
+  config:
+    - entity_browser.browser.podcast_episode_browser
+    - field.field.node.podcast.field_artwork
+    - field.field.node.podcast.field_content_description
+    - field.field.node.podcast.field_description
+    - field.field.node.podcast.field_episodes
+    - field.field.node.podcast.field_tags
+    - node.type.podcast
+  module:
+    - allowed_formats
+    - autocomplete_deluxe
+    - description_field
+    - entity_browser
+    - entitygroupfield
+    - field_layout
+    - layout_discovery
+    - maxlength
+    - text
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings:
+      label: ''
+id: node.podcast.default
+targetEntityType: node
+bundle: podcast
+mode: default
+content:
+  entitygroupfield:
+    type: entitygroupfield_select_widget
+    weight: 7
+    region: content
+    settings:
+      help_text: ''
+      label: 'Group name'
+      multiple: true
+      required: false
+      orderable: true
+    third_party_settings: {  }
+  field_artwork:
+    type: entity_browser_entity_reference
+    weight: 4
+    region: content
+    settings:
+      entity_browser: image_browser
+      field_widget_display: rendered_entity
+      field_widget_edit: true
+      field_widget_remove: true
+      field_widget_replace: false
+      open: true
+      field_widget_display_settings:
+        view_mode: media_library
+      selection_mode: selection_append
+      orderable: true
+    third_party_settings: {  }
+  field_content_description:
+    type: description_field_standard
+    weight: 0
+    region: content
+    settings:
+      orderable: true
+    third_party_settings: {  }
+  field_description:
+    type: text_textarea
+    weight: 5
+    region: content
+    settings:
+      orderable: true
+      rows: 5
+      placeholder: ''
+    third_party_settings:
+      allowed_formats:
+        hide_help: '1'
+        hide_guidelines: '1'
+      maxlength:
+        maxlength_js: 200
+        maxlength_js_label: 'Content limited to @limit characters, remaining: <strong>@remaining</strong>'
+        maxlength_js_enforce: true
+        maxlength_js_truncate_html: true
+  field_episodes:
+    type: entity_browser_entity_reference
+    weight: 6
+    region: content
+    settings:
+      entity_browser: podcast_episode_browser
+      field_widget_display: rendered_entity
+      field_widget_edit: true
+      field_widget_remove: true
+      field_widget_replace: false
+      open: true
+      field_widget_display_settings:
+        view_mode: row
+      selection_mode: selection_append
+      orderable: true
+    third_party_settings: {  }
+  field_tags:
+    type: autocomplete_deluxe
+    weight: 3
+    region: content
+    settings:
+      match_operator: CONTAINS
+      autocomplete_route_name: autocomplete_deluxe.autocomplete
+      size: 60
+      selection_handler: default
+      limit: 10
+      min_length: 0
+      delimiter: '#'
+      not_found_message_allow: false
+      not_found_message: 'Create a new tag: #@term'
+      new_terms: true
+      no_empty_message: 'No terms could be found. Please type in order to add a new term.'
+      orderable: true
+    third_party_settings: {  }
+  promote:
+    type: boolean_checkbox
+    weight: 8
+    region: content
+    settings:
+      orderable: true
+      display_label: true
+    third_party_settings: {  }
+  publish_on:
+    type: datetime_timestamp_no_default
+    weight: 30
+    region: content
+    settings:
+      orderable: true
+    third_party_settings: {  }
+  publish_state:
+    type: scheduler_moderation
+    weight: 30
+    region: content
+    settings:
+      orderable: true
+    third_party_settings: {  }
+  status:
+    type: boolean_checkbox
+    weight: 2
+    region: content
+    settings:
+      orderable: true
+      display_label: true
+    third_party_settings: {  }
+  title:
+    type: string_textfield
+    weight: 1
+    region: content
+    settings:
+      orderable: true
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  unpublish_on:
+    type: datetime_timestamp_no_default
+    weight: 30
+    region: content
+    settings:
+      orderable: true
+    third_party_settings: {  }
+  unpublish_state:
+    type: scheduler_moderation
+    weight: 30
+    region: content
+    settings:
+      orderable: true
+    third_party_settings: {  }
+hidden:
+  created: true
+  field_image: true
+  group_content: true
+  langcode: true
+  moderation_state: true
+  path: true
+  sticky: true
+  uid: true
+  url_redirects: true

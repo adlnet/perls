@@ -1,0 +1,22 @@
+uuid: ead43c7d-d3d4-4eea-81ff-078bb985236e
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - perls
+_core:
+  default_config_hash: 80N66GdzEvwqi1m-_GZ-ulkk8AJG9beoXcZ4-pMVKjI
+id: perls_content
+theme: perls
+region: content
+weight: 3
+provider: null
+plugin: system_main_block
+settings:
+  id: system_main_block
+  label: 'Main page content'
+  label_display: '0'
+  provider: system
+visibility: {  }

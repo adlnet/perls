@@ -1,0 +1,13 @@
+uuid: 30783303-b371-434a-bdf8-155cf3787172
+langcode: en
+status: true
+dependencies:
+  config:
+    - paragraphs.paragraphs_type.list_unordered
+_core:
+  default_config_hash: PT3KoisC2LsZPKDaW66DJrPpWeztNl3TcDmjkeewzJk
+id: paragraph.list_unordered
+target_entity_type_id: paragraph
+target_bundle: list_unordered
+default_langcode: site_default
+language_alterable: true

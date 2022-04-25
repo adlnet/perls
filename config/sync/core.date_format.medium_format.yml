@@ -1,0 +1,8 @@
+uuid: a757fe04-b3b7-430d-9818-907d60e25254
+langcode: en
+status: true
+dependencies: {  }
+id: medium_format
+label: 'Medium format'
+locked: false
+pattern: 'M d, Y h:ia'

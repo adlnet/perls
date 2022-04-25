@@ -1,0 +1,11 @@
+services:
+  badges.xapi_badge_subscriber:
+    class: Drupal\badges_xapi_reporting\EventSubscriber\BadgeXApiStatementSubscriber
+    arguments:
+      [
+        '@badges.badge_service',
+        '@entity.repository',
+        '@xapi.xapi_statement_helper',
+      ]
+    tags:
+      - { name: 'event_subscriber' }

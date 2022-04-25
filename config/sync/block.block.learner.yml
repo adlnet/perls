@@ -1,0 +1,30 @@
+uuid: f58824c5-9a85-495d-9812-758d4ea21ca1
+langcode: en
+status: true
+dependencies:
+  config:
+    - system.menu.learner
+  module:
+    - system
+  theme:
+    - adminimal_theme
+id: learner
+theme: adminimal_theme
+region: header
+weight: 0
+provider: null
+plugin: 'system_menu_block:learner'
+settings:
+  id: 'system_menu_block:learner'
+  label: Learner
+  label_display: '0'
+  provider: system
+  level: 1
+  depth: 0
+  expand_all_items: false
+visibility:
+  request_path:
+    id: request_path
+    negate: true
+    context_mapping: {  }
+    pages: "/manage\r\n/manage/*\r\n/admin\r\n/admin/*\r\n/node/add/*"

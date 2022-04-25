@@ -1,0 +1,10 @@
+uuid: b25f5518-23d4-45c2-aaf4-d16c658b4caa
+langcode: en
+status: true
+dependencies: {  }
+id: user_generated_content
+label: 'User generated content'
+description: 'Enable/disable learners being able to create content in the system.'
+activationConditions: {  }
+activationMethod: manual
+manualActivationStatus: false

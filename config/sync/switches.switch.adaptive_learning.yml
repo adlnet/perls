@@ -1,0 +1,15 @@
+uuid: a01a877c-d935-4d36-b74f-83335c66ffa8
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - switches
+_core:
+  default_config_hash: OqBkShK1EeQv8naSlLGGh6Ony8yBEcjIMnic-f3tDFY
+id: adaptive_learning
+label: 'Adaptive Learning'
+description: 'Switch for adaptive learning (recommendation engine and adaptive tests).'
+activationConditions: {  }
+activationMethod: manual
+manualActivationStatus: true

@@ -1,0 +1,44 @@
+#!/bin/bash
+echo "== Running code style checks in git pre-commit hook..."
+
+vendor/bin/phpcs --standard=Drupal --extensions=php,module,inc,install,test,profile,theme,css,info,txt,md '--ignore=node_modules,bower_components,vendor,*.min.js,*.min.css' web/modules/custom web/themes/custom
+
+if [[ $? -eq 0 ]]
+then
+  echo "== Code style check passed..."
+else
+  printf "== Code style issues found.\n Try to auto fix errors with:\n   vendor/bin/phpcbf --standard=Drupal --extensions=php,module,inc,install,test,profile,theme,css,info,txt,md '--ignore=node_modules,bower_components,vendor,*.min.js,*.min.css' web/modules/custom web/themes/custom"
+  exit 1
+fi
+
+scan_deprecations() {
+  echo "== Running drupal-check to check for Drupal 9 incompatibility..."
+
+  # Paths the scan.
+  module_path='web/modules/custom'
+  theme_path='web/themes/custom'
+  scan_command="./vendor/bin/drupal-check -d --no-progress"
+
+  # Scan modules first for deprecation.
+  scan_output=$($scan_command $module_path)
+
+  pattern='(\[ERROR\] Found )'
+
+  if [[ $scan_output =~ $pattern ]]; then
+    echo "$scan_output";
+    echo "Use of deprecated code found in '$module_path'. Please run '$scan_command $module_path' and fix the deprecations."
+    exit 1;
+  fi
+
+  # Scan themes for deprecation.
+  scan_output=$($scan_command $theme_path)
+
+  if [[ $scan_output =~ $pattern ]]; then
+    echo "$scan_output";
+    echo "Use of deprecated code found in '$theme_path'. Please run '$scan_command $theme_path' and fix the deprecations."
+    exit 1;
+  fi
+
+}
+# TODO: Uncomment this to run deprecations scan after the codebase has deprications fixed
+# scan_deprecations

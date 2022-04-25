@@ -1,0 +1,26 @@
+uuid: a699c2b1-1fc5-4617-9fea-bf8dd54d73eb
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.user.field_goal_weekly_completions
+  module:
+    - user
+id: user.user.field_goal_weekly_completions
+field_name: field_goal_weekly_completions
+entity_type: user
+bundle: user
+label: 'Items Completed Per Week'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 5
+default_value_callback: ''
+settings:
+  min: 0
+  max: 100
+  prefix: ''
+  suffix: Items
+field_type: integer

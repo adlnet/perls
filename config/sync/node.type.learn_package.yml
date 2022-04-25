@@ -1,0 +1,34 @@
+uuid: a848657a-9014-4ce8-9374-8b4a7c16af41
+langcode: en
+status: true
+dependencies:
+  module:
+    - menu_ui
+    - node_title_help_text
+    - scheduler
+third_party_settings:
+  menu_ui:
+    available_menus: {  }
+    parent: ''
+  node_title_help_text:
+    title_help: 'A good title is short and representative of the eLearning package. Avoid jargon and acronyms when possible.'
+  scheduler:
+    expand_fieldset: when_required
+    fields_display_mode: vertical_tab
+    publish_enable: true
+    publish_past_date: error
+    publish_past_date_created: false
+    publish_required: false
+    publish_revision: true
+    publish_touch: false
+    show_message_after_update: true
+    unpublish_enable: true
+    unpublish_required: false
+    unpublish_revision: true
+name: 'eLearning Package'
+type: learn_package
+description: 'A learning object that is authored in an eLearning authoring tool and exported as a zip with xAPI metadata (tincan.xml).'
+help: ''
+new_revision: true
+preview_mode: 1
+display_submitted: false

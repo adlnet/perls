@@ -1,0 +1,13 @@
+uuid: 1d76000d-35c9-4c7c-bd93-3197e99896d0
+langcode: en
+status: true
+dependencies:
+  module:
+    - flag
+id: flag_action.recommendation_unflag
+label: 'Remove recommendation'
+type: node
+plugin: 'flag_action:recommendation_unflag'
+configuration:
+  flag_id: recommendation
+  flag_action: unflag

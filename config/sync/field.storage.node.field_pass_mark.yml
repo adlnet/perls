@@ -1,0 +1,20 @@
+uuid: 07165556-4d1c-43d5-bdcd-b005b3ecfd08
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.field_pass_mark
+field_name: field_pass_mark
+entity_type: node
+type: integer
+settings:
+  unsigned: false
+  size: normal
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

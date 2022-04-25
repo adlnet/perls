@@ -1,0 +1,16 @@
+diff --git a/src/Form/SwitchForm.php b/src/Form/SwitchForm.php
+index e31e6d5..3b0438a 100644
+--- a/src/Form/SwitchForm.php
++++ b/src/Form/SwitchForm.php
+@@ -159,6 +159,11 @@ class SwitchForm extends EntityForm {
+    *   The current state of the form.
+    */
+   protected function submitActivationConditions(array $form, FormStateInterface $form_state) {
++    if ($this->entity->getActivationMethod() === 'manual') {
++      $this->entity->setManualActivationStatus($form['manualActivationStatus']['#value']);
++      return;
++    }
++
+     // Extract the enabled conditions tab from the front of the list.
+     $enabled_conditions = $form_state->getValue([
+       'activation_conditions',

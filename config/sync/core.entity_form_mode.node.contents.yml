@@ -1,0 +1,10 @@
+uuid: f721b306-6dc7-4a2b-be0b-8eeec03ab344
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.contents
+label: Contents
+targetEntityType: node
+cache: true

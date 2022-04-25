@@ -1,0 +1,6 @@
+services:
+  rules_date_recur.event_subscriber:
+      class: Drupal\rules_date_recur\EventSubscriber\RulesEventHandlerSubscriber
+      arguments: ['@event_dispatcher']
+      tags:
+        - { name: event_subscriber }

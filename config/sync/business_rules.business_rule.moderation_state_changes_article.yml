@@ -1,0 +1,19 @@
+uuid: 24817b3d-6eb3-420c-9f92-8839d60d17f6
+langcode: en
+status: true
+dependencies:
+  config:
+    - business_rules.condition.moderation_state_changes
+id: moderation_state_changes_article
+label: 'Moderation state changes (Article)'
+description: 'Reacts on when the moderation state changes for an article.'
+reacts_on: entity_presave
+target_entity_type: node
+target_bundle: learn_article
+items:
+  moderation_state_changes:
+    type: condition
+    id: moderation_state_changes
+    weight: -9
+tags: {  }
+enabled: null

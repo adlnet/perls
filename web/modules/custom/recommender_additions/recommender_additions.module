@@ -1,0 +1,57 @@
+<?php
+
+/**
+ * @file
+ * Module related hooks.
+ */
+
+/**
+ * Implements hook_views_data_alter().
+ */
+function recommender_additions_views_data_alter(array &$data) {
+  $data['node_field_data']['topics_progress'] = [
+    'title' => t('Percent Complete(Topic)'),
+    'group' => t('Content'),
+    'help' => t('Short/filter topics percentage progress.'),
+    'sort' => [
+      'id' => 'topic_progress_sort',
+    ],
+    'filter' => [
+      'id' => 'topic_progress_filter',
+    ],
+  ];
+
+  $data['node_field_data']['course_progress'] = [
+    'title' => t('Percent Complete(Course)'),
+    'group' => t('Content'),
+    'help' => t('Short/filter course percentage progress.'),
+    'sort' => [
+      'id' => 'course_progress_sort',
+    ],
+    'filter' => [
+      'id' => 'course_progress_filter',
+    ],
+  ];
+
+  $data['webform_submission']['feedback_score'] = [
+    'title' => t('Positive feedback score'),
+    'group' => t('Webform submission'),
+    'help' => t('Show content with positive score.'),
+    'real field' => 'sid',
+    'filter' => [
+      'id' => 'positive_feedback_score_filter',
+    ],
+    'sort' => [
+      'id' => 'positive_feedback_score_sort',
+    ],
+  ];
+}
+
+/**
+ * Implements hook_recommender_engine_info_alter().
+ */
+function recommender_additions_recommender_engine_info_alter(array &$definitions) {
+  if (isset($definitions['user_interests_recommendation_plugin'])) {
+    $definitions['user_interests_recommendation_plugin']['class'] = 'Drupal\recommender_additions\Plugin\Recommendations\UserInterestsRecommendationEnginePlugin';
+  }
+}

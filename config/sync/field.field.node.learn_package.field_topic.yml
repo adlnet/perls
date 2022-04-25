@@ -1,0 +1,29 @@
+uuid: 395ec340-ba16-45dd-bae6-33a527dd2cdd
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_topic
+    - node.type.learn_package
+    - taxonomy.vocabulary.category
+id: node.learn_package.field_topic
+field_name: field_topic
+entity_type: node
+bundle: learn_package
+label: Topic
+description: 'Select the topic that best represents the eLearning Package''s content. Remember, only the groups assigned to that topic can see the eLearning Package.'
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      category: category
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

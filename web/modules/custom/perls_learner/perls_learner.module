@@ -1,0 +1,167 @@
+<?php
+
+/**
+ * @file
+ * The hook which belongs to this module.
+ */
+
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\flag\Entity\Flag;
+use Drupal\node\NodeInterface;
+
+/**
+ * Implements hook_entity_extra_field_info().
+ */
+function perls_learner_entity_extra_field_info() {
+  $extra = [];
+
+  $extra['node']['learn_article']['display']['completed_manually'] = [
+    'label' => t('Set completion manually'),
+    'description' => t('User can trigger node completion by hand'),
+    'weight' => 100,
+    'visible' => FALSE,
+  ];
+
+  return $extra;
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_view().
+ *
+ * Replaces the default completion library on the page with one that is
+ * manually invoked when the learner clicks the *Done* button.
+ */
+function perls_learner_node_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+  if ($display->getComponent('completed_manually')) {
+    /** @var \Drupal\node\NodeInterface $entity */
+    if ($entity->hasField('field_completion_strategy')) {
+      $field_value = $entity->get('field_completion_strategy')->getString();
+      if ($field_value === 'manual') {
+        // Remove the default completion reporting library to
+        // allow us to perform manual completion.
+        $build['#attached']['library'] = array_diff($build['#attached']['library'], ['perls_xapi_reporting/perls_xapi_reporting_article_completed']);
+
+        $build['completed_manually'] = [
+          '#type' => 'container',
+          '#attributes' => [
+            'class' => ['completed-manually-button'],
+          ],
+        ];
+
+        $build['completed_manually']['button'] = [
+          '#type' => 'button',
+          '#value' => t("Mark as Done"),
+          '#attached' => [
+            'library' => 'perls_learner/manual-completed',
+          ],
+          '#cache' => [
+            'contexts' => ['url', 'user'],
+          ],
+        ];
+
+        if ($flagging_timestamp = perls_learner_check_completion($entity)) {
+          /** @var \Drupal\Core\Datetime\DateFormatter $date_formatter */
+          $date_formatter = \Drupal::service('date.formatter');
+          $build['completed_manually']['button']['#attributes']['disabled'] = TRUE;
+          $build['completed_manually']['button']['#suffix'] = '<span class="manually-complete-time">' . t('You did this on @time.',
+          [
+            '@time' => $date_formatter->format($flagging_timestamp, 'custom', 'M. j, Y'),
+          ]) . '</span>';
+          $build['completed_manually']['button']['#value'] = t('Done');
+        }
+      }
+    }
+  }
+
+  if ($view_mode === 'full' && $entity->bundle() === 'learn_article' && $entity instanceof NodeInterface && node_is_page($entity)) {
+    $settings['Xapi']['templateStatement'] = \Drupal::service('xapi_reporting.xapi_statement_creator')->getEntityTemplateStatement($entity);
+    $build['#attached']['library'][] = 'annotator/annotations.base';
+  }
+}
+
+/**
+ * Gives back that a node is completed or isn't.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   A drupal entity.
+ *
+ * @return mixed
+ *   The timestamp of flagging or FALSE if the content isn't flagged.
+ */
+function perls_learner_check_completion(EntityInterface $entity) {
+  /** @var \Drupal\flag\Entity\Flag $flag */
+  $flag = Flag::load('completed');
+  if ($flag->isFlagged($entity)) {
+    /** @var \Drupal\flag\FlagService $flagging_service */
+    $flagging_service = \Drupal::service('flag');
+    $flagging = $flagging_service->getFlagging($flag, $entity);
+    return $flagging->get('created')->getString();
+  }
+
+  return FALSE;
+}
+
+/**
+ * Implements hook_form_BASE_ENTITY_ID_form_alter().
+ */
+function perls_learner_form_node_form_alter(&$form, &$form_state, $form_id) {
+  $node = $form_state->getformObject()->getEntity();
+  $user = \Drupal::currentUser();
+  if ($node->bundle() !== 'learn_article' || $user->hasPermission('access group overview')) {
+    return;
+  }
+  // Hide groups form element for learners.
+  if (isset($form['entitygroupfield'])) {
+    $form['entitygroupfield']['#access'] = FALSE;
+  }
+  // Default field difficulty to first option if new article.
+  // We only do this on new articles because admin may have
+  // removed difficulty during edit.
+  if (
+    isset($form['field_difficulty'])
+    && isset($form['field_difficulty']['widget']['#options'])
+    &&  $node->isNew()
+    ) {
+    $options = array_keys($form['field_difficulty']['widget']['#options']);
+    if (count($options) > 1) {
+      $form['field_difficulty']['widget']['#default_value'] = $options[1];
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function perls_learner_preprocess_node(&$variables) {
+  // Loading the library on article pages, the comments are only enabled on
+  // Article content type.
+  $node = Drupal::routeMatch()->getParameter('node');
+  if (empty($node)) {
+    $node = $variables['node'];
+  }
+  if (($node instanceof NodeInterface) &&
+    $node->bundle() === 'learn_article' &&
+    $variables['view_mode'] === 'full' &&
+    perls_learner_comments_enabled($node)) {
+    // Attach JS library only if comments are enabled on this node, .
+    $variables['#attached']['library'][] = 'perls_learner/perls_learner.node_stats';
+  }
+}
+
+/**
+ * Helper function to check whether comments for the node are enabled.
+ *
+ * @param Drupal\Node\NodeInterface $node
+ *   Node object.
+ *
+ * @return bool
+ *   Returns TRUE if Enabled, else False.
+ */
+function perls_learner_comments_enabled(NodeInterface $node) {
+  $comments = $node->get('field_comments')->first()->getValue();
+  if (isset($comments['status']) && $comments['status'] == '2') {
+    return TRUE;
+  }
+  return FALSE;
+}

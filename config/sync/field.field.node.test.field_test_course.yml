@@ -1,0 +1,21 @@
+uuid: 344581e0-7d9a-4600-9abd-2ea351ce5e56
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_test_course
+    - node.type.test
+id: node.test.field_test_course
+field_name: field_test_course
+entity_type: node
+bundle: test
+label: 'Test Course'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings: {  }
+field_type: entity_reference

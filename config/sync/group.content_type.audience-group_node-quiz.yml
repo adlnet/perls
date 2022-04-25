@@ -1,0 +1,19 @@
+uuid: d9a9bd1f-c2d7-4dd7-b35b-2a6821e80d09
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.audience
+    - node.type.quiz
+  module:
+    - gnode
+    - node
+id: audience-group_node-quiz
+label: 'Group: Group node (Quiz Item)'
+description: 'Adds <em class="placeholder">Quiz Item</em> content to groups both publicly and privately.'
+group_type: audience
+content_plugin: 'group_node:quiz'
+plugin_config:
+  group_cardinality: 0
+  entity_cardinality: 1
+  use_creation_wizard: false

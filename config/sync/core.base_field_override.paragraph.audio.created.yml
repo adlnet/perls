@@ -1,0 +1,20 @@
+uuid: 6f99a939-40ca-4cac-8124-937b7d22fc20
+langcode: en
+status: true
+dependencies:
+  config:
+    - paragraphs.paragraphs_type.audio
+_core:
+  default_config_hash: JbdJZW14r6kimHzq_vExicQJGYDkytVb__YTv7uaNrc
+id: paragraph.audio.created
+field_name: created
+entity_type: paragraph
+bundle: audio
+label: 'Authored on'
+description: 'The time that the Paragraph was created.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: created

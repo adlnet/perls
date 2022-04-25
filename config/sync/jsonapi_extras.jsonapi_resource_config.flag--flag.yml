@@ -1,0 +1,149 @@
+uuid: 07ba7a94-f921-4afb-9a86-2cfad441c52b
+langcode: en
+status: true
+dependencies:
+  module:
+    - flag
+id: flag--flag
+disabled: true
+path: flag/flag
+resourceType: flag--flag
+resourceFields:
+  uuid:
+    disabled: false
+    fieldName: uuid
+    publicName: uuid
+    enhancer:
+      id: ''
+  langcode:
+    disabled: false
+    fieldName: langcode
+    publicName: langcode
+    enhancer:
+      id: ''
+  status:
+    disabled: false
+    fieldName: status
+    publicName: status
+    enhancer:
+      id: ''
+  dependencies:
+    disabled: false
+    fieldName: dependencies
+    publicName: dependencies
+    enhancer:
+      id: ''
+  third_party_settings:
+    disabled: false
+    fieldName: third_party_settings
+    publicName: third_party_settings
+    enhancer:
+      id: ''
+  _core:
+    disabled: false
+    fieldName: _core
+    publicName: _core
+    enhancer:
+      id: ''
+  id:
+    disabled: false
+    fieldName: id
+    publicName: id
+    enhancer:
+      id: ''
+  label:
+    disabled: false
+    fieldName: label
+    publicName: label
+    enhancer:
+      id: ''
+  bundles:
+    disabled: false
+    fieldName: bundles
+    publicName: bundles
+    enhancer:
+      id: ''
+  entity_type:
+    disabled: false
+    fieldName: entity_type
+    publicName: entity_type
+    enhancer:
+      id: ''
+  global:
+    disabled: false
+    fieldName: global
+    publicName: global
+    enhancer:
+      id: ''
+  weight:
+    disabled: false
+    fieldName: weight
+    publicName: weight
+    enhancer:
+      id: ''
+  flag_short:
+    disabled: false
+    fieldName: flag_short
+    publicName: flag_short
+    enhancer:
+      id: ''
+  flag_long:
+    disabled: false
+    fieldName: flag_long
+    publicName: flag_long
+    enhancer:
+      id: ''
+  flag_message:
+    disabled: false
+    fieldName: flag_message
+    publicName: flag_message
+    enhancer:
+      id: ''
+  unflag_short:
+    disabled: false
+    fieldName: unflag_short
+    publicName: unflag_short
+    enhancer:
+      id: ''
+  unflag_long:
+    disabled: false
+    fieldName: unflag_long
+    publicName: unflag_long
+    enhancer:
+      id: ''
+  unflag_message:
+    disabled: false
+    fieldName: unflag_message
+    publicName: unflag_message
+    enhancer:
+      id: ''
+  unflag_denied_text:
+    disabled: false
+    fieldName: unflag_denied_text
+    publicName: unflag_denied_text
+    enhancer:
+      id: ''
+  flag_type:
+    disabled: false
+    fieldName: flag_type
+    publicName: flag_type
+    enhancer:
+      id: ''
+  link_type:
+    disabled: false
+    fieldName: link_type
+    publicName: link_type
+    enhancer:
+      id: ''
+  flagTypeConfig:
+    disabled: false
+    fieldName: flagTypeConfig
+    publicName: flagTypeConfig
+    enhancer:
+      id: ''
+  linkTypeConfig:
+    disabled: false
+    fieldName: linkTypeConfig
+    publicName: linkTypeConfig
+    enhancer:
+      id: ''

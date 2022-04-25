@@ -1,0 +1,8 @@
+name: 'Perls Course Completion Certificates'
+description: 'Adds course completion certificates to the system'
+type: module
+core_version_requirement: ^8.8 || ^9
+dependencies:
+  - float:badges
+  - drupal:textimage
+package: 'Custom'

@@ -1,0 +1,86 @@
+<?php
+
+/**
+ * @file
+ * Hooks of prompts module.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\webform\Entity\WebformSubmission;
+
+/**
+ * Implements hook_ENTITY_TYPE_update().
+ */
+function prompts_webform_submission_update(WebformSubmission $entity) {
+  $prompt_manager = \Drupal::service('plugin.manager.prompt');
+  $prompt_plugins = $prompt_manager->getDefinitions();
+  foreach ($prompt_plugins as $plugin_name => $plugin) {
+    // Save the new topics if the user's answer was yes.
+    if ($plugin['webform'] === $entity->getWebform()->id()) {
+      /** @var \Drupal\prompts\Prompt\PromptTypeInterface $plugin_object */
+      $plugin_object = $prompt_manager->createInstance($plugin_name);
+      if (!$entity->isLocked()) {
+        $plugin_object->actOnSubmission($entity);
+        $entity->setLocked(1);
+        $entity->save();
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_presave().
+ */
+function prompts_webform_submission_presave(WebformSubmission $entity) {
+  $prompt_manager = \Drupal::service('plugin.manager.prompt');
+  $prompt_plugins = $prompt_manager->getDefinitions();
+  foreach ($prompt_plugins as $plugin_name => $plugin) {
+    // Save the new topics if the user's answer was yes.
+    if ($plugin['webform'] === $entity->getWebform()->id()) {
+      \Drupal::service('cache_tags.invalidator')->invalidateTags(['prompts']);
+    }
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function prompts_webform_submission_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $form_object = $form_state->getFormObject();
+  $webform_submission = $form_object->getEntity();
+  $extra_attributes = [
+    'submission-uuid' => $webform_submission->uuid(),
+    'webform-id' => $webform_submission->getWebform()->id(),
+  ];
+
+  if ($webform_submission) {
+    if (isset($form['#attributes'])) {
+      $form['#attributes'] = array_merge($form['#attributes'], $extra_attributes);
+    }
+    else {
+      $form['#attributes'] = $extra_attributes;
+    }
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function prompts_theme($existing, $type, $theme, $path) {
+  return [
+    'prompt_block' => [
+      'variables' => [
+        'in_modal' => FALSE,
+        'prompts' => '',
+      ],
+    ],
+    'simple_banner' => [
+      'variables' => [
+        'modal_link' => '',
+        'title' => '',
+        'icon' => '',
+        'bg_color' => '',
+      ],
+    ],
+  ];
+}

@@ -1,0 +1,26 @@
+uuid: a126ea06-9b8d-4551-954a-afe1ed62da6f
+langcode: en
+status: true
+dependencies:
+  module:
+    - textimage
+third_party_settings:
+  textimage:
+    uri_scheme: public
+name: mobile_200x200
+label: 'Mobile (200x200)'
+effects:
+  4695480a-3081-4327-9683-54266db19856:
+    uuid: 4695480a-3081-4327-9683-54266db19856
+    id: image_scale_and_crop
+    weight: -10
+    data:
+      width: 200
+      height: 200
+      anchor: center-center
+  4263e1da-4a9e-4b90-b358-c532bc88e47a:
+    uuid: 4263e1da-4a9e-4b90-b358-c532bc88e47a
+    id: image_convert
+    weight: -9
+    data:
+      extension: jpeg

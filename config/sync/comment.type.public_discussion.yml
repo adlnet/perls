@@ -1,0 +1,8 @@
+uuid: 9709d722-1f50-43fd-a5a2-27a5c8f1a60a
+langcode: en
+status: true
+dependencies: {  }
+id: public_discussion
+label: 'Public discussion'
+target_entity_type_id: node
+description: ''

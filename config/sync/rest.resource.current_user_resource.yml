@@ -1,0 +1,18 @@
+uuid: b6522e94-f751-4747-831b-33b303e35029
+langcode: en
+status: true
+dependencies:
+  module:
+    - perls_api
+    - serialization
+    - simple_oauth
+id: current_user_resource
+plugin_id: current_user_resource
+granularity: resource
+configuration:
+  methods:
+    - GET
+  formats:
+    - json
+  authentication:
+    - oauth2

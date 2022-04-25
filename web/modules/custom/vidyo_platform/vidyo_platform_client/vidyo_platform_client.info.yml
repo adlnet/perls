@@ -1,0 +1,7 @@
+name: 'VidyoPlatform Client'
+type: module
+description: 'Provides a Web-based client for connecting to Vidyo.'
+core: 8.x
+package: 'Vidyo'
+dependencies:
+  - vidyo_platform

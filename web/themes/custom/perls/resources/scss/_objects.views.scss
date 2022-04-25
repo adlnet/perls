@@ -1,0 +1,546 @@
+/* ------------------------------------ *\
+    $VIEWS
+\* ------------------------------------ */
+
+.c-view__banner {
+  display: flex;
+  flex-direction: column;
+
+  h2 {
+    @include o-heading--l;
+  }
+
+  > *:first-child {
+    flex: 1;
+    order: 1;
+  }
+
+  > *:last-child:not(:first-child) {
+    order: 0;
+    margin-bottom: $space;
+
+    @include media(">medium") {
+      order: 1;
+      margin-bottom: 0;
+    }
+  }
+}
+
+.c-view__filters {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+  > * {
+    margin: $space $space 0 0;
+  }
+}
+
+.c-view__extra-title {
+  @include o-heading--l;
+}
+
+.c-view__header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+/**
+ * Enhanced dashboard sliders.
+ */
+.page-variant--new-dashboard {
+  .c-view {
+    .js-slick-slider {
+      .slick-list {
+        overflow: hidden;
+      }
+
+      li:not(.slick-slide),
+      .slick-slide {
+        padding: 0 $space-half;
+      }
+    }
+  }
+}
+
+/**
+ * 'Most recent' and 'Recent users' sliders.
+ */
+.c-view--recent-users,
+.c-view--most-recent-content,
+.c-view--most-recent-vocabulary {
+  padding: $space 0;
+  display: block;
+  position: relative;
+  overflow: hidden;
+
+  .c-view-display-id--manage_tests & {
+    margin-left: -10px;
+  }
+
+  .c-view__header p {
+    @include o-heading--l;
+  }
+
+  .js-slick-slider {
+    margin-left: 0;
+    margin-right: -$space;
+    padding-right: $space;
+
+    .slick-next {
+      right: $space-double;
+      transform: rotate(180deg) translateY(-70%);
+    }
+
+    .slick-prev {
+      transform: translateY(70%);
+    }
+
+    .slick-list {
+      padding: 0;
+      overflow: hidden;
+    }
+
+    ul:not(.slick-slider) {
+      padding-left: 0;
+      padding-right: 0;
+    }
+
+    li:not(.slick-slide),
+    .slick-slide {
+      padding: 0 $space-half;
+    }
+  }
+}
+
+.c-view-id--recommended_content {
+  .js-slick-slider .slick-track {
+    align-items: stretch;
+  }
+}
+
+.c-view--most-recent-content {
+  .views-exposed-form {
+    display: none;
+  }
+}
+
+.l-page--manage-courses-and-content-library-tags {
+  .c-view-display-id--most_recent_topics {
+    display: none;
+  }
+}
+
+.l-page--manage-courses-and-content-library-topics {
+  .c-view-display-id--most_recent_tags {
+    display: none;
+  }
+}
+
+.l-page--manage-courses-and-content-library-tags,
+.l-page--manage-courses-and-content-library-topics {
+  .c-view--most-recent-vocabulary {
+    .taxonomy-term--teaser {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 200px;
+      width: 100%;
+      padding: 20px;
+      background-color: $c-gray--light;
+      border-radius: $border-radius--card;
+      box-shadow: $box-shadow;
+      overflow: hidden;
+    }
+  }
+}
+
+.c-view--recent-users {
+  .js-slick-slider .slick-slide {
+    min-width: 330px;
+  }
+}
+
+/**
+ * Manage users view.
+ */
+.c-view--manage-users {
+  .c-view__banner {
+    flex-direction: column;
+    margin-right: -$space;
+
+    @include media(">xlarge") {
+      margin-right: -$space-double;
+    }
+
+
+    .c-view__filters {
+      margin-left: 0;
+      padding-right: $space;
+
+      @include media(">xlarge") {
+        padding-right: $space-double;
+      }
+    }
+  }
+}
+
+/**
+ * Manage content and vocabularies view.
+ */
+.c-view--manage-users,
+.c-view--manage-vocabularies,
+.c-view--manage-content {
+  .c-view__header {
+    > p {
+      margin-left: $space-half;
+    }
+
+    .slick-track {
+      align-items: flex-end;
+    }
+
+    .o-button--large {
+      align-self: flex-end;
+      margin-bottom: $space-double;
+    }
+  }
+}
+
+//
+// Resolves issue:
+// At "Content" >> "Learning Objects" page,
+// in view's header section, few too many create new buttons pushed the "most recent" carousel to way far off right,
+// to a point where it is unusable.
+// Resolution: Break carousel into new line until a specific screen width.
+.c-view-id--manage_content.c-view-display-id--page_4,
+.c-nav__push-notification-manage {
+  .c-view__header,
+  .c-menu {
+    @include media("<xxxxxlarge") {
+      flex-wrap: wrap;
+      display: flex;
+    }
+
+    .o-button--large {
+      width: 200px;
+    }
+  }
+}
+
+/**
+ * Corpus activity block
+ */
+.c-block-views-blockcorpus-activity-corpus-activity-long,
+.c-block-views-blockcorpus-activity-corpus-activity {
+  h2 {
+    @include o-heading--l;
+
+    margin-bottom: $space;
+  }
+}
+
+/**
+ * Corpus activity view
+ */
+.c-block-views-blockcorpus-activity-corpus-activity {
+  .c-view--corpus-activity {
+    padding: $space-and-half 0 ($space-double * 2);
+
+    .c-view__content {
+      white-space: nowrap;
+      overflow-x: scroll;
+      margin-right: -$space-double;
+
+      > .item-list {
+        display: inline-flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+        width: 310px; // to accomodate current text lengths for equal heights.
+        height: 170px;
+        white-space: normal;
+        margin-right: $space-half;
+        border-radius: $border-radius;
+        position: relative;
+
+        h3,
+        h3 a {
+          @include o-heading--l;
+
+          display: block;
+          width: 100%;
+          height: 100%;
+          margin-top: 0;
+          margin-bottom: 0;
+
+          span {
+            @include o-heading--xxl;
+
+            display: block;
+            clear: both;
+            margin-bottom: $space-half;
+          }
+        }
+
+        h3 {
+          padding: ($space-half + $space-quarter) $space;
+        }
+      }
+
+      ul {
+        display: none;
+      }
+
+      .views-field-title {
+        display: flex;
+        flex-direction: column-reverse;
+        justify-content: start;
+        align-items: flex-start;
+
+        .field-content { // Large number
+          @include o-heading--xxl;
+        }
+
+        .views-label-title {
+          font-size: $font-size-s;
+        }
+      }
+    }
+  }
+}
+
+.c-block-views-blockcorpus-activity-corpus-activity-long {
+  margin-top: $space;
+
+  .c-view--corpus-activity {
+    padding: $space-and-half 0 ($space-double * 2);
+
+    .c-view__content {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+
+      > .item-list {
+        display: inline-flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: flex-start;
+        white-space: normal;
+        margin: 0 $space-half $space-half 0;
+        padding: $space $space $space-half;
+        border-radius: $border-radius;
+        color: $c-white;
+        position: relative;
+
+        h3 {
+          margin-bottom: $space-half;
+
+          a {
+            @include o-heading--l;
+
+            &::after {
+              content: "";
+              display: block;
+              position: absolute;
+              top: 0;
+              right: 0;
+              bottom: 0;
+              left: 0;
+            }
+          }
+        }
+      }
+
+      ul,
+      ul > li {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+    }
+  }
+}
+
+.c-view--corpus-activity {
+  .c-view__content {
+    > .item-list {
+      background-color: $c-secondary;
+      color: $c-white;
+
+      & a {
+        color: $c-white;
+      }
+
+      $color-map:
+        course $c-card--course,
+        tip_card $c-card--tip,
+        flash_card $c-card--flashcard,
+        quiz $c-card--quiz,
+        test $c-card--test,
+        podcast $c-card--podcast,
+        podcast_episode $c-card--podcast;
+
+      @each $selector, $color in $color-map {
+        &.#{$selector} {
+          background-color: $color;
+        }
+      }
+    }
+  }
+}
+
+.views-empty {
+  .cm-empty {
+    &-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      max-width: 350px;
+      margin: ($space-double * 2) auto;
+      text-align: center;
+    }
+
+    &-title {
+      font-family: $ff-font--secondary;
+      font-size: var(--font-size-l, $font-size-l);
+      line-height: 1.1;
+      color: $c-empty;
+      font-weight: 600;
+      margin-bottom: $space-half;
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+
+      @mixin add-icon-gray($icon-name, $icon-width, $icon-height) {
+        &::before {
+          content: "";
+          display: block;
+          width: $icon-width;
+          height: $icon-height;
+          min-height: $icon-height;
+          margin: $space auto;
+          background-image: url("../img/icons/icon-#{$icon-name}-gray.svg");
+          background-size: $icon-width $icon-height;
+          background-repeat: no-repeat;
+          background-position: center;
+        }
+      }
+
+      $icon-map:
+        image image $icon-medium $icon-medium,
+        dashboard topics $icon-large $icon-large,
+        groups group $icon-large $icon-large,
+        users users $icon-large $icon-large,
+        course courses $icon-large $icon-large,
+        learning-objects learning-objects $icon-large $icon-large,
+        tip_card tip-cards $icon-large $icon-large,
+        flash_card flash-cards $icon-large $icon-large,
+        quiz quizzes $icon-large $icon-large,
+        tag tags $icon-xxlarge $icon-large,
+        topic topics $icon-large $icon-large,
+        test tests $icon-large $icon-large,
+        podcast podcasts $icon-large $icon-large;
+
+      @each $selector, $icon-name, $icon-width, $icon-height in $icon-map {
+        &.#{$selector} {
+          @include add-icon-gray($icon-name, $icon-width, $icon-height);
+        }
+      }
+    }
+
+    &-message {
+      @include p;
+
+      color: $c-empty;
+      margin-bottom: $space-and-half;
+    }
+  }
+
+  .o-button {
+    margin-bottom: $space;
+  }
+}
+
+.c-view--dashboard {
+  .c-view__extra-title {
+    display: none;
+  }
+}
+
+.c-view--stat-course-feedback {
+  td.views-field-operations .dropbutton-widget {
+    left: 0;
+    right: inherit;
+  }
+}
+
+.c-view__footer.u-spacing {
+  margin-top: $space;
+}
+
+.c-view--taxonomy-term {
+  .taxonomy-term--full {
+    h2 {
+      margin: $space-half 0;
+
+      a {
+        color: $c-content--foreground;
+      }
+    }
+  }
+
+  .vocabulary-tags {
+
+    h2 {
+      display: inline-block;
+    }
+
+    .content {
+      display: inline-block;
+    }
+
+    .c-field--name-name {
+      &::before {
+        content: '#';
+      }
+    }
+  }
+
+  .flag-following {
+    margin-left: 20px;
+  }
+}
+
+.c-block-views-blockgroup-index-my-groups,
+.c-view--group-topics .o-topic-row{
+  padding-bottom: $space;
+  padding-top: $space-half;
+}
+
+.c-view--group-topics .c-view__banner h2 {
+  padding-bottom: $space;
+}
+
+.c-view--group-content-by-topic,
+.c-view--dashboard-tags,
+.c-block-views-blockhistory-recent-viewed-block,
+.c-block-views-blockgroup-index-my-groups-block,
+.c-block-views-blockbookmarks-favorites-block {
+  .c-view__more {
+    display: none;
+  }
+}
+.c-view-id--content_for_review_block.c-view-display-id--block_1 {
+  padding-top: $space-double;
+}
+
+.l-page--manage-push-notifications {
+  .push-notification-action-link {
+    width: 225px;
+  }
+}

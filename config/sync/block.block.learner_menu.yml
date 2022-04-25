@@ -1,0 +1,33 @@
+uuid: b2c602eb-7820-468a-ab34-bb79d20618e4
+langcode: en
+status: true
+dependencies:
+  config:
+    - system.menu.learner
+  module:
+    - system
+    - user
+  theme:
+    - perls_learner
+id: learner_menu
+theme: perls_learner
+region: header_top
+weight: -6
+provider: null
+plugin: 'system_menu_block:learner'
+settings:
+  id: 'system_menu_block:learner'
+  label: Learner
+  label_display: visible
+  provider: system
+  level: 1
+  depth: 1
+  expand_all_items: false
+visibility:
+  user_role:
+    id: user_role
+    negate: true
+    context_mapping:
+      user: '@user.current_user_context:current_user'
+    roles:
+      packager: packager

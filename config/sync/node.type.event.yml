@@ -1,0 +1,20 @@
+uuid: 816f1405-f601-474d-8f09-2a28c8e92701
+langcode: en
+status: true
+dependencies:
+  module:
+    - menu_ui
+    - node_title_help_text
+third_party_settings:
+  menu_ui:
+    available_menus: {  }
+    parent: ''
+  node_title_help_text:
+    title_help: 'A good title is short and representative of the article. Avoid jargon and acronyms when possible.'
+name: Event
+type: event
+description: 'Use an event to schedule a virtual event (such as a webinar or conference call) or promotion of selected content.'
+help: ''
+new_revision: true
+preview_mode: 1
+display_submitted: true

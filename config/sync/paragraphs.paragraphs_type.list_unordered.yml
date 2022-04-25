@@ -1,0 +1,12 @@
+uuid: 7d459b06-a0c8-45f4-84b8-ef5a44c22642
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: h9fpcrQBjsX-asrAcPwOm5zguciXzyj2aJPA_y_74pE
+id: list_unordered
+label: 'Bullet list'
+icon_uuid: null
+icon_default: null
+description: 'Add a bulleted list of items'
+behavior_plugins: {  }

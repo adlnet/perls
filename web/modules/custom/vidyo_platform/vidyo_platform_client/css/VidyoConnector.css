@@ -1,0 +1,730 @@
+:root {
+  --vidyo-space: 30px;
+}
+
+.vidyo-client {
+  padding-top: 0;
+  position: static;
+}
+
+#vidyoConnector {
+  height: 100%;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+#vidyoConnector :root {
+  --max-z-index: 2147483647;
+}
+
+#vidyoConnector html,
+#vidyoConnector body {
+  width: 100%;
+  height: 100%;
+  font-family: "robotolight", "Open Sans", "Helvetica", "Arial", sans-serif;
+}
+#vidyoConnector #options {
+  position: absolute;
+  bottom: calc(2 * var(--vidyo-space));
+  width: 350px;
+  padding: var(--vidyo-space) var(--vidyo-space) 0;
+  text-align: center;
+  z-index: 99;
+  overflow-y: auto;
+  overflow-x: hidden;
+  transition: all 0.5s;
+  -moz-transition: all 0.5s;
+  -webkit-transition: all 0.5s;
+  white-space: nowrap;
+  z-index: 100;
+  left: 0;
+  top: 0;
+  background: white;
+  opacity: 1;
+}
+
+@media only screen and (max-width: 480px) {
+  #vidyoConnector #options {
+    width: 100%;
+  }
+}
+
+#vidyoConnector #options.vidyo-hide-options {
+  width: 0;
+  left: calc(-2 * var(--vidyo-space));
+  opacity: 0;
+}
+
+#vidyoConnector #options #advancedSettings {
+  width: 80%;
+  margin: 2em auto 2em auto;
+  padding-right: 1em;
+}
+#vidyoConnector #options #advancedSettings p {
+  text-align: right;
+}
+#vidyoConnector #options #advancedSettings input,
+#vidyoConnector #options #advancedSettings label {
+  width: auto;
+}
+#vidyoConnector #options #advancedSettings input {
+  max-width: 50%;
+}
+#vidyoConnector #options #advancedSettings input[type=number] {
+  width: 4em;
+}
+#vidyoConnector #optionsVisibilityButton {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 101;
+  transition: left 0.5s;
+  -moz-transition: left 0.5s;
+  -webkit-transition: left 0.5s;
+}
+#vidyoConnector .renderer-container {
+  display: flex;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  bottom: 60px;
+  z-index: 99;
+  transition: left 0.5s;
+  -moz-transition: left 0.5s;
+  -webkit-transition: left 0.5s;
+}
+#vidyoConnector .renderer-container #offline-banner {
+  position: absolute;
+  width: 100%;
+  min-height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #bf0e00;
+  box-shadow: 0 0 10px 0 black;
+  box-sizing: border-box;
+  padding: 0 32px;
+  color: white;
+  z-index: 3;
+}
+#vidyoConnector .renderer-container #renderer {
+  width: 100%;
+  height: 100%;
+  background-color: #2f2f2f;
+}
+#vidyoConnector .renderer-container .lobby-room-overlay {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.85);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  color: white;
+  z-index: 1;
+}
+#vidyoConnector .renderer-container .lobby-room-overlay span {
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 100;
+}
+#vidyoConnector .renderer-container .lobby-room-overlay span:nth-child(1) {
+  margin-bottom: 32px;
+  font-size: 18pt;
+  color: white;
+}
+#vidyoConnector .renderer-container .lobby-room-overlay span:nth-child(2) {
+  margin-bottom: 20px;
+  font-size: 15pt;
+}
+#vidyoConnector #helper {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  background: white;
+  color: #5d5d5d;
+  font-weight: 300;
+}
+#vidyoConnector #helper table {
+  max-width: 1200px;
+  height: 100%;
+  margin: auto;
+}
+#vidyoConnector #helper td {
+  vertical-align: middle;
+  text-align: center;
+  width: 800px;
+  padding: 10px;
+}
+#vidyoConnector #helper img {
+  vertical-align: middle;
+}
+#vidyoConnector .helperCheck {
+  vertical-align: middle;
+  text-align: left;
+  padding: 10px;
+}
+#vidyoConnector .helperHeader,
+#vidyoConnector .helperFooter {
+  padding: var(--vidyo-space) 0px;
+}
+#vidyoConnector #helperText {
+  font-size: 36px;
+}
+#vidyoConnector #helperText p {
+  font-size: 16px;
+}
+#vidyoConnector .helperFooter a {
+  font-size: 18px;
+  text-align: center;
+  text-decoration: none;
+  background-color: #83c36d;
+  display: inline-block;
+  padding: 14px 0px 14px 0px;
+  color: white;
+  font-weight: normal;
+  width: 200px;
+  margin: auto;
+  border-radius: 5px;
+}
+#vidyoConnector #helper ul {
+  display: inline-block;
+  list-style-type: none;
+}
+#vidyoConnector .toolbar {
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
+  height: 60px;
+  text-align: center;
+  display: grid;
+  grid-template-columns: auto max-content auto;
+}
+#vidyoConnector #toolbarCenter > div {
+  display: flex;
+  justify-content: center;
+}
+#vidyoConnector .rendererWithOptions {
+  left: 350px;
+}
+#vidyoConnector .rendererFullScreen {
+  left: 0px;
+}
+#vidyoConnector .rendererFullScreenPermanent {
+  left: 0px;
+}
+#vidyoConnector .rendererWithChat {
+  right: 300px !important;
+}
+#vidyoConnector .rendererWithoutChat {
+  right: 0px;
+}
+#vidyoConnector .hidden {
+  display: none !important;
+}
+#vidyoConnector .hiddenPermanent {
+  display: none;
+}
+#vidyoConnector #error {
+  color: red;
+  font-size: 50%;
+}
+#vidyoConnector #message {
+  font-size: 50%;
+}
+#vidyoConnector #participantStatus {
+  color: white;
+  line-height: 60px;
+  margin: 0px 10px;
+  position: absolute;
+  left: 0px;
+}
+#vidyoConnector #connectionStatus {
+  color: white;
+  line-height: 20px;
+  margin: 0px 10px;
+  position: absolute;
+  right: 0px;
+  bottom: 10px;
+}
+#vidyoConnector #clientVersion {
+  color: white;
+  line-height: 10px;
+  margin: 0px 10px;
+  position: absolute;
+  right: 0px;
+  bottom: 3px;
+  font-size: 75%;
+}
+
+#vidyoConnector #options p {
+  text-align: left;
+  display: block;
+}
+
+#vidyoConnector #options p + p {
+  margin-top: 10px;
+}
+
+#vidyoConnector #options label {
+  display: block;
+  text-align: left;
+  font-size: 12px;
+}
+
+#vidyoConnector #options input {
+  display: inline-block;
+  width: 183px;
+  margin: 5px;
+  padding: 4px;
+}
+#vidyoConnector #options select {
+  display: inline-block;
+  width: 100%;
+  margin: 0 0 5px 0;
+  padding: 4px;
+}
+
+#vidyoConnector #monitorSharesSafari,
+#vidyoConnector #windowSharesSafari {
+  display: inline-block;
+}
+#vidyoConnector #monitorSharesSafari button,
+#vidyoConnector #windowSharesSafari button {
+  margin: 5px;
+  padding: 3px;
+}
+#vidyoConnector .logo {
+  margin: 20px;
+  width: 300px;
+}
+#vidyoConnector .optionsVisibiliyButtonElements {
+  width: var(--vidyo-space);
+  height: var(--vidyo-space);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: white;
+  border: 0;
+}
+#vidyoConnector .toolbarButton {
+  max-width: 60px;
+  width: 11vw;
+  height: 60px;
+  background-size: 32px auto;
+  background-size: clamp(21px, 70%, 32px);
+  background-repeat: no-repeat;
+  background-position: center;
+  border: 0;
+  margin: 0 2%;
+}
+
+#vidyoConnector #recorder,
+#vidyoConnector #webcasting {
+  display: none;
+}
+
+#vidyoConnector #recorder.recorderOn,
+#vidyoConnector #recorder.recorderPaused,
+#vidyoConnector #webcasting.webcastingOn {
+  display: block;
+}
+
+#vidyoConnector .recorderOn {
+  background-image: url(../images/icon_record.png);
+}
+#vidyoConnector .recorderPaused {
+  background-image: url(../images/pause.png);
+}
+#vidyoConnector .webcastingOn {
+  background-image: url(../images/icon_webcast.png);
+}
+#vidyoConnector .cameraOn {
+  background-image: url(../images/cameraOn.png);
+}
+#vidyoConnector .cameraOff {
+  background-image: url(../images/cameraOff.png);
+}
+#vidyoConnector .microphoneOn {
+  background-image: url(../images/microphoneOn.png);
+}
+#vidyoConnector .microphoneOff {
+  background-image: url(../images/microphoneOff.png);
+}
+#vidyoConnector .speakerOn {
+  background-image: url(../images/speakerOn.png);
+}
+#vidyoConnector .speakerOff {
+  background-image: url(../images/speakerOff.png);
+}
+#vidyoConnector .callStart {
+  background-image: url(../images/callStart.png);
+}
+#vidyoConnector .callEnd {
+  background-image: url(../images/callEnd.png);
+}
+#vidyoConnector .chaticon {
+  background-image: url(../images/chat.png);
+}
+#vidyoConnector .showOptions {
+  background-image: url(../images/showOptions.png);
+  background-size: var(--vidyo-space) auto;
+  left: 0px;
+}
+#vidyoConnector .hideOptions {
+  background-image: url(../images/hideOptions.png);
+  background-size: 15px auto;
+  left: 315px;
+}
+#vidyoConnector .raiseHand {
+  background-image: url(../images/icon_raise_hand.svg);
+  background-size: 54px;
+}
+#vidyoConnector .raiseHand.raised {
+  background-image: url(../images/icon_unraise_hand.svg);
+}
+#vidyoConnector .raiseHand[disabled] {
+  cursor: no-drop;
+}
+#vidyoConnector .pluginOverlay .videoContainer .frame video {
+  background-image: url(../images/default_profile.svg);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 33%;
+}
+#vidyoConnector .apiLogger {
+  margin-left: 5%;
+}
+#vidyoConnector .apiLogger li ul {
+  width: 76%;
+}
+#vidyoConnector .apiLogger li:hover {
+  background-color: #c3c8d1;
+}
+#vidyoConnector .apiLogger ul li:hover {
+  background-color: #e9e9e9;
+}
+#vidyoConnector .apiLogger,
+#vidyoConnector .apiLogger ul {
+  list-style-type: none;
+}
+#vidyoConnector .apiLogger ul {
+  display: none;
+  background-color: white;
+  position: absolute;
+}
+#vidyoConnector .apiLogger li:hover ul {
+  display: block;
+  box-shadow: inset 0px 0px 1px 1px #e9e9e9;
+}
+#vidyoConnector .apiLogger li div {
+  display: block;
+  padding: 6px;
+  text-align: right;
+}
+#vidyoConnector .apiLogger li div:after {
+  content: "▼";
+  color: #c8c8c8;
+  margin: 0px -2px 0px 15px;
+}
+#vidyoConnector #logLevels select {
+  width: 150px;
+}
+#vidyoConnector #log-popup {
+  display: none;
+  /* Hidden by default */
+  position: fixed;
+  /* Stay in place */
+  z-index: calc(var(--max-z-index) - 1);
+  padding-top: 100px;
+  /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%;
+  /* Full width */
+  height: 100%;
+  /* Full height */
+  overflow: auto;
+  /* Enable scroll if needed */
+  background-color: black;
+  /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.4);
+  /* Black w/ opacity */
+}
+#vidyoConnector .popup-content {
+  display: table;
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 50%;
+}
+#vidyoConnector .close {
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+#vidyoConnector .close:hover,
+#vidyoConnector .close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+#vidyoConnector #log-table th {
+  padding: 15px 0 15px 0;
+}
+#vidyoConnector #log-table {
+  margin: 0 auto;
+}
+#vidyoConnector #log-table td {
+  padding: 15px;
+  /* text-align: center; */
+}
+#vidyoConnector #log-table tr > td:first-child {
+  font-weight: bold;
+}
+#vidyoConnector #showLogs {
+  cursor: pointer;
+  padding-right: 5px;
+  text-align: right;
+}
+#vidyoConnector #showLogs:after {
+  content: "☰";
+  margin-left: 15px;
+}
+#vidyoConnector .container {
+  position: relative;
+  padding-left: 35px;
+  cursor: pointer;
+  font-size: 22px;
+  user-select: none;
+}
+#vidyoConnector .container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+#vidyoConnector .checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  background-color: #eee;
+}
+#vidyoConnector .container:hover input ~ .checkmark {
+  background-color: #ccc;
+}
+#vidyoConnector .container input:checked ~ .checkmark {
+  background-color: #2196f3;
+}
+#vidyoConnector .checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+#vidyoConnector .container input:checked ~ .checkmark:after {
+  display: block;
+}
+#vidyoConnector .container .checkmark:after {
+  left: 9px;
+  top: 5px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+#vidyoConnector th {
+  text-transform: capitalize;
+}
+#vidyoConnector th:first-child {
+  text-align: left;
+  padding-left: 15px !important;
+}
+#vidyoConnector .not-active {
+  pointer-events: none;
+  cursor: default;
+}
+#vidyoConnector .loader {
+  border: 5px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 5px solid #3498db;
+  width: 22px;
+  height: 22px;
+  margin: auto;
+  -webkit-animation: spin 2s linear infinite;
+  /* Safari */
+  animation: spin 2s linear infinite;
+}
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+#vidyoConnector .tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black;
+}
+#vidyoConnector .nodrop {
+  cursor: no-drop;
+}
+#vidyoConnector .tooltip .tooltiptext {
+  visibility: hidden;
+  width: 150px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  bottom: 115%;
+  left: 50%;
+  margin-left: -75px;
+  z-index: 100;
+}
+#vidyoConnector .tooltip .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: black transparent transparent transparent;
+}
+#vidyoConnector .tooltipvisible {
+  visibility: visible !important;
+}
+#vidyoConnector .tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+#vidyoConnector .raiseHand .tooltiptext,
+#vidyoConnector .raiseHand .tooltiptext.tooltip-raise-hand,
+#vidyoConnector .raiseHand .tooltiptext.tooltip-unraise-hand {
+  visibility: hidden;
+}
+#vidyoConnector .raiseHand:hover .tooltiptext.tooltip-raise-hand,
+#vidyoConnector .raiseHand.raised:hover .tooltiptext.tooltip-unraise-hand {
+  visibility: visible;
+}
+#vidyoConnector .indicators-container {
+  position: absolute;
+  display: none;
+  right: 10px;
+  z-index: 2;
+}
+#vidyoConnector .renderer-container.in-call .indicators-container {
+  display: flex;
+}
+#vidyoConnector .indicators-container * {
+  border-radius: 3px;
+  margin: 5px;
+}
+#vidyoConnector .indicators-container .indicator-icon {
+  width: 20px;
+  height: 20px;
+}
+#vidyoConnector .indicators-container .base-indicator {
+  width: 20px;
+  height: 22px;
+  background-color: #303030;
+  padding: 5px 7px;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  position: relative;
+  box-shadow: 0px 1px 5px 1px rgba(0, 0, 0, 0.3);
+}
+#vidyoConnector .indicators-container .base-tooltip {
+  width: 180px;
+  top: 133%;
+  right: -5px;
+  background-color: #e6e6e6;
+  position: absolute;
+  border-radius: 5px;
+  padding: 10px 15px;
+  font-weight: 100;
+  font-size: 11pt;
+  visibility: hidden;
+}
+#vidyoConnector .indicators-container .base-tooltip::after {
+  content: "";
+  position: absolute;
+  top: -20px;
+  right: 7px;
+  margin-left: -5px;
+  border-width: 10px;
+  border-style: solid;
+  border-color: transparent transparent #e6e6e6 transparent;
+}
+#vidyoConnector .conference-mode-indicators img {
+  height: 100%;
+  display: none;
+}
+#vidyoConnector .conference-mode-indicators .tooltip {
+  top: 133%;
+  right: -5px;
+}
+#vidyoConnector .conference-mode-indicators .conference-mode-indicator-presenter + .tooltip {
+  width: 105px;
+}
+#vidyoConnector .conference-mode-indicators .conference-mode-indicator-group + .tooltip {
+  width: 85px;
+}
+#vidyoConnector .conference-mode-indicators .indicator-icon:hover + .tooltip {
+  visibility: visible;
+}
+#vidyoConnector .dropped-tiles-indicator:hover .tooltip {
+  visibility: visible;
+}
+#vidyoConnector[data-conference-mode=lobby] .lobby-room-overlay,
+#vidyoConnector[data-conference-mode=group] .conference-mode-indicator-group,
+#vidyoConnector:not([data-conference-mode=group]) .conference-mode-indicator-presenter {
+  display: flex;
+}
+#vidyoConnector[data-conference-mode=lobby] .participantTabLink {
+  display: none;
+}
+@media only screen and (max-width: 690px) {
+  #vidyoConnector .toolbar {
+    grid-template-columns: none;
+  }
+  #vidyoConnector #toolbarLeft,
+  #vidyoConnector #toolbarRight {
+    display: none;
+  }
+}
+@media only screen and (max-device-width: 500px) {
+  #vidyoConnector #connectionStatus {
+    font-size: x-small;
+    margin-bottom: 20px;
+    width: 50%;
+    line-height: 10px;
+  }
+  #vidyoConnector #clientVersion {
+    font-size: x-small;
+    margin: 10px 10px;
+  }
+  #vidyoConnector .helperFooter a {
+    width: 100% !important;
+  }
+}

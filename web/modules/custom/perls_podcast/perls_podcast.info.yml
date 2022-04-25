@@ -1,0 +1,7 @@
+name: 'Perls podcast'
+description: 'Provides functionality for podcast and episode contents.'
+type: module
+core: 8.x
+package: "PERLS"
+dependencies:
+  - drupal:node

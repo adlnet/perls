@@ -1,0 +1,43 @@
+<?php
+
+/**
+ * @file
+ * Module related hooks.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\user_email_field\EmailDescription;
+
+/**
+ * Implements hook_form_FORM_BUILD_alter().
+ */
+function user_email_field_form_user_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if (isset($form['account']['mail'])) {
+    $form['account']['mail']['#description'] = EmailDescription::getEmailDescription();
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function user_email_field_form_user_admin_settings_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $form['email_field_description'] = [
+    '#type' => 'textarea',
+    '#title' => t('Email description'),
+    '#weight' => 1,
+    '#default_value' => EmailDescription::getEmailDescription(),
+  ];
+
+  $form['email']['#weight'] = 2;
+
+  $form['#submit'][] = 'user_email_field_user_settings_submit';
+}
+
+/**
+ * Custom submit function that save the extra settings.
+ */
+function user_email_field_user_settings_submit(array &$form, FormStateInterface $form_state) {
+  $config = \Drupal::configFactory()->getEditable('user.settings');
+  $config->set('email_description', $form_state->getValue('email_field_description'));
+  $config->save();
+}

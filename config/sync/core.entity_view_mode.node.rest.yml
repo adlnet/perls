@@ -1,0 +1,12 @@
+uuid: 859716d5-4a1a-459c-a6a0-decd6b98d924
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+_core:
+  default_config_hash: FdPrlTttR3e3qOyAvqTfcXr4TQEbAGtbyoT-0S0uU6c
+id: node.rest
+label: REST
+targetEntityType: node
+cache: true

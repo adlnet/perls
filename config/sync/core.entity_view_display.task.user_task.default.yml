@@ -1,0 +1,51 @@
+uuid: e817c086-dc92-468d-a19c-c7068e5b9649
+langcode: en
+status: true
+dependencies:
+  config:
+    - task.type.user_task
+  module:
+    - datetime
+id: task.user_task.default
+targetEntityType: task
+bundle: user_task
+mode: default
+content:
+  completion_date:
+    type: datetime_custom
+    label: hidden
+    settings:
+      timezone_override: ''
+      date_format: 'Y-m-d\TH:i:s'
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  flag_task_completed:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  name:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  weight:
+    type: number_integer
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    weight: 2
+    region: content
+hidden:
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  langcode: true
+  search_api_excerpt: true
+  user_id: true

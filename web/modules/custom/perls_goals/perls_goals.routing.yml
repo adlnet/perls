@@ -1,0 +1,7 @@
+perls_goals.settings:
+  path: '/admin/config/people/perls-goals/settings'
+  defaults:
+    _form: 'Drupal\perls_goals\Form\PerlsGoalsSettings'
+    _title: 'Perls goals settings'
+  requirements:
+    _permission: 'administer site configuration'

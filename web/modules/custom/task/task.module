@@ -1,0 +1,66 @@
+<?php
+
+/**
+ * @file
+ * Contains task.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function task_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the task module.
+    case 'help.page.task':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function task_theme() {
+  $theme = [];
+  $theme['task'] = [
+    'render element' => 'elements',
+    'file' => 'task.page.inc',
+    'template' => 'task',
+  ];
+  $theme['task_content_add_list'] = [
+    'render element' => 'content',
+    'variables' => ['content' => NULL],
+    'file' => 'task.page.inc',
+  ];
+  return $theme;
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function task_theme_suggestions_task(array $variables) {
+  $suggestions = [];
+  $entity = $variables['elements']['#task'];
+  $sanitized_view_mode = strtr($variables['elements']['#view_mode'], '.', '_');
+
+  $suggestions[] = 'task__' . $sanitized_view_mode;
+  $suggestions[] = 'task__' . $entity->bundle();
+  $suggestions[] = 'task__' . $entity->bundle() . '__' . $sanitized_view_mode;
+  $suggestions[] = 'task__' . $entity->id();
+  $suggestions[] = 'task__' . $entity->id() . '__' . $sanitized_view_mode;
+  return $suggestions;
+}
+
+/**
+ * Implements hook_entity_type_alter().
+ */
+function user_task_entity_type_alter(array &$entity_types) {
+  if (isset($entity_types['task'])) {
+    $entity_types['task']->addConstraint('TaskCountConstraint');
+  }
+}

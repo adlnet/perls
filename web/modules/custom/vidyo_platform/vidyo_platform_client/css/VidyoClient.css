@@ -1,0 +1,568 @@
+.vidyo-rendering-container {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  display: grid;
+  justify-items: stretch;
+  align-items: stretch;
+  grid-gap: 5px;
+}
+.vidyo-rendering-container .video-grid {
+  grid-area: video;
+}
+.vidyo-rendering-container .video-grid .popup-application {
+  display: none;
+}
+.vidyo-rendering-container .video-grid .video-wrapper {
+  background: #202020;
+}
+.vidyo-rendering-container .application-grid {
+  grid-area: application;
+}
+.vidyo-rendering-container .application-grid .video-wrapper {
+  background: black;
+}
+.vidyo-rendering-container .application-grid .video-placeholder {
+  display: none;
+}
+.vidyo-rendering-container .application-grid .video-container:not(.pinned-video) .popup-application {
+  bottom: 60px;
+  left: 60px;
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  z-index: 10;
+}
+.vidyo-rendering-container .flip-back-video {
+  transform: translate(-50%, -50%) scaleX(1) !important;
+}
+.vidyo-rendering-container.defaultWidthIsZero {
+  width: 100vw;
+}
+.vidyo-rendering-container.defaultHeightIsZero {
+  height: 100vh;
+}
+.vidyo-rendering-container * {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.vidyo-rendering-container .pin-participant {
+  cursor: pointer;
+  display: flex;
+  opacity: 0.5;
+}
+.vidyo-rendering-container .pin-participant:hover {
+  opacity: 0.8;
+}
+.vidyo-rendering-container .pin-participant img {
+  place-self: center;
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
+  transform: translateY(12%);
+}
+.vidyo-rendering-container .control-participant {
+  cursor: pointer;
+  display: flex;
+  opacity: 0.5;
+  margin-right: 3px;
+  justify-content: center;
+  align-items: center;
+}
+.vidyo-rendering-container .control-participant.hide {
+  display: none;
+}
+.vidyo-rendering-container .control-participant:hover {
+  opacity: 0.8;
+}
+.vidyo-rendering-container .fecc-controls {
+  width: 4vw;
+  height: 4vw;
+  min-width: 60px;
+  min-height: 60px;
+  position: absolute;
+  left: 10px;
+  bottom: 20px;
+  z-index: 11;
+}
+.vidyo-rendering-container .fecc-controls.hide {
+  display: none;
+}
+@media screen and (max-width: 450px), screen and (max-height: 450px) {
+  .vidyo-rendering-container .pinned-video .fecc-controls {
+    width: 100px;
+    height: 100px;
+  }
+}
+.vidyo-rendering-container .video-muted .pin-participant,
+.vidyo-rendering-container .local-track .pin-participant,
+.vidyo-rendering-container .application-type .pin-participant,
+.vidyo-rendering-container .video-muted .control-participant,
+.vidyo-rendering-container .local-track .control-participant,
+.vidyo-rendering-container .application-type .control-participant,
+.vidyo-rendering-container .video-muted .fecc-controls,
+.vidyo-rendering-container .local-track .fecc-controls,
+.vidyo-rendering-container .application-type .fecc-controls {
+  display: none;
+}
+.vidyo-rendering-container .media-grid {
+  height: 100%;
+  width: 100%;
+  display: grid;
+  justify-items: stretch;
+  align-items: stretch;
+  grid-gap: 5px;
+  user-select: none;
+  /*
+     * Assuming two tracks, one of which is local
+     *
+     *  +---------+
+     *  |         |
+     *  |      +--+
+     *  |      |  <-- local track
+     *  +------+--+
+     *
+     */
+}
+.vidyo-rendering-container .media-grid:empty {
+  display: none;
+}
+.vidyo-rendering-container .media-grid video {
+  background: transparent;
+}
+.vidyo-rendering-container .media-grid .video-muted video {
+  width: 100%;
+  z-index: -1;
+}
+.vidyo-rendering-container .media-grid .video-restricted video {
+  filter: blur(25px);
+}
+.vidyo-rendering-container .media-grid .stats-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  overflow-y: auto;
+  z-index: 10;
+}
+.vidyo-rendering-container .media-grid .stats-overlay.hide {
+  display: none;
+}
+.vidyo-rendering-container .media-grid .stats-overlay ul.statistics-list {
+  list-style-type: none;
+  padding: 0;
+}
+.vidyo-rendering-container .media-grid .stats-overlay ul.statistics-list li.statistics-line {
+  background: white;
+  display: inline;
+  padding: 0.1em;
+  opacity: 0.5;
+}
+.vidyo-rendering-container .media-grid .stats-overlay ul.statistics-list li.statistics-line:after {
+  content: '\A';
+  white-space: pre;
+}
+.vidyo-rendering-container .media-grid .stats-overlay ul.statistics-list li.statistics-line .statistics-key {
+  font-weight: bold;
+}
+.vidyo-rendering-container .media-grid .video-overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-rows: auto min-content;
+  pointer-events: none;
+  z-index: 1;
+}
+.vidyo-rendering-container .media-grid .video-overlay .video-control-views-wrapper {
+  position: relative;
+}
+.vidyo-rendering-container .media-grid .video-overlay .video-control-views-wrapper .tile-control-view {
+  pointer-events: all;
+}
+.vidyo-rendering-container .media-grid .video-overlay .video-display-name-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.vidyo-rendering-container .media-grid .video-overlay .video-display-name-wrapper .video-tile-controls {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  margin: 3px 3px 12px 6px;
+  align-items: center;
+  min-width: 23px;
+  pointer-events: all;
+  z-index: 2;
+}
+.vidyo-rendering-container .media-grid .video-overlay .video-display-name-wrapper .video-tile-controls[hidden] {
+  display: none;
+}
+.vidyo-rendering-container .media-grid .video-overlay .video-display-name-wrapper .video-tile-controls .tile-control {
+  justify-content: center;
+  align-items: center;
+  min-height: 22px;
+  min-width: 22px;
+  width: 1.65vw;
+  height: 1.65vw;
+  cursor: pointer;
+  opacity: 0.5;
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+}
+.vidyo-rendering-container .media-grid .video-overlay .video-display-name-wrapper .video-tile-controls .tile-control:hover {
+  opacity: 0.8;
+}
+.vidyo-rendering-container .media-grid .video-overlay .video-display-name-wrapper .video-display-name {
+  width: 100%;
+  justify-content: left;
+  word-break: break-all;
+  background: black;
+  color: white;
+  opacity: 0.25;
+  z-index: 1;
+}
+.vidyo-rendering-container .media-grid .video-overlay .video-display-name-wrapper .video-display-name span {
+  display: flex;
+  align-items: center;
+  min-height: 22pt;
+  font-size: 1.65vw;
+  margin: 3px 3% 12px 3px;
+  word-break: break-all;
+}
+.vidyo-rendering-container .media-grid .video-overlay .video-display-name-wrapper .video-display-name::before {
+  content: '';
+  width: 100px;
+  height: 100%;
+  position: absolute;
+  background-color: black;
+  transform: translate(-100%, 0px);
+}
+.vidyo-rendering-container .media-grid .video-overlay .video-display-name-wrapper .video-tile-controls[hidden] + .video-display-name {
+  margin-left: 32px;
+}
+.vidyo-rendering-container .media-grid .video-overlay .video-display-name-wrapper .volume-indicator {
+  position: absolute;
+  width: 100%;
+  height: 5px;
+  bottom: 5px;
+  padding: 0 3%;
+  padding-left: 35px;
+  z-index: 2;
+}
+.vidyo-rendering-container .media-grid.application-grid .video-container video {
+  max-width: 100%;
+  max-height: 100%;
+  height: 100%;
+  width: auto;
+}
+.vidyo-rendering-container .media-grid.video-grid .video-container.local-track video {
+  transform: translate(-50%, -50%) scaleX(-1);
+}
+.vidyo-rendering-container .media-grid.video-grid .video-container:not(.video-muted) div.video-placeholder {
+  display: none;
+}
+.vidyo-rendering-container .media-grid.video-grid .video-container.displayCropped:not(.video-muted).aspectRatioTooWide video {
+  object-fit: cover;
+  height: 100%;
+  width: auto;
+}
+.vidyo-rendering-container .media-grid.video-grid .video-container.displayCropped:not(.video-muted).aspectRatioTooHigh video {
+  object-fit: cover;
+  height: auto;
+  width: 100%;
+}
+.vidyo-rendering-container .media-grid.video-grid .video-container.displayCropped:not(.video-muted).aspectRatioInversed video {
+  object-fit: cover;
+  height: 100%;
+  width: auto;
+  margin-left: 0;
+}
+.vidyo-rendering-container .media-grid.video-grid .video-container.displayCropped:not(.video-muted) video.video-loading {
+  object-fit: contain;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  max-height: 100%;
+}
+.vidyo-rendering-container .media-grid.video-grid .video-container:not(.displayCropped) video,
+.vidyo-rendering-container .media-grid.video-grid .video-container.video-muted video {
+  object-fit: contain;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  max-height: 100%;
+}
+.vidyo-rendering-container .media-grid .video-container {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+  grid-row-end: span 1;
+  grid-column-end: span 2;
+}
+.vidyo-rendering-container .media-grid .video-container .video-placeholder {
+  width: 100%;
+  height: 100%;
+  background: #202020;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.vidyo-rendering-container .media-grid .video-container .video-placeholder .text {
+  height: 11rem;
+  width: 11rem;
+  border-radius: 50%;
+  font-size: 8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #202020;
+  background-color: grey;
+  font-weight: bold;
+}
+.vidyo-rendering-container .media-grid .video-container .video-wrapper {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+.vidyo-rendering-container .media-grid .video-container video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.vidyo-rendering-container .media-grid .video-container.audio-muted .volume-indicator {
+  display: none;
+}
+.vidyo-rendering-container .media-grid.picture-in-picture {
+  grid-gap: 0;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+}
+.vidyo-rendering-container .media-grid.picture-in-picture .video-container.remote-track {
+  grid-row-start: 1;
+  grid-column-start: 1;
+  grid-row-end: 6;
+  grid-column-end: 6;
+}
+.vidyo-rendering-container .media-grid.picture-in-picture .video-container.local-track {
+  z-index: 2;
+  font-size: 0.4em;
+  /* scale-down the height of the volume-indicator */
+  grid-row-start: 5;
+  grid-column-start: 5;
+  grid-row-end: 6;
+  grid-column-end: 6;
+  /* There isn't enough room to show stats on the preview screen */
+}
+.vidyo-rendering-container .media-grid.picture-in-picture .video-container.local-track video {
+  max-height: 100%;
+  width: auto;
+}
+.vidyo-rendering-container .media-grid.picture-in-picture .video-container.local-track .stats-overlay {
+  display: none;
+}
+.vidyo-rendering-container-custom {
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+.vidyo-rendering-container-custom .popup-application {
+  display: none;
+}
+.vidyo-rendering-container-custom .pin-participant {
+  display: none;
+}
+.vidyo-rendering-container-custom .control-participant {
+  cursor: pointer;
+  display: flex;
+  opacity: 0.5;
+  justify-content: center;
+  align-items: center;
+}
+.vidyo-rendering-container-custom .control-participant.hide {
+  display: none;
+}
+.vidyo-rendering-container-custom .control-participant:hover {
+  opacity: 0.8;
+}
+.vidyo-rendering-container-custom .fecc-controls {
+  width: 4vw;
+  height: 4vw;
+  min-width: 60px;
+  min-height: 60px;
+  position: absolute;
+  left: 10px;
+  bottom: 20px;
+  z-index: 11;
+}
+.vidyo-rendering-container-custom .fecc-controls.hide {
+  display: none;
+}
+.vidyo-rendering-container-custom .video-container {
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.vidyo-rendering-container-custom .video-container .video-wrapper-container {
+  width: 100%;
+  height: 100%;
+}
+.vidyo-rendering-container-custom .video-container .video-wrapper {
+  background: #202020;
+  height: 100%;
+  width: 100%;
+}
+.vidyo-rendering-container-custom .video-container.audio-muted .volume-indicator {
+  display: none;
+}
+.vidyo-rendering-container-custom .video-container:not(.video-muted) div.video-placeholder {
+  display: none;
+}
+.vidyo-rendering-container-custom .video-container.displayCropped video {
+  object-fit: cover;
+}
+.vidyo-rendering-container-custom .video-container video {
+  background: transparent;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 100%;
+  width: 100%;
+}
+.vidyo-rendering-container-custom .video-container .video-muted video {
+  width: 100%;
+  z-index: -1;
+}
+.vidyo-rendering-container-custom .video-container.video-restricted video {
+  filter: blur(25px);
+}
+.vidyo-rendering-container-custom .video-container .stats-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  overflow-y: auto;
+  z-index: 10;
+}
+.vidyo-rendering-container-custom .video-container .stats-overlay.hide {
+  display: none;
+}
+.vidyo-rendering-container-custom .video-container .stats-overlay ul.statistics-list {
+  list-style-type: none;
+  padding: 0;
+}
+.vidyo-rendering-container-custom .video-container .stats-overlay ul.statistics-list li.statistics-line {
+  background: white;
+  display: inline;
+  padding: 0.1em;
+  opacity: 0.5;
+}
+.vidyo-rendering-container-custom .video-container .stats-overlay ul.statistics-list li.statistics-line:after {
+  content: '\A';
+  white-space: pre;
+}
+.vidyo-rendering-container-custom .video-container .stats-overlay ul.statistics-list li.statistics-line .statistics-key {
+  font-weight: bold;
+}
+.vidyo-rendering-container-custom .video-container .video-overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-rows: auto min-content;
+  pointer-events: none;
+  z-index: 1;
+}
+.vidyo-rendering-container-custom .video-container .video-overlay .video-control-views-wrapper {
+  position: relative;
+}
+.vidyo-rendering-container-custom .video-container .video-overlay .video-control-views-wrapper .tile-control-view {
+  pointer-events: all;
+}
+.vidyo-rendering-container-custom .video-container .video-overlay .video-display-name-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.vidyo-rendering-container-custom .video-container .video-overlay .video-display-name-wrapper .video-tile-controls {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  margin: 3px 0px 12px 0px;
+  padding: 0 6px;
+  box-sizing: border-box;
+  align-items: center;
+  min-width: 3%;
+  pointer-events: all;
+  z-index: 3;
+}
+.vidyo-rendering-container-custom .video-container .video-overlay .video-display-name-wrapper .video-tile-controls[hidden] {
+  display: none;
+}
+.vidyo-rendering-container-custom .video-container .video-overlay .video-display-name-wrapper .video-tile-controls .tile-control {
+  justify-content: center;
+  align-items: center;
+  min-height: 22px;
+  min-width: 22px;
+  width: 1.65vw;
+  height: 1.65vw;
+  cursor: pointer;
+  opacity: 0.5;
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+}
+.vidyo-rendering-container-custom .video-container .video-overlay .video-display-name-wrapper .video-tile-controls .tile-control:hover {
+  opacity: 0.8;
+}
+.vidyo-rendering-container-custom .video-container .video-overlay .video-display-name-wrapper .video-display-name {
+  width: 100%;
+  justify-content: left;
+  word-break: break-all;
+  background: black;
+  color: white;
+  opacity: 0.25;
+  z-index: 2;
+}
+.vidyo-rendering-container-custom .video-container .video-overlay .video-display-name-wrapper .video-display-name span {
+  display: flex;
+  align-items: center;
+  min-height: 22pt;
+  font-size: 1.65vw;
+  margin: 3px 3% 12px 0px;
+  word-break: break-all;
+}
+.vidyo-rendering-container-custom .video-container .video-overlay .video-display-name-wrapper .video-display-name::before {
+  content: '';
+  width: 100px;
+  height: 100%;
+  position: absolute;
+  background-color: black;
+  transform: translate(-100%, 0px);
+}
+.vidyo-rendering-container-custom .video-container .video-overlay .video-display-name-wrapper .video-tile-controls[hidden] + .video-display-name span {
+  margin-left: 3%;
+}
+.vidyo-rendering-container-custom .video-container .video-overlay .video-display-name-wrapper .volume-indicator {
+  position: absolute;
+  width: 100%;
+  height: 5px;
+  bottom: 5px;
+  padding: 0 3%;
+  z-index: 2;
+}
+.vidyo-rendering-container-custom .flip-back-video {
+  transform: translate(-50%, -50%) scaleX(1) !important;
+}
+.vidyo-rendering-container-custom:not(.application-type) .video-container.local-track video {
+  transform: translate(-50%, -50%) scaleX(-1);
+}

@@ -1,0 +1,115 @@
+/* ------------------------------------ *\
+    $SPECIFIC TABLES
+\* ------------------------------------ */
+
+table {
+  .button {
+    @include o-link;
+  }
+
+  .tabledrag-hide {
+    text-align: center;
+  }
+
+  .paragraph-type {
+    @include o-heading--s;
+  }
+
+  tr:nth-child(odd) {
+    .paragraphs-description .paragraphs-content-wrapper::after {
+      background: linear-gradient(to right, rgba(0, 0, 0, 0) 0%, $table-row--background--odd 100%);
+    }
+  }
+}
+
+table.views-table,
+table.sticky-table,
+table.sticky-header,
+table.sticky-enabled {
+  th {
+    border-color: $c-white;
+  }
+}
+
+// Special table td cases on given fields.
+td.views-field-user-picture {
+  width: calc(50px + #{$space});
+
+  img {
+    width: 50px;
+    box-shadow: none;
+    margin: 0 auto;
+    display: block;
+  }
+}
+
+.views-field-type,
+.views-field-changed {
+  white-space: nowrap;
+}
+
+// Special table th cases on given fields.
+th.views-field-views-bulk-operations-bulk-form {
+  overflow: visible;
+  width: 25px;
+
+  input {
+    position: relative;
+    margin: 0;
+    float: none;
+  }
+}
+
+// Hides the show row weights
+.tabledrag-toggle-weight-wrapper {
+  display: none;
+}
+
+td.views-field-operations {
+  .dropbutton-widget {
+    right: 0;
+  }
+}
+
+.c-view--webform-submissions td.views-field-operations {
+  .dropbutton-widget {
+    left: 0;
+    right: auto;
+  }
+}
+
+table.webform-results-table {
+  tbody tr {
+    :nth-child(4),
+    :nth-child(5) {
+      white-space: normal;
+    }
+  }
+
+  .webform-dropbutton {
+    .dropbutton-wrapper {
+      margin-right: 20px;
+      padding-right: 100px;
+    }
+  }
+}
+
+tr.promoted {
+  border-left: solid 4px $c-secondary;
+}
+
+tr.unpublished {
+  border-left: solid 4px $c-gray;
+}
+
+td.views-field-counter {
+  word-break: normal;
+  text-align: center;
+
+  tr.sticky & {
+    background: url("../img/icons/icon-tack.svg") center no-repeat;
+    background-size: $icon-small $icon-small;
+    text-indent: -9999px;
+    width: $icon-small;
+  }
+}

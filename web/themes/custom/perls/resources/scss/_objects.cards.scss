@@ -1,0 +1,1216 @@
+/* ------------------------------------ *\
+    $CARDS
+\* ------------------------------------ */
+
+.c-node {
+  position: relative;
+  width: 100%;
+  word-wrap: break-word;
+  word-break: break-word;
+
+  &__actions {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+
+    &-edit {
+      margin-left: $space;
+    }
+  }
+
+  & &__byline {
+    margin-top: 0;
+  }
+
+  .c-node__content {
+    color: $c-content--foreground;
+  }
+}
+
+.c-card {
+  display: flex;
+  flex-direction: column;
+  border-radius: $border-radius--card;
+  box-shadow: $box-shadow;
+  position: relative;
+  overflow: hidden;
+  min-height: 250px;
+
+  &::after {
+    display: block;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: rgba($c-black, 0.1);
+    position: absolute;
+    top: 0;
+    left: -5px;
+    font-size: 100px;
+    line-height: 1;
+    white-space: pre;
+    font-family: $ff-font--secondary;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  &__header {
+    padding: $space;
+
+    .status {
+      float: right;
+      font-weight: bold;
+    }
+
+    h3 {
+      clear: both;
+      font-size: 1.25em;
+    }
+
+    h5 {
+      font-weight: normal;
+      text-transform: none;
+    }
+  }
+
+  &__title {
+    @include o-heading--l;
+    @include u-visible;
+
+    display: block;
+  }
+
+  &__content {
+    flex-grow: 1;
+    overflow: auto;
+    position: relative;
+    padding: $space;
+    z-index: 1;
+
+    a {
+      display: block;
+    }
+  }
+
+  &__footer {
+    padding: $space-half $space;
+    display: block;
+    border-bottom-left-radius: $border-radius--card;
+    border-bottom-right-radius: $border-radius--card;
+    font-size: var(--font-size-xs, $font-size-xs);
+    background-color: rgba($c-black, 0.3);
+    transform-style: preserve-3d;
+
+    .c-field--name-field-tags {
+      max-height: 36px;
+      overflow: hidden;
+    }
+  }
+
+  &__link {
+    flex-grow: 1;
+  }
+
+  /**
+   * Inline background image. If inline-background class added by "node--tile.html.twig".
+   */
+  &.inline-background {
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+
+    &::before {
+      height: 60%;
+      width: 100%;
+      background-image: linear-gradient(0, $c-tile-gradient 0%, #000000 100%);
+      position: absolute;
+      top: 0;
+      left: 0;
+      content: "";
+      display: block;
+      z-index: 0;
+    }
+
+    .c-card__footer {
+      position: relative;
+      background-color: rgba($c-black, 0.3);
+      overflow: hidden;
+
+      /* if backdrop support: very transparent and blurred */
+      @supports (-webkit-backdrop-filter: blur(30px)) or (backdrop-filter: blur(30px)) {
+        background-color: rgba($c-black, 0.3);
+        -webkit-backdrop-filter: blur(30px);
+        backdrop-filter: blur(30px);
+      }
+    }
+  }
+}
+
+.o-progress,
+.o-episode-count {
+  .c-node--tile--course &,
+  .c-node--tile--podcast & {
+    color: white;
+    z-index: 1;
+    text-align: center;
+    padding: $space $space + $space-half;
+    font-size: $font-size-s;
+    margin: auto 0 0;
+    z-index: 1;
+  }
+}
+
+.c-node--tile--course {
+  .inline-background {
+    &::after {
+      height: 100%;
+      width: 100%;
+      background-image: $c-course-gradient;
+      position: absolute;
+      top: 0;
+      left: 0;
+      content: "";
+      display: block;
+      z-index: 0;
+    }
+  }
+
+  .u-middle-block {
+    @extend .o-button-course-tile;
+  }
+}
+
+.c-node--tile--event {
+  .inline-background {
+    &::after {
+      height: 100%;
+      width: 100%;
+      background-image: $c-event-gradient;
+      position: absolute;
+      top: 0;
+      left: 0;
+      content: "";
+      display: block;
+      z-index: 0;
+    }
+  }
+}
+
+.c-node--tile--event,
+.c-node--card--event {
+  .u-middle-block {
+    @extend .o-button--event-button;
+  }
+}
+
+.c-node--tile--podcast {
+  .inline-background {
+    &::after {
+      height: 100%;
+      width: 100%;
+      background-image: $c-podcast-gradient;
+      position: absolute;
+      top: 0;
+      left: 0;
+      content: "";
+      display: block;
+      z-index: 0;
+    }
+  }
+}
+
+.c-node--podcast-episode,
+.c-node--tile--podcast-episode,
+.c-node--tile--podcast {
+  .u-middle-block {
+    @extend .o-button-course-podcast;
+  }
+}
+
+.c-node--tile--quiz {
+  .u-middle-block {
+    @extend .o-button--quiz;
+  }
+
+  &.c-node--quiz {
+    .c-card__title {
+      font-size: var(--font-size-l, $font-size-l);
+    }
+  }
+}
+
+.c-node--card .c-card__content {
+  margin-top: $space-double-half;
+}
+
+.c-node--card .c-node__content .recommendation-info-trigger {
+  display: none;
+}
+
+.c-card--more {
+  background: $c-button;
+  font-family: $ff-font--secondary;
+  font-size: var(--font-size-l, $font-size-l);
+  font-weight: 700;
+  width: 100%;
+
+  &:hover {
+    background: $c-button--hover;
+  }
+
+  .more-link {
+    height: 100%;
+    width: 100%;
+
+    a {
+      align-items: center;
+      color: $c-button--alt;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      justify-content: center;
+      transition: color 0.3s, transform 0.3s;
+      width: 100%;
+
+      &::before {
+        content: '•••';
+        font-size: 200%;
+        height: $space-double + $space-half;
+        margin-top: -$space;
+      }
+
+      &:hover {
+        color: $c-button--alt;
+        transform: scale(1.05);
+      }
+    }
+  }
+}
+
+.c-node--tile {
+  // Set line-height for clamp.js on tiles to prevent overflow clipping.
+  .c-node__content .c-card__title {
+    line-height: 1.3;
+  }
+
+  .c-card__footer {
+    background: none;
+    padding: 0;
+    font-size: var(--font-size-s, $font-size-s);
+    margin-top: $space-half;
+  }
+
+  .c-field--name-field-tags {
+    max-height: unset;
+
+    a {
+      color: $c-secondary;
+    }
+
+    a:hover {
+      color: $c-secondary--dark;
+    }
+  }
+
+  .c-card__link {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+  }
+
+  .flag.completed ~ .o-flag--bookmark ~ .recommendation-info {
+    top: $space-double + $space-half;
+  }
+
+  .c-node__content {
+    .recommendation-info-trigger {
+      display: none;
+    }
+  }
+
+  .recommendation-info {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    position: absolute;
+    top: $space-half;
+    left: $space;
+
+    &-trigger {
+      $recommendation-icon-white: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMC44NCAyMC44NCI+PGRlZnM+PHN0eWxlPi5jbHMtMXtmaWxsOiNmZmY7fTwvc3R5bGU+PC9kZWZzPjxnIGlkPSJMYXllcl8yIiBkYXRhLW5hbWU9IkxheWVyIDIiPjxnIGlkPSJMYXllcl8xLTIiIGRhdGEtbmFtZT0iTGF5ZXIgMSI+PHBhdGggY2xhc3M9ImNscy0xIiBkPSJNMTcuNzksMy4wNWExMC40MiwxMC40MiwwLDEsMCwzLjA1LDcuMzdBMTAuNDMsMTAuNDMsMCwwLDAsMTcuNzksMy4wNVpNMTAuNDIsMTlBOC41NSw4LjU1LDAsMSwxLDE5LDEwLjQyLDguNTQsOC41NCwwLDAsMSwxMC40MiwxOVoiLz48cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik0xMy4zNyw5LjExYTcuODEsNy44MSwwLDAsMS0xLjIsMS4xN2wtLjQyLjM3YS45MS45MSwwLDAsMC0uMzQuNzZjMCwuMzIsMCwuNjQsMCwxYS4yNi4yNiwwLDAsMS0uMjMuMjhoLS43OXYwSDkuNmEuMjMuMjMsMCwwLDEtLjI1LS4yMXYwYTgsOCwwLDAsMSwuMTUtMkExLjc3LDEuNzcsMCwwLDEsMTAsOS42MWMuMjEtLjIzLjQ0LS40Mi42Ni0uNjNzLjUtLjQ0Ljc1LS42NWEuODcuODcsMCwwLDAsLjE1LTEuMjIsMSwxLDAsMCwwLS4zNC0uMjYsMS40NSwxLjQ1LDAsMCwwLTIsLjU5LjU0LjU0LDAsMCwwLS4wNy4xM0EyLjkxLDIuOTEsMCwwLDAsOSw4YzAsLjE4LS4xNC4yNS0uMzIuMjJMNy4yMiw4QS4yNy4yNywwLDAsMSw3LDcuNzN2MEEzLjA3LDMuMDcsMCwwLDEsOS41LDVhNC4zNiw0LjM2LDAsMCwxLDIuNjIuMjQsMi44NSwyLjg1LDAsMCwxLDEuNTksMS42N0EyLjIyLDIuMjIsMCwwLDEsMTMuMzcsOS4xMVoiLz48cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik0xMS40NCwxNC45YTEsMSwwLDEsMS0xLTFBMSwxLDAsMCwxLDExLjQ0LDE0LjlaIi8+PC9nPjwvZz48L3N2Zz4=";
+      display: block;
+      width: $space + $space-quarter;
+      height: $space + $space-quarter;
+      cursor: pointer;
+      background: url($recommendation-icon-white) center center no-repeat;
+      background-size: $space + $space-quarter;
+      opacity: 0.5;
+      transition: opacity 0.25s $hard-ease-in;
+      z-index: 3;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+
+    &-content {
+      display: none;
+    }
+  }
+}
+
+.c-node--card,
+.c-node--teaser {
+  &,
+  a {
+    color: $c-white;
+    outline: 0;
+    display: block;
+
+    &:hover {
+      color: $c-white;
+    }
+  }
+
+  .perls-content-manager &,
+  .c-node--full--course & {
+    // When on the full course view, if the node content
+    // is _after_ (i.e. outside of) the card, then the text
+    // should be the body color.
+    .c-node__card + .c-node__content {
+      &,
+      a {
+        color: $c-content--foreground;
+      }
+    }
+  }
+}
+
+.c-node--tile,
+.c-node--card,
+.c-node--teaser {
+
+  .c-stack & {
+    &,
+    .c-card {
+      height: 100%;
+    }
+  }
+
+  .c-card {
+    background-color: $c-card;
+  }
+
+  .o-button--more::after {
+    background: transparent;
+  }
+
+  &--test {
+    .c-card {
+      background-color: $c-card--test;
+
+      &__title {
+        @include o-heading--m;
+      }
+    }
+
+    .o-button--more::after {
+      background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, $c-card--test 80%);
+    }
+  }
+
+  &--quiz {
+    .c-card {
+      background-color: $c-card--quiz;
+
+      &__title {
+        @include o-heading--m;
+      }
+    }
+
+    .o-button--more::after {
+      background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, $c-card--quiz 80%);
+    }
+  }
+
+  &--tip-card {
+    .c-card {
+      background-color: $c-card--tip;
+
+      &__title {
+        @include o-heading--l;
+      }
+    }
+
+    .o-button--more::after {
+      background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, $c-card--tip 80%);
+    }
+  }
+
+  &--flash-card,
+  .o-button--more {
+    .c-card {
+      background-color: $c-card--flashcard;
+
+      &__title {
+        @include o-heading--l;
+      }
+    }
+
+    .o-button--more::after {
+      background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, $c-card--flashcard 80%);
+    }
+  }
+
+  &--course {
+    .c-card {
+      background-color: $c-card--course;
+    }
+  }
+
+  &--podcast,
+  &--podcast-episode {
+    .c-card {
+      background-color: $c-card--podcast;
+    }
+  }
+
+  .c-field__label {
+    display: none;
+  }
+}
+
+.c-node--card .c-node__content,
+.c-node--tile .c-node__content {
+  color: $c-content--foreground;
+
+  a {
+    color: $c-content--foreground;
+  }
+}
+
+.c-node--tile--flash-card {
+  .u-middle-block {
+    @extend .o-button-flash-card;
+  }
+}
+
+.c-node--tile--tip-card {
+  .u-middle-block {
+    @extend .o-button--view-tip-button;
+  }
+}
+
+.c-node--card--test {
+  .flag.completed {
+    display: none;
+  }
+
+  .c-card--results {
+    background-color: $c-card--results;
+    color: $c-black;
+    height: 100%;
+
+    .feedback {
+      font-size: 1.25em;
+      margin: $space 0;
+    }
+
+    .feedback::before {
+      background: url(../img/icons/icon-results.svg) no-repeat;
+      background-size: 50px 70px;
+      content: '';
+      display: block;
+      margin-bottom: $space;
+      height: 70px;
+      width: 50px;
+    }
+
+    .c-card__footer {
+      background: none;
+    }
+  }
+}
+
+/**
+ * Node card
+ */
+.c-node--card {
+  .c-card {
+    &__content:first-child,
+    .o-flag--bookmark + .c-card__content {
+      padding: 70px $space $space-double;
+    }
+  }
+
+  &.has-toggle {
+    > * {
+      position: relative;
+    }
+
+    .c-node__content {
+      max-height: 500px;
+      overflow: hidden;
+
+      .o-button--more {
+        width: 50px;
+        height: 50px;
+        border-radius: 50px;
+        background-color: $c-secondary;
+        margin: 0 auto;
+        right: 0;
+
+        &::before {
+          background-position: center center;
+          height: 50px;
+        }
+
+        &::after {
+          display: none;
+        }
+      }
+    }
+
+    .c-node__card,
+    .c-card__content {
+      max-height: 100vh;
+      overflow: hidden;
+      justify-content: flex-start;
+    }
+
+    .c-card--back {
+      justify-content: flex-start;
+      min-height: 100vh;
+    }
+  }
+
+  &.has-toggle.this-is-active {
+    .c-node__card,
+    .c-card__content,
+    .c-card--back {
+      max-height: 100%;
+    }
+  }
+
+  .c-node__content,
+  .c-card__content {
+    &.this-is-active {
+      max-height: 100%;
+      overflow: visible;
+    }
+
+    .title--section {
+      font-size: 0;
+
+      > a,
+      > .c-field--name-field-card-front {
+        display: inline-block;
+        width: 90%;
+        vertical-align: top;
+      }
+    }
+  }
+
+  .recommendation-info {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    position: absolute;
+    top: $space-half;
+    left: $space;
+
+    &-trigger {
+      $recommendation-icon-white: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMC44NCAyMC44NCI+PGRlZnM+PHN0eWxlPi5jbHMtMXtmaWxsOiNmZmY7fTwvc3R5bGU+PC9kZWZzPjxnIGlkPSJMYXllcl8yIiBkYXRhLW5hbWU9IkxheWVyIDIiPjxnIGlkPSJMYXllcl8xLTIiIGRhdGEtbmFtZT0iTGF5ZXIgMSI+PHBhdGggY2xhc3M9ImNscy0xIiBkPSJNMTcuNzksMy4wNWExMC40MiwxMC40MiwwLDEsMCwzLjA1LDcuMzdBMTAuNDMsMTAuNDMsMCwwLDAsMTcuNzksMy4wNVpNMTAuNDIsMTlBOC41NSw4LjU1LDAsMSwxLDE5LDEwLjQyLDguNTQsOC41NCwwLDAsMSwxMC40MiwxOVoiLz48cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik0xMy4zNyw5LjExYTcuODEsNy44MSwwLDAsMS0xLjIsMS4xN2wtLjQyLjM3YS45MS45MSwwLDAsMC0uMzQuNzZjMCwuMzIsMCwuNjQsMCwxYS4yNi4yNiwwLDAsMS0uMjMuMjhoLS43OXYwSDkuNmEuMjMuMjMsMCwwLDEtLjI1LS4yMXYwYTgsOCwwLDAsMSwuMTUtMkExLjc3LDEuNzcsMCwwLDEsMTAsOS42MWMuMjEtLjIzLjQ0LS40Mi42Ni0uNjNzLjUtLjQ0Ljc1LS42NWEuODcuODcsMCwwLDAsLjE1LTEuMjIsMSwxLDAsMCwwLS4zNC0uMjYsMS40NSwxLjQ1LDAsMCwwLTIsLjU5LjU0LjU0LDAsMCwwLS4wNy4xM0EyLjkxLDIuOTEsMCwwLDAsOSw4YzAsLjE4LS4xNC4yNS0uMzIuMjJMNy4yMiw4QS4yNy4yNywwLDAsMSw3LDcuNzN2MEEzLjA3LDMuMDcsMCwwLDEsOS41LDVhNC4zNiw0LjM2LDAsMCwxLDIuNjIuMjQsMi44NSwyLjg1LDAsMCwxLDEuNTksMS42N0EyLjIyLDIuMjIsMCwwLDEsMTMuMzcsOS4xMVoiLz48cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik0xMS40NCwxNC45YTEsMSwwLDEsMS0xLTFBMSwxLDAsMCwxLDExLjQ0LDE0LjlaIi8+PC9nPjwvZz48L3N2Zz4=";
+      display: block;
+      width: $space + $space-quarter;
+      height: $space + $space-quarter;
+      cursor: pointer;
+      background: url($recommendation-icon-white) center center no-repeat;
+      background-size: $space + $space-quarter;
+      opacity: 0.8;
+      transition: opacity 0.25s $hard-ease-in;
+      z-index: 3;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+
+    &-content {
+      display: none;
+    }
+  }
+
+  .flag.completed + .o-flag--bookmark + .recommendation-info {
+    left: $space-and-half + $space-and-half;
+  }
+}
+
+.c-node--card--quiz .recommendation-info {
+  left: $space;
+}
+
+.quiz-in-test .c-node--card--quiz .recommendation-info {
+  display: none;
+}
+
+/**
+ * Node full
+ */
+.c-node--full {
+  > .c-node__header {
+    .c-card {
+      justify-content: flex-end;
+
+      a {
+        color: $c-white;
+      }
+    }
+  }
+
+  .c-card__footer {
+    .c-field--name-field-tags {
+      max-height: none;
+      overflow: visible;
+    }
+  }
+
+  .o-rich-text .o-button {
+    display: inline-block;
+    text-decoration: none;
+  }
+}
+
+/**
+ * Node teaser
+ */
+.c-node--teaser {
+  .c-card {
+    min-height: 200px;
+
+    &__title {
+      overflow: hidden;
+
+      span {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        -moz-line-clamp: 3;
+        -moz-box-orient: vertical;
+        overflow: hidden;
+        line-height: 1.2;
+      }
+    }
+
+    &__content {
+      max-height: 160px;
+    }
+
+    &__footer {
+      min-height: 40px;
+    }
+
+    &::after {
+      display: none;
+    }
+  }
+}
+
+/**
+ * Node card: flash card
+ */
+ $flash-card-transition: transform 1s ease 0s, opacity 0.25s ease 0.5s;
+.c-node--card--flash-card {
+  // 2000px fixes animation on extra long cards.
+  perspective: 2000px;
+
+  .c-card {
+    display: flex;
+    position: relative;
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: $flash-card-transition;
+
+    &.this-is-active {
+      transform: rotateY(180deg);
+
+      &::after {
+        opacity: 0;
+        visibility: hidden;
+      }
+
+      .c-card--front {
+        opacity: 0;
+        visibility: hidden;
+
+        & > * {
+          opacity: 0;
+          visibility: hidden;
+        }
+      }
+
+      .c-card--back {
+        opacity: 1;
+        visibility: visible;
+      }
+    }
+
+    &__content {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    &--front,
+    &--back {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      box-sizing: border-box;
+      transform: rotateY(0deg);
+      min-height: 300px;
+      transition: $flash-card-transition;
+    }
+
+    &--front {
+      position: relative;
+      opacity: 1;
+      visibility: visible;
+      backface-visibility: hidden;
+
+      .o-button--view {
+        margin-top: 50%;
+        margin-bottom: 50%;
+      }
+    }
+
+    &--back {
+      padding: ($space-double * 2) $space $space-double;
+      transform: rotateY(-180deg);
+      transition: $flash-card-transition;
+      opacity: 0;
+      visibility: hidden;
+      background-color: $c-card--flashcard;
+
+      // pulls the back of the card under the front.
+      // This way they can be the same height and be both relative.
+      // So parent item can calculate height relative to its biggest child.
+      margin-left: -100%;
+    }
+
+    &::after {
+      z-index: -1;
+      visibility: visible;
+      transition: all 1s ease;
+    }
+  }
+
+  .c-field--name-field-card-front p {
+    @include o-heading--l;
+  }
+}
+
+/**
+ * Node card: quiz
+ */
+.c-node--card--quiz {
+  color: $c-white;
+
+  a {
+    color: $c-white;
+  }
+
+  .c-card.this-is-active {
+    .o-flag,
+    .flag,
+    .c-card__title {
+      @include u-hidden;
+
+      transition-delay: 0.5s;
+    }
+
+    .c-quiz__option {
+      @include u-hidden;
+
+      pointer-events: none;
+      transition-delay: 0.5s;
+
+      &.this-is-active {
+        @include u-visible;
+
+        pointer-events: auto;
+
+        .c-quiz__answer {
+          display: flex;
+          overflow: visible;
+        }
+      }
+    }
+
+    .c-quiz__question {
+      @include u-hidden;
+
+      transition-delay: 0.5s;
+    }
+
+    .c-quiz__answer {
+      @include u-visible;
+
+      display: none;
+      transition-delay: 0.5s;
+    }
+  }
+
+  .c-card__footer {
+    display: none;
+
+    .top & {
+      display: block;
+    }
+  }
+}
+
+.slick-track .c-node--card--quiz .c-node__card.c-card {
+  height: calc(100% - 24px);
+}
+
+/**
+ * Node card: course
+ */
+
+.c-node--card--course {
+  .inline-background {
+    &::before {
+      background: none;
+    }
+  }
+
+  .c-card__content {
+    margin: 50px 0;
+  }
+
+  .title--section {
+    > h2 {
+      display: inline-block;
+      width: 90%;
+      vertical-align: top;
+    }
+  }
+
+  .o-progress {
+    margin: 0;
+
+    span {
+      padding: 0 $space-quarter;
+    }
+  }
+
+  .o-button {
+    margin-top: $space-double;
+    text-align: center;
+  }
+}
+
+
+/**
+ * User profile: card
+ */
+.c-user-profile--card {
+  width: 100%;
+
+  .c-card {
+    position: relative;
+    min-height: 200px;
+
+    &__content {
+      display: grid;
+      grid-template-rows: auto;
+      grid-column-gap: 0;
+      grid-template-columns: 4fr 5fr;
+      padding: 0;
+      min-height: inherit;
+      background-color: #efefef;
+
+      &__left {
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: cover;
+        border-radius: 0 0 100% 0;
+
+        // Default background if there is no picture.
+        background-color: $c-white;
+      }
+
+      &__right {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        text-align: right;
+        margin-left: -$space-and-half;
+
+        // Keep space (padding-bottom)for absolute positioned __footer.
+        padding: $space-half $space $space-double-half $space;
+      }
+    }
+
+    &__footer {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 2;
+      background-color: rgba($c-black, 0.6);
+      overflow: hidden;
+
+      /* if backdrop support: very transparent and blurred */
+      @supports (-webkit-backdrop-filter: blur(30px)) or (backdrop-filter: blur(30px)) {
+        background-color: rgba($c-black, 0.4);
+        -webkit-backdrop-filter: blur(30px);
+        backdrop-filter: blur(30px);
+      }
+    }
+  }
+
+  .c-user-profile__created {
+    font-family: $ff-font--secondary;
+    font-size: $font-size-xs;
+    font-weight: 600;
+    color: $c-white;
+
+    &__label {
+      margin-right: $space-half;
+    }
+  }
+
+  .c-user-profile__details {
+    &__user-name {
+      @include o-heading--m;
+
+      color: $c-secondary;
+      font-weight: 900;
+      text-transform: capitalize;
+      word-break: break-word;
+      word-wrap: break-word;
+    }
+
+    &__role {
+      font-size: $font-size-s;
+      font-family: $ff-font--secondary;
+      color: $c-black;
+      font-weight: 600;
+      text-transform: capitalize;
+    }
+  }
+
+  .c-user-profile__actions-edit {
+    color: $c-link;
+    display: inline-block;
+  }
+}
+
+/**
+ * Node 'course' full: description card
+ */
+.card--description {
+  background-color: $c-card--course;
+  color: $c-white;
+}
+
+/**
+ * Taxonomy term Card
+ */
+.taxonomy-vocabulary__card {
+  .c-card {
+    background-color: $c-taxonomy-term-card;
+  }
+
+  &.taxonomy-vocabulary--tags {
+    &.c-node--teaser {
+      .c-card:not(.inline-background) {
+        &::before {
+          height: 100%;
+          width: 100%;
+          background-image: $c-teaser-gradient;
+          position: absolute;
+          top: 0;
+          left: 0;
+          content: "";
+          display: block;
+          z-index: 0;
+        }
+
+        &::after {
+          content: "";
+          display: block;
+          position: absolute;
+          z-index: 0;
+          width: 84px;
+          height: 84px;
+          top: unset;
+          right: 30px;
+          bottom: 25px;
+          left: unset;
+          background: center no-repeat url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='UTF-8'%3F%3E%3Csvg id='SVGDoc' width='84' height='84' xmlns='http://www.w3.org/2000/svg' version='1.1' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:avocode='https://avocode.com/' viewBox='0 0 84 84'%3E%3Cdefs%3E%3C/defs%3E%3Cdesc%3EGenerated with Avocode.%3C/desc%3E%3Cg%3E%3Cg%3E%3Ctitle%3EPath 2%3C/title%3E%3Cpath d='M33.70634,32.68831h18.58791l-2.19127,18.62434h-18.58744zM81.48151,32.68831c0.61755,0.00037 1.20992,-0.24477 1.64659,-0.68146c0.43667,-0.43667 0.68183,-1.02904 0.68147,-1.64659l-0.00001,-9.31216c0.00037,-0.61755 -0.24479,-1.20991 -0.68147,-1.64659c-0.43667,-0.43667 -1.02903,-0.68183 -1.64658,-0.68146h-13.53909l1.88573,-16.02578c0.07767,-0.66059 -0.13108,-1.32282 -0.57351,-1.81947c-0.44243,-0.49665 -1.07625,-0.78022 -1.74138,-0.77909h-9.31218c-1.18121,0.00075 -2.17535,0.88453 -2.31442,2.05753l-1.94916,16.56682h-18.58768l1.88571,-16.02578c0.07766,-0.66058 -0.13108,-1.32282 -0.5735,-1.81947c-0.44243,-0.49664 -1.07625,-0.78021 -1.74138,-0.77909h-9.31218c-1.18121,0.00074 -2.17534,0.88453 -2.31443,2.05753l-1.94915,16.56682h-19.01685c-0.61755,-0.00037 -1.20991,0.24479 -1.64658,0.68146c-0.43667,0.43668 -0.68183,1.02904 -0.68146,1.64659v9.31216c-0.00037,0.61755 0.24479,1.20992 0.68146,1.64659c0.43667,0.43668 1.02904,0.68183 1.64659,0.68146h17.3736l-2.19127,18.62434h-15.18233c-0.61755,-0.00037 -1.20991,0.24478 -1.64659,0.68146c-0.43667,0.43668 -0.68183,1.02904 -0.68146,1.64658v9.31218c-0.00037,0.61755 0.24479,1.20992 0.68146,1.64658c0.43667,0.43668 1.02904,0.68183 1.64659,0.68147l13.53908,-0.00001l-1.88572,16.02345c-0.07722,0.66071 0.1316,1.32294 0.57387,1.81985c0.44226,0.4969 1.07581,0.78112 1.74102,0.78104h9.31217c1.18079,0.00034 2.17516,-0.88267 2.31443,-2.05521l1.94915,-16.56913h18.58768l-1.88571,16.02345c-0.07722,0.66071 0.1316,1.32294 0.57387,1.81985c0.44226,0.4969 1.0758,0.78114 1.74102,0.78105l9.31217,-0.00001c1.18079,0.00034 2.17516,-0.88267 2.31442,-2.05521l1.94916,-16.56913h19.01685c0.61755,0.00038 1.20992,-0.24478 1.64659,-0.68145c0.43667,-0.43668 0.68183,-1.02904 0.68147,-1.64659l-0.00001,-9.31218c0.00037,-0.61755 -0.24479,-1.20992 -0.68146,-1.64658c-0.43668,-0.43668 -1.02904,-0.68183 -1.64659,-0.68147l-17.37337,0.00001l2.19081,-18.62434z' fill='%238d8d8d' fill-opacity='1'%3E%3C/path%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Group card
+ */
+ .c-group--default {
+  width: 100%;
+  padding-bottom: $space-and-half;
+
+  .c-node__header .inline-background {
+    border-radius: 0;
+  }
+
+  .membership-link .button {
+    padding: $space-half $space-and-half;
+  }
+
+  .c-group__description .c-field--name-field-description {
+    max-height: unset;
+  }
+
+ }
+
+ .c-group--card {
+   width: 100%;
+
+   .membership-link {
+     position: absolute;
+     bottom: $space-quarter;
+     right: $space-quarter;
+
+     a {
+      font-size: 0;
+      width: 60px;
+      padding: 0;
+      background-color: unset;
+      line-height: 60px;
+      height: 60px;
+
+      &::before {
+        content: '+';
+        font-size: 60px;
+        font-weight: 700;
+        color: white;
+        display: block;
+        padding: 0 $space-half;
+      }
+
+     }
+   }
+   .c-card {
+    background-color: $c-gray;
+    width: 100%;
+
+     &::after {
+       @include media(">xlarge") {
+         font-size: 7vw;
+       }
+     }
+
+     &__content,
+     &__content:first-child {
+       display: flex;
+       flex-direction: column;
+       justify-content: flex-end;
+       padding: $space;
+       padding-top: $space;
+       margin-top: 0;
+       flex: 1;
+     }
+
+     &__title-link {
+       position: absolute;
+       top: 0;
+       left: 0;
+       display: flex;
+       align-items: flex-end;
+       justify-content: flex-start;
+       height: 100%;
+       padding: $space;
+     }
+
+     &__title {
+       overflow: hidden;
+
+       > .title-span {
+         display: -webkit-box;
+         -webkit-line-clamp: 5;
+         -webkit-box-orient: vertical;
+         -moz-line-clamp: 5;
+         -moz-box-orient: vertical;
+         overflow: hidden;
+         line-height: 1.2;
+       }
+     }
+   }
+   .c-group__description {
+    padding-left: 0;
+    padding-right: 0;
+  }
+ }
+
+ .c-block-views-blockgroup-index-my-groups {
+  .c-group--card {
+    .c-group__content {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      padding: 0;
+
+      .title--section {
+        width: 100%;
+        height: 100%;
+
+        > a {
+          width: 100%;
+          height: 100%;
+          padding: $space;
+        }
+
+      }
+
+    }
+    .c-group__description {
+      display: none;
+    }
+    .membership-link {
+      display: none;
+      a::before {
+        content: '–';
+      }
+    }
+  }
+}
+
+.c-group--card.group--info-card {
+  .membership-link {
+    width:100%;
+    height:100%;
+    bottom: 0;
+    right: 0;
+    z-index: 30;
+
+    a {
+      width: 100%;
+      height: 100%;
+
+      &::before {
+        position: absolute;
+        bottom: $space-quarter;
+        right: $space-quarter;
+      }
+    }
+  }
+}

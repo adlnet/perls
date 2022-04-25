@@ -1,0 +1,6 @@
+theme_switcher.settings:
+  title: Switch Page Theme
+  description: 'Manage theme for specific pages.'
+  parent: system.admin_config_system
+  route_name: theme_switcher.settings
+  weight: 10

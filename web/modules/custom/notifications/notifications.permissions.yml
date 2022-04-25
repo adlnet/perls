@@ -1,0 +1,6 @@
+administer push notifications:
+  title: 'Administer push notifications'
+  description: 'Allow to access the administration form to configure push notification entities.'
+send push notifications:
+  title: 'Send push notifications'
+  description: 'Allow user to send push notifications to all users'

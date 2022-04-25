@@ -1,0 +1,1616 @@
+From fc4e0982444f07b8b88f047b8969d890cb62b6d9 Mon Sep 17 00:00:00 2001
+From: Tim Plunkett <git@plnktt.com>
+Date: Mon, 29 Jun 2020 12:28:20 -0400
+Subject: [PATCH 1/7] First attempt
+
+---
+ .../layout_builder/layout_builder.info.yml    |  2 -
+ .../SectionStorage/DefaultsSectionStorage.php |  9 +--
+ .../Functional/LayoutBuilderAccessTest.php    |  1 +
+ .../LayoutBuilderSectionStorageTest.php       |  1 +
+ .../src/Functional/LayoutBuilderTest.php      |  1 +
+ .../LayoutBuilderThemeSuggestionsTest.php     | 11 +--
+ .../LayoutBuilderTranslationTest.php          | 23 ++----
+ .../Functional/Rest/LayoutRestTestBase.php    | 15 ++--
+ .../FunctionalJavascript/AjaxBlockTest.php    | 30 ++++----
+ .../FunctionalJavascript/BlockFilterTest.php  | 23 +++---
+ .../BlockFormMessagesTest.php                 | 19 +++--
+ .../ContentPreviewToggleTest.php              | 13 ++--
+ .../ContextualLinksTest.php                   | 16 ++---
+ .../InlineBlockPrivateFilesTest.php           | 20 ++----
+ .../FunctionalJavascript/InlineBlockTest.php  | 70 ++++++++++---------
+ .../ItemLayoutFieldBlockTest.php              | 13 ++--
+ .../LayoutBuilderDisableInteractionsTest.php  |  1 +
+ .../LayoutBuilderNestedFormUiTest.php         | 17 ++---
+ .../LayoutBuilderToolbarTest.php              |  1 +
+ .../LayoutBuilderUiTest.php                   |  4 ++
+ .../MoveBlockFormTest.php                     | 32 ++++-----
+ .../TestMultiWidthLayoutsTest.php             | 24 +++----
+ .../Functional/LayoutBuilderQuickEditTest.php | 11 ++-
+ .../LayoutBuilderQuickEditTest.php            |  1 +
+ 24 files changed, 159 insertions(+), 199 deletions(-)
+
+diff --git a/core/modules/layout_builder/layout_builder.info.yml b/core/modules/layout_builder/layout_builder.info.yml
+index ccf4e273d69..0a6e43ea3b2 100644
+--- a/core/modules/layout_builder/layout_builder.info.yml
++++ b/core/modules/layout_builder/layout_builder.info.yml
+@@ -6,7 +6,5 @@ version: VERSION
+ dependencies:
+   - drupal:layout_discovery
+   - drupal:contextual
+-  # @todo Discuss removing in https://www.drupal.org/project/drupal/issues/2935999.
+-  - drupal:field_ui
+   # @todo Discuss removing in https://www.drupal.org/project/drupal/issues/3003610.
+   - drupal:block
+diff --git a/core/modules/layout_builder/src/Plugin/SectionStorage/DefaultsSectionStorage.php b/core/modules/layout_builder/src/Plugin/SectionStorage/DefaultsSectionStorage.php
+index dc0f35707b4..355677a9406 100644
+--- a/core/modules/layout_builder/src/Plugin/SectionStorage/DefaultsSectionStorage.php
++++ b/core/modules/layout_builder/src/Plugin/SectionStorage/DefaultsSectionStorage.php
+@@ -14,7 +14,6 @@
+ use Drupal\Core\Plugin\Context\EntityContext;
+ use Drupal\Core\Session\AccountInterface;
+ use Drupal\Core\Url;
+-use Drupal\field_ui\FieldUI;
+ use Drupal\layout_builder\DefaultsSectionStorageInterface;
+ use Drupal\layout_builder\Entity\SampleEntityGeneratorInterface;
+ use Symfony\Component\DependencyInjection\ContainerInterface;
+@@ -136,9 +135,11 @@ public function getLayoutBuilderUrl($rel = 'view') {
+   protected function getRouteParameters() {
+     $display = $this->getDisplay();
+     $entity_type = $this->entityTypeManager->getDefinition($display->getTargetEntityTypeId());
+-    $route_parameters = FieldUI::getRouteBundleParameter($entity_type, $display->getTargetBundle());
+-    $route_parameters['view_mode_name'] = $display->getMode();
+-    return $route_parameters;
++    $bundle_parameter_key = $entity_type->getBundleEntityType() ?: 'bundle';
++    return [
++      $bundle_parameter_key => $display->getTargetBundle(),
++      'view_mode_name' => $display->getMode(),
++    ];
+   }
+ 
+   /**
+diff --git a/core/modules/layout_builder/tests/src/Functional/LayoutBuilderAccessTest.php b/core/modules/layout_builder/tests/src/Functional/LayoutBuilderAccessTest.php
+index dcf482eb8c3..fee21994c8c 100644
+--- a/core/modules/layout_builder/tests/src/Functional/LayoutBuilderAccessTest.php
++++ b/core/modules/layout_builder/tests/src/Functional/LayoutBuilderAccessTest.php
+@@ -18,6 +18,7 @@ class LayoutBuilderAccessTest extends BrowserTestBase {
+   protected static $modules = [
+     'layout_builder',
+     'block_test',
++    'field_ui',
+     'node',
+     'user',
+   ];
+diff --git a/core/modules/layout_builder/tests/src/Functional/LayoutBuilderSectionStorageTest.php b/core/modules/layout_builder/tests/src/Functional/LayoutBuilderSectionStorageTest.php
+index a008b63f9bb..a30d65dcf81 100644
+--- a/core/modules/layout_builder/tests/src/Functional/LayoutBuilderSectionStorageTest.php
++++ b/core/modules/layout_builder/tests/src/Functional/LayoutBuilderSectionStorageTest.php
+@@ -16,6 +16,7 @@ class LayoutBuilderSectionStorageTest extends BrowserTestBase {
+    */
+   protected static $modules = [
+     'layout_builder',
++    'field_ui',
+     'node',
+     'layout_builder_test',
+   ];
+diff --git a/core/modules/layout_builder/tests/src/Functional/LayoutBuilderTest.php b/core/modules/layout_builder/tests/src/Functional/LayoutBuilderTest.php
+index d4314d7ecbb..5afb950064b 100644
+--- a/core/modules/layout_builder/tests/src/Functional/LayoutBuilderTest.php
++++ b/core/modules/layout_builder/tests/src/Functional/LayoutBuilderTest.php
+@@ -19,6 +19,7 @@ class LayoutBuilderTest extends BrowserTestBase {
+    * {@inheritdoc}
+    */
+   protected static $modules = [
++    'field_ui',
+     'views',
+     'layout_builder',
+     'layout_builder_views_test',
+diff --git a/core/modules/layout_builder/tests/src/Functional/LayoutBuilderThemeSuggestionsTest.php b/core/modules/layout_builder/tests/src/Functional/LayoutBuilderThemeSuggestionsTest.php
+index 3c140db949f..16469f50de7 100644
+--- a/core/modules/layout_builder/tests/src/Functional/LayoutBuilderThemeSuggestionsTest.php
++++ b/core/modules/layout_builder/tests/src/Functional/LayoutBuilderThemeSuggestionsTest.php
+@@ -2,6 +2,7 @@
+ 
+ namespace Drupal\Tests\layout_builder\Functional;
+ 
++use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
+ use Drupal\Tests\BrowserTestBase;
+ 
+ /**
+@@ -35,6 +36,10 @@ protected function setUp(): void {
+       'type' => 'bundle_with_section_field',
+       'name' => 'Bundle with section field',
+     ]);
++    LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default')
++      ->enableLayoutBuilder()
++      ->setOverridable()
++      ->save();
+     $this->createNode([
+       'type' => 'bundle_with_section_field',
+       'title' => 'A node title',
+@@ -47,11 +52,7 @@ protected function setUp(): void {
+ 
+     $this->drupalLogin($this->drupalCreateUser([
+       'configure any layout',
+-      'administer node display',
+     ]));
+-
+-    $this->drupalGet('admin/structure/types/manage/bundle_with_section_field/display/default');
+-    $this->submitForm(['layout[enabled]' => TRUE], 'Save');
+   }
+ 
+   /**
+@@ -61,7 +62,7 @@ public function testLayoutListSuggestion() {
+     $page = $this->getSession()->getPage();
+     $assert_session = $this->assertSession();
+ 
+-    $this->drupalGet('admin/structure/types/manage/bundle_with_section_field/display/default/layout');
++    $this->drupalGet('node/1/layout');
+     $page->clickLink('Add section');
+     $assert_session->pageTextContains('layout_builder_theme_suggestions_test_preprocess_item_list__layouts');
+   }
+diff --git a/core/modules/layout_builder/tests/src/Functional/LayoutBuilderTranslationTest.php b/core/modules/layout_builder/tests/src/Functional/LayoutBuilderTranslationTest.php
+index a4873d5d7b6..df882876866 100644
+--- a/core/modules/layout_builder/tests/src/Functional/LayoutBuilderTranslationTest.php
++++ b/core/modules/layout_builder/tests/src/Functional/LayoutBuilderTranslationTest.php
+@@ -2,6 +2,7 @@
+ 
+ namespace Drupal\Tests\layout_builder\Functional;
+ 
++use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
+ use Drupal\Tests\content_translation\Functional\ContentTranslationTestBase;
+ use Drupal\Core\Entity\Entity\EntityViewDisplay;
+ use Drupal\Core\Url;
+@@ -122,15 +123,6 @@ public function testLayoutOverrideBeforeTranslation() {
+     $assert_session->pageTextContains('Access denied');
+   }
+ 
+-  /**
+-   * {@inheritdoc}
+-   */
+-  protected function getAdministratorPermissions() {
+-    $permissions = parent::getAdministratorPermissions();
+-    $permissions[] = 'administer entity_test_mul display';
+-    return $permissions;
+-  }
+-
+   /**
+    * {@inheritdoc}
+    */
+@@ -148,13 +140,6 @@ protected function getTranslatorPermissions() {
+   protected function setUpEntities() {
+     $this->drupalLogin($this->administrator);
+ 
+-    $field_ui_prefix = 'entity_test_mul/structure/entity_test_mul';
+-    // Allow overrides for the layout.
+-    $this->drupalGet("{$field_ui_prefix}/display/default");
+-    $this->submitForm(['layout[enabled]' => TRUE], 'Save');
+-    $this->drupalGet("{$field_ui_prefix}/display/default");
+-    $this->submitForm(['layout[allow_custom]' => TRUE], 'Save');
+-
+     // @todo The Layout Builder UI relies on local tasks; fix in
+     //   https://www.drupal.org/project/drupal/issues/2917777.
+     $this->drupalPlaceBlock('local_tasks_block');
+@@ -179,7 +164,11 @@ protected function setUpViewDisplay() {
+       'bundle' => $this->bundle,
+       'mode' => 'default',
+       'status' => TRUE,
+-    ])->setComponent($this->fieldName, ['type' => 'string'])->save();
++    ])
++      ->setComponent($this->fieldName, ['type' => 'string'])
++      ->enableLayoutBuilder()
++      ->setOverridable()
++      ->save();
+   }
+ 
+   /**
+diff --git a/core/modules/layout_builder/tests/src/Functional/Rest/LayoutRestTestBase.php b/core/modules/layout_builder/tests/src/Functional/Rest/LayoutRestTestBase.php
+index 37708448368..7198ad9b4d3 100644
+--- a/core/modules/layout_builder/tests/src/Functional/Rest/LayoutRestTestBase.php
++++ b/core/modules/layout_builder/tests/src/Functional/Rest/LayoutRestTestBase.php
+@@ -4,6 +4,7 @@
+ 
+ use Drupal\Component\Utility\NestedArray;
+ use Drupal\Core\Url;
++use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
+ use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
+ use Drupal\Tests\rest\Functional\ResourceTestBase;
+ use GuzzleHttp\RequestOptions;
+@@ -48,24 +49,18 @@ public function setUp() {
+     $assert_session = $this->assertSession();
+ 
+     $this->createContentType(['type' => 'bundle_with_section_field']);
++    LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default')
++      ->enableLayoutBuilder()
++      ->setOverridable()
++      ->save();
+ 
+     $this->drupalLogin($this->drupalCreateUser([
+       'configure any layout',
+-      'administer node display',
+-      'administer display modes',
+       'bypass node access',
+       'create bundle_with_section_field content',
+       'edit any bundle_with_section_field content',
+     ]));
+     $page = $this->getSession()->getPage();
+-    $field_ui_prefix = 'admin/structure/types/manage/bundle_with_section_field/display';
+-
+-    // Enable Layout Builder for the default view modes, and overrides.
+-    $this->drupalGet("$field_ui_prefix/default");
+-    $page->checkField('layout[enabled]');
+-    $page->pressButton('Save');
+-    $page->checkField('layout[allow_custom]');
+-    $page->pressButton('Save');
+ 
+     // Create a node.
+     $this->node = $this->createNode([
+diff --git a/core/modules/layout_builder/tests/src/FunctionalJavascript/AjaxBlockTest.php b/core/modules/layout_builder/tests/src/FunctionalJavascript/AjaxBlockTest.php
+index 5fbf7ac022e..d596dc500c1 100644
+--- a/core/modules/layout_builder/tests/src/FunctionalJavascript/AjaxBlockTest.php
++++ b/core/modules/layout_builder/tests/src/FunctionalJavascript/AjaxBlockTest.php
+@@ -3,6 +3,7 @@
+ namespace Drupal\Tests\layout_builder\FunctionalJavascript;
+ 
+ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
++use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
+ 
+ /**
+  * Ajax blocks tests.
+@@ -33,14 +34,19 @@ class AjaxBlockTest extends WebDriverTestBase {
+    */
+   protected function setUp(): void {
+     parent::setUp();
+-    $user = $this->drupalCreateUser([
++
++    // @todo The Layout Builder UI relies on local tasks; fix in
++    //   https://www.drupal.org/project/drupal/issues/2917777.
++    $this->drupalPlaceBlock('local_tasks_block');
++
++    $this->drupalLogin($this->drupalCreateUser([
+       'configure any layout',
+-      'administer node display',
+-      'administer node fields',
+-    ]);
+-    $user->save();
+-    $this->drupalLogin($user);
++    ]));
+     $this->createContentType(['type' => 'bundle_with_section_field']);
++    LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default')
++      ->enableLayoutBuilder()
++      ->setOverridable()
++      ->save();
+   }
+ 
+   /**
+@@ -49,8 +55,9 @@ protected function setUp(): void {
+   public function testAddAjaxBlock() {
+     $assert_session = $this->assertSession();
+     $page = $this->getSession()->getPage();
++
+     // Start by creating a node.
+-    $node = $this->createNode([
++    $this->createNode([
+       'type' => 'bundle_with_section_field',
+       'body' => [
+         [
+@@ -58,18 +65,13 @@ public function testAddAjaxBlock() {
+         ],
+       ],
+     ]);
+-    $node->save();
++
+     $this->drupalGet('node/1');
+     $assert_session->pageTextContains('The node body');
+     $assert_session->pageTextNotContains('Every word is like an unnecessary stain on silence and nothingness.');
+-    $field_ui_prefix = 'admin/structure/types/manage/bundle_with_section_field';
+ 
+     // From the manage display page, go to manage the layout.
+-    $this->drupalGet("{$field_ui_prefix}/display/default");
+-    $this->submitForm(['layout[enabled]' => TRUE], 'Save');
+-    $assert_session->linkExists('Manage layout');
+-    $this->clickLink('Manage layout');
+-    $assert_session->addressEquals("$field_ui_prefix/display/default/layout");
++    $this->clickLink('Layout');
+     // The body field is present.
+     $assert_session->elementExists('css', '.field--name-body');
+ 
+diff --git a/core/modules/layout_builder/tests/src/FunctionalJavascript/BlockFilterTest.php b/core/modules/layout_builder/tests/src/FunctionalJavascript/BlockFilterTest.php
+index d4402a79658..4474947a7ec 100644
+--- a/core/modules/layout_builder/tests/src/FunctionalJavascript/BlockFilterTest.php
++++ b/core/modules/layout_builder/tests/src/FunctionalJavascript/BlockFilterTest.php
+@@ -4,6 +4,7 @@
+ 
+ use Behat\Mink\Element\NodeElement;
+ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
++use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
+ 
+ /**
+  * Tests the JavaScript functionality of the block add filter.
+@@ -33,13 +34,16 @@ class BlockFilterTest extends WebDriverTestBase {
+    */
+   protected function setUp(): void {
+     parent::setUp();
+-    $user = $this->drupalCreateUser([
++
++    $this->drupalLogin($this->drupalCreateUser([
+       'configure any layout',
+-      'administer node display',
+-      'administer node fields',
+-    ]);
+-    $this->drupalLogin($user);
++    ]));
+     $this->createContentType(['type' => 'bundle_with_section_field']);
++    LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default')
++      ->enableLayoutBuilder()
++      ->setOverridable()
++      ->save();
++    $this->createNode(['type' => 'bundle_with_section_field']);
+   }
+ 
+   /**
+@@ -50,15 +54,8 @@ public function testBlockFilter() {
+     $session = $this->getSession();
+     $page = $session->getPage();
+ 
+-    // From the manage display page, go to manage the layout.
+-    $field_ui_prefix = 'admin/structure/types/manage/bundle_with_section_field';
+-    $this->drupalGet("{$field_ui_prefix}/display/default");
+-    $this->submitForm(['layout[enabled]' => TRUE], 'Save');
+-    $assert_session->linkExists('Manage layout');
+-    $this->clickLink('Manage layout');
+-    $assert_session->addressEquals("$field_ui_prefix/display/default/layout");
+-
+     // Open the block listing.
++    $this->drupalGet('node/1/layout');
+     $assert_session->linkExists('Add block');
+     $this->clickLink('Add block');
+     $assert_session->assertWaitOnAjaxRequest();
+diff --git a/core/modules/layout_builder/tests/src/FunctionalJavascript/BlockFormMessagesTest.php b/core/modules/layout_builder/tests/src/FunctionalJavascript/BlockFormMessagesTest.php
+index 54e7e4e9b43..5e8dbcb3b17 100644
+--- a/core/modules/layout_builder/tests/src/FunctionalJavascript/BlockFormMessagesTest.php
++++ b/core/modules/layout_builder/tests/src/FunctionalJavascript/BlockFormMessagesTest.php
+@@ -3,6 +3,7 @@
+ namespace Drupal\Tests\layout_builder\FunctionalJavascript;
+ 
+ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
++use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
+ use Drupal\Tests\contextual\FunctionalJavascript\ContextualLinkClickTrait;
+ 
+ /**
+@@ -35,6 +36,11 @@ class BlockFormMessagesTest extends WebDriverTestBase {
+   protected function setUp(): void {
+     parent::setUp();
+     $this->createContentType(['type' => 'bundle_with_section_field']);
++    LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default')
++      ->enableLayoutBuilder()
++      ->setOverridable()
++      ->save();
++    $this->createNode(['type' => 'bundle_with_section_field']);
+   }
+ 
+   /**
+@@ -50,15 +56,8 @@ public function testValidationMessage() {
+     $this->drupalLogin($this->drupalCreateUser([
+       'access contextual links',
+       'configure any layout',
+-      'administer node display',
+-      'administer node fields',
+     ]));
+-    $field_ui_prefix = 'admin/structure/types/manage/bundle_with_section_field';
+-    // Enable layout builder.
+-    $this->drupalGet($field_ui_prefix . '/display/default');
+-    $this->submitForm(['layout[enabled]' => TRUE], 'Save');
+-    $page->findLink('Manage layout')->click();
+-    $assert_session->addressEquals($field_ui_prefix . '/display/default/layout');
++    $this->drupalGet('node/1/layout');
+     $page->findLink('Add block')->click();
+     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '#drupal-off-canvas .block-categories'));
+     $page->findLink('Powered by Drupal')->click();
+@@ -75,10 +74,10 @@ public function testValidationMessage() {
+     $assert_session->assertWaitOnAjaxRequest();
+     $this->drupalGet($this->getUrl());
+     $page->findButton('Save layout')->click();
+-    $this->assertNotEmpty($assert_session->waitForElement('css', 'div:contains("The layout has been saved")'));
++    $this->assertNotEmpty($assert_session->waitForElement('css', 'div:contains("The layout override has been saved")'));
+ 
+     // Ensure that message are displayed when configuring an existing block.
+-    $this->drupalGet($field_ui_prefix . '/display/default/layout');
++    $this->drupalGet('node/1/layout');
+     $assert_session->assertWaitOnAjaxRequest();
+     $this->clickContextualLink($block_css_locator, 'Configure', TRUE);
+     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '#drupal-off-canvas [name="settings[label]"]'));
+diff --git a/core/modules/layout_builder/tests/src/FunctionalJavascript/ContentPreviewToggleTest.php b/core/modules/layout_builder/tests/src/FunctionalJavascript/ContentPreviewToggleTest.php
+index 0d472adc821..0505aae3c3a 100644
+--- a/core/modules/layout_builder/tests/src/FunctionalJavascript/ContentPreviewToggleTest.php
++++ b/core/modules/layout_builder/tests/src/FunctionalJavascript/ContentPreviewToggleTest.php
+@@ -3,6 +3,7 @@
+ namespace Drupal\Tests\layout_builder\FunctionalJavascript;
+ 
+ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
++use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
+ use Drupal\Tests\contextual\FunctionalJavascript\ContextualLinkClickTrait;
+ 
+ /**
+@@ -37,11 +38,13 @@ protected function setUp(): void {
+     parent::setUp();
+ 
+     $this->createContentType(['type' => 'bundle_for_this_particular_test']);
++    LayoutBuilderEntityViewDisplay::load('node.bundle_for_this_particular_test.default')
++      ->enableLayoutBuilder()
++      ->setOverridable()
++      ->save();
+ 
+     $this->drupalLogin($this->drupalCreateUser([
+       'configure any layout',
+-      'administer node display',
+-      'administer node fields',
+       'access contextual links',
+     ]));
+   }
+@@ -56,12 +59,6 @@ public function testContentPreviewToggle() {
+     $body_field_placeholder_label = '"Body" field';
+     $content_preview_body_text = 'I should only be visible if content preview is enabled.';
+ 
+-    $this->drupalGet('admin/structure/types/manage/bundle_for_this_particular_test/display/default');
+-    $this->submitForm([
+-      'layout[enabled]' => TRUE,
+-      'layout[allow_custom]' => TRUE,
+-    ], 'Save');
+-
+     $this->createNode([
+       'type' => 'bundle_for_this_particular_test',
+       'body' => [
+diff --git a/core/modules/layout_builder/tests/src/FunctionalJavascript/ContextualLinksTest.php b/core/modules/layout_builder/tests/src/FunctionalJavascript/ContextualLinksTest.php
+index 94872332337..3e7b91c108b 100644
+--- a/core/modules/layout_builder/tests/src/FunctionalJavascript/ContextualLinksTest.php
++++ b/core/modules/layout_builder/tests/src/FunctionalJavascript/ContextualLinksTest.php
+@@ -3,6 +3,7 @@
+ namespace Drupal\Tests\layout_builder\FunctionalJavascript;
+ 
+ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
++use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
+ use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
+ 
+ /**
+@@ -41,8 +42,6 @@ protected function setUp(): void {
+ 
+     $user = $this->drupalCreateUser([
+       'configure any layout',
+-      'administer node display',
+-      'administer node fields',
+       'access contextual links',
+       'administer nodes',
+       'bypass node access',
+@@ -51,6 +50,10 @@ protected function setUp(): void {
+     $user->save();
+     $this->drupalLogin($user);
+     $this->createContentType(['type' => 'bundle_with_section_field']);
++    LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default')
++      ->enableLayoutBuilder()
++      ->setOverridable()
++      ->save();
+ 
+     $this->createNode([
+       'type' => 'bundle_with_section_field',
+@@ -68,15 +71,6 @@ protected function setUp(): void {
+   public function testContextualLinks() {
+     $page = $this->getSession()->getPage();
+ 
+-    $field_ui_prefix = 'admin/structure/types/manage/bundle_with_section_field';
+-
+-    // Enable Layout Builder and overrides.
+-    $this->drupalGet("{$field_ui_prefix}/display/default");
+-    $this->submitForm([
+-      'layout[enabled]' => TRUE,
+-      'layout[allow_custom]' => TRUE,
+-    ], 'Save');
+-
+     $this->drupalGet('node/1/layout');
+ 
+     // Add a block that includes an entity contextual link.
+diff --git a/core/modules/layout_builder/tests/src/FunctionalJavascript/InlineBlockPrivateFilesTest.php b/core/modules/layout_builder/tests/src/FunctionalJavascript/InlineBlockPrivateFilesTest.php
+index 5727e9b8a40..032b5cb9959 100644
+--- a/core/modules/layout_builder/tests/src/FunctionalJavascript/InlineBlockPrivateFilesTest.php
++++ b/core/modules/layout_builder/tests/src/FunctionalJavascript/InlineBlockPrivateFilesTest.php
+@@ -4,6 +4,7 @@
+ 
+ use Drupal\file\Entity\File;
+ use Drupal\file\FileInterface;
++use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
+ use Drupal\node\Entity\Node;
+ use Drupal\node\Entity\NodeType;
+ use Drupal\Tests\file\Functional\FileFieldCreationTrait;
+@@ -62,21 +63,10 @@ protected function setUp(): void {
+    */
+   public function testPrivateFiles() {
+     $assert_session = $this->assertSession();
+-    $this->drupalLogin($this->drupalCreateUser([
+-      'access contextual links',
+-      'configure any layout',
+-      'administer node display',
+-      'administer node fields',
+-      'create and edit custom blocks',
+-    ]));
+-
+-    // Enable layout builder and overrides.
+-    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default');
+-    $this->submitForm([
+-      'layout[enabled]' => TRUE,
+-      'layout[allow_custom]' => TRUE,
+-    ], 'Save');
+-    $this->drupalLogout();
++    LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default')
++      ->enableLayoutBuilder()
++      ->setOverridable()
++      ->save();
+ 
+     // Log in as user you can only configure layouts and access content.
+     $this->drupalLogin($this->drupalCreateUser([
+diff --git a/core/modules/layout_builder/tests/src/FunctionalJavascript/InlineBlockTest.php b/core/modules/layout_builder/tests/src/FunctionalJavascript/InlineBlockTest.php
+index 773ad3a396a..b5c4dab47f0 100644
+--- a/core/modules/layout_builder/tests/src/FunctionalJavascript/InlineBlockTest.php
++++ b/core/modules/layout_builder/tests/src/FunctionalJavascript/InlineBlockTest.php
+@@ -17,6 +17,13 @@ class InlineBlockTest extends InlineBlockTestBase {
+    */
+   protected $defaultTheme = 'classy';
+ 
++  /**
++   * {@inheritdoc}
++   */
++  protected static $modules = [
++    'field_ui',
++  ];
++
+   /**
+    * Tests adding and editing of inline blocks.
+    */
+@@ -32,11 +39,12 @@ public function testInlineBlocks() {
+       'create and edit custom blocks',
+     ]));
+ 
+-    // Enable layout builder.
+-    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default');
+-    $this->submitForm(['layout[enabled]' => TRUE], 'Save');
+-    $this->clickLink('Manage layout');
+-    $assert_session->addressEquals(static::FIELD_UI_PREFIX . '/display/default/layout');
++    LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default')
++      ->enableLayoutBuilder()
++      ->setOverridable()
++      ->save();
++
++    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default/layout');
+     // Add a basic block with the body field set.
+     $this->addInlineBlockToLayout('Block title', 'The DEFAULT block body');
+     $this->assertSaveLayout();
+@@ -46,9 +54,6 @@ public function testInlineBlocks() {
+     $this->drupalGet('node/2');
+     $assert_session->pageTextContains('The DEFAULT block body');
+ 
+-    // Enable overrides.
+-    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default');
+-    $this->submitForm(['layout[allow_custom]' => TRUE], 'Save');
+     $this->drupalGet('node/1/layout');
+ 
+     // Confirm the block can be edited.
+@@ -116,11 +121,10 @@ public function testNoLayoutSave($operation, $no_save_button_text, $confirm_butt
+     $page = $this->getSession()->getPage();
+     $this->assertEmpty($this->blockStorage->loadMultiple(), 'No entity blocks exist');
+     // Enable layout builder and overrides.
+-    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default');
+-    $this->submitForm([
+-      'layout[enabled]' => TRUE,
+-      'layout[allow_custom]' => TRUE,
+-    ], 'Save');
++    LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default')
++      ->enableLayoutBuilder()
++      ->setOverridable()
++      ->save();
+ 
+     $this->drupalGet('node/1/layout');
+     $this->addInlineBlockToLayout('Block title', 'The block body');
+@@ -208,8 +212,10 @@ public function testInlineBlocksRevisioning() {
+       'create and edit custom blocks',
+     ]));
+     // Enable layout builder and overrides.
+-    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default');
+-    $this->submitForm(['layout[enabled]' => TRUE, 'layout[allow_custom]' => TRUE], 'Save');
++    LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default')
++      ->enableLayoutBuilder()
++      ->setOverridable()
++      ->save();
+     $this->drupalGet('node/1/layout');
+ 
+     // Add an inline block.
+@@ -368,12 +374,12 @@ public function testDeletion() {
+     $page = $this->getSession()->getPage();
+ 
+     // Enable layout builder.
+-    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default');
+-    $this->submitForm(['layout[enabled]' => TRUE], 'Save');
++    LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default')
++      ->enableLayoutBuilder()
++      ->setOverridable()
++      ->save();
+     // Add a block to default layout.
+-    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default');
+-    $this->clickLink('Manage layout');
+-    $assert_session->addressEquals(static::FIELD_UI_PREFIX . '/display/default/layout');
++    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default/layout');
+     $this->addInlineBlockToLayout('Block title', 'The DEFAULT block body');
+     $this->assertSaveLayout();
+ 
+@@ -386,10 +392,6 @@ public function testDeletion() {
+     $this->drupalGet('node/2');
+     $assert_session->pageTextContains('The DEFAULT block body');
+ 
+-    // Enable overrides.
+-    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default');
+-    $this->submitForm(['layout[allow_custom]' => TRUE], 'Save');
+-
+     // Ensure we have 2 copies of the block in node overrides.
+     $this->drupalGet('node/1/layout');
+     $this->assertSaveLayout();
+@@ -400,9 +402,7 @@ public function testDeletion() {
+     $node_2_block_id = $this->getLatestBlockEntityId();
+     $this->assertCount(3, $this->blockStorage->loadMultiple());
+ 
+-    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default');
+-    $this->clickLink('Manage layout');
+-    $assert_session->addressEquals(static::FIELD_UI_PREFIX . '/display/default/layout');
++    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default/layout');
+ 
+     $this->assertNotEmpty($this->blockStorage->load($default_block_id));
+     $this->assertNotEmpty($usage->getUsage($default_block_id));
+@@ -437,9 +437,7 @@ public function testDeletion() {
+     $this->assertCount(1, $this->blockStorage->loadMultiple());
+ 
+     // Add another block to the default.
+-    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default');
+-    $this->clickLink('Manage layout');
+-    $assert_session->addressEquals(static::FIELD_UI_PREFIX . '/display/default/layout');
++    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default/layout');
+     $this->addInlineBlockToLayout('Title 2', 'Body 2');
+     $this->assertSaveLayout();
+     $cron->run();
+@@ -489,8 +487,10 @@ public function testAccess() {
+     $assert_session = $this->assertSession();
+ 
+     // Enable layout builder and overrides.
+-    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default');
+-    $this->submitForm(['layout[enabled]' => TRUE, 'layout[allow_custom]' => TRUE], 'Save');
++    LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default')
++      ->enableLayoutBuilder()
++      ->setOverridable()
++      ->save();
+ 
+     // Ensure we have 2 copies of the block in node overrides.
+     $this->drupalGet('node/1/layout');
+@@ -539,8 +539,10 @@ public function testAddWorkFlow() {
+     ]));
+ 
+     // Enable layout builder and overrides.
+-    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default');
+-    $this->submitForm(['layout[enabled]' => TRUE, 'layout[allow_custom]' => TRUE], 'Save');
++    LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default')
++      ->enableLayoutBuilder()
++      ->setOverridable()
++      ->save();
+ 
+     $layout_default_path = 'admin/structure/types/manage/bundle_with_section_field/display/default/layout';
+     $this->drupalGet($layout_default_path);
+diff --git a/core/modules/layout_builder/tests/src/FunctionalJavascript/ItemLayoutFieldBlockTest.php b/core/modules/layout_builder/tests/src/FunctionalJavascript/ItemLayoutFieldBlockTest.php
+index 726cc31a2d4..eba608cdc18 100644
+--- a/core/modules/layout_builder/tests/src/FunctionalJavascript/ItemLayoutFieldBlockTest.php
++++ b/core/modules/layout_builder/tests/src/FunctionalJavascript/ItemLayoutFieldBlockTest.php
+@@ -3,6 +3,7 @@
+ namespace Drupal\Tests\layout_builder\FunctionalJavascript;
+ 
+ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
++use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
+ 
+ /**
+  * Field blocks tests for the override layout.
+@@ -32,12 +33,14 @@ protected function setUp(): void {
+ 
+     $this->drupalLogin($this->drupalCreateUser([
+       'configure any layout',
+-      'administer node display',
+-      'administer node fields',
+     ]));
+ 
+     // We need more then one content type for this test.
+     $this->createContentType(['type' => 'bundle_with_layout_overrides']);
++    LayoutBuilderEntityViewDisplay::load('node.bundle_with_layout_overrides.default')
++      ->enableLayoutBuilder()
++      ->setOverridable()
++      ->save();
+     $this->createContentType(['type' => 'filler_bundle']);
+   }
+ 
+@@ -48,12 +51,6 @@ public function testAddAjaxBlock() {
+     $assert_session = $this->assertSession();
+     $page = $this->getSession()->getPage();
+ 
+-    // Allow overrides for the layout.
+-    $this->drupalGet('admin/structure/types/manage/bundle_with_layout_overrides/display/default');
+-    $page->checkField('layout[enabled]');
+-    $page->checkField('layout[allow_custom]');
+-    $page->pressButton('Save');
+-
+     // Start by creating a node of type with layout overrides.
+     $node = $this->createNode([
+       'type' => 'bundle_with_layout_overrides',
+diff --git a/core/modules/layout_builder/tests/src/FunctionalJavascript/LayoutBuilderDisableInteractionsTest.php b/core/modules/layout_builder/tests/src/FunctionalJavascript/LayoutBuilderDisableInteractionsTest.php
+index e83099c1dbc..6962a9528dd 100644
+--- a/core/modules/layout_builder/tests/src/FunctionalJavascript/LayoutBuilderDisableInteractionsTest.php
++++ b/core/modules/layout_builder/tests/src/FunctionalJavascript/LayoutBuilderDisableInteractionsTest.php
+@@ -25,6 +25,7 @@ class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
+   protected static $modules = [
+     'block',
+     'block_content',
++    'field_ui',
+     'filter',
+     'filter_test',
+     'layout_builder',
+diff --git a/core/modules/layout_builder/tests/src/FunctionalJavascript/LayoutBuilderNestedFormUiTest.php b/core/modules/layout_builder/tests/src/FunctionalJavascript/LayoutBuilderNestedFormUiTest.php
+index aa073f12364..8178918828a 100644
+--- a/core/modules/layout_builder/tests/src/FunctionalJavascript/LayoutBuilderNestedFormUiTest.php
++++ b/core/modules/layout_builder/tests/src/FunctionalJavascript/LayoutBuilderNestedFormUiTest.php
+@@ -3,6 +3,7 @@
+ namespace Drupal\Tests\layout_builder\FunctionalJavascript;
+ 
+ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
++use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
+ 
+ /**
+  * Tests placing blocks containing forms in theLayout Builder UI.
+@@ -25,6 +26,7 @@ class LayoutBuilderNestedFormUiTest extends WebDriverTestBase {
+    */
+   protected static $modules = [
+     'block',
++    'field_ui',
+     'node',
+     'layout_builder',
+     'layout_builder_form_block_test',
+@@ -53,6 +55,10 @@ protected function setUp(): void {
+       'type' => 'bundle_with_section_field',
+       'name' => 'Bundle with section field',
+     ]);
++    LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default')
++      ->enableLayoutBuilder()
++      ->setOverridable()
++      ->save();
+     for ($i = 1; $i <= count(static::FORM_BLOCK_LABELS); $i++) {
+       $this->createNode([
+         'type' => 'bundle_with_section_field',
+@@ -70,11 +76,7 @@ public function testAddingFormBlocksToDefaults() {
+       'administer node display',
+     ]));
+ 
+-    // From the manage display page, enable Layout Builder.
+     $field_ui_prefix = 'admin/structure/types/manage/bundle_with_section_field';
+-    $this->drupalGet("$field_ui_prefix/display/default");
+-    $this->submitForm(['layout[enabled]' => TRUE], 'Save');
+-    $this->submitForm(['layout[allow_custom]' => TRUE], 'Save');
+ 
+     // Save the entity view display so that it can be reverted to later.
+     /** @var \Drupal\Core\Config\StorageInterface $active_config_storage */
+@@ -101,15 +103,8 @@ public function testAddingFormBlocksToDefaults() {
+   public function testAddingFormBlocksToOverrides() {
+     $this->drupalLogin($this->drupalCreateUser([
+       'configure any layout',
+-      'administer node display',
+     ]));
+ 
+-    // From the manage display page, enable Layout Builder.
+-    $field_ui_prefix = 'admin/structure/types/manage/bundle_with_section_field';
+-    $this->drupalGet("$field_ui_prefix/display/default");
+-    $this->submitForm(['layout[enabled]' => TRUE], 'Save');
+-    $this->submitForm(['layout[allow_custom]' => TRUE], 'Save');
+-
+     $expected_save_message = 'The layout override has been saved.';
+     $nid = 1;
+     foreach (static::FORM_BLOCK_LABELS as $label) {
+diff --git a/core/modules/layout_builder/tests/src/FunctionalJavascript/LayoutBuilderToolbarTest.php b/core/modules/layout_builder/tests/src/FunctionalJavascript/LayoutBuilderToolbarTest.php
+index 9cb41a4b420..2af74b31457 100644
+--- a/core/modules/layout_builder/tests/src/FunctionalJavascript/LayoutBuilderToolbarTest.php
++++ b/core/modules/layout_builder/tests/src/FunctionalJavascript/LayoutBuilderToolbarTest.php
+@@ -17,6 +17,7 @@ class LayoutBuilderToolbarTest extends WebDriverTestBase {
+   protected static $modules = [
+     'block',
+     'node',
++    'field_ui',
+     'layout_builder',
+     'node',
+     'toolbar',
+diff --git a/core/modules/layout_builder/tests/src/FunctionalJavascript/LayoutBuilderUiTest.php b/core/modules/layout_builder/tests/src/FunctionalJavascript/LayoutBuilderUiTest.php
+index 77af692cc51..47aee6c186b 100644
+--- a/core/modules/layout_builder/tests/src/FunctionalJavascript/LayoutBuilderUiTest.php
++++ b/core/modules/layout_builder/tests/src/FunctionalJavascript/LayoutBuilderUiTest.php
+@@ -22,9 +22,13 @@ class LayoutBuilderUiTest extends WebDriverTestBase {
+    */
+   const FIELD_UI_PREFIX = 'admin/structure/types/manage/bundle_with_section_field';
+ 
++  /**
++   * {@inheritdoc}
++   */
+   protected static $modules = [
+     'layout_builder',
+     'block',
++    'field_ui',
+     'node',
+     'block_content',
+     'contextual',
+diff --git a/core/modules/layout_builder/tests/src/FunctionalJavascript/MoveBlockFormTest.php b/core/modules/layout_builder/tests/src/FunctionalJavascript/MoveBlockFormTest.php
+index f7b302e7355..6eb6576304a 100644
+--- a/core/modules/layout_builder/tests/src/FunctionalJavascript/MoveBlockFormTest.php
++++ b/core/modules/layout_builder/tests/src/FunctionalJavascript/MoveBlockFormTest.php
+@@ -3,6 +3,7 @@
+ namespace Drupal\Tests\layout_builder\FunctionalJavascript;
+ 
+ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
++use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
+ use Drupal\Tests\contextual\FunctionalJavascript\ContextualLinkClickTrait;
+ 
+ /**
+@@ -14,13 +15,6 @@ class MoveBlockFormTest extends WebDriverTestBase {
+ 
+   use ContextualLinkClickTrait;
+ 
+-  /**
+-   * Path prefix for the field UI for the test bundle.
+-   *
+-   * @var string
+-   */
+-  const FIELD_UI_PREFIX = 'admin/structure/types/manage/bundle_with_section_field';
+-
+   /**
+    * {@inheritdoc}
+    */
+@@ -44,21 +38,25 @@ protected function setUp(): void {
+     $page = $this->getSession()->getPage();
+     $assert_session = $this->assertSession();
+ 
++    // @todo The Layout Builder UI relies on local tasks; fix in
++    //   https://www.drupal.org/project/drupal/issues/2917777.
++    $this->drupalPlaceBlock('local_tasks_block');
++
+     $this->createContentType(['type' => 'bundle_with_section_field']);
++    LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default')
++      ->enableLayoutBuilder()
++      ->setOverridable()
++      ->save();
++    $this->createNode([
++      'type' => 'bundle_with_section_field',
++    ]);
+ 
+     $this->drupalLogin($this->drupalCreateUser([
+       'configure any layout',
+-      'administer node display',
+-      'administer node fields',
+       'access contextual links',
+     ]));
+ 
+-    // Enable layout builder.
+-    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default');
+-    $this->submitForm(['layout[enabled]' => TRUE], 'Save');
+-    $page->clickLink('Manage layout');
+-    $assert_session->addressEquals(static::FIELD_UI_PREFIX . '/display/default/layout');
+-
++    $this->drupalGet('node/1/layout');
+     $expected_block_order = [
+       '.block-extra-field-blocknodebundle-with-section-fieldlinks',
+       '.block-field-blocknodebundle-with-section-fieldbody',
+@@ -108,7 +106,7 @@ public function testMoveBlock() {
+     ];
+     $this->assertRegionBlocksOrder(1, 'content', $expected_block_order);
+     $page->pressButton('Save layout');
+-    $page->clickLink('Manage layout');
++    $page->clickLink('Layout');
+     $this->assertRegionBlocksOrder(1, 'content', $expected_block_order);
+ 
+     // Move the body block into the first region above existing block.
+@@ -126,7 +124,7 @@ public function testMoveBlock() {
+     // Ensure the body block is no longer in the content region.
+     $this->assertRegionBlocksOrder(1, 'content', ['.block-extra-field-blocknodebundle-with-section-fieldlinks']);
+     $page->pressButton('Save layout');
+-    $page->clickLink('Manage layout');
++    $page->clickLink('Layout');
+     $this->assertRegionBlocksOrder(0, 'first', $expected_block_order);
+ 
+     // Move into the second region that has no existing blocks.
+diff --git a/core/modules/layout_builder/tests/src/FunctionalJavascript/TestMultiWidthLayoutsTest.php b/core/modules/layout_builder/tests/src/FunctionalJavascript/TestMultiWidthLayoutsTest.php
+index 9ec01e7cb0d..6ada06020ec 100644
+--- a/core/modules/layout_builder/tests/src/FunctionalJavascript/TestMultiWidthLayoutsTest.php
++++ b/core/modules/layout_builder/tests/src/FunctionalJavascript/TestMultiWidthLayoutsTest.php
+@@ -3,6 +3,7 @@
+ namespace Drupal\Tests\layout_builder\FunctionalJavascript;
+ 
+ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
++use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
+ 
+ /**
+  * Test the multi-width layout plugins.
+@@ -12,12 +13,8 @@
+ class TestMultiWidthLayoutsTest extends WebDriverTestBase {
+ 
+   /**
+-   * Path prefix for the field UI for the test bundle.
+-   *
+-   * @var string
++   * {@inheritdoc}
+    */
+-  const FIELD_UI_PREFIX = 'admin/structure/types/manage/bundle_with_section_field';
+-
+   protected static $modules = [
+     'layout_builder',
+     'block',
+@@ -36,11 +33,16 @@ protected function setUp(): void {
+     parent::setUp();
+ 
+     $this->createContentType(['type' => 'bundle_with_section_field']);
++    LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default')
++      ->enableLayoutBuilder()
++      ->setOverridable()
++      ->save();
+ 
++    $this->createNode([
++      'type' => 'bundle_with_section_field',
++    ]);
+     $this->drupalLogin($this->drupalCreateUser([
+       'configure any layout',
+-      'administer node display',
+-      'administer node fields',
+     ]));
+   }
+ 
+@@ -51,13 +53,7 @@ public function testWidthChange() {
+     $assert_session = $this->assertSession();
+     $page = $this->getSession()->getPage();
+ 
+-    // Enable layout builder.
+-    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default');
+-    $this->submitForm(['layout[enabled]' => TRUE], 'Save');
+-
+-    $this->clickLink('Manage layout');
+-    $assert_session->addressEquals(static::FIELD_UI_PREFIX . '/display/default/layout');
+-
++    $this->drupalGet('node/1/layout');
+     $width_options = [
+       [
+         'label' => 'Two column',
+diff --git a/core/modules/quickedit/tests/src/Functional/LayoutBuilderQuickEditTest.php b/core/modules/quickedit/tests/src/Functional/LayoutBuilderQuickEditTest.php
+index e9be41eb804..3c46248158e 100644
+--- a/core/modules/quickedit/tests/src/Functional/LayoutBuilderQuickEditTest.php
++++ b/core/modules/quickedit/tests/src/Functional/LayoutBuilderQuickEditTest.php
+@@ -2,6 +2,7 @@
+ 
+ namespace Drupal\Tests\quickedit\Functional;
+ 
++use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
+ use Drupal\Tests\BrowserTestBase;
+ 
+ /**
+@@ -39,6 +40,10 @@ protected function setUp(): void {
+     $this->createNode([
+       'type' => 'bundle_with_section_field',
+     ]);
++    LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default')
++      ->enableLayoutBuilder()
++      ->setOverridable()
++      ->save();
+   }
+ 
+   /**
+@@ -49,15 +54,9 @@ public function testPlaceFieldBlockFromDifferentEntityType() {
+ 
+     $this->drupalLogin($this->drupalCreateUser([
+       'configure any layout',
+-      'administer node display',
+       'access in-place editing',
+     ]));
+ 
+-    // From the manage display page, go to manage the layout.
+-    $this->drupalGet('admin/structure/types/manage/bundle_with_section_field/display/default');
+-    $this->submitForm(['layout[enabled]' => TRUE], 'Save');
+-    $this->submitForm(['layout[allow_custom]' => TRUE], 'Save');
+-
+     // Place a field block for a user entity field.
+     $this->drupalGet('node/1/layout');
+     $page->clickLink('Add block');
+diff --git a/core/modules/quickedit/tests/src/FunctionalJavascript/LayoutBuilderQuickEditTest.php b/core/modules/quickedit/tests/src/FunctionalJavascript/LayoutBuilderQuickEditTest.php
+index 05744d77eaf..6fc6b401bec 100644
+--- a/core/modules/quickedit/tests/src/FunctionalJavascript/LayoutBuilderQuickEditTest.php
++++ b/core/modules/quickedit/tests/src/FunctionalJavascript/LayoutBuilderQuickEditTest.php
+@@ -25,6 +25,7 @@ class LayoutBuilderQuickEditTest extends QuickEditJavascriptTestBase {
+   protected static $modules = [
+     'node',
+     'layout_builder',
++    'field_ui',
+   ];
+ 
+   /**
+-- 
+GitLab
+
+
+From 9a4130c7fa32e22cb7ee189b30fc45b3f6dbabc8 Mon Sep 17 00:00:00 2001
+From: Tim Plunkett <git@plnktt.com>
+Date: Mon, 29 Jun 2020 13:45:23 -0400
+Subject: [PATCH 2/7] improvements
+
+---
+ .../FunctionalJavascript/InlineBlockTest.php  | 76 ++++++++++++-------
+ .../LayoutBuilderNestedFormUiTest.php         | 16 ++--
+ .../Theme/ClaroLayoutBuilderTest.php          |  1 +
+ .../Theme/SevenLayoutBuilderTest.php          |  1 +
+ 4 files changed, 60 insertions(+), 34 deletions(-)
+
+diff --git a/core/modules/layout_builder/tests/src/FunctionalJavascript/InlineBlockTest.php b/core/modules/layout_builder/tests/src/FunctionalJavascript/InlineBlockTest.php
+index b5c4dab47f0..91d585b5ecf 100644
+--- a/core/modules/layout_builder/tests/src/FunctionalJavascript/InlineBlockTest.php
++++ b/core/modules/layout_builder/tests/src/FunctionalJavascript/InlineBlockTest.php
+@@ -39,12 +39,14 @@ public function testInlineBlocks() {
+       'create and edit custom blocks',
+     ]));
+ 
+-    LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default')
+-      ->enableLayoutBuilder()
+-      ->setOverridable()
+-      ->save();
+-
+-    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default/layout');
++    // Enable layout builder.
++    $this->drupalPostForm(
++      static::FIELD_UI_PREFIX . '/display/default',
++      ['layout[enabled]' => TRUE],
++      'Save'
++    );
++    $this->clickLink('Manage layout');
++    $assert_session->addressEquals(static::FIELD_UI_PREFIX . '/display/default/layout');
+     // Add a basic block with the body field set.
+     $this->addInlineBlockToLayout('Block title', 'The DEFAULT block body');
+     $this->assertSaveLayout();
+@@ -54,6 +56,8 @@ public function testInlineBlocks() {
+     $this->drupalGet('node/2');
+     $assert_session->pageTextContains('The DEFAULT block body');
+ 
++    // Enable overrides.
++    $this->drupalPostForm(static::FIELD_UI_PREFIX . '/display/default', ['layout[allow_custom]' => TRUE], 'Save');
+     $this->drupalGet('node/1/layout');
+ 
+     // Confirm the block can be edited.
+@@ -121,10 +125,11 @@ public function testNoLayoutSave($operation, $no_save_button_text, $confirm_butt
+     $page = $this->getSession()->getPage();
+     $this->assertEmpty($this->blockStorage->loadMultiple(), 'No entity blocks exist');
+     // Enable layout builder and overrides.
+-    LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default')
+-      ->enableLayoutBuilder()
+-      ->setOverridable()
+-      ->save();
++    $this->drupalPostForm(
++      static::FIELD_UI_PREFIX . '/display/default',
++      ['layout[enabled]' => TRUE, 'layout[allow_custom]' => TRUE],
++      'Save'
++    );
+ 
+     $this->drupalGet('node/1/layout');
+     $this->addInlineBlockToLayout('Block title', 'The block body');
+@@ -212,10 +217,11 @@ public function testInlineBlocksRevisioning() {
+       'create and edit custom blocks',
+     ]));
+     // Enable layout builder and overrides.
+-    LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default')
+-      ->enableLayoutBuilder()
+-      ->setOverridable()
+-      ->save();
++    $this->drupalPostForm(
++      static::FIELD_UI_PREFIX . '/display/default',
++      ['layout[enabled]' => TRUE, 'layout[allow_custom]' => TRUE],
++      'Save'
++    );
+     $this->drupalGet('node/1/layout');
+ 
+     // Add an inline block.
+@@ -374,12 +380,15 @@ public function testDeletion() {
+     $page = $this->getSession()->getPage();
+ 
+     // Enable layout builder.
+-    LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default')
+-      ->enableLayoutBuilder()
+-      ->setOverridable()
+-      ->save();
++    $this->drupalPostForm(
++      static::FIELD_UI_PREFIX . '/display/default',
++      ['layout[enabled]' => TRUE],
++      'Save'
++    );
+     // Add a block to default layout.
+-    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default/layout');
++    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default');
++    $this->clickLink('Manage layout');
++    $assert_session->addressEquals(static::FIELD_UI_PREFIX . '/display/default/layout');
+     $this->addInlineBlockToLayout('Block title', 'The DEFAULT block body');
+     $this->assertSaveLayout();
+ 
+@@ -392,6 +401,9 @@ public function testDeletion() {
+     $this->drupalGet('node/2');
+     $assert_session->pageTextContains('The DEFAULT block body');
+ 
++    // Enable overrides.
++    $this->drupalPostForm(static::FIELD_UI_PREFIX . '/display/default', ['layout[allow_custom]' => TRUE], 'Save');
++
+     // Ensure we have 2 copies of the block in node overrides.
+     $this->drupalGet('node/1/layout');
+     $this->assertSaveLayout();
+@@ -402,7 +414,9 @@ public function testDeletion() {
+     $node_2_block_id = $this->getLatestBlockEntityId();
+     $this->assertCount(3, $this->blockStorage->loadMultiple());
+ 
+-    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default/layout');
++    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default');
++    $this->clickLink('Manage layout');
++    $assert_session->addressEquals(static::FIELD_UI_PREFIX . '/display/default/layout');
+ 
+     $this->assertNotEmpty($this->blockStorage->load($default_block_id));
+     $this->assertNotEmpty($usage->getUsage($default_block_id));
+@@ -437,7 +451,9 @@ public function testDeletion() {
+     $this->assertCount(1, $this->blockStorage->loadMultiple());
+ 
+     // Add another block to the default.
+-    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default/layout');
++    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default');
++    $this->clickLink('Manage layout');
++    $assert_session->addressEquals(static::FIELD_UI_PREFIX . '/display/default/layout');
+     $this->addInlineBlockToLayout('Title 2', 'Body 2');
+     $this->assertSaveLayout();
+     $cron->run();
+@@ -487,10 +503,11 @@ public function testAccess() {
+     $assert_session = $this->assertSession();
+ 
+     // Enable layout builder and overrides.
+-    LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default')
+-      ->enableLayoutBuilder()
+-      ->setOverridable()
+-      ->save();
++    $this->drupalPostForm(
++      static::FIELD_UI_PREFIX . '/display/default',
++      ['layout[enabled]' => TRUE, 'layout[allow_custom]' => TRUE],
++      'Save'
++    );
+ 
+     // Ensure we have 2 copies of the block in node overrides.
+     $this->drupalGet('node/1/layout');
+@@ -539,10 +556,11 @@ public function testAddWorkFlow() {
+     ]));
+ 
+     // Enable layout builder and overrides.
+-    LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default')
+-      ->enableLayoutBuilder()
+-      ->setOverridable()
+-      ->save();
++    $this->drupalPostForm(
++      static::FIELD_UI_PREFIX . '/display/default',
++      ['layout[enabled]' => TRUE, 'layout[allow_custom]' => TRUE],
++      'Save'
++    );
+ 
+     $layout_default_path = 'admin/structure/types/manage/bundle_with_section_field/display/default/layout';
+     $this->drupalGet($layout_default_path);
+diff --git a/core/modules/layout_builder/tests/src/FunctionalJavascript/LayoutBuilderNestedFormUiTest.php b/core/modules/layout_builder/tests/src/FunctionalJavascript/LayoutBuilderNestedFormUiTest.php
+index 8178918828a..9ebd4792570 100644
+--- a/core/modules/layout_builder/tests/src/FunctionalJavascript/LayoutBuilderNestedFormUiTest.php
++++ b/core/modules/layout_builder/tests/src/FunctionalJavascript/LayoutBuilderNestedFormUiTest.php
+@@ -3,7 +3,6 @@
+ namespace Drupal\Tests\layout_builder\FunctionalJavascript;
+ 
+ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+-use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
+ 
+ /**
+  * Tests placing blocks containing forms in theLayout Builder UI.
+@@ -55,10 +54,6 @@ protected function setUp(): void {
+       'type' => 'bundle_with_section_field',
+       'name' => 'Bundle with section field',
+     ]);
+-    LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default')
+-      ->enableLayoutBuilder()
+-      ->setOverridable()
+-      ->save();
+     for ($i = 1; $i <= count(static::FORM_BLOCK_LABELS); $i++) {
+       $this->createNode([
+         'type' => 'bundle_with_section_field',
+@@ -76,7 +71,11 @@ public function testAddingFormBlocksToDefaults() {
+       'administer node display',
+     ]));
+ 
++    // From the manage display page, enable Layout Builder.
+     $field_ui_prefix = 'admin/structure/types/manage/bundle_with_section_field';
++    $this->drupalGet("$field_ui_prefix/display/default");
++    $this->drupalPostForm(NULL, ['layout[enabled]' => TRUE], 'Save');
++    $this->drupalPostForm(NULL, ['layout[allow_custom]' => TRUE], 'Save');
+ 
+     // Save the entity view display so that it can be reverted to later.
+     /** @var \Drupal\Core\Config\StorageInterface $active_config_storage */
+@@ -103,8 +102,15 @@ public function testAddingFormBlocksToDefaults() {
+   public function testAddingFormBlocksToOverrides() {
+     $this->drupalLogin($this->drupalCreateUser([
+       'configure any layout',
++      'administer node display',
+     ]));
+ 
++    // From the manage display page, enable Layout Builder.
++    $field_ui_prefix = 'admin/structure/types/manage/bundle_with_section_field';
++    $this->drupalGet("$field_ui_prefix/display/default");
++    $this->drupalPostForm(NULL, ['layout[enabled]' => TRUE], 'Save');
++    $this->drupalPostForm(NULL, ['layout[allow_custom]' => TRUE], 'Save');
++
+     $expected_save_message = 'The layout override has been saved.';
+     $nid = 1;
+     foreach (static::FORM_BLOCK_LABELS as $label) {
+diff --git a/core/tests/Drupal/FunctionalTests/Theme/ClaroLayoutBuilderTest.php b/core/tests/Drupal/FunctionalTests/Theme/ClaroLayoutBuilderTest.php
+index c2569bcff87..c20e08b44ec 100644
+--- a/core/tests/Drupal/FunctionalTests/Theme/ClaroLayoutBuilderTest.php
++++ b/core/tests/Drupal/FunctionalTests/Theme/ClaroLayoutBuilderTest.php
+@@ -24,6 +24,7 @@ class ClaroLayoutBuilderTest extends BrowserTestBase {
+     'layout_builder',
+     'layout_builder_views_test',
+     'layout_test',
++    'field_ui',
+     'block',
+     'block_test',
+     'node',
+diff --git a/core/tests/Drupal/FunctionalTests/Theme/SevenLayoutBuilderTest.php b/core/tests/Drupal/FunctionalTests/Theme/SevenLayoutBuilderTest.php
+index 4fd04e89be3..f738f125614 100644
+--- a/core/tests/Drupal/FunctionalTests/Theme/SevenLayoutBuilderTest.php
++++ b/core/tests/Drupal/FunctionalTests/Theme/SevenLayoutBuilderTest.php
+@@ -24,6 +24,7 @@ class SevenLayoutBuilderTest extends BrowserTestBase {
+     'layout_builder',
+     'layout_builder_views_test',
+     'layout_test',
++    'field_ui',
+     'block',
+     'block_test',
+     'node',
+-- 
+GitLab
+
+
+From 0d53ef9de4d4e31d221ce0d8b98c64eff860d2bb Mon Sep 17 00:00:00 2001
+From: Tim Plunkett <git@plnktt.com>
+Date: Mon, 24 May 2021 10:42:38 -0400
+Subject: [PATCH 3/7] Fix regressions
+
+---
+ .../FunctionalJavascript/InlineBlockTest.php  | 51 +++++++------------
+ .../LayoutBuilderNestedFormUiTest.php         |  8 +--
+ 2 files changed, 23 insertions(+), 36 deletions(-)
+
+diff --git a/core/modules/layout_builder/tests/src/FunctionalJavascript/InlineBlockTest.php b/core/modules/layout_builder/tests/src/FunctionalJavascript/InlineBlockTest.php
+index 91d585b5ecf..867cb1abae9 100644
+--- a/core/modules/layout_builder/tests/src/FunctionalJavascript/InlineBlockTest.php
++++ b/core/modules/layout_builder/tests/src/FunctionalJavascript/InlineBlockTest.php
+@@ -40,11 +40,8 @@ public function testInlineBlocks() {
+     ]));
+ 
+     // Enable layout builder.
+-    $this->drupalPostForm(
+-      static::FIELD_UI_PREFIX . '/display/default',
+-      ['layout[enabled]' => TRUE],
+-      'Save'
+-    );
++    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default');
++    $this->submitForm(['layout[enabled]' => TRUE], 'Save');
+     $this->clickLink('Manage layout');
+     $assert_session->addressEquals(static::FIELD_UI_PREFIX . '/display/default/layout');
+     // Add a basic block with the body field set.
+@@ -57,7 +54,8 @@ public function testInlineBlocks() {
+     $assert_session->pageTextContains('The DEFAULT block body');
+ 
+     // Enable overrides.
+-    $this->drupalPostForm(static::FIELD_UI_PREFIX . '/display/default', ['layout[allow_custom]' => TRUE], 'Save');
++    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default');
++    $this->submitForm(['layout[allow_custom]' => TRUE], 'Save');
+     $this->drupalGet('node/1/layout');
+ 
+     // Confirm the block can be edited.
+@@ -125,11 +123,11 @@ public function testNoLayoutSave($operation, $no_save_button_text, $confirm_butt
+     $page = $this->getSession()->getPage();
+     $this->assertEmpty($this->blockStorage->loadMultiple(), 'No entity blocks exist');
+     // Enable layout builder and overrides.
+-    $this->drupalPostForm(
+-      static::FIELD_UI_PREFIX . '/display/default',
+-      ['layout[enabled]' => TRUE, 'layout[allow_custom]' => TRUE],
+-      'Save'
+-    );
++    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default');
++    $this->submitForm([
++      'layout[enabled]' => TRUE,
++      'layout[allow_custom]' => TRUE,
++    ], 'Save');
+ 
+     $this->drupalGet('node/1/layout');
+     $this->addInlineBlockToLayout('Block title', 'The block body');
+@@ -217,11 +215,8 @@ public function testInlineBlocksRevisioning() {
+       'create and edit custom blocks',
+     ]));
+     // Enable layout builder and overrides.
+-    $this->drupalPostForm(
+-      static::FIELD_UI_PREFIX . '/display/default',
+-      ['layout[enabled]' => TRUE, 'layout[allow_custom]' => TRUE],
+-      'Save'
+-    );
++    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default');
++    $this->submitForm(['layout[enabled]' => TRUE, 'layout[allow_custom]' => TRUE], 'Save');
+     $this->drupalGet('node/1/layout');
+ 
+     // Add an inline block.
+@@ -380,11 +375,8 @@ public function testDeletion() {
+     $page = $this->getSession()->getPage();
+ 
+     // Enable layout builder.
+-    $this->drupalPostForm(
+-      static::FIELD_UI_PREFIX . '/display/default',
+-      ['layout[enabled]' => TRUE],
+-      'Save'
+-    );
++    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default');
++    $this->submitForm(['layout[enabled]' => TRUE], 'Save');
+     // Add a block to default layout.
+     $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default');
+     $this->clickLink('Manage layout');
+@@ -402,7 +394,8 @@ public function testDeletion() {
+     $assert_session->pageTextContains('The DEFAULT block body');
+ 
+     // Enable overrides.
+-    $this->drupalPostForm(static::FIELD_UI_PREFIX . '/display/default', ['layout[allow_custom]' => TRUE], 'Save');
++    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default');
++    $this->submitForm(['layout[allow_custom]' => TRUE], 'Save');
+ 
+     // Ensure we have 2 copies of the block in node overrides.
+     $this->drupalGet('node/1/layout');
+@@ -503,11 +496,8 @@ public function testAccess() {
+     $assert_session = $this->assertSession();
+ 
+     // Enable layout builder and overrides.
+-    $this->drupalPostForm(
+-      static::FIELD_UI_PREFIX . '/display/default',
+-      ['layout[enabled]' => TRUE, 'layout[allow_custom]' => TRUE],
+-      'Save'
+-    );
++    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default');
++    $this->submitForm(['layout[enabled]' => TRUE, 'layout[allow_custom]' => TRUE], 'Save');
+ 
+     // Ensure we have 2 copies of the block in node overrides.
+     $this->drupalGet('node/1/layout');
+@@ -556,11 +546,8 @@ public function testAddWorkFlow() {
+     ]));
+ 
+     // Enable layout builder and overrides.
+-    $this->drupalPostForm(
+-      static::FIELD_UI_PREFIX . '/display/default',
+-      ['layout[enabled]' => TRUE, 'layout[allow_custom]' => TRUE],
+-      'Save'
+-    );
++    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default');
++    $this->submitForm(['layout[enabled]' => TRUE, 'layout[allow_custom]' => TRUE], 'Save');
+ 
+     $layout_default_path = 'admin/structure/types/manage/bundle_with_section_field/display/default/layout';
+     $this->drupalGet($layout_default_path);
+diff --git a/core/modules/layout_builder/tests/src/FunctionalJavascript/LayoutBuilderNestedFormUiTest.php b/core/modules/layout_builder/tests/src/FunctionalJavascript/LayoutBuilderNestedFormUiTest.php
+index 9ebd4792570..82efebb9ea5 100644
+--- a/core/modules/layout_builder/tests/src/FunctionalJavascript/LayoutBuilderNestedFormUiTest.php
++++ b/core/modules/layout_builder/tests/src/FunctionalJavascript/LayoutBuilderNestedFormUiTest.php
+@@ -74,8 +74,8 @@ public function testAddingFormBlocksToDefaults() {
+     // From the manage display page, enable Layout Builder.
+     $field_ui_prefix = 'admin/structure/types/manage/bundle_with_section_field';
+     $this->drupalGet("$field_ui_prefix/display/default");
+-    $this->drupalPostForm(NULL, ['layout[enabled]' => TRUE], 'Save');
+-    $this->drupalPostForm(NULL, ['layout[allow_custom]' => TRUE], 'Save');
++    $this->submitForm(['layout[enabled]' => TRUE], 'Save');
++    $this->submitForm(['layout[allow_custom]' => TRUE], 'Save');
+ 
+     // Save the entity view display so that it can be reverted to later.
+     /** @var \Drupal\Core\Config\StorageInterface $active_config_storage */
+@@ -108,8 +108,8 @@ public function testAddingFormBlocksToOverrides() {
+     // From the manage display page, enable Layout Builder.
+     $field_ui_prefix = 'admin/structure/types/manage/bundle_with_section_field';
+     $this->drupalGet("$field_ui_prefix/display/default");
+-    $this->drupalPostForm(NULL, ['layout[enabled]' => TRUE], 'Save');
+-    $this->drupalPostForm(NULL, ['layout[allow_custom]' => TRUE], 'Save');
++    $this->submitForm(['layout[enabled]' => TRUE], 'Save');
++    $this->submitForm(['layout[allow_custom]' => TRUE], 'Save');
+ 
+     $expected_save_message = 'The layout override has been saved.';
+     $nid = 1;
+-- 
+GitLab
+
+
+From 129279109e02d380efdf1a506c10613c69b0f25b Mon Sep 17 00:00:00 2001
+From: Tim Plunkett <git@plnktt.com>
+Date: Mon, 24 May 2021 10:45:20 -0400
+Subject: [PATCH 4/7] Fix LayoutBuilderPrepareLayoutTest
+
+---
+ .../tests/src/Functional/LayoutBuilderPrepareLayoutTest.php      | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/core/modules/layout_builder/tests/src/Functional/LayoutBuilderPrepareLayoutTest.php b/core/modules/layout_builder/tests/src/Functional/LayoutBuilderPrepareLayoutTest.php
+index e991d909e48..903ebfcff46 100644
+--- a/core/modules/layout_builder/tests/src/Functional/LayoutBuilderPrepareLayoutTest.php
++++ b/core/modules/layout_builder/tests/src/Functional/LayoutBuilderPrepareLayoutTest.php
+@@ -16,6 +16,7 @@ class LayoutBuilderPrepareLayoutTest extends BrowserTestBase {
+    * {@inheritdoc}
+    */
+   protected static $modules = [
++    'field_ui',
+     'layout_builder',
+     'node',
+     'layout_builder_element_test',
+-- 
+GitLab
+
+
+From 47f412f950fc8d366a70470253fa8cdbd7fc0cec Mon Sep 17 00:00:00 2001
+From: Tim Plunkett <git@plnktt.com>
+Date: Mon, 24 May 2021 11:49:07 -0400
+Subject: [PATCH 5/7] Remove leftover use statement
+
+---
+ .../tests/src/Functional/LayoutBuilderTranslationTest.php        | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/core/modules/layout_builder/tests/src/Functional/LayoutBuilderTranslationTest.php b/core/modules/layout_builder/tests/src/Functional/LayoutBuilderTranslationTest.php
+index df882876866..4b5999d9030 100644
+--- a/core/modules/layout_builder/tests/src/Functional/LayoutBuilderTranslationTest.php
++++ b/core/modules/layout_builder/tests/src/Functional/LayoutBuilderTranslationTest.php
+@@ -2,7 +2,6 @@
+ 
+ namespace Drupal\Tests\layout_builder\Functional;
+ 
+-use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
+ use Drupal\Tests\content_translation\Functional\ContentTranslationTestBase;
+ use Drupal\Core\Entity\Entity\EntityViewDisplay;
+ use Drupal\Core\Url;
+-- 
+GitLab
+
+
+From ad7243ebea8522744a043089bc5cd5558d75ac94 Mon Sep 17 00:00:00 2001
+From: Tim Plunkett <git@plnktt.com>
+Date: Fri, 17 Sep 2021 10:17:31 -0400
+Subject: [PATCH 6/7] Do not provide Field UI-based routes if Field UI isn't
+ installed.
+
+---
+ .../src/Plugin/SectionStorage/DefaultsSectionStorage.php      | 4 ++++
+ .../layout_builder/tests/src/Functional/LayoutBuilderTest.php | 4 +++-
+ 2 files changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/core/modules/layout_builder/src/Plugin/SectionStorage/DefaultsSectionStorage.php b/core/modules/layout_builder/src/Plugin/SectionStorage/DefaultsSectionStorage.php
+index 355677a9406..4c5d6f103b8 100644
+--- a/core/modules/layout_builder/src/Plugin/SectionStorage/DefaultsSectionStorage.php
++++ b/core/modules/layout_builder/src/Plugin/SectionStorage/DefaultsSectionStorage.php
+@@ -146,6 +146,10 @@ protected function getRouteParameters() {
+    * {@inheritdoc}
+    */
+   public function buildRoutes(RouteCollection $collection) {
++    if (!\Drupal::moduleHandler()->moduleExists('field_ui')) {
++      return;
++    }
++
+     foreach ($this->getEntityTypes() as $entity_type_id => $entity_type) {
+       // Try to get the route from the current collection.
+       if (!$entity_route = $collection->get($entity_type->get('field_ui_base_route'))) {
+diff --git a/core/modules/layout_builder/tests/src/Functional/LayoutBuilderTest.php b/core/modules/layout_builder/tests/src/Functional/LayoutBuilderTest.php
+index 5afb950064b..e36ef89d062 100644
+--- a/core/modules/layout_builder/tests/src/Functional/LayoutBuilderTest.php
++++ b/core/modules/layout_builder/tests/src/Functional/LayoutBuilderTest.php
+@@ -109,7 +109,9 @@ public function testOverridesWithoutDefaultsAccess() {
+     $assert_session = $this->assertSession();
+     $page = $this->getSession()->getPage();
+ 
+-    $this->drupalLogin($this->drupalCreateUser(['configure any layout']));
++    // @todo In https://www.drupal.org/node/540008 switch this to logging in as
++    //   a user with the 'configure any layout' permission.
++    $this->drupalLogin($this->rootUser);
+ 
+     LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default')
+       ->enableLayoutBuilder()
+-- 
+GitLab
+
+
+From a2dc384989d12bf6ff24d6a52380638b123e4c30 Mon Sep 17 00:00:00 2001
+From: Tim Plunkett <git@plnktt.com>
+Date: Fri, 17 Sep 2021 11:14:51 -0400
+Subject: [PATCH 7/7] Fix test coverage
+
+---
+ .../src/Functional/LayoutBuilderTest.php      | 22 +++++++++++++++++++
+ .../src/Unit/DefaultsSectionStorageTest.php   | 22 +++++++++++++++++++
+ 2 files changed, 44 insertions(+)
+
+diff --git a/core/modules/layout_builder/tests/src/Functional/LayoutBuilderTest.php b/core/modules/layout_builder/tests/src/Functional/LayoutBuilderTest.php
+index e36ef89d062..0581071ca17 100644
+--- a/core/modules/layout_builder/tests/src/Functional/LayoutBuilderTest.php
++++ b/core/modules/layout_builder/tests/src/Functional/LayoutBuilderTest.php
+@@ -109,6 +109,28 @@ public function testOverridesWithoutDefaultsAccess() {
+     $assert_session = $this->assertSession();
+     $page = $this->getSession()->getPage();
+ 
++    $this->drupalLogin($this->drupalCreateUser(['configure any layout']));
++
++    LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default')
++      ->enableLayoutBuilder()
++      ->setOverridable()
++      ->save();
++
++    $this->drupalGet('node/1');
++    $page->clickLink('Layout');
++    $assert_session->elementTextContains('css', '.layout-builder__message.layout-builder__message--overrides', 'You are editing the layout for this Bundle with section field content item.');
++    $assert_session->linkNotExists('Edit the template for all Bundle with section field content items instead.');
++  }
++
++  /**
++   * Tests Layout Builder overrides without Field UI installed.
++   */
++  public function testOverridesWithoutFieldUi() {
++    $this->container->get('module_installer')->uninstall(['field_ui']);
++
++    $assert_session = $this->assertSession();
++    $page = $this->getSession()->getPage();
++
+     // @todo In https://www.drupal.org/node/540008 switch this to logging in as
+     //   a user with the 'configure any layout' permission.
+     $this->drupalLogin($this->rootUser);
+diff --git a/core/modules/layout_builder/tests/src/Unit/DefaultsSectionStorageTest.php b/core/modules/layout_builder/tests/src/Unit/DefaultsSectionStorageTest.php
+index 11aff3d47f8..162935d5b17 100644
+--- a/core/modules/layout_builder/tests/src/Unit/DefaultsSectionStorageTest.php
++++ b/core/modules/layout_builder/tests/src/Unit/DefaultsSectionStorageTest.php
+@@ -9,6 +9,7 @@
+ use Drupal\Core\Entity\EntityTypeInterface;
+ use Drupal\Core\Entity\EntityTypeManagerInterface;
+ use Drupal\Core\Entity\FieldableEntityInterface;
++use Drupal\Core\Extension\ModuleHandlerInterface;
+ use Drupal\Core\Plugin\Context\ContextDefinition;
+ use Drupal\Core\Plugin\Context\ContextInterface;
+ use Drupal\Core\Plugin\Context\EntityContextDefinition;
+@@ -220,6 +221,12 @@ public function testExtractEntityFromRouteCreate() {
+    * @covers \Drupal\layout_builder\Routing\LayoutBuilderRoutesTrait::buildLayoutRoutes
+    */
+   public function testBuildRoutes() {
++    $module_handler = $this->prophesize(ModuleHandlerInterface::class);
++    $module_handler->moduleExists('field_ui')->willReturn(TRUE);
++    $container = new ContainerBuilder();
++    $container->set('module_handler', $module_handler->reveal());
++    \Drupal::setContainer($container);
++
+     $entity_types = [];
+ 
+     $not_fieldable = $this->prophesize(EntityTypeInterface::class);
+@@ -405,4 +412,19 @@ public function testBuildRoutes() {
+     $this->assertSame(array_keys($expected), array_keys($collection->all()));
+   }
+ 
++  /**
++   * @covers ::buildRoutes
++   */
++  public function testBuildRoutesNoFieldUi() {
++    $module_handler = $this->prophesize(ModuleHandlerInterface::class);
++    $module_handler->moduleExists('field_ui')->willReturn(FALSE);
++    $container = new ContainerBuilder();
++    $container->set('module_handler', $module_handler->reveal());
++    \Drupal::setContainer($container);
++
++    $collection = new RouteCollection();
++    $this->plugin->buildRoutes($collection);
++    $this->assertEmpty($collection->all());
++  }
++
+ }
+-- 
+GitLab
+

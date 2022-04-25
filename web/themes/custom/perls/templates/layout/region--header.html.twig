@@ -1,0 +1,21 @@
+<header class="c-header" role="banner">
+  <div class="c-header__logo">
+    {{ drupal_block('system_branding_block') }}
+  </div>
+
+  <div class="c-header__content">
+    {% if content %}
+      <div class="c-header__content--left">
+        {{ content }}
+      </div>
+    {% endif %}
+
+    <div class="c-header__content--right">
+      {{ drupal_entity('block', 'content_manager_search_block', check_access=false) }}
+      {{ drupal_entity('block', 'content_manager_user_menu') }}
+    </div>
+  </div>
+  <button aria-controls="c-menu" class="c-nav__toggle">
+    <svg xmlns="http://www.w3.org/2000/svg" width="257" height="300" viewBox="0 0 257 300"><title>bars</title><path d="M257.143 225v21.429c0 5.859-4.855 10.714-10.714 10.714H10.715c-5.859 0-10.714-4.855-10.714-10.714V225c0-5.859 4.855-10.714 10.714-10.714h235.714c5.859 0 10.714 4.855 10.714 10.714zm0-85.714v21.429c0 5.859-4.855 10.714-10.714 10.714H10.715c-5.859 0-10.714-4.855-10.714-10.714v-21.429c0-5.859 4.855-10.714 10.714-10.714h235.714c5.859 0 10.714 4.855 10.714 10.714zm0-85.715V75c0 5.859-4.855 10.714-10.714 10.714H10.715C4.856 85.714.001 80.859.001 75V53.571c0-5.859 4.855-10.714 10.714-10.714h235.714c5.859 0 10.714 4.855 10.714 10.714z"/></svg>
+  </button>
+</header>

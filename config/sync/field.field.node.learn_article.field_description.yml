@@ -1,0 +1,30 @@
+uuid: 98a470b3-36f5-4621-883d-8407e825b2ba
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_description
+    - node.type.learn_article
+  module:
+    - allowed_formats
+    - text
+third_party_settings:
+  allowed_formats:
+    plain_text: plain_text
+    basic_filter: '0'
+    card_styling: '0'
+    inline_styling: '0'
+    list: '0'
+    table: '0'
+id: node.learn_article.field_description
+field_name: field_description
+entity_type: node
+bundle: learn_article
+label: Description
+description: 'A good description is short (1 or 2 sentences), avoids jargon, and summarizes the content.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

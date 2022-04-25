@@ -1,0 +1,73 @@
+uuid: aa7f9dd2-0f30-4fc4-8c5b-ed7cc1f9adfa
+langcode: en
+status: true
+dependencies:
+  config:
+    - page_manager.page.analytics
+  module:
+    - veracity_vql
+id: analytics-block_display-0
+label: 'Analytics Overview'
+weight: 0
+variant: block_display
+variant_settings:
+  id: block_display
+  label: null
+  weight: 0
+  uuid: f87b7f03-c3f3-4ab1-8025-a360689331d7
+  blocks:
+    2e49c448-aa90-4c7b-80cc-54e7b1838e1b:
+      id: veracity_chart_block
+      label: 'Popular Learning Objects'
+      label_display: visible
+      provider: veracity_vql
+      context_mapping: {  }
+      region: bottom
+      weight: 0
+      uuid: 2e49c448-aa90-4c7b-80cc-54e7b1838e1b
+      vql: "{\r\n    \"title\": \"Popular Learning Objects\",\r\n    \"filter\": {\r\n        \"$and\": [\r\n            {\r\n                \"object.definition.type\": \"http://activitystrea.ms/schema/1.0/article\",\r\n                \"verb.id\": {\r\n                    \"$in\": [\r\n                        \"http://adlnet.gov/expapi/verbs/launched\",\r\n                        \"http://adlnet.gov/expapi/verbs/completed\",\r\n                        \"http://id.tincanapi.com/verb/voted-up\",\r\n                        \"http://id.tincanapi.com/verb/voted-down\",\r\n                        \"http://adlnet.gov/expapi/verbs/commented\",\r\n                        \"http://activitystrea.ms/schema/1.0/share\",\r\n                        \"http://activitystrea.ms/schema/1.0/save\",\r\n                        \"http://activitystrea.ms/schema/1.0/unsave\",\r\n                        \"http://id.tincanapi.com/verb/selected\",\r\n                        \"https://w3id.org/xapi/dod-isd/verbs/recommended\"\r\n                    ]\r\n                }\r\n            }\r\n        ]\r\n    },\r\n    \"process\": [\r\n        {\r\n            \"$frequentValues\": {\r\n                \"path\": \"object.id\",\r\n                \"limit\": 10,\r\n                \"sort\": {\r\n                    \"count\": \"desc\"\r\n                },\r\n                \"metrics\": {\r\n                    \"split\": {\r\n                        \"$frequentValues\": {\r\n                            \"path\": \"verb.id\",\r\n                            \"sort\": {\r\n                                \"count\": \"desc\"\r\n                            }\r\n                        }\r\n                    }\r\n                }\r\n            }\r\n        },\r\n        {\r\n            \"$toCanonicalDisplay\": {\r\n                \"forceUnique\": true\r\n            }\r\n        },\r\n        {\r\n            \"$toCanonicalDisplay\": {\r\n                \"path\": \"split[*]._id\",\r\n                \"forceUnique\": true\r\n            }\r\n        },\r\n        {\r\n            \"$project\": {\r\n                \"_id\": \"$canonical.display\",\r\n                \"split\": \"$split\",\r\n                \"color\": \"#ff0000\"\r\n            }\r\n        },\r\n        {\r\n            \"$barChart\": {\r\n                \"categoryPath\": \"split[*].canonical.display\",\r\n                \"valuePath\": \"split[*].count\",\r\n                \"sortCategory\": false\r\n            }\r\n        }\r\n    ]\r\n}"
+    db42576e-2763-4095-a8d1-d9642f356d0b:
+      id: veracity_chart_block
+      label: 'Most Recommended Content'
+      label_display: visible
+      provider: veracity_vql
+      context_mapping: {  }
+      region: bottom
+      weight: 1
+      uuid: db42576e-2763-4095-a8d1-d9642f356d0b
+      vql: "{\r\n   \"title\": \"Most Recommended Content\",\r\n    \"filter\": {\r\n        \"verb.id\": \"https://w3id.org/xapi/dod-isd/verbs/recommended\"\r\n    },\r\n    \"process\": [\r\n        {\r\n            \"$frequentValues\": {\r\n                \"path\": \"object.id\",\r\n                \"limit\": 10,\r\n                \"sort\": {\r\n                    \"count\": \"desc\"\r\n                }\r\n            }\r\n        },\r\n        {\r\n            \"$toCanonicalDisplay\": {\r\n                \"forceUnique\": true\r\n            }\r\n        },\r\n        {\r\n            \"$barChart\": {\r\n                \"categoryPath\": \"canonical.display\",\r\n                \"valuePath\": \"count\",\r\n                \"sortCategory\": false\r\n            }\r\n        }\r\n    ]\r\n}"
+    2029b42e-a5c7-4e77-bc49-eed315d3e59e:
+      id: veracity_chart_block
+      label: 'Content Relevance'
+      label_display: visible
+      provider: veracity_vql
+      context_mapping: {  }
+      region: bottom
+      weight: 2
+      uuid: 2029b42e-a5c7-4e77-bc49-eed315d3e59e
+      vql: "{\r\n    \"title\": \"Content Relevance\",\r\n    \"filter\": {\r\n        \"verb.id\": {\r\n            \"$in\": [\r\n                \"http://id.tincanapi.com/verb/voted-up\",\r\n                \"http://id.tincanapi.com/verb/voted-down\"\r\n            ]\r\n        }\r\n    },\r\n    \"process\": [\r\n        {\r\n            \"$frequentValues\": {\r\n                \"path\": \"verb.id\"\r\n            }\r\n        },\r\n        {\r\n            \"$toCanonicalDisplay\": {\r\n                \"forceUnique\": true\r\n            }\r\n        },\r\n        {\r\n            \"$pieChart\": {\r\n                \"categoryPath\": \"canonical.display\",\r\n                \"valuePath\": \"count\",\r\n                \"sortCategory\": false\r\n            }\r\n        }\r\n    ]\r\n}"
+    fb90d75b-0d28-4697-a0e7-b9f7d4dd2cb8:
+      id: veracity_chart_block
+      label: 'Top Search Queries'
+      label_display: visible
+      provider: veracity_vql
+      context_mapping: {  }
+      region: bottom
+      weight: 3
+      uuid: fb90d75b-0d28-4697-a0e7-b9f7d4dd2cb8
+      vql: "{\r\n  \"title\": \"Top Search Queries\",\r\n  \"filter\": {\r\n    \"verb.id\": \"http://activitystrea.ms/schema/1.0/search\"\r\n  },\r\n  \"process\": [\r\n    {\r\n      \"$frequentValues\": {\r\n        \"path\": \"result.response\",\r\n        \"sort\": {\r\n          \"count\": \"desc\"\r\n        },\r\n        \"limit\": 10\r\n      }\r\n    },\r\n    {\r\n      \"$list\": {\r\n        \"icon\": \"search\",\r\n        \"title\": \"${value._id}\",\r\n        \"subtitle\": \"Searched ${value.count} times\",\r\n        \"valuePath\": \"$\"\r\n      }\r\n    }\r\n  ]\r\n}"
+    df6b1019-acc8-41db-915c-adad838e495c:
+      id: veracity_chart_block
+      label: 'Popular Times'
+      label_display: visible
+      provider: veracity_vql
+      context_mapping: {  }
+      region: bottom
+      weight: 4
+      uuid: df6b1019-acc8-41db-915c-adad838e495c
+      vql: "{\r\n    \"title\": \"Popular Times\",\r\n    \"filter\": {},\r\n    \"process\": [\r\n        {\r\n            \"$punchCard\": {\r\n                \"path\": \"timestamp\",\r\n                \"timezone\": \"-05:00\"\r\n            }\r\n        },\r\n        {\r\n            \"$unwind\": \"$hours\"\r\n        },\r\n        {\r\n            \"$project\": {\r\n                \"day\": \"$dayOfWeek\",\r\n                \"hour\": \"$hours.hour\",\r\n                \"count\": \"$hours.count\"\r\n            }\r\n        },\r\n        {\r\n            \"$heatChart\": {\r\n                \"categoryPathX\": \"day\",\r\n                \"categoryPathY\": \"hour\",\r\n                \"valuePath\": \"count\"\r\n            }\r\n        },\r\n        {\r\n            \"$addFields\": {\r\n                \"chart.series.0.heatRules\": []\r\n            }\r\n        }\r\n    ]\r\n}"
+  page_title: Analytics
+page: analytics
+selection_criteria: {  }
+selection_logic: and
+static_context: {  }

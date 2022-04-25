@@ -1,0 +1,50 @@
+uuid: 2fec0c60-a293-4b42-8adc-61c07d4c8ce6
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.test_question_answer.field_answer_correct
+    - field.field.paragraph.test_question_answer.field_quiz_card
+    - field.field.paragraph.test_question_answer.field_user_answer
+    - paragraphs.paragraphs_type.test_question_answer
+  module:
+    - field_layout
+    - layout_discovery
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings:
+      label: ''
+id: paragraph.test_question_answer.default
+targetEntityType: paragraph
+bundle: test_question_answer
+mode: default
+content:
+  field_answer_correct:
+    type: boolean_checkbox
+    weight: 2
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  field_quiz_card:
+    type: entity_reference_autocomplete
+    weight: 3
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_user_answer:
+    type: string_textfield
+    weight: 1
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true

@@ -1,0 +1,110 @@
+<?php
+
+/**
+ * @file
+ * Contains perls_cards.module.
+ */
+
+/**
+ * Implements hook_theme().
+ *
+ * Defines a new theme that can be used to add a result card to card stacks.
+ */
+function perls_cards_theme($existing, $type, $theme, $path) {
+  return [
+    'results_card' => [
+      'variables' => [
+        'result_title' => NULL,
+        'result_status' => NULL,
+        'result_type' => NULL,
+        'feedback' => t('Your results will appear here'),
+        'attributes' => [
+          'class' => ['results-card'],
+        ],
+      ],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for test questions.
+ *
+ * Prepares `results` for tests.
+ */
+function perls_cards_preprocess_field__node__field_quiz__test(&$variables) {
+  $variables['attributes']['class'][] = 'perls-test';
+  $variables['attributes']['question_count'] = count($variables['items']);
+  $test = $variables['element']['#object'];
+  $variables['attributes']['pass_mark'] = $test->field_pass_mark->value / 100;
+  $variables['attributes']['correct_count'] = 0;
+
+  // Set default value for results card.
+  $variables['is_completed'] = FALSE;
+
+  $variables['results'] = [
+    '#theme' => 'results_card',
+    '#result_title' => $test->label(),
+    '#result_status' => t('Completed'),
+    '#result_type' => $test->type->entity->label(),
+    '#feedback' => t('You answered <span class="correct">0</span> out of <span class="total">@total</span> correct.', ['@total' => $variables['attributes']['question_count']]),
+    '#cache' => [
+      'keys' => ['results', 'node', $test->id()],
+      'contexts' => ['user'],
+    ],
+  ];
+  // Update these values if an attempt exists.
+  $flag_service = \Drupal::service('flag');
+  $flag = $flag_service->getFlagById('test_results');
+  if ($flag) {
+    // We check that this flagging is exist or not.
+    $flagging = $flag_service->getFlagging($flag, $test);
+    if ($flagging) {
+      $variables['results']['#cache']['tags'][] = 'flagging:' . $flagging->id();
+      $variables['results']['#cache']['tags'][] = 'node:' . $test->id();
+      $attempts = $flagging->field_test_attempts;
+      if ($attempts && $attempts->count() > 0) {
+        // Load last attempt.
+        $attempt = $attempts->get($attempts->count() - 1)->get('entity')->getTarget()->getValue();
+        // Update the results card with data from the attempt.
+        $variables['attributes']['correct_count'] = $attempt->field_correctly_answered_count->value;
+        $variables['is_completed'] = ($attempt->field_test_complete->value) ? TRUE : FALSE;
+        $variables['results']['#feedback'] = $attempt->field_test_feedback->processed;
+      }
+
+    }
+    else {
+      $variables['results']['#cache']['tags'][] = 'flagging_list';
+    }
+  }
+
+  // Pass down the knowledge to child templates that this is a test.
+  foreach ($variables['items'] as $index => &$item) {
+    $item['content']['#test'] = $test;
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for quiz cards.
+ */
+function perls_cards_preprocess_node__quiz__card(&$variables) {
+  if (isset($variables['elements']['#test'])) {
+    $variables['is_test'] = TRUE;
+    $variables['content']['field_option']['#is_test'] = TRUE;
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for quiz answer options.
+ */
+function perls_cards_preprocess_field__field_option(&$variables) {
+  if (isset($variables['element']['#is_test'])) {
+    $variables['is_test'] = $variables['element']['#is_test'];
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for tests.
+ */
+function perls_cards_preprocess_node__test(&$variables) {
+  $variables['#attached']['library'][] = 'perls_cards/perls-test';
+}

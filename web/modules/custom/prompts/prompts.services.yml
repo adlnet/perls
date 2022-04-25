@@ -1,0 +1,27 @@
+services:
+  prompts.webform_submission.normalizer:
+    class: Drupal\prompts\Normalizer\WebformSubmissionNormalizer
+    arguments: ['@webform.token_manager']
+    tags:
+      - { name: normalizer, priority: 15 }
+  plugin.manager.prompt:
+    class: Drupal\prompts\Prompt\PromptManager
+    parent: default_plugin_manager
+  prompts.prompt:
+    class: Drupal\prompts\Prompt
+    arguments: ['@plugin.manager.prompt', '@current_user']
+  prompts.statement_subscriber:
+    arguments: ['@request_stack', '@entity_type.manager', '@plugin.manager.prompt']
+    class: Drupal\prompts\EventSubscriber\PromptStatementSubscriber
+    tags:
+      - { name: 'event_subscriber' }
+  dashboard.normalizer.prompt_block:
+    class: Drupal\prompts\Normalizer\DashboardPromptTileBlockNormalizer
+    arguments:
+      - '@entity_type.manager'
+      - '@entity_type.repository'
+      - '@entity_field.manager'
+      - '@prompts.prompt'
+      - '@prompts.webform_submission.normalizer'
+    tags:
+      - { name: normalizer }

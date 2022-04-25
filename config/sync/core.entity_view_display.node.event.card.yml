@@ -1,0 +1,106 @@
+uuid: 7c31aef9-019e-40e7-91ea-56f8bcc681c9
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.date_format.medium
+    - core.entity_view_mode.node.card
+    - field.field.node.event.field_additional_details
+    - field.field.node.event.field_course
+    - field.field.node.event.field_description
+    - field.field.node.event.field_media_image
+    - field.field.node.event.field_related_content
+    - field.field.node.event.field_schedule
+    - field.field.node.event.field_tags
+    - field.field.node.event.field_topic
+    - field.field.node.event.field_type_description
+    - field.field.node.event.field_virtual_meeting_room
+    - node.type.event
+  module:
+    - date_recur
+    - layout_builder
+    - media
+    - text
+    - user
+third_party_settings:
+  layout_builder:
+    enabled: false
+    allow_custom: false
+id: node.event.card
+targetEntityType: node
+bundle: event
+mode: card
+content:
+  field_description:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 7
+    region: content
+  field_media_image:
+    type: media_thumbnail
+    label: hidden
+    settings:
+      image_link: ''
+      image_style: ''
+    third_party_settings: {  }
+    weight: 5
+    region: content
+  field_schedule:
+    type: date_recur_basic_formatter
+    label: hidden
+    settings:
+      timezone_override: ''
+      format_type: medium
+      separator: '-'
+      show_next: 1
+      count_per_item: true
+      occurrence_format_type: medium
+      same_end_date_format_type: medium
+      interpreter: ''
+    third_party_settings: {  }
+    weight: 6
+    region: content
+  field_tags:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  flag_bookmark:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  flag_completed:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  flag_recommendation:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  recommendation_reason:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+hidden:
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  entitygroupfield: true
+  field_additional_details: true
+  field_course: true
+  field_related_content: true
+  field_topic: true
+  field_type_description: true
+  field_virtual_meeting_room: true
+  langcode: true
+  links: true
+  search_api_excerpt: true

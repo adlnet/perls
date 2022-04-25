@@ -1,0 +1,36 @@
+uuid: 5ec786c3-73e8-4fbc-8db1-8b2b648cac5a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_virtual_meeting_room
+    - node.type.event
+  module:
+    - block_field
+id: node.event.field_virtual_meeting_room
+field_name: field_virtual_meeting_room
+entity_type: node
+bundle: event
+label: 'Virtual Meeting Room'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    plugin_id: vidyo_room_block
+    settings:
+      id: vidyo_room_block
+      label: 'Meeting Room'
+      provider: vidyo_platform
+      label_display: ''
+      uuid: 861ecab2-586e-4f1f-a218-ba2a0bd66e9f
+      room_availability: unlocked
+      offline_message: 'Sorry, this room is unavailable right now.'
+      renderer: new_window
+default_value_callback: ''
+settings:
+  selection: blocks
+  selection_settings:
+    plugin_ids:
+      vidyo_room_block: vidyo_room_block
+field_type: block_field

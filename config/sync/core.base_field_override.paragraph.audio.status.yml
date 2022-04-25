@@ -1,0 +1,24 @@
+uuid: 1136f473-69a7-4424-b3ff-bcf13b5c774d
+langcode: en
+status: true
+dependencies:
+  config:
+    - paragraphs.paragraphs_type.audio
+_core:
+  default_config_hash: 3CoIm8gcLEEKabgpZSlW1NoGyy4dQUVCdGXtWK5LnCY
+id: paragraph.audio.status
+field_name: status
+entity_type: paragraph
+bundle: audio
+label: Published
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 1
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

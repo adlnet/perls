@@ -1,0 +1,38 @@
+uuid: 1efa79a1-62fd-425a-b675-a8ea08bf212c
+langcode: en
+status: true
+dependencies:
+  config:
+    - system.menu.learner
+  module:
+    - system
+    - user
+  theme:
+    - perls_content_manager
+id: learner_2
+theme: perls_content_manager
+region: header
+weight: -10
+provider: null
+plugin: 'system_menu_block:learner'
+settings:
+  id: 'system_menu_block:learner'
+  label: Learner
+  label_display: visible
+  provider: system
+  level: 1
+  depth: 0
+  expand_all_items: false
+visibility:
+  user_role:
+    id: user_role
+    negate: true
+    context_mapping:
+      user: '@user.current_user_context:current_user'
+    roles:
+      anonymous: anonymous
+      rest_api_user: rest_api_user
+      content_manager: content_manager
+      perls_system_admin: perls_system_admin
+      sysadmin: sysadmin
+      packager: packager

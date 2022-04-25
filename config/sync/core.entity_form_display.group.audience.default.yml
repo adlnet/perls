@@ -1,0 +1,75 @@
+uuid: 6e584599-03f3-421b-876e-6710ad329e7e
+langcode: en
+status: true
+dependencies:
+  config:
+    - entity_browser.browser.image_browser
+    - field.field.group.audience.field_description
+    - field.field.group.audience.field_media_image
+    - field.field.group.audience.field_visibility
+    - group.type.audience
+  module:
+    - entity_browser
+    - field_layout
+    - layout_discovery
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings:
+      label: ''
+id: group.audience.default
+targetEntityType: group
+bundle: audience
+mode: default
+content:
+  field_description:
+    type: string_textarea
+    weight: 2
+    region: content
+    settings:
+      orderable: true
+      rows: 2
+      placeholder: 'Optionally, add a description for this group'
+    third_party_settings:
+      maxlength:
+        maxlength_js: 500
+        maxlength_js_label: 'Content limited to @limit characters, remaining: <strong>@remaining</strong>'
+        maxlength_js_enforce: true
+        maxlength_js_truncate_html: false
+  field_media_image:
+    type: entity_browser_entity_reference
+    weight: 1
+    region: content
+    settings:
+      entity_browser: image_browser
+      field_widget_display: rendered_entity
+      field_widget_edit: true
+      field_widget_remove: true
+      field_widget_replace: false
+      open: true
+      field_widget_display_settings:
+        view_mode: media_library
+      selection_mode: selection_append
+      orderable: true
+    third_party_settings: {  }
+  field_visibility:
+    type: options_select
+    weight: 3
+    region: content
+    settings:
+      orderable: true
+    third_party_settings: {  }
+  label:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      orderable: true
+      size: 60
+      placeholder: 'Type the name of the group'
+    third_party_settings: {  }
+hidden:
+  langcode: true
+  path: true
+  status: true
+  uid: true

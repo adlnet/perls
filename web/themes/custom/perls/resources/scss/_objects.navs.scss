@@ -1,0 +1,457 @@
+/* ------------------------------------ *\
+    $NAVIGATION
+\* ------------------------------------ */
+
+/**
+ * Sidebar menu
+ */
+.c-nav__content-management {
+  margin: 0 (-$space) $space 0;
+
+  @include media("<medium") {
+    margin: 0;
+  }
+
+  @include media(">xlarge") {
+    margin-left: $space;
+  }
+
+  .c-menu {
+    li {
+      a {
+        @include o-heading--m;
+
+        display: block;
+        font-weight: bold;
+        letter-spacing: 0.04rem;
+        text-transform: uppercase;
+        color: $c-admin-nav--foreground;
+        text-decoration: none;
+        line-height: 1.3;
+        transition: $transition;
+        border-top: 1px solid rgba($c-admin-nav--foreground, 0.4);
+        padding-top: $space-double;
+        margin-bottom: $space-double;
+        padding-right: $space;
+
+        &:hover {
+          color: $c-link;
+        }
+      }
+    }
+
+    li:first-child a {
+      border-top: 0;
+    }
+
+    li.c-menu__item--expanded {
+      > a {
+        margin-bottom: $space;
+      }
+
+      & .c-menu__item--expanded {
+        > a {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+
+  .c-submenu {
+    padding-bottom: $space;
+
+    li {
+      a,
+      span {
+        padding: $space $space;
+        margin: 2px 0 2px 0;
+        border-radius: $border-radius--button 0 0 $border-radius--button;
+        border: 0;
+        color: $c-admin-nav--foreground;
+
+        @include o-heading--s;
+
+        &:hover,
+        &.is-active {
+          background-color: $c-admin-nav--background--active;
+          color: $c-admin-nav--foreground--active;
+        }
+
+        &.is-active {
+          font-weight: normal;
+        }
+      }
+
+      span {
+        display: block;
+        &:hover {
+          background-color: $c-admin-nav--background;
+        }
+      }
+    }
+
+    & .c-submenu {
+      padding-bottom: 0;
+
+      li {
+        a {
+          margin-left: $space;
+        }
+      }
+    }
+  }
+}
+/**
+ * Responsive toggle button.
+ */
+.c-nav__toggle {
+  background: transparent;
+  display: none;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  margin-left: $space;
+  margin-bottom: $space;
+  width: $space-double;
+  height: $space-double;
+  background: $c-button;
+  padding: $space-half;
+  border-radius: $border-radius;
+
+  @include media("<medium") {
+    display: block;
+  }
+
+  svg {
+    fill: white;
+  }
+}
+
+/**
+ * Learn nav
+ */
+.c-nav__learner {
+  ul {
+    display: flex;
+    &.c-menu {
+      overflow-x: scroll;
+      -ms-overflow-sytle: none;
+      scrollbar-width: none;
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
+  }
+
+  a {
+    @include o-heading--s;
+
+    color: $c-learner-nav--inactive;
+    font-weight: normal;
+    text-transform: uppercase;
+    padding: $space-half 0;
+    margin: 0 $space-half;
+    background-color: transparent;
+    transition: background 0.25s $hard-ease-in, color 0.25s $hard-ease-in;
+    display: block;
+    white-space: nowrap;
+
+    &:hover {
+      color: $c-learner-nav--hover;
+
+      &::after {
+        opacity: 1;
+      }
+    }
+
+    &::after {
+      content: "";
+      display: block;
+      width: 100%;
+      height: 2px;
+      background-color: $c-learner-nav--hover;
+      opacity: 0;
+      transition: $transition;
+    }
+
+    &.is-active {
+      background-color: $c-learner-nav--active;
+      border-radius: $border-radius--card;
+      padding: $space-half $space;
+      color: $c-learner-header--background;
+      font-weight: bold;
+    }
+  }
+
+  .c-header__content & {
+    a {
+      @include media("<xxlarge") {
+        margin: 0;
+      }
+    }
+  }
+
+  // First level menu items
+  $first-level-menu-items: home url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26.27 24.53'%3E%3Ctitle%3Eicon-home%3C/title%3E%3Cpath d='M26,12.41a1,1,0,0,1-.75.34,1,1,0,0,1-.66-.25l-2.2-1.95v14h-7v-7H10.91v7h-7v-14L1.66,12.5A1,1,0,1,1,.34,11L12.46.24a1.07,1.07,0,0,1,1.35,0L25.93,11A1,1,0,0,1,26,12.41Z' fill='%23ffffff'/%3E%3C/svg%3E"), discover url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='27' height='19' viewBox='0 0 27 19'%3E%3Cg%3E%3Cg clip-path='url(%23clip-b264f5c1-5091-4033-a508-e8b414f00517)'%3E%3Cpath fill='%23fff' d='M20.95 16.238a4.066 4.066 0 0 1-3.9-5.22 4.088 4.088 0 0 1 3.9-2.895 4.041 4.041 0 0 1 2.951 1.273h.017l.21.257a4.052 4.052 0 0 1-3.177 6.585zm-14.996 0a4.055 4.055 0 1 1 3.9-5.215c.115.376.172.767.172 1.16a4.066 4.066 0 0 1-4.072 4.055zm20.654-6.178h.072l-2.71-5.132a4.038 4.038 0 0 0-2.09-1.766 3.906 3.906 0 0 0-7.213.056 2.677 2.677 0 0 0-2.405 0 3.903 3.903 0 0 0-7.232 0c-.832.34-1.526.95-1.971 1.73L.947 8.8a6.045 6.045 0 1 0 11.055 3.382c0-.406-.04-.811-.12-1.21a5.974 5.974 0 0 0-.207-.733 1.976 1.976 0 0 1 3.554 0 6.01 6.01 0 0 0-.207.736 6.125 6.125 0 0 0-.092 1.763 6.045 6.045 0 1 0 11.678-2.679z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"), groups url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2225%22%20height%3D%2223%22%20viewBox%3D%220%200%2025%2023%22%3E%3Cg%3E%3Cg%3E%3Cg%3E%3Cg%3E%3Cpath%20fill%3D%22%23fff%22%20d%3D%22M10.849%209.35c0%20.43.05.86.15%201.28-.65.32-1.37.49-2.13.49-2.73%200-4.95-2.21-4.95-4.94V4.94c0-2.73%202.22-4.94%204.95-4.94%202.16%200%203.99%201.38%204.66%203.3-.33.2-.64.45-.93.73-1.13%201.11-1.75%202.57-1.75%204.12z%22%2F%3E%3C%2Fg%3E%3Cg%3E%3Cpath%20fill%3D%22%23fff%22%20d%3D%22M7.989%2018.88l-.1.19-.02.22c-.01.2-.01.34-.01.45h-5.35a1.63%201.63%200%200%201-1.63-1.63v-.83c0-.25%200-.33.02-.81a6.181%206.181%200%200%201%205.44-3.3h4.95c.39%200%20.77.04%201.14.11.05.06.11.12.17.18.87.85%201.95%201.4%203.11%201.6.03.02.05.05.07.08h-1.54c-2.62%200-5.01%201.43-6.25%203.74z%22%2F%3E%3C%2Fg%3E%3C%2Fg%3E%3Cg%3E%3Cg%3E%3Cg%3E%3Cpath%20fill%3D%22%23fff%22%20d%3D%22M21.599%208.15v1.2c0%202.65-2.24%204.8-4.87%204.8-2.39%200-4.46-1.77-4.82-4.09-.04-.23-.06-.47-.06-.71v-1.2c0-1.55.76-2.93%201.92-3.8a4.893%204.893%200%200%201%202.96-1.01c2.63%200%204.87%202.15%204.87%204.81z%22%2F%3E%3C%2Fg%3E%3C%2Fg%3E%3Cg%3E%3Cg%3E%3Cpath%20fill%3D%22%23fff%22%20d%3D%22M24.569%2020.14v.81c0%20.87-.73%201.59-1.62%201.59h-12.49c-.89%200-1.61-.72-1.61-1.59v-1.21c0-.1.01-.22.02-.39a6.084%206.084%200%200%201%205.37-3.21h4.87c2.34%200%204.31%201.28%205.37%203.21.1.47.09.54.09.79z%22%2F%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E"), me url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18.44 23.34'%3E%3Ctitle%3Eicon-my-profile%3C/title%3E%3Cpath d='M0,23.34V19.62a5,5,0,0,1,5-5h8.44a5,5,0,0,1,5,5v3.72ZM9.22,0a6.42,6.42,0,1,0,6.42,6.42A6.41,6.41,0,0,0,9.22,0Z' fill='%23ffffff'/%3E%3C/svg%3E");
+
+  @each $name, $icon in $first-level-menu-items {
+    .c-menu__item--#{$name} {
+      padding: 0;
+
+      a {
+        @include o-heading--m;
+
+        text-transform: capitalize;
+        letter-spacing: normal;
+        position: relative;
+        padding: $space-half;
+        display: flex;
+        align-items: center;
+        height: 100%;
+        font-weight: normal;
+        border-radius: 0;
+
+        &::before {
+          content: "";
+          display: inline-block;
+          width: 20px;
+          height: 20px;
+          margin-right: $space-half;
+          background-color: transparent;
+          background-image: colored-icon($icon, $c-learner-nav--icon);
+          background-position: center center;
+          background-size: 20px 20px;
+          background-repeat: no-repeat;
+          vertical-align: middle;
+        }
+
+        &::after {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          width: 30px;
+          height: 4px;
+          margin: $space-quarter $space-quarter 0;
+
+          @include media("<=medium") {
+            display: none;
+          }
+        }
+
+        &:hover {
+          color: $c-learner-nav--hover;
+
+          &::after {
+            opacity: 1;
+          }
+
+          @include media("<=medium") {
+            color: $c-learner-nav--hover;
+            border-bottom: 4px solid $c-learner-nav--hover;
+          }
+        }
+      }
+
+      &.c-menu__item--active-trail {
+        a {
+          background-color: transparent;
+          color: $c-learner-nav--active;
+
+          @include media("<=medium") {
+            color: $c-learner-nav--active;
+            border-bottom: 4px solid $c-learner-nav--active;
+          }
+
+
+          &::after {
+            background-color: $c-learner-nav--icon--active;
+            opacity: 1;
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Pager
+ */
+.c-pager {
+  padding: $space-half 0;
+
+  &__heading {
+    display: none;
+  }
+
+  &__items {
+    display: flex;
+    width: 100%;
+    justify-content: flex-end;
+    align-items: center;
+  }
+
+  &__item {
+    color: $c-link;
+    display: block;
+    line-height: 1;
+    padding: 0 $space-quarter;
+
+    a {
+      padding: $space-quarter;
+      background-color: transparent;
+      border-radius: 3px;
+      display: block;
+
+      &:hover {
+        background-color: $c-admin-pager--hover;
+      }
+    }
+
+    &.is-active {
+      a {
+        font-weight: normal;
+        color: $c-black;
+      }
+    }
+  }
+}
+
+// Pager variant for blue background.
+@mixin pagerColorVariant($font-color: $c-white, $link-font-color: $c-white, $link-background-color: transparent, $hover-link-font-color: $c-content--foreground, $hover-link-background-color: $c-white, $active-link-color: $c-content--foreground, $active-link-background-color: $c-content--foreground) {
+  .c-pager {
+    &__item {
+      color: $font-color;
+
+      a {
+        color: $link-font-color;
+        background-color: $link-background-color;
+
+        &:hover {
+          color: $hover-link-font-color;
+          background-color: $hover-link-background-color;
+        }
+      }
+
+      &.is-active {
+        a {
+          color: $active-link-color;
+          background-color: $active-link-background-color;
+        }
+      }
+    }
+  }
+}
+
+/**
+ * User menu (learner and content manager).
+ */
+.c-block__menu {
+  position: relative;
+}
+
+.c-nav__content-manager-user-menu,
+.c-nav__learner-user-menu {
+  width: 50px;
+  margin: 0 $space-half;
+}
+
+.c-user-menu {
+  position: absolute;
+  top: calc(100% + #{$space-half});
+  right: -$space-double + $space-quarter;
+  min-width: 150px;
+  color: $c-account-menu--foreground;
+  background: $c-account-menu--background;
+  border-radius: $border-radius--card;
+  box-shadow: $box-shadow;
+  opacity: 0;
+  visibility: hidden;
+  transition: $transition;
+  z-index: 100;
+
+  @include media("<large") {
+    right: -$space + $space-quarter;
+  }
+
+  &::after {
+    position: absolute;
+    top: -10px;
+    right: 20px;
+    content: "";
+    display: block;
+    border-right: 17px solid transparent;
+    border-bottom: 13px solid $c-account-menu--background;
+    border-left: 17px solid transparent;
+
+    @include media(">large") {
+      right: 40px;
+    }
+  }
+
+  &.this-is-active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  &__toggle {
+    // fallback solution for no user profile picture.
+    $icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='141' height='141'%3E%3Cpath fill='transparent' d='M0 141V0h141v141z'/%3E%3Cpath fill='%23ffffff' d='M118.742 120.825l.156 18.94a.644.644 0 01-.644.645H22.057a.644.644 0 01-.633-.636l.29-18.818s0-10.53 15.822-15.413h.041c.513-.126 11.371-2.508 15.855-3.261.273-.105.502-.298.652-.549a7.745 7.745 0 00.73-2.521.647.647 0 00-.217-.573c-1.39-1.217-7.773-8.326-9.938-22.67-2.255-14.995 5.386-30.945 25.488-32.033 20.133.863 28.311 17.504 25.763 32.167-2.431 13.936-8.584 21.306-9.902 22.558-.146.137-.521.428-.497.628.114.85.402 1.666.847 2.398.09.186.576.578 1.294.71 4.769.877 13.772 2.836 15.087 3.127h.041c15.82 4.895 15.962 15.301 15.962 15.301z'/%3E%3C/svg%3E");
+
+    background-color: transparent;
+    padding: 0;
+    background-image: colored-icon($icon, $c-learner-nav--icon);
+    background-repeat: no-repeat;
+    background-position: top center;
+    background-size: 75% 75%;
+    width: 50px;
+    height: 50px;
+  }
+
+  &__header__item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    white-space: nowrap;
+  }
+
+  .c-menu__item a {
+    display: block;
+    color: $c-account-menu--foreground;
+    border-top: 1px solid rgba($c-white, 0.4);
+    padding-top: $space-half;
+    padding-bottom: $space-half;
+    white-space: nowrap;
+
+    &:hover {
+      color: $c-account-menu--foreground--active;
+    }
+  }
+
+  $switcher-variants: content-manager-user-menu OFF $c-admin-toggle--off left $space-quarter $space, learner-user-menu ON $c-admin-toggle--on right $space $space-quarter;
+
+  @each $name, $text, $color, $position, $space-right, $space-left in $switcher-variants {
+    &.c-user-menu__#{$name} {
+      .c-menu__item--view-as-learner a {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+
+        &::after {
+          content: "#{$text}";
+          display: inline-block;
+          margin-left: $space-half;
+          padding-right: $space-right;
+          padding-left: $space-left;
+          color: $c-account-menu--foreground;
+          font-size: $font-size-xs - 1;
+          line-height: 22px;
+          background-image: radial-gradient(circle at center, $color 0%, $color 55%, $c-disabled 55%, transparent 80%, transparent 80%, transparent 100%), linear-gradient(to right, $c-gray-5 0%, $c-gray-5 100%);
+          background-size: 18px 18px, 100% 100%;
+          background-position: center $position, center center;
+          background-repeat: no-repeat, no-repeat;
+          border-radius: $border-radius--card;
+        }
+      }
+    }
+  }
+}

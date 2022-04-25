@@ -1,0 +1,60 @@
+/* ------------------------------------ *\
+    $COLOR-PALETTE
+\* ------------------------------------ */
+
+.color-palette {
+  display: inline-flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+
+  @include media(">xlarge") {
+    float: left;
+    // Account for width of color picker element, set by the farbtastic library.
+    width: calc(100% -  195px);
+    padding-right: $space;
+  }
+
+  > * {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}
+
+.color-placeholder {
+  @include media(">xlarge") {
+    margin-top: 110px;
+  }
+}
+
+.color-palette-element {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: center;
+
+  > .form-item {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    height: auto;
+    margin: 0;
+  }
+
+  .help-text {
+    display: block;
+    top: 0;
+  }
+
+  .color-palette__hook {
+    float: none;
+  }
+
+  .form-item label {
+    margin-top: 0;
+  }
+}

@@ -1,0 +1,30 @@
+uuid: 20916689-b44e-4f2a-9931-012cf306ea05
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_test_feedback
+    - paragraphs.paragraphs_type.test_attempt
+  module:
+    - allowed_formats
+    - text
+third_party_settings:
+  allowed_formats:
+    card_styling: card_styling
+    basic_filter: '0'
+    inline_styling: '0'
+    list: '0'
+    table: '0'
+    plain_text: '0'
+id: paragraph.test_attempt.field_test_feedback
+field_name: field_test_feedback
+entity_type: paragraph
+bundle: test_attempt
+label: 'Test Feedback'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

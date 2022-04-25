@@ -1,0 +1,29 @@
+/* ------------------------------------ *\
+    $MEDIA
+\* ------------------------------------ */
+
+/**
+ * Image styles.
+ */
+.image-style-user-profile-circle {
+  border-radius: 50%;
+  width: 200px;
+  max-width: 100%;
+}
+
+.achievement-image {
+  margin: 0 auto;
+  padding: 0.6em;
+}
+
+/**
+ * Field audio file.
+ */
+.c-field--name-field-audio-file {
+  audio {
+    display: block;
+    width: 100%;
+    // Browser default width of the audio element. Remove for full width.
+    max-width: 300px;
+  }
+}

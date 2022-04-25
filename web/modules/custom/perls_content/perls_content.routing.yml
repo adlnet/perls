@@ -1,0 +1,37 @@
+perls_content.manage.categories:
+  path: '/manage/categories'
+  defaults:
+    taxonomy_vocabulary: category
+    _form: 'Drupal\taxonomy\Form\OverviewTerms'
+    _title: 'Manage categories'
+  requirements:
+    _permission: 'edit terms in category'
+
+perls_content.manage.categories.add_form:
+  path: '/manage/categories/add'
+  defaults:
+    taxonomy_vocabulary: category
+    _controller: '\Drupal\taxonomy\Controller\TaxonomyController::addForm'
+    _title: 'Add category'
+  requirements:
+    _permission: 'edit terms in category'
+
+perls_content.learn_article_comments:
+  path: '/node/{node}/discussion'
+  defaults:
+    _controller: '\Drupal\perls_content\Controller\ArticleCommentsController::render'
+    _title_callback: '\Drupal\perls_content\Controller\ArticleCommentsController::getTitle'
+  requirements:
+    _custom_access: '\Drupal\perls_content\Controller\ArticleCommentsController::access'
+  options:
+    parameters:
+      node:
+        type: entity:node
+
+perls_content.perls_config_form:
+  path: '/admin/config/system/perls'
+  defaults:
+    _form: '\Drupal\perls_content\Form\PerlsConfigForm'
+    _title: 'Settings'
+  requirements:
+    _permission: 'administer perls'

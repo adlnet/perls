@@ -1,0 +1,13 @@
+uuid: 7a136b62-c30f-46a4-9369-87c5c750cadf
+langcode: en
+status: true
+dependencies:
+  module:
+    - flag
+id: flag_action.topic_completed_unflag
+label: 'Unflag this item'
+type: taxonomy_term
+plugin: 'flag_action:topic_completed_unflag'
+configuration:
+  flag_id: topic_completed
+  flag_action: unflag

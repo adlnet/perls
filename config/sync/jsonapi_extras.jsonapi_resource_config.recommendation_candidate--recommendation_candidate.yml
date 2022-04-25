@@ -1,0 +1,65 @@
+uuid: e7276eae-1105-4aa4-a139-d9e47aeaf461
+langcode: en
+status: true
+dependencies:
+  module:
+    - recommender
+id: recommendation_candidate--recommendation_candidate
+disabled: true
+path: recommendation_candidate/recommendation_candidate
+resourceType: recommendation_candidate--recommendation_candidate
+resourceFields:
+  id:
+    disabled: false
+    fieldName: id
+    publicName: id
+    enhancer:
+      id: ''
+  nid:
+    disabled: false
+    fieldName: nid
+    publicName: nid
+    enhancer:
+      id: ''
+  user_id:
+    disabled: false
+    fieldName: user_id
+    publicName: user_id
+    enhancer:
+      id: ''
+  status:
+    disabled: false
+    fieldName: status
+    publicName: status
+    enhancer:
+      id: ''
+  created:
+    disabled: false
+    fieldName: created
+    publicName: created
+    enhancer:
+      id: ''
+  changed:
+    disabled: false
+    fieldName: changed
+    publicName: changed
+    enhancer:
+      id: ''
+  recommendation_reason:
+    disabled: false
+    fieldName: recommendation_reason
+    publicName: recommendation_reason
+    enhancer:
+      id: ''
+  combined_score:
+    disabled: false
+    fieldName: combined_score
+    publicName: combined_score
+    enhancer:
+      id: ''
+  scores:
+    disabled: false
+    fieldName: scores
+    publicName: scores
+    enhancer:
+      id: ''

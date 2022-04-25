@@ -1,0 +1,89 @@
+uuid: 16683496-9b74-4df0-a7d7-fa25d7d5ef0b
+langcode: en
+status: true
+dependencies:
+  config:
+    - flag.flag.recommendation
+id: flagging--recommendation
+disabled: true
+path: flagging/recommendation
+resourceType: flagging--recommendation
+resourceFields:
+  id:
+    disabled: false
+    fieldName: id
+    publicName: id
+    enhancer:
+      id: ''
+  uuid:
+    disabled: false
+    fieldName: uuid
+    publicName: uuid
+    enhancer:
+      id: ''
+  flag_id:
+    disabled: false
+    fieldName: flag_id
+    publicName: flag_id
+    enhancer:
+      id: ''
+  entity_type:
+    disabled: false
+    fieldName: entity_type
+    publicName: entity_type
+    enhancer:
+      id: ''
+  entity_id:
+    disabled: false
+    fieldName: entity_id
+    publicName: entity_id
+    enhancer:
+      id: ''
+  flagged_entity:
+    disabled: false
+    fieldName: flagged_entity
+    publicName: flagged_entity
+    enhancer:
+      id: ''
+  global:
+    disabled: false
+    fieldName: global
+    publicName: global
+    enhancer:
+      id: ''
+  uid:
+    disabled: false
+    fieldName: uid
+    publicName: uid
+    enhancer:
+      id: ''
+  session_id:
+    disabled: false
+    fieldName: session_id
+    publicName: session_id
+    enhancer:
+      id: ''
+  created:
+    disabled: false
+    fieldName: created
+    publicName: created
+    enhancer:
+      id: ''
+  field_recommendation_plugin:
+    disabled: false
+    fieldName: field_recommendation_plugin
+    publicName: field_recommendation_plugin
+    enhancer:
+      id: ''
+  field_recommendation_reason:
+    disabled: false
+    fieldName: field_recommendation_reason
+    publicName: field_recommendation_reason
+    enhancer:
+      id: ''
+  field_recommendation_score:
+    disabled: false
+    fieldName: field_recommendation_score
+    publicName: field_recommendation_score
+    enhancer:
+      id: ''

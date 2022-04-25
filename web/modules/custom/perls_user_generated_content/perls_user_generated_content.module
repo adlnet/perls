@@ -1,0 +1,146 @@
+<?php
+
+/**
+ * @file
+ * Contains perls_user_generated_content.module.
+ */
+
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\flag\FlaggingInterface;
+use Drupal\node\NodeInterface;
+use Drupal\user\UserInterface;
+
+/**
+ * Implements hook_node_access().
+ */
+function perls_user_generated_content_node_access(NodeInterface $node, $operation, AccountInterface $account) {
+  // A learner can delete provided the article is not published.
+  // Admin roles can still delete content.
+  if (
+    $operation === 'delete'
+    && ($node->isPublished() || !$node->isDefaultRevision())
+    && $node->bundle() === 'learn_article'
+    && !$account->hasPermission('delete any learn_article content')) {
+    return AccessResult::forbidden()
+      ->addCacheableDependency($node)
+      ->addCacheableDependency($account);
+  }
+
+}
+
+/**
+ * Implements hook_form_node__form_alter().
+ */
+function perls_user_generated_content_form_node_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if (isset($form['author'])) {
+    unset($form['author']);
+  }
+  if (isset($form['uid'])) {
+    unset($form['uid']['#group']);
+    $form['uid']['widget']['#title'] = t('Author');
+    $form['uid']['widget']['#description'] = t('The author of this article.');
+    $form['uid']['#type'] = 'container';
+    $form['#validate'][] = '_perls_user_generated_content_validate_user_not_anon';
+    // Change entity browser layout.
+    if (isset($form['uid']['widget']['current']['items'][0]['replace_button'])) {
+      $form['uid']['widget']['#type'] = 'item';
+      $form['uid']['widget']['current']['items'][0]['replace_button']['#value'] = t('Change author');
+      unset($form['uid']['widget']['current']['#prefix']);
+    }
+    $entity = $form_state->getFormObject()->getEntity();
+    if ($entity && $entity->isNew()) {
+      $form['uid']['#access'] = FALSE;
+    }
+  }
+}
+
+/**
+ * Implements hook_inline_entity_form_form_alter().
+ */
+function perls_user_generated_content_inline_entity_form_entity_form_alter(&$entity_form, &$form_state) {
+  if ($entity_form['#entity_type'] == 'node') {
+    if (isset($entity_form['author'])) {
+      $entity_form['author']['#access'] = FALSE;
+    }
+    if (isset($entity_form['uid'])) {
+      $entity_form['uid']['#access'] = FALSE;
+    }
+    // Inline forms can set published status to draft or published.
+    if (isset($entity_form['moderation_state']) && isset($entity_form['moderation_state']['widget'][0]['state']['#options'])) {
+      foreach ($entity_form['moderation_state']['widget'][0]['state']['#options'] as $state => $label) {
+        if (!in_array($state, ['draft', 'published'])) {
+          unset($entity_form['moderation_state']['widget'][0]['state']['#options'][$state]);
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Validate that user is not anonymous.
+ */
+function _perls_user_generated_content_validate_user_not_anon(&$form, FormStateInterface $form_state) {
+  $values = $form_state->getValues();
+  if (isset($values['uid']) && isset($values['uid']['target_id']) && $values['uid']['target_id'] === '') {
+    $values['uid']['target_id'] = 'user:' . \Drupal::currentUser()->id();
+    $form_state->setValue('uid', $values['uid']);
+  }
+}
+
+/**
+ * Hide byline on any article transferred to anomyous.
+ */
+function perls_user_generated_content_user_cancel($edit, UserInterface $account, $method) {
+  if ($method === 'user_cancel_reassign') {
+    // Hide by line on all articles that will be anonymous.
+    module_load_include('inc', 'node', 'node.admin');
+    $nodes = \Drupal::entityQuery('node')
+      ->condition('uid', $account->id())
+      ->condition('field_shows_byline', 1)
+      ->execute();
+    node_mass_update($nodes, ['field_shows_byline' => 0], NULL, TRUE);
+  }
+}
+
+/**
+ * Update review and published badge plugins on node insert.
+ */
+function perls_user_generated_content_entity_insert(EntityInterface $entity) {
+  if ($entity->getEntityTypeId() !== 'node') {
+    return;
+  }
+  $badge_service = \Drupal::service('badges.badge_service');
+  if ($badge_plugin = $badge_service->getBadgePlugin('authored_count_badge_plugin')) {
+    $badge_plugin->updateUserProgress($entity->getOwner(), ['entity' => $entity]);
+  }
+}
+
+/**
+ * Update review and published badge plugins on node update.
+ */
+function perls_user_generated_content_entity_update(EntityInterface $entity) {
+  if ($entity->getEntityTypeId() !== 'node') {
+    return;
+  }
+  $badge_service = \Drupal::service('badges.badge_service');
+  if ($badge_plugin = $badge_service->getBadgePlugin('authored_count_badge_plugin')) {
+    $badge_plugin->updateUserProgress($entity->getOwner(), ['entity' => $entity]);
+  }
+}
+
+/**
+ * Update completed badge for user-generated content.
+ */
+function perls_user_generated_content_flagging_insert(FlaggingInterface $flag) {
+  $badge_service = \Drupal::service('badges.badge_service');
+  // Flag badges.
+  if ($badge_plugin = $badge_service->getBadgePlugin('authored_count_completed_badge_plugin')) {
+    $entity = $flag->getFlaggable();
+    if ($entity instanceof NodeInterface) {
+      $badge_plugin->updateUserProgress($entity->getOwner());
+    }
+  }
+}

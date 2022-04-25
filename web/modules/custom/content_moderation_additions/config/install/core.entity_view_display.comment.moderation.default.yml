@@ -1,0 +1,21 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - comment.type.moderation
+    - field.field.comment.moderation.comment_message
+id: comment.moderation.default
+targetEntityType: comment
+bundle: moderation
+mode: default
+content:
+  comment_message:
+    type: basic_string
+    weight: 0
+    region: content
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  langcode: true
+  links: true

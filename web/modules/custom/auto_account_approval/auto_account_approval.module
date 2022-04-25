@@ -1,0 +1,63 @@
+<?php
+
+/**
+ * @file
+ * All module related hooks.
+ */
+
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function auto_account_approval_form_user_register_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  // Add my own submit function.
+  if (!isset($form['actions']['submit']['#submit'])) {
+    $form['actions']['submit']['#submit'] = [];
+  }
+  // We should reorder the submit functions.
+  $form['actions']['submit']['#submit'][] = 'auto_account_approval_registration_submit';
+}
+
+/**
+ * Custom submit: Activate those user's account, where email end match.
+ */
+function auto_account_approval_registration_submit(array &$form, FormStateInterface $form_state) {
+  /** @var \Drupal\Core\Messenger\MessengerInterface $messenger */
+  $auto_approval_config = \Drupal::configFactory()
+    ->get('auto_account_approval.settings');
+  $top_level_domains = $auto_approval_config->get('top_level_domains');
+  $top_level_domains = explode(',', $top_level_domains);
+  $user_mail_address = $form_state->getValue('mail');
+  foreach ($top_level_domains as $top_domain) {
+    $escaped_domain = preg_quote(trim($top_domain));
+    $escaped_domain = str_replace("\*", "[A-Za-z0-9\-]+", $escaped_domain);
+    if (preg_match("/^.+@" . $escaped_domain . "$/i", $user_mail_address)) {
+      $messenger = \Drupal::service('messenger');
+      $messenger->deleteByType('status');
+      $messenger->addStatus(t('Your account is almost ready, please check your email for next steps.'));
+    }
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_presave().
+ */
+function auto_account_approval_user_presave(EntityInterface $account) {
+  if ($account->isNew()) {
+    $auto_approval_config = \Drupal::configFactory()
+      ->get('auto_account_approval.settings');
+
+    $top_level_domains = $auto_approval_config->get('top_level_domains');
+    $top_level_domains = explode(',', $top_level_domains);
+    $email_address = $account->get('mail')->value;
+    foreach ($top_level_domains as $top_domain) {
+      $escaped_domain = preg_quote(trim($top_domain));
+      $escaped_domain = str_replace("\*", "[A-Za-z0-9\-]+", $escaped_domain);
+      if (preg_match("/^.+@" . $escaped_domain . "$/i", $email_address)) {
+        $account->set('status', 1);
+      }
+    }
+  }
+}

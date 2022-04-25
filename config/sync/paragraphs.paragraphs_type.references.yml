@@ -1,0 +1,12 @@
+uuid: 1d46a956-5205-474f-b8f9-0c2add763458
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: k3E68LVgeIY-Q0nBMkH4VYzuJDBnsRSNdPTovKIYmE0
+id: references
+label: References
+icon_uuid: null
+icon_default: null
+description: 'Add links to external sites or other articles'
+behavior_plugins: {  }

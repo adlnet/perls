@@ -1,0 +1,26 @@
+uuid: 070940f8-1c91-4176-b1e4-1bf33e9f1f65
+langcode: en
+status: true
+dependencies:
+  module:
+    - perls_search
+    - system
+  theme:
+    - perls
+id: perlssearchinputblock_base
+theme: perls
+region: content
+weight: -2
+provider: null
+plugin: perls_search_input_block
+settings:
+  id: perls_search_input_block
+  label: 'Perls Search Input Block'
+  label_display: '0'
+  provider: perls_search
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    context_mapping: {  }
+    pages: /search

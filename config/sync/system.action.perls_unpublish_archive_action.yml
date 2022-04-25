@@ -1,0 +1,12 @@
+uuid: 45a43815-5d8c-487b-86a0-57f428195158
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - views_bulk_operations
+id: perls_unpublish_archive_action
+label: Unpublish/Archive
+type: node
+plugin: perls_unpublish_archive_action
+configuration: {  }

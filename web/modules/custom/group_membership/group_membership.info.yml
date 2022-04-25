@@ -1,0 +1,7 @@
+name: 'Group Membership'
+type: module
+description: 'Adds filters and fields to more easily work with group membership.'
+core: 8.x
+package: 'Group'
+dependencies:
+  - group

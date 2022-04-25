@@ -1,0 +1,95 @@
+uuid: 6d1fdfed-dd7a-425f-8072-75a57b0b2fe1
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.test_attempt.field_attempted_answers
+    - field.field.paragraph.test_attempt.field_correctly_answered_count
+    - field.field.paragraph.test_attempt.field_registration_id
+    - field.field.paragraph.test_attempt.field_test_complete
+    - field.field.paragraph.test_attempt.field_test_feedback
+    - field.field.paragraph.test_attempt.field_test_passed
+    - field.field.paragraph.test_attempt.field_test_question_count
+    - field.field.paragraph.test_attempt.field_test_result
+    - paragraphs.paragraphs_type.test_attempt
+  module:
+    - field_layout
+    - layout_discovery
+    - paragraphs
+    - text
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings:
+      label: ''
+id: paragraph.test_attempt.default
+targetEntityType: paragraph
+bundle: test_attempt
+mode: default
+content:
+  field_attempted_answers:
+    type: entity_reference_paragraphs
+    weight: 2
+    region: content
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: open
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: ''
+    third_party_settings: {  }
+  field_correctly_answered_count:
+    type: number
+    weight: 6
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+  field_registration_id:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_test_complete:
+    type: boolean_checkbox
+    weight: 4
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  field_test_feedback:
+    type: text_textarea
+    weight: 1
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_test_passed:
+    type: boolean_checkbox
+    weight: 3
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  field_test_question_count:
+    type: number
+    weight: 5
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+  field_test_result:
+    type: number
+    weight: 7
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true

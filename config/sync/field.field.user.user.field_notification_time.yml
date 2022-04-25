@@ -1,0 +1,21 @@
+uuid: 9c85d5a9-986d-4d60-a4e2-4cb0450c78b5
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.user.field_notification_time
+  module:
+    - time_field
+    - user
+id: user.user.field_notification_time
+field_name: field_notification_time
+entity_type: user
+bundle: user
+label: 'Reminder time'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: time

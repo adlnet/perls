@@ -1,0 +1,12 @@
+name: 'Perls learner state'
+description: 'Manage the xApi states'
+core: 8.x
+core_version_requirement: ^8 || ^9
+type: module
+package: 'Custom'
+dependencies:
+  - drupal:flag
+  - perls_core:perls_core
+  - content_moderation_additions:content_moderation_additions
+  - xapi:xapi
+  - xapi:xapi_reporting

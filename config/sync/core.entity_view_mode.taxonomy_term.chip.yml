@@ -1,0 +1,10 @@
+uuid: 32721976-07a6-474f-86b9-e0803e4f436f
+langcode: en
+status: true
+dependencies:
+  module:
+    - taxonomy
+id: taxonomy_term.chip
+label: Chip
+targetEntityType: taxonomy_term
+cache: true

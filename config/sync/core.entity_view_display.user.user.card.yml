@@ -1,0 +1,77 @@
+uuid: 5ad405d8-edb9-4df8-8b95-f40ff98aa493
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.user.card
+    - field.field.user.user.field_add_groups
+    - field.field.user.user.field_goal_log
+    - field.field.user.user.field_goal_monthly_course_comp
+    - field.field.user.user.field_goal_weekly_completions
+    - field.field.user.user.field_goal_weekly_test_average
+    - field.field.user.user.field_goal_weekly_views
+    - field.field.user.user.field_interests
+    - field.field.user.user.field_name
+    - field.field.user.user.field_notification_days
+    - field.field.user.user.field_notification_time
+    - field.field.user.user.field_organization_homepage
+    - field.field.user.user.field_organization_identifier
+    - field.field.user.user.user_picture
+    - image.style.user_profile_portrait
+  module:
+    - field_layout
+    - image
+    - layout_builder
+    - user
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings:
+      label: ''
+  layout_builder:
+    enabled: false
+    allow_custom: false
+_core:
+  default_config_hash: K-E3NJy6JQWSRtBiiWc6Sq-do_zomm-3Eyp428tsupo
+id: user.user.card
+targetEntityType: user
+bundle: user
+mode: card
+content:
+  field_name:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  user_picture:
+    type: image
+    label: hidden
+    settings:
+      image_link: ''
+      image_style: user_profile_portrait
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  entitygroupfield: true
+  field_add_groups: true
+  field_goal_log: true
+  field_goal_monthly_course_comp: true
+  field_goal_weekly_completions: true
+  field_goal_weekly_test_average: true
+  field_goal_weekly_views: true
+  field_interests: true
+  field_notification_days: true
+  field_notification_time: true
+  field_organization_homepage: true
+  field_organization_identifier: true
+  group_content: true
+  langcode: true
+  member_for: true
+  search_api_excerpt: true

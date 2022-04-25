@@ -1,0 +1,3 @@
+services:
+  monolog.formatter.minimal_line:
+    class: Drupal\monolog_extra\Monolog\Formatter\MinimalLineFormatter

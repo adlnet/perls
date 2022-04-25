@@ -1,0 +1,16 @@
+diff --git a/web/modules/custom/annotator/js/plugins/annotator.touch.js b/web/modules/custom/annotator/js/plugins/annotator.touch.js
+index 6adf09e..f9f1116 100644
+--- a/web/modules/custom/annotator/js/plugins/annotator.touch.js
++++ b/web/modules/custom/annotator/js/plugins/annotator.touch.js
+@@ -472,9 +472,9 @@
+         if (data.onTapUp) {
+           data.onTapUp.apply(this, arguments);
+         }
+-        return jQuery(document).unbind({ touchstart: onTapEnd, mousedown: onTapEnd });
++        return jQuery(document).unbind({ touchstart: onTapEnd });
+       };
+-      data.tapHandlers = { touchstart: onTapStart, mousedown: onTapStart };
++      data.tapHandlers = { touchstart: onTapStart };
+       if (eventHandler.selector) {
+         return jQuery(context).delegate(eventHandler.selector, data.tapHandlers);
+       } else {

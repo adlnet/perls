@@ -1,0 +1,10 @@
+uuid: f91b91bc-e2f7-4452-bd0b-26a9d7cb880d
+langcode: en
+status: true
+dependencies:
+  module:
+    - block_content
+id: block_content.webform
+label: Webform
+targetEntityType: block_content
+cache: true

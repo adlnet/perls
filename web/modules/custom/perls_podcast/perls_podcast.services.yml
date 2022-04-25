@@ -1,0 +1,13 @@
+services:
+  perls_podcast.podcast_episode_subscriber:
+    class: Drupal\perls_podcast\EventSubscriber\PodcastEpisodeSubscriber
+    tags:
+      - {name: event_subscriber}
+  perls_podcast.podcast_notification_subscriber:
+    class: Drupal\perls_podcast\EventSubscriber\PodcastNotificationSubscriber
+    arguments:
+      - '@flag'
+      - '@notifications.firebase.message'
+      - '@image.factory'
+    tags:
+      - {name: event_subscriber}

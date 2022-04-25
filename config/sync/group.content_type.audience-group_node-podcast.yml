@@ -1,0 +1,19 @@
+uuid: ecffb654-0048-4e36-84e0-204a396fe7cb
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.audience
+    - node.type.podcast
+  module:
+    - gnode
+    - node
+id: audience-group_node-podcast
+label: 'Group: Group node (Podcast)'
+description: 'Adds <em class="placeholder">Podcast</em> content to groups both publicly and privately.'
+group_type: audience
+content_plugin: 'group_node:podcast'
+plugin_config:
+  group_cardinality: 0
+  entity_cardinality: 1
+  use_creation_wizard: false

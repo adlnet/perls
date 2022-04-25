@@ -1,0 +1,21 @@
+uuid: 11903fa1-acd6-4c4a-aa0a-196e2ca6b0c6
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.flagging.field_completion_source
+    - flag.flag.completed
+id: flagging.completed.field_completion_source
+field_name: field_completion_source
+entity_type: flagging
+bundle: completed
+label: 'Completion Source'
+description: 'This field can be used by the adaptive learning system to mark why an item has been marked as completed. manual/Null = completed normally, adaptive = completed by adaptive system, needs_review = completed but failed adaptive test questions about the subject.'
+required: false
+translatable: false
+default_value:
+  -
+    value: manual
+default_value_callback: ''
+settings: {  }
+field_type: string

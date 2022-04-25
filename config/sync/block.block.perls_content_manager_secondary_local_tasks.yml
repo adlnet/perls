@@ -1,0 +1,22 @@
+uuid: f37f1172-9f1e-488c-bdcf-b2ee6bdc2478
+langcode: en
+status: true
+dependencies:
+  theme:
+    - perls_content_manager
+_core:
+  default_config_hash: DJ7Om1C2xWr2GI8CjZaZtyWpP-0S3hRR3oROZl1oesc
+id: perls_content_manager_secondary_local_tasks
+theme: perls_content_manager
+region: content
+weight: -11
+provider: null
+plugin: local_tasks_block
+settings:
+  id: local_tasks_block
+  label: 'Secondary tabs'
+  label_display: '0'
+  provider: core
+  primary: false
+  secondary: true
+visibility: {  }

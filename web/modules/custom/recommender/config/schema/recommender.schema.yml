@@ -1,0 +1,109 @@
+recommender.plugin.new_content_recommendation_plugin.settings:
+  type: config_object
+  label: 'Recommendation Plugins'
+  mapping:
+    recommendation_reason:
+      type: label
+      label: 'New Content Recommendation Reason'
+    number_candidates_generated:
+      type: string
+      label: 'Number of Candidates'
+    weight:
+      type: sequence
+      label: 'Weight'
+      sequence:
+        type: integer
+
+recommender.plugin.trending_content_recommendation_plugin.settings:
+  type: config_object
+  label: 'Recommendation Plugins'
+  mapping:
+    recommendation_reason:
+      type: label
+      label: 'Trending Content Recommendation Reason'
+    number_candidates_generated:
+      type: string
+      label: 'Number of Candidates'
+    weight:
+      type: sequence
+      label: 'Weight'
+      sequence:
+        type: integer
+
+recommender.plugin.pad_results_recommendation_plugin.settings:
+  type: config_object
+  label: 'Recommendation Plugins'
+  mapping:
+    recommendation_reason:
+      type: label
+      label: 'Pad Results Recommendation Reason'
+    number_candidates_generated:
+      type: string
+      label: 'Number of Candidates'
+    weight:
+      type: sequence
+      label: 'Weight'
+      sequence:
+        type: integer
+
+recommender.plugin.random_recommendation_plugin.settings:
+  type: config_object
+  label: 'Recommendation Plugins'
+  mapping:
+    recommendation_reason:
+      type: label
+      label: 'Random Content Recommendation Reason'
+    number_candidates_generated:
+      type: string
+      label: 'Number of Candidates'
+    weight:
+      type: sequence
+      label: 'Weight'
+      sequence:
+        type: integer
+
+recommender.plugin.similar_content_recommendation_plugin.settings:
+  type: config_object
+  label: 'Recommendation Plugins'
+  mapping:
+    recommendation_reason:
+      type: label
+      label: 'Similar Content Recommendation Reason'
+    number_candidates_generated:
+      type: string
+      label: 'Number of Candidates'
+    weight:
+      type: sequence
+      label: 'Weight'
+      sequence:
+        type: integer
+
+recommender.plugin.weighted_score_combine.settings:
+  type: config_object
+  label: 'Recommendation Score Combine Plugin'
+  mapping:
+    recommendation_reason_template:
+      type: mapping
+      label: 'Weighted Recommendation Reason Template'
+      mapping:
+        single:
+          type: label
+          label: 'Single Recommendation Reason Template'
+        multiple:
+          type: label
+          label: 'Multiple Recommendation Reasons Template'
+
+recommender.plugin.averaged_score_combine.settings:
+  type: config_object
+  label: 'Recommendation Score Combine Plugin'
+  mapping:
+    recommendation_reason_template:
+      type: mapping
+      label: 'Averaged Recommendation Reason Template'
+      mapping:
+        single:
+          type: label
+          label: 'Single Recommendation Reason Template'
+        multiple:
+          type: label
+          label: 'Multiple Recommendation Reasons Template'

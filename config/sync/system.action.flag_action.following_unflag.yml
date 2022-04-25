@@ -1,0 +1,15 @@
+uuid: 7b97ede5-934e-46f7-8395-35417af989c8
+langcode: en
+status: true
+dependencies:
+  config:
+    - flag.flag.following
+  module:
+    - flag
+id: flag_action.following_unflag
+label: 'Unflag this item'
+type: taxonomy_term
+plugin: 'flag_action:following_unflag'
+configuration:
+  flag_id: following
+  flag_action: unflag

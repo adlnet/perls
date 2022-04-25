@@ -1,0 +1,18 @@
+uuid: 5eddcc9f-f864-4916-8e13-80fa942d339d
+langcode: en
+status: true
+dependencies: {  }
+id: entity_author_is_not_blocked
+label: 'Entity author is not blocked'
+type: variable_data_comparison
+reverse: false
+description: 'Checks whether the author of the entity is blocked.'
+target_entity_type: null
+target_bundle: null
+success_items: {  }
+fail_items: {  }
+tags: {  }
+settings:
+  value_1: '[node:author:status:value]'
+  operator: '!='
+  value_2: '0'

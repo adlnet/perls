@@ -1,0 +1,12 @@
+uuid: 6517c81d-9c9c-4b97-8d1b-16adb681256b
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: U9fP3qsNKPEstdOr7_Nv1oC2oGOu8QAqQY23GMqCr1Y
+id: heading
+label: Heading
+icon_uuid: null
+icon_default: null
+description: 'Add a heading to separate key sections of the article.'
+behavior_plugins: {  }

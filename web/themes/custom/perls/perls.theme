@@ -1,0 +1,949 @@
+<?php
+
+/**
+ * @file
+ * Functions to support theming in the PERLS theme.
+ */
+
+use Drupal\Core\Asset\AttachedAssetsInterface;
+use Drupal\block_content\BlockContentInterface;
+use Drupal\Component\Utility\Environment;
+use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
+use Drupal\Core\Template\Attribute;
+use Drupal\Core\Url;
+use Drupal\Core\Site\Settings;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\file\Entity\File;
+use Drupal\image\Entity\ImageStyle;
+use Drupal\user\Entity\Role;
+use Drupal\user\Entity\User;
+
+/**
+ * Implements template_preprocess_html().
+ */
+function perls_preprocess_html(&$variables) {
+  $current_path = \Drupal::service('path.current')->getPath();
+  $requestException = Drupal::requestStack()->getCurrentRequest()->attributes->get('exception');
+
+  if (isset($requestException) && isset($variables['root_path'])) {
+    unset($variables['root_path']);
+  }
+  else {
+    $variables['current_path'] = \Drupal::service('path_alias.manager')->getAliasByPath($current_path);
+  }
+  // Adds a class for the page name if a page manager page is being viewed.
+  // Class should stay the same regardless of path since it is a machine name.
+  $page_variant = \Drupal::routeMatch()->getParameter('page_manager_page_variant');
+  if (!empty($page_variant)) {
+    if ($variant = $page_variant->get('page')) {
+      $variables['attributes']['class'][] = 'page-variant--' . str_replace('_', '-', $variant);
+    }
+  }
+
+  // The is_front variable needed in html twig as well, but it's only available
+  // in page twig.
+  $variables['is_front'] = \Drupal::service('path.matcher')->isFrontPage();
+
+  if (\Drupal::service('perls_api.request_inspector')->isMobileApp()) {
+    $variables['attributes']['class'][] = 'content-only';
+    $variables["page"]["#cache"]["contexts"][] = 'headers:user-agent';
+  }
+
+  // Adds a body class with the current page manager page id (if it exists).
+  $page = \Drupal::routeMatch()->getParameter('page_manager_page');
+  if (!empty($page)) {
+    $variables['attributes']['class'][] = 'page--' . $page->id();
+  }
+  $route_name = \Drupal::routeMatch()->getRouteName();
+  if ($route_name == 'user_task.my_list') {
+    $variables['attributes']['class'][] = 'page--user-task-my-list';
+  }
+}
+
+/**
+ * Implements template_preprocess_maintenance_page().
+ */
+function perls_preprocess_maintenance_page(&$variables) {
+  $variables['title'] = t("We'll be back soon");
+}
+
+/**
+ * Implements hook_js_settings_alter().
+ *
+ * Adds custom theming information.
+ */
+function perls_js_settings_alter(array &$settings, AttachedAssetsInterface $assets) {
+  if ($fid = theme_get_setting('custom_background_pattern', 'perls')) {
+    $file = File::load($fid[0]);
+
+    $settings['appearance'] = [
+      'custom_background' => $file->createFileUrl(),
+      'custom_background_repeat' => theme_get_setting('custom_background_repeat', 'perls') ?? 'repeat-x',
+      'custom_background_anchor' => theme_get_setting('custom_background_anchor', 'perls') ?? 'top center',
+      'custom_background_size' => theme_get_setting('custom_background_size', 'perls') ?? 'auto',
+    ];
+  }
+
+  // Override the themeing settings for the Veracity charts.
+  if (isset($settings['veracity_vql'])) {
+    foreach ($settings['veracity_vql'] as $chart_id => &$chart) {
+      $chart['theme']['name'] = 'am4themes_perls';
+      $chart['theme']['url'] = _perls_get_chart_theme_url();
+      $chart['theme']['background'] = '#FFF';
+    }
+  }
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK_alter().
+ */
+function perls_theme_suggestions_page_alter(&$suggestions, $variables, $hook) {
+  // 404 template suggestion.
+  if (!is_null(Drupal::requestStack()->getCurrentRequest()->attributes->get('exception'))) {
+    $status_code = \Drupal::request()->attributes->get('_route');
+    switch ($status_code) {
+      case 'system.404':
+        $suggestions[] = 'page__' . (string) $status_code;
+        break;
+    }
+  }
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK_alter().
+ */
+function perls_theme_suggestions_block_alter(array &$suggestions, array $variables) {
+  $block = $variables['elements'];
+  $blockType = $block['#configuration']['provider'];
+  if ($blockType == "block_content") {
+    $bundle = $block['content']['#block_content']->bundle();
+    array_splice($suggestions, 2, 0, 'block__' . $blockType . '__' . $bundle);
+  }
+}
+
+/**
+ * Implements hook_theme_preprocess_node().
+ */
+function perls_preprocess_node(&$variables) {
+  $node = $variables['node'];
+  $node_type = $node->getType();
+
+  $linkType = NULL;
+  if ($node->hasField('field_link_type')) {
+    $linkType = $node->get('field_link_type')->getString();
+
+    if (!empty($linkType)) {
+      $variables['field_link_type'] = $linkType;
+    }
+  }
+
+  if ($node_type == 'learn_link' && $linkType !== 'custom') {
+    $variables['target'] = '_blank';
+  }
+
+  // Create node id.
+  if ($node) {
+    $variables['id'] = $node->id();
+
+    // Avoid linking to the author who created the article.
+    $variables['author_name'] = $node->getOwner()->getDisplayName();
+  }
+
+  // Setting url value as per field_link_type.
+  if ($node->hasField('field_link_type')) {
+    if ($linkType !== 'custom') {
+      if (isset($variables['content']['field_content_link'][0])) {
+        if (!empty($variables['content']['field_content_link'][0]['#options']) &&
+          $variables['content']['field_content_link'][0]['#options']['external'] == TRUE) {
+          $variables['url'] = $variables['content']['field_content_link'][0]['#url']->getUri();
+        }
+        else {
+          $variables['url'] = $variables['content']['field_content_link'][0]['#url']->toString();
+        }
+      }
+    }
+    else {
+      if (isset($variables['content']['field_custom_uri'][0])) {
+        $variables['url'] = $node->get('field_custom_uri')->getString();
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for user_pass.
+ */
+function perls_form_user_pass_alter(&$form, &$form_state, $form_id) {
+  $form['name']['#attributes']['autofocus'] = TRUE;
+  $form['name']['#attributes']['placeholder'] = t('Email');
+  $form['actions']['submit']['#value'] = t('Send Link');
+  $form['mail']['#markup'] = FALSE;
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for entity browser.
+ */
+function perls_form_entity_browser_image_browser_form_alter(&$form, &$form_state, $form_id) {
+  if (isset($form['widget']['upload'])) {
+    $form['widget']['upload']['#description'] = t('One file only. @memory_limit limit. Allowed types: @extensions',
+    [
+      '@memory_limit' => format_size(Environment::getUploadMaxSize()),
+      '@extensions' => $form['widget']['upload']['#upload_validators']['file_validate_extensions'][0],
+    ]);
+  }
+}
+
+/**
+ * Implements hook_theme_preprocess_block().
+ */
+function perls_preprocess_block(&$variables) {
+  // User login form block.
+  if (isset($variables['content']['user_login_form'])) {
+    $variables['content']['user_login_form']['name']['#attributes']['autofocus'] = TRUE;
+    $variables['content']['user_login_form']['name']['#attributes']['placeholder'] = t('Email');
+    $variables['content']['user_login_form']['pass']['#attributes']['placeholder'] = t('Password');
+    $variables['content']['user_login_form']['actions']['submit']['#value'] = t('Sign in');
+  }
+
+  // User links block.
+  if (isset($variables['content']['user_links'])) {
+    $variables['content']['user_links']['#items']['create_account']['#title'] = t('Create Account');
+    $variables['content']['user_links']['#items']['request_password']['#title'] = t('Forgot Password');
+  }
+
+  $content = $variables['elements']['content'];
+  if (isset($content['#block_content']) && $content['#block_content'] instanceof BlockContentInterface) {
+    $variables['block_content_bundle'] = $content['#block_content']->bundle();
+  }
+
+  // Hide history button so we can verify if history exists first. The class
+  // will get removed via JS if it does (see main.js).
+  if ($variables['plugin_id'] == 'go_back_history_block') {
+    $variables['attributes']['class'] = ['go-back--hidden'];
+  }
+
+  // Make user fields available for block level twig.
+  $user = User::load(\Drupal::currentUser()->id());
+  /** @var \Drupal\file\FileInterface $image */
+  $image = $user->get('user_picture')->entity;
+  if ($image) {
+    $variables['user_picture'] = [
+      '#theme' => 'image_style',
+      '#style_name' => 'user_profile_circle',
+      '#uri' => $image->getFileUri(),
+    ];
+  }
+  else {
+    $field = FieldConfig::loadByName('user', 'user', 'user_picture');
+    $default_image = $field->getSetting('default_image');
+    $file = \Drupal::service('entity.repository')->loadEntityByUuid('file', $default_image['uuid']);
+    if ($file) {
+      $image_uri = $file->getFileUri();
+      $variables['user_picture'] = [
+        '#theme' => 'image_style',
+        '#style_name' => 'user_profile_circle',
+        '#uri' => $image_uri,
+      ];
+    }
+  }
+}
+
+/**
+ * Implements hook_theme_preprocess_user().
+ *
+ * @throws EntityStorageException
+ */
+function perls_preprocess_user(&$variables) {
+  $variables['view_mode'] = $variables['elements']['#view_mode'];
+  $created = $variables['user']->getCreatedTime();
+  $variables['created'] = \Drupal::service('date.formatter')->format($created, 'custom', 'l, F j, Y');
+  $variables['url'] = Url::fromUserInput('/user/' . $variables['user']->id() . '/edit');
+
+  /** @var \Drupal\file\FileInterface $image */
+  $image = User::load($variables['user']->id())->get('user_picture')->entity;
+  if ($image) {
+    $image_uri = $image->getFileUri();
+    $variables['user_picture_uri'] = ImageStyle::load('user_profile_portrait')->buildUrl($image_uri);
+  }
+  else {
+    $field = FieldConfig::loadByName('user', 'user', 'user_picture');
+    $default_image = $field->getSetting('default_image');
+    $file = \Drupal::service('entity.repository')->loadEntityByUuid('file', $default_image['uuid']);
+    $variables['user_picture_uri'] = '';
+    if ($file) {
+      $image_uri = $file->getFileUri();
+      $variables['user_picture_uri'] = ImageStyle::load('user_profile_portrait')->buildUrl($image_uri);
+    }
+  }
+
+  if (User::load($variables['user']->id())->hasRole('sysadmin')) {
+    $variables['role'] = 'admin';
+  }
+
+  $account = User::load($variables['user']->id());
+  $roles = Role::loadMultiple($account->getRoles());
+  $role = end($roles);
+  $variables['role'] = $role ? $role->label() : '';
+}
+
+/**
+ * Implements hook_theme_preprocess_user().
+ */
+function perls_theme_suggestions_user_alter(&$suggestions, $vars, $hook) {
+  $view_mode = $vars['elements']['#view_mode'];
+  $suggestions[] = 'user__' . $view_mode;
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for views_bulk_operations_confirm_action.
+ *
+ * Improves the UX of the VBO confirmation page.
+ */
+function perls_form_views_bulk_operations_confirm_action_alter(&$form, &$form_state, $form_id) {
+  $form_data = $form_state->get('views_bulk_operations');
+
+  // If there are no entity labels, then the user has requested to
+  // perform an action to all entities in the view.
+  if (empty($form_data['entity_labels'])) {
+    $form['list'] = [
+      '#theme' => 'item_list',
+      '#items' => [t('All @count items', [
+        '@count' => $form_data['selected_count'],
+      ]),
+      ],
+    ];
+  }
+
+  $form['list']['#title'] = t('Are you sure you want to @action?', ['@action' => strtolower($form_data['action_label'])]);
+  $form['#title'] = t('@action confirmation', ['@action' => $form_data['action_label']]);
+  $form['actions']['#type'] = 'actions';
+  $form['actions']['submit']['#value'] = $form_data['action_label'];
+  $form['actions']['submit']['#attributes']['class'][] = 'button--danger';
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for views_bulk_operations_configure_action.
+ *
+ * Improves the UX of the VBO configure page.
+ */
+function perls_form_views_bulk_operations_configure_action_alter(&$form, &$form_state, $form_id) {
+  $form_data = $form_state->get('views_bulk_operations');
+  $action_label = $form_data['action_label'] ?? '';
+  $form['#title'] = t('Configure %action', ['%action' => $action_label]);
+  $form['actions']['#type'] = 'actions';
+  $form['actions']['submit']['#value'] = $action_label;
+}
+
+/**
+ * Implements hook_form_alter() for forms.
+ *
+ * Re-arranges the header of VBO forms and alter tax form titles.
+ */
+function perls_form_alter(&$form, &$form_state, $form_id) {
+  $topic_and_tag_form_ids = [
+    'taxonomy_term_tags_form',
+    'taxonomy_term_category_form',
+  ];
+
+  if (in_array($form_id, $topic_and_tag_form_ids)) {
+    $term = $form_state->getFormObject()->getEntity();
+
+    if ($term->isNew()) {
+      $form['#title'] = t('Create @vocab', [
+        '@vocab' => $term->vid->entity->label(),
+      ]);
+    }
+    else {
+      $form['#title'] = t('Edit @vocab: @label', [
+        '@vocab' => $term->vid->entity->label(),
+        '@label' => $term->label(),
+      ]);
+    }
+  }
+
+  if (isset($form['header']) && isset($form['header']['views_bulk_operations_bulk_form'])) {
+    $form['header']['views_bulk_operations_bulk_form']['multipage']['#weight'] = 1000;
+    $form['header']['views_bulk_operations_bulk_form']['select_all']['#weight'] = 1001;
+  }
+}
+
+/**
+ * Add display to theme suggestions for taxonomy_term.
+ */
+function perls_theme_suggestions_taxonomy_term_alter(array &$suggestions, array $variables) {
+  $term = $variables['elements']['#taxonomy_term'];
+  $suggestions[] = 'taxonomy_term__' . $variables['elements']['#view_mode'];
+  $suggestions[] = 'taxonomy_term__' . $term->bundle() . '__' . $variables['elements']['#view_mode'];
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ *
+ * We need to load by hand the formtips js to entity browser forms because the
+ * entity browser is using modal view. The formtips module attach the library in
+ * hook_page_bottom hook but this hook doesn't run in modal view.
+ */
+function perls_form_entity_browser_form_alter(&$form, $form_state, $form_id) {
+  if (\Drupal::moduleHandler()->moduleExists('formtips')) {
+    $settings = \Drupal::config('formtips.settings');
+    $enabled_themes = $settings->get('formtips_themes');
+    if (!empty($enabled_themes) && !array_key_exists('perls', $enabled_themes)) {
+      return;
+    }
+
+    $js_settings = [
+      'formtips' => [
+        'selectors' => explode("\r\n", $settings->get('formtips_selectors')),
+        'interval' => $settings->get('formtips_interval'),
+        'sensitivity' => $settings->get('formtips_sensitivity'),
+        'timeout' => $settings->get('formtips_timeout'),
+        'max_width' => $settings->get('formtips_max_width'),
+        'trigger_action' => $settings->get('formtips_trigger_action'),
+      ],
+    ];
+
+    $form['#attached']['library'][] = 'formtips/formtips';
+    $form['#attached']['drupalSettings'] = $js_settings;
+  };
+}
+
+/**
+ * Implements template_preprocess().
+ */
+function perls_preprocess_views_view_table(&$variables) {
+  $route_match = \Drupal::routeMatch();
+  if ($route_match->getRouteName() === 'entity.webform_submission.collection') {
+    $route = $route_match->getRouteObject();
+    $route->setDefault('_title', 'Learner Feedback');
+  }
+}
+
+/**
+ * Implements template_preprocess() for layouts.
+ *
+ * Add a semantic class for a layout region.
+ */
+function perls_preprocess_layout(&$variables) {
+  $variables['attributes']['class'][] = 'layout-section';
+  if (isset($variables['settings']['layout_section_id'])) {
+    $variables['attributes']['class'][] =
+      'layout-section--' .
+      str_replace('_', '-', $variables['settings']['layout_section_id']);
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for tests.
+ *
+ * Adds the test header to each question in the test.
+ */
+function perls_preprocess_field__node__field_quiz__test(&$variables) {
+  $test = $variables['element']['#object'];
+
+  foreach ($variables['items'] as $index => &$item) {
+    $item['content']['#header'] = [
+      '#markup' => t('<p class="status">@item / @total</p><h5>@type</h5><h3>@title</h3>', [
+        '@item' => $index + 1,
+        '@total' => count($variables['items']),
+        '@type' => $test->type->entity->label(),
+        '@title' => $test->label(),
+      ]),
+    ];
+
+    // Ensure the quiz card is cached based on the test it's in.
+    array_push($item['content']['#cache']['keys'], 'test', $test->id());
+    $item['content']['#cache']['tags'][] = 'node:' . $test->id();
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for quiz cards.
+ *
+ * Applies a header if the question appears as part of a test.
+ */
+function perls_preprocess_node__quiz__card(&$variables) {
+  if (isset($variables['elements']['#header'])) {
+    $variables['header'] = $variables['elements']['#header'];
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for course cards.
+ */
+function perls_preprocess_node__course__card(&$variables) {
+  /** @var \Drupal\perls_learner_state\LearnerInfo $learner_info */
+  $learner_info = \Drupal::service('perls_learner_state.info');
+  $course = $variables['node'];
+  $count = $learner_info->getCourseLength($course);
+  $progress = ($count) ? min(100, round($learner_info->getCourseProgress($course) / $count * 100)) : '0';
+
+  if ($learner_info->isEnrolled($course)) {
+    $variables['launch_button_title'] = t('Continue');
+    $variables['course_status'] = t('@count lessons<span> / </span>@progress% complete', [
+      '@count' => $count,
+      '@progress' => $progress,
+    ]);
+  }
+  else {
+    $variables['launch_button_title'] = t('Start');
+    $variables['course_status'] = t('@count lessons', [
+      '@count' => $count,
+    ]);
+  }
+
+  $cache_metadata = CacheableMetadata::createFromRenderArray($variables);
+  $cache_metadata->addCacheContexts(['user']);
+  foreach ($course->field_learning_content->referencedEntities() as $node) {
+    $cache_metadata->addCacheTags($node->getCacheTags());
+  }
+
+  $cache_metadata->applyTo($variables);
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for course node pages.
+ */
+function perls_preprocess_node__course__full(&$variables) {
+  $course = $variables['node'];
+  $learner_info = \Drupal::service('perls_learner_state.info');
+  $count = $learner_info->getCourseLength($course);
+  $progress = $learner_info->getCourseProgress($course);
+
+  $variables['course_complete_count'] = $progress;
+  $variables['course_total_count'] = $count;
+  // LearnerInfo getCourseLength returns 0 if there is no accessible content.
+  if (!$count) {
+    $variables['course_progress'] = t("You do not have access to any of the content within this course. @recommendation.", [
+      '@recommendation' => Link::fromTextAndUrl(t('Try something new'), Url::fromRoute('<front>'))->toString(),
+    ]);
+  }
+  elseif ($progress < $count) {
+    $variables['course_progress'] = t('<strong>@complete_count / @total_count</strong> completed', [
+      '@complete_count' => $progress,
+      '@total_count' => $count,
+    ]);
+  }
+  else {
+    $variables['course_progress'] = t("You've completed this course! @recommendation.", [
+      '@recommendation' => Link::fromTextAndUrl(t('Try something new'), Url::fromRoute('<front>'))->toString(),
+    ]);
+  }
+
+  $variables['#cache']['contexts'][] = 'user';
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for course tiles.
+ */
+function perls_preprocess_node__course__tile(&$variables) {
+  /** @var \Drupal\perls_learner_state\LearnerInfo $learner_info */
+  $learner_info = \Drupal::service('perls_learner_state.info');
+  $course = $variables['node'];
+  $account = User::load($variables['user']->id());
+  $course_complete = $learner_info->isCourseComplete($course, $account);
+  if ($course_complete) {
+    $variables['course_status'] = t('Completed');
+  }
+  else {
+    $count = $learner_info->getCourseLength($course);
+    $progress = ($count) ? $learner_info->getCourseProgress($course) : '0';
+
+    if ($learner_info->isEnrolled($course)) {
+      $variables['course_status'] = t('@progress<span> / </span>@count @lesson Complete', [
+        '@count' => $count,
+        '@progress' => $progress,
+        '@lesson' => \Drupal::translation()->formatPlural(
+          $count,
+          'Lesson', 'Lessons'
+        ),
+      ]);
+    }
+  }
+
+  $cache_metadata = CacheableMetadata::createFromRenderArray($variables);
+  $cache_metadata->addCacheContexts(['user']);
+  foreach ($course->field_learning_content->referencedEntities() as $node) {
+    $cache_metadata->addCacheTags($node->getCacheTags());
+  }
+
+  $cache_metadata->applyTo($variables);
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for podcast tiles.
+ */
+function perls_preprocess_node__podcast__tile(&$variables) {
+  $podcast = $variables['node'];
+  $episodes = $podcast->get('field_episodes');
+  if (!$episodes->isEmpty()) {
+    $variables['episode_count'] = \Drupal::translation()->formatPlural(
+      count($episodes),
+      '1 Episode', '@count Episodes'
+    );
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for node tiles.
+ */
+function perls_preprocess_node__tile(&$variables) {
+  $node = $variables['node'];
+  $node_type = $node->getType();
+  $variables['link_attributes'] = [];
+  if (in_array($node_type, ['tip_card', 'quiz', 'flash_card'])) {
+    $variables['link_attributes'] = new Attribute();
+    $variables['link_attributes']->addClass('use-ajax');
+    $variables['link_attributes']->setAttribute('dialog', 'modal');
+  }
+}
+
+/**
+ * Implements template_preprocess_views_view().
+ */
+function perls_preprocess_views_view_list(&$variables) {
+  /** @var \Drupal\views\ViewExecutable $view */
+  $view = $variables['view'];
+  $id = $view->id();
+  $display = $view->current_display;
+  if ($id === 'recommended_content' && $display === 'learner_page') {
+    $block_manager = \Drupal::service('plugin.manager.block');
+    $plugin_block = $block_manager->createInstance('prompt_block', []);
+    $rendered_block = $plugin_block->build();
+    if (!empty($rendered_block)) {
+      $variables['prompt_block'] = $rendered_block;
+    }
+  }
+
+  if ($id === 'corpus_activity') {
+    $rows = $variables['rows'];
+
+    foreach ($rows as $row) {
+      /** @var \Drupal\views\ResultRow $content */
+      $content = $row['content']['#row'];
+      $variables['attributes']['class'][] = $content->_entity->bundle();
+    }
+  }
+
+  if ($id === 'group_content_by_topic'
+  || $id === 'history'
+  || $id === 'bookmarks') {
+    $more_link = _perls_get_view_more_link($view);
+
+    if ($more_link) {
+      $variables['rows'][] = [
+        'content' => [
+          '#type' => 'container',
+          '#attributes' => ['class' => 'c-card c-card--more'],
+          'link' => $more_link,
+        ],
+      ];
+    }
+  }
+
+  if ($id === 'dashboard_tags'
+  || $id === 'group_index') {
+    $more_link = _perls_get_view_more_link($view);
+
+    if ($more_link) {
+      $variables['rows'][] = [
+        'content' => [
+          '#type' => 'container',
+          '#attributes' => ['class' => 'c-chip--more'],
+          'link' => $more_link,
+        ],
+      ];
+    }
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function perls_form_system_theme_settings_alter(&$form, FormStateInterface $form_state) {
+  $build_info = $form_state->getBuildInfo();
+  if (isset($build_info['args'][0]) && ($theme = $build_info['args'][0]) && color_get_info($theme) && $theme === 'perls' && function_exists('gd_info')) {
+    $form['#validate'][] = '_perls_scheme_form_validate';
+  }
+
+  if (!isset($form['#submit']) || !in_array('perls_theme_settings_submit_handler', $form['#submit'])) {
+    $form['#submit'][] = 'perls_theme_settings_submit_handler';
+  }
+
+  // This alter hook is invoked for both base and child themes;
+  // but we only want to override what happens for the base theme.
+  $theme = \Drupal::routeMatch()->getParameter('theme');
+
+  if ($theme !== 'perls') {
+    return;
+  }
+
+  $form['#title'] = t('Customize Theming');
+
+  // Hide the default theme settings.
+  unset($form['logo'], $form['favicon']);
+  $form['theme_settings']['#access'] = FALSE;
+
+  $form['perls'] = [
+    '#type' => 'container',
+    '#weight' => -10,
+  ];
+
+  $form['perls']['description'] = [
+    '#type' => 'container',
+    '#attributes' => ['class' => ['page-description']],
+  ];
+
+  $form['perls']['description']['content'] = [
+    '#type' => 'html_tag',
+    '#tag' => 'p',
+    '#value' => t('Customizing the logos and colors will update both the web and mobile app. You can choose all your own colors or customize one of the existing color schemes. Use the preview below to ensure text is easily readable across all content types.'),
+  ];
+
+  $form['perls']['custom_logo'] = [
+    '#type' => 'managed_image',
+    '#title' => t('Custom logo'),
+    '#description' => t('<strong>Recommended size:</strong> 400x400px.'),
+    '#default_value' => theme_get_setting('custom_logo', $theme),
+    '#upload_location' => 'public://branding/',
+  ];
+
+  $form['perls']['custom_app_logo'] = [
+    '#type' => 'managed_image',
+    '#title' => t('App logo'),
+    '#description' => t('Optionally, you may upload a different logo to use in the mobile app.<br><strong>Recommended size:</strong> 300x90px.'),
+    '#default_value' => theme_get_setting('custom_app_logo', $theme),
+    '#upload_location' => 'public://branding/',
+  ];
+
+  $form['perls']['custom_favicon'] = [
+    '#type' => 'managed_image',
+    '#title' => t('Favicon'),
+    '#description' => t('Some browsers show this icon in the address bar or when the user bookmarks the site.<br><strong>Recommended size:</strong> 300x300px'),
+    '#default_value' => theme_get_setting('custom_favicon', $theme),
+    '#upload_location' => 'public://branding/',
+    '#upload_validators' => [
+      'file_validate_extensions' => ['png'],
+    ],
+  ];
+
+  $form['background'] = [
+    '#type' => 'details',
+    '#title' => t('Background'),
+  ];
+
+  $form['background']['custom_background_pattern'] = [
+    '#type' => 'managed_image',
+    '#title' => t('Pattern'),
+    '#description' => t('The background pattern appears on the login screen, the content management screens, and at the top of the learner screens.<br><strong>Tip:</strong> Choose a pattern that can tile vertically or horizontally and choose how the pattern should be repeated below.'),
+    '#default_value' => theme_get_setting('custom_background_pattern', $theme),
+    '#upload_location' => 'public://branding/',
+    '#upload_validators' => [
+      'file_validate_extensions' => ['png'],
+    ],
+  ];
+
+  $form['background']['custom_background_repeat'] = [
+    '#type' => 'select',
+    '#title' => t('Repeat'),
+    '#options' => [
+      'repeat-x' => t('Repeat horizontally'),
+      'repeat-y' => t('Repeat vertically'),
+      'repeat' => t('Repeat horizontally and vertically'),
+    ],
+    '#default_value' => theme_get_setting('custom_background_repeat', $theme),
+  ];
+
+  $form['background']['custom_background_anchor'] = [
+    '#type' => 'select',
+    '#title' => t('Anchor'),
+    '#description' => t('Choose where the repeating background should start'),
+    '#options' => [
+      'top left' => t('Top left'),
+      'top center' => t('Top center'),
+      'top right' => t('Top right'),
+      'center left' => t('Center left'),
+      'center center' => t('Center'),
+      'center right' => t('Center right'),
+      'bottom left' => t('Bottom left'),
+      'bottom center' => t('Bottom center'),
+      'bottom right' => t('Bottom right'),
+    ],
+    '#default_value' => theme_get_setting('custom_background_anchor', $theme) ?? 'top center',
+  ];
+}
+
+/**
+ * Invoked when the appearance settings have been changed for the theme.
+ *
+ * Invoked for both base and child themes; happens before base form submission.
+ *
+ * @param array $form
+ *   The form that was submitted.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   The state of the form.
+ */
+function perls_theme_settings_submit_handler(array &$form, FormStateInterface $form_state) {
+  $config = \Drupal::configFactory()->getEditable('perls.settings');
+
+  foreach (['logo', 'app_logo', 'favicon', 'background_pattern'] as $option) {
+    $field = 'custom_' . $option;
+    $default_key = $option . '.use_default';
+    $path_key = $option . '.path';
+
+    $value = $form_state->getValue($field);
+
+    if (!empty($value)) {
+      $file = File::load($value[0]);
+      $file->setPermanent();
+      $file->save();
+
+      $config->set($default_key, 0);
+      $config->set($path_key, $file->getFileUri());
+    }
+    elseif ($config->get($path_key) !== NULL) {
+      $files = \Drupal::entityTypeManager()
+        ->getStorage('file')
+        ->loadByProperties(['uri' => $config->get($path_key)]);
+
+      foreach ($files as $file) {
+        $file->delete();
+      }
+
+      $config->set($default_key, 1);
+      $config->set($path_key, NULL);
+    }
+
+    // @todo Consider unsetting the file upload field?
+    // $form_state->unsetValue($field);
+  }
+
+  $config->save();
+}
+
+/**
+ * Get the view more link for a given view.
+ *
+ * @param object $view
+ *   The view to get the more link for.
+ *
+ * @return array|bool
+ *   Render array for more_link or false.
+ */
+function _perls_get_view_more_link($view) {
+  if (is_object($view)) {
+    $more_link = $view->getDisplay()->renderMoreLink();
+
+    if ($more_link) {
+      return $more_link;
+    }
+  }
+  return FALSE;
+}
+
+/**
+ * Make changes to color form submission.
+ */
+function _perls_scheme_form_validate(&$form, FormStateInterface $form_state) {
+  $palette = $form_state->getValue('palette');
+  $palette['secondary_lighter'] = _perls_theme_lighter($palette['secondary'], 0.2);
+  $palette['secondary_darker'] = _perls_theme_darker($palette['secondary'], 0.2);
+  $palette['course_darker'] = _perls_theme_darker($palette['course'], 0.2);
+  $form_state->setValue('palette', $palette);
+}
+
+/**
+ * Get a lighter shade of the given color.
+ */
+function _perls_theme_lighter($rgb, $amount) {
+  $source = _color_rgb2hsl(_color_unpack($rgb, TRUE));
+  $source[2] = min(1, $source[2] * (1 + $amount));
+  return _color_pack(_color_hsl2rgb($source), TRUE);
+}
+
+/**
+ * Gets a darker shade of a given color.
+ */
+function _perls_theme_darker($rgb, $amount) {
+  $source = _color_rgb2hsl(_color_unpack($rgb, TRUE));
+  $source[2] = max(0, $source[2] * max(0, 1 - $amount));
+  return _color_pack(_color_hsl2rgb($source), TRUE);
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for duration field.
+ */
+function perls_preprocess_field__node__field_duration(&$variables) {
+  $duration = $variables["items"][0]["content"]["#markup"];
+  $variables["items"][0]["content"]["#markup"] = gmdate('G:i:s', $duration);
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for status report info.
+ *
+ * Adds deployment identifier.
+ */
+function perls_preprocess_status_report_general_info(&$variables) {
+  $variables['drupal']['deployment_identifier'] = Settings::get('deployment_identifier') ?? t('Unknown');
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for group.
+ *
+ * Updates requirements for whether the current page is the "group page."
+ */
+function perls_preprocess_group(&$variables) {
+  $route_match = \Drupal::routeMatch();
+  $group = $variables['group'];
+  $page_group = $route_match->getParameter('group');
+  $is_group_page = $route_match->getRouteName() === 'view.group_topics.page_1'
+    && $page_group
+    && $page_group->id() == $group->id();
+
+  $variables['page'] = $variables['page'] || $is_group_page;
+  $variables['#cache']['contexts'][] = 'route';
+}
+
+/**
+ * Determines the amcharts theme URL for the Veracity VQL renderer.
+ */
+function _perls_get_chart_theme_url() {
+  $target = 'am4chart-theme.js';
+  $stylesheets = \Drupal::config('color.theme.perls')->get('stylesheets');
+
+  if (isset($stylesheets)) {
+    foreach ($stylesheets as $file) {
+      if (basename($file) === $target) {
+        return file_create_url($file);
+      }
+    }
+  }
+
+  return file_create_url(drupal_get_path('theme', 'perls') . '/dist/css/' . $target);
+}
+
+/**
+ * Implements template_preprocess_menu_local_action().
+ */
+function perls_preprocess_menu_local_action(&$variables) {
+  $classes = [
+    'o-button--large',
+    'push-notification-action-link',
+  ];
+  if (isset($variables['link']['#title']) && in_array($variables['link']['#title'], [
+    'Send Notification by User',
+    'Send Notification by Group',
+  ])) {
+    if ($variables['link']['#title'] === 'Send Notification by User') {
+      $classes[] = 'o-button__notify-user';
+    }
+    else {
+      $classes[] = 'o-button__notify-groups';
+    }
+
+    if (isset($variables['link']['#options']['attributes']['class'])) {
+      $variables['link']['#options']['attributes']['class'] = $classes;
+    }
+  }
+}

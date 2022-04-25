@@ -1,0 +1,11 @@
+uuid: 61a71ddc-542c-4dbc-815d-c4c3c5d56137
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.learn_file
+id: node.learn_file
+target_entity_type_id: node
+target_bundle: learn_file
+default_langcode: site_default
+language_alterable: false

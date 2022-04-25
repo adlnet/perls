@@ -1,0 +1,9 @@
+services:
+  perls_goals_log.log_manager:
+    class: Drupal\perls_goals_log\PerlsLogManager
+    arguments: ['@entity_type.manager', '@config.factory']
+  perls_goals_log.achieved_goal_subcsriber:
+    class: Drupal\perls_goals_log\EventSubscriber\AchievedGoalReceived
+    arguments: [ '@perls_goals_log.log_manager', '@perls_goals.goal_helper', '@datetime.time' ]
+    tags:
+      - { name: 'event_subscriber' }

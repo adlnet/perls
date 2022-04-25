@@ -1,0 +1,64 @@
+uuid: 58485b16-8a16-472f-aa81-802f73ae591a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.flagging.test_results.field_test_attempts
+    - flag.flag.test_results
+  module:
+    - entity_reference_revisions
+    - field_layout
+    - layout_builder
+    - layout_discovery
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings:
+      label: ''
+  layout_builder:
+    enabled: true
+    sections:
+      -
+        layout_id: layout_onecol
+        layout_settings:
+          label: ''
+          context_mapping: {  }
+        components:
+          48c12aec-1ae5-48b9-a15d-81a948849a08:
+            uuid: 48c12aec-1ae5-48b9-a15d-81a948849a08
+            region: content
+            configuration:
+              id: 'field_block:flagging:test_results:field_test_attempts'
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              formatter:
+                type: entity_reference_revisions_entity_view
+                label: above
+                settings:
+                  view_mode: default
+                  link: ''
+                third_party_settings: {  }
+            weight: 0
+            additional: {  }
+            third_party_settings: {  }
+        third_party_settings: {  }
+id: flagging.test_results.default
+targetEntityType: flagging
+bundle: test_results
+mode: default
+content:
+  field_test_attempts:
+    type: entity_reference_revisions_entity_view
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    weight: 4
+    region: content
+hidden:
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  search_api_excerpt: true

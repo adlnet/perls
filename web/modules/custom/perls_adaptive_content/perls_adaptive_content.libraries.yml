@@ -1,0 +1,4 @@
+perls_adaptive_content.refresh_course:
+  version: 1.x
+  js:
+    js/adaptive_content.js: {}

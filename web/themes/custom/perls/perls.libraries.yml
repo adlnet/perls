@@ -1,0 +1,52 @@
+perls-base:
+  version: 1.x
+  css:
+    theme:
+      css/main.min.css: {}
+  js:
+    js/main.min.js: {}
+    js/forms.min.js: {}
+    js/stack.min.js: {}
+    js/clamp.init.min.js: {}
+    js/live-preview.min.js: {}
+    js/dialog.min.js: {}
+    js/sticky.init.min.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/jquery.once
+    - core/sortable
+
+slick:
+  version: 1.8.1
+  js:
+    /libraries/slick-carousel/slick/slick.min.js: {}
+  dependencies:
+    - core/jquery
+    - core/jquery.once
+
+clamp:
+  version: 0.5.1
+  js:
+    /libraries/clamp-js/clamp.js: {}
+
+color:
+  version: 1.x
+  css:
+    theme:
+      dist/css/color.css: {}
+
+color.preview:
+  version: 1.0.0
+  css:
+    theme:
+      color/preview.css: { }
+  js:
+    color/preview.js: {}
+  dependencies:
+    - color/drupal.color
+
+sticky:
+  version: 1.3.0
+  js:
+    /libraries/sticky-js/dist/sticky.min.js: { minified: true }

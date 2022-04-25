@@ -1,0 +1,8 @@
+user_task.draggable:
+  js:
+    js/Sortable.min.js: {scope: footer}
+    js/vuedraggable.umd.min.js: {scope: footer}
+    js/a11y-dialog.min.js: {scope: footer}
+  dependencies:
+    - pdb_vue/vue
+

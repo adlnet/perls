@@ -1,0 +1,11 @@
+name: 'Perls: User'
+description: 'Provides extra functionality to handle user on the website.'
+type: module
+core: 8.x
+core_version_requirement: ^8 || ^9
+package: 'Custom'
+libraries:
+  - perls_user/isotope
+dependencies:
+  - perls_dashboard
+  - veracity_vql

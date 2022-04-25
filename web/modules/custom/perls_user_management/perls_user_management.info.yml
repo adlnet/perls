@@ -1,0 +1,11 @@
+name: 'PERLS User Management'
+type: module
+description: 'Provides custom VBO actions and other features for managing users'
+core: 8.x
+core_version_requirement: ^8 || ^9
+package: 'PERLS'
+dependencies:
+  - drupal:views_bulk_operations
+  - drupal:history
+  - history_views:history_views
+  - float:badges

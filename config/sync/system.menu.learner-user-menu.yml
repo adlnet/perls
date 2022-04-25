@@ -1,0 +1,8 @@
+uuid: 4760e689-9b0e-4fcb-a19f-5e36c07d7a94
+langcode: en
+status: true
+dependencies: {  }
+id: learner-user-menu
+label: 'Learner User menu'
+description: 'Account menu of the learner'
+locked: false

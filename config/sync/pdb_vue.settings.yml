@@ -1,0 +1,5 @@
+_core:
+  default_config_hash: bWeks1BOhJAQVtTxRtL7YSV59RtlhH0jY12h3T17nVs
+development_mode: false
+use_spa: false
+spa_element: '#page-wrapper'

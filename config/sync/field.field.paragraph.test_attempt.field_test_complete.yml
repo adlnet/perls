@@ -1,0 +1,23 @@
+uuid: 90e60986-f011-4633-8ba5-f65f7d731800
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_test_complete
+    - paragraphs.paragraphs_type.test_attempt
+id: paragraph.test_attempt.field_test_complete
+field_name: field_test_complete
+entity_type: paragraph
+bundle: test_attempt
+label: 'Test Complete'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: Completed
+  off_label: Unfinished
+field_type: boolean

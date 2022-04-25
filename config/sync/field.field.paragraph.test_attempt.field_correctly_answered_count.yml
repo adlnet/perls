@@ -1,0 +1,23 @@
+uuid: 3b2da712-bbb8-45a6-9c0d-fecc54b38cf2
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_correctly_answered_count
+    - paragraphs.paragraphs_type.test_attempt
+id: paragraph.test_attempt.field_correctly_answered_count
+field_name: field_correctly_answered_count
+entity_type: paragraph
+bundle: test_attempt
+label: 'Correctly Answered Count'
+description: 'The number of questions correctly answered by a user. (Equivalent to RAW in xapi statement)'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: 0
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

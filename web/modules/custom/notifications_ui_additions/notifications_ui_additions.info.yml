@@ -1,0 +1,7 @@
+name: 'Notifications additions'
+type: module
+description: 'API and UI for associating content with push notifications to send to the mobile app.'
+core: 8.x
+package: 'Perls'
+dependencies:
+  - notifications

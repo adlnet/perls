@@ -1,0 +1,85 @@
+uuid: ee127751-0a7c-4747-9869-57bd762831ac
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_body
+    - node.type.learn_article
+    - paragraphs.paragraphs_type.goal_log
+    - paragraphs.paragraphs_type.quiz_option
+    - paragraphs.paragraphs_type.test_attempt
+    - paragraphs.paragraphs_type.test_question_answer
+  module:
+    - entity_reference_revisions
+id: node.learn_article.field_body
+field_name: field_body
+entity_type: node
+bundle: learn_article
+label: Body
+description: 'Add the article text here. Remember to keep the text brief and focus on the main takeaways (less than 500 words).'
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      quiz_option: quiz_option
+      goal_log: goal_log
+      test_attempt: test_attempt
+      test_question_answer: test_question_answer
+    negate: 1
+    target_bundles_drag_drop:
+      audio:
+        weight: -21
+        enabled: false
+      callout:
+        weight: -24
+        enabled: false
+      checklist:
+        weight: -19
+        enabled: false
+      document:
+        weight: -26
+        enabled: false
+      goal_log:
+        weight: 22
+        enabled: true
+      heading:
+        weight: -27
+        enabled: false
+      image:
+        weight: -30
+        enabled: false
+      layout_two_column:
+        weight: -20
+        enabled: false
+      list_ordered:
+        weight: -29
+        enabled: false
+      list_unordered:
+        weight: -28
+        enabled: false
+      quiz_option:
+        weight: -17
+        enabled: true
+      references:
+        weight: -23
+        enabled: false
+      table:
+        weight: -25
+        enabled: false
+      test_attempt:
+        weight: 29
+        enabled: true
+      test_question_answer:
+        weight: 30
+        enabled: true
+      text:
+        weight: -31
+        enabled: false
+      video:
+        weight: -22
+        enabled: false
+field_type: entity_reference_revisions

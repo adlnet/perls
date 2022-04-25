@@ -1,0 +1,15 @@
+perls_admin.analytics.edit:
+  path: '/analytics/overview/edit'
+  defaults:
+    _entity_wizard: 'page.edit'
+    _title_callback: '\Drupal\page_manager_ui\Controller\PageManagerController::editPageTitle'
+    tempstore_id: page_manager.page
+    page: '{machine_name}'
+    machine_name: analytics
+    step: page_variant__analytics-block_display-0__content
+  options:
+    parameters:
+      page:
+        type: tempstore:page
+  requirements:
+    _permission: 'administer pages'

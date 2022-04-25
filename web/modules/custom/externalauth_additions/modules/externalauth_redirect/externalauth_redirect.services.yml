@@ -1,0 +1,6 @@
+services:
+  externalauth_redirect.request_redirect_subscriber:
+    class: Drupal\externalauth_redirect\EventSubscriber\RequestRedirectSubscriber
+    arguments: ['@string_translation', '@current_route_match', '@current_user', '@page_cache_kill_switch']
+    tags:
+      - { name: event_subscriber }

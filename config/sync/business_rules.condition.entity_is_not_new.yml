@@ -1,0 +1,19 @@
+uuid: 04d99437-d5a3-4238-8785-2686f29cbb66
+langcode: en
+status: true
+dependencies: {  }
+id: entity_is_not_new
+label: 'Entity is not new'
+type: data_comparison
+reverse: true
+description: 'Checks whether the entity is new.'
+target_entity_type: node
+target_bundle: learn_article
+success_items: {  }
+fail_items: {  }
+tags: {  }
+settings:
+  field: nid
+  data_to_compare: current_data
+  operator: empty
+  value_to_compare: ''

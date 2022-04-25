@@ -1,0 +1,24 @@
+uuid: 8cf5c39c-5c2a-4658-95dc-9edbb5e6a581
+langcode: en
+status: true
+dependencies: {  }
+third_party_settings:
+  textimage:
+    uri_scheme: public
+name: 16_9_medium
+label: '16:9 Medium (900x500)'
+effects:
+  9b12ff85-9eb0-44ff-8858-0692587234ed:
+    uuid: 9b12ff85-9eb0-44ff-8858-0692587234ed
+    id: image_convert
+    weight: -9
+    data:
+      extension: jpg
+  0db3bf4d-6257-4b2d-836e-a8907a9be669:
+    uuid: 0db3bf4d-6257-4b2d-836e-a8907a9be669
+    id: image_scale
+    weight: -10
+    data:
+      width: 900
+      height: 500
+      upscale: false

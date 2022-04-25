@@ -1,0 +1,27 @@
+uuid: c0d107fc-dacd-4996-907d-42a9c6230fb6
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - perls_learner
+_core:
+  default_config_hash: Z3nlZUh2mSJP3apMrJWt-duS-aLyP79rcfu_0wpPmDs
+id: perls_learner_page_title
+theme: perls_learner
+region: content
+weight: -6
+provider: null
+plugin: page_title_block
+settings:
+  id: page_title_block
+  label: 'Page title'
+  label_display: '0'
+  provider: core
+visibility:
+  request_path:
+    id: request_path
+    negate: true
+    context_mapping: {  }
+    pages: "/bookmarks\r\n/our_picks\r\n/recent\r\n/trending\r\n/history\r\n/taxonomy/term/*\r\n/vidyo-room/*\r\n/group/*\r\n!/group/*/*"

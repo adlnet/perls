@@ -1,0 +1,200 @@
+/* ------------------------------------ *\
+    $TEXT TYPES
+\* ------------------------------------ */
+
+/**
+ * Page Title
+ */
+.o-page-title,
+.page-title {
+  @include o-heading--xl;
+
+  text-transform: uppercase;
+
+  .page-variant--new-dashboard & {
+    display: none;
+  }
+}
+
+/**
+ * Description element
+ */
+.page-description {
+  @include description-container;
+}
+
+/**
+ * Font Families
+ */
+.u-font {
+  font-family: $ff-font;
+}
+
+.u-font--primary {
+  font-family: $ff-font--primary;
+}
+
+.u-font--secondary {
+  font-family: $ff-font--secondary;
+}
+
+/**
+ * Text Sizes
+ */
+.u-font--xs {
+  font-size: var(--font-size-xs, $font-size-xs);
+}
+
+.u-font--s {
+  font-size: var(--font-size-s, $font-size-s);
+}
+
+.u-font--m {
+  font-size: var(--font-size-m, $font-size-m);
+}
+
+.u-font--l {
+  font-size: var(--font-size-l, $font-size-l);
+}
+
+.u-font--xl {
+  font-size: var(--font-size-xl, $font-size-xl);
+}
+
+.u-font--xxl {
+  font-size: var(--font-size-xxl, $font-size-xxl);
+}
+
+/**
+ * Text Positioning
+ */
+.u-text-align--center {
+  text-align: center;
+}
+
+/**
+ * Text Decorations
+ */
+.u-text-decoration--underline {
+  text-decoration: underline;
+}
+
+/**
+ * Text Transform
+ */
+.u-text-transform--uppercase {
+  text-transform: uppercase;
+}
+
+.u-text-transform--normal {
+  text-transform: normal;
+}
+
+/**
+ * Rich text editor text
+ */
+.o-rich-text {
+  word-break: break-word;
+
+  p,
+  li {
+    @include p;
+  }
+
+  a[href]:not(.button) {
+    text-decoration: underline;
+  }
+
+  .c-node {
+    height: 100%;
+    max-height: 100%;
+
+    a {
+      text-decoration: none;
+    }
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin-top: 0;
+    padding-top: $space;
+  }
+
+  h2:empty,
+  h3:empty,
+  p:empty {
+    display: none;
+  }
+}
+
+ol,
+ul {
+  .o-rich-text & {
+    padding-left: 0;
+    margin-left: 0;
+
+    li {
+      list-style: none;
+      padding-left: $space;
+      margin-left: $space;
+      position: relative;
+
+      &::before {
+        content: "";
+        width: $space;
+        height: auto;
+        display: inline-block;
+        position: absolute;
+        left: 0;
+        line-height: inherit;
+        font-size: inherit;
+      }
+
+      li {
+        list-style: none;
+        margin-left: $space-half;
+      }
+    }
+  }
+}
+
+ol {
+  .o-rich-text & {
+    counter-reset: item;
+
+    li {
+      &::before {
+        content: counter(item) ". ";
+        counter-increment: item;
+      }
+
+      li {
+        counter-reset: item;
+
+        &::before {
+          content: '\002010';
+        }
+      }
+    }
+  }
+}
+
+ul {
+  .o-rich-text & {
+    li {
+      &::before {
+        content: '\002022';
+      }
+
+      li {
+        &::before {
+          content: '\0025E6';
+        }
+      }
+    }
+  }
+}

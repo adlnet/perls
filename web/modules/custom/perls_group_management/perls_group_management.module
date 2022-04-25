@@ -1,0 +1,322 @@
+<?php
+
+/**
+ * @file
+ * Group management.
+ */
+
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Database\Query\AlterableInterface;
+use Drupal\Core\Database\Query\SelectInterface;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Url;
+use Drupal\group\Entity\Group;
+use Drupal\group\Entity\GroupContent;
+use Drupal\group\Entity\GroupInterface;
+use Drupal\group\Entity\GroupType;
+use Drupal\views\Plugin\views\query\QueryPluginBase;
+use Drupal\views\ViewExecutable;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+
+/**
+ * Implements hook_menu_local_actions_alter().
+ *
+ * Limits the actions on the group content page to only allow
+ * for adding existing content.
+ */
+function perls_group_management_menu_local_actions_alter(&$local_actions) {
+  if (!empty($local_actions['group_content.group_node_add_page'])) {
+    unset($local_actions['group_content.group_node_add_page']);
+  }
+
+  if (!empty($local_actions['group_content.group_node_relate_page'])) {
+    $local_actions['group_content.group_node_relate_page']['title'] = t('Add content');
+    $local_actions['group_content.group_node_relate_page']['class'] = '\Drupal\group\Plugin\Menu\LocalAction\WithDestination';
+  }
+}
+
+/**
+ * Implements hook_local_tasks_alter().
+ *
+ * Hides the "All Entities" tab for groups;
+ * admins should manage users and content separately.
+ */
+function perls_group_management_local_tasks_alter(&$local_tasks) {
+  if (!empty($local_tasks['group.content'])) {
+    unset($local_tasks['group.content']);
+  }
+}
+
+/**
+ * Implements hook_views_query_alter().
+ *
+ * Adjusts the query for "Add content" view so that it only shows
+ * content that has not already been added to the group.
+ *
+ * There doesn't seem to be a way to do this simply from the view configuration.
+ * Using the 'exclude' option on the argument _almost_ works, but it will still
+ * include a node that has been added to another group (because it passes the
+ * conditions for "not being in group A" by also being in group B).
+ */
+function perls_group_management_views_query_alter(ViewExecutable $view, QueryPluginBase $query) {
+  if (in_array($view->id(), ['add_group_membership', 'group_add_content'])) {
+    $view->getDisplay()->setOption('group_by', 1);
+  }
+
+  if ($view->id() === 'group_add_content') {
+    $tables = &$query->getTableQueue();
+    if (!isset($tables['group_content_field_data_node_field_data'])) {
+      return;
+    }
+    // We only want to consider group content for the current group.
+    $tables['group_content_field_data_node_field_data']['join']->extra[] = [
+      'field' => 'gid',
+      'value' => $view->args[0],
+    ];
+  }
+
+  if ($view->id() === 'add_group_membership') {
+    $tables = &$query->getTableQueue();
+    if (!isset($tables['group_content_field_data_users_field_data'])) {
+      return;
+    }
+    // We only want to consider group content for the current group.
+    $tables['group_content_field_data_users_field_data']['join']->extra[] = [
+      'field' => 'gid',
+      'value' => $view->args[0],
+    ];
+  }
+}
+
+/**
+ * Implements hook_query_alter().
+ *
+ * The Group module alters view queries to restrict displaying content
+ * that belongs to groups that the user cannot access, but this query
+ * can create duplicate results if the content belongs to multiple groups
+ * and the user also is a member of those groups. The fix is to only
+ * SELECT DISTINCT results, but instead of remembering to add that to every
+ * view, we'll add it programmatically if it looks like a query is being
+ * altered by Group.
+ */
+function perls_group_management_query_alter(AlterableInterface $query) {
+  if (!($query instanceof SelectInterface)) {
+    return;
+  }
+
+  $tables = $query->getTables();
+
+  // Only alters queries from views since that's specifically
+  // where Group alters the queries.
+  // Avoids altering the query if it has GROUP BY parameters since
+  // that may already address the duplicates.
+  if ($query->hasTag('views') && isset($tables['node_field_data'], $tables['gcfd']) && empty($query->getGroupBy())) {
+    $query->distinct();
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ *
+ * Alters forms for adding members or content to the group.
+ */
+function perls_group_management_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  // Normally I would have used a specific form alter hook, but because
+  // the form id has a hyphen, we can't use hook_form_FORM_ID_alter().
+  switch ($form_id) {
+    case 'group_content_audience-group_membership_add_form':
+      $form['actions']['submit']['#value'] = t('Add to group');
+      _perls_group_management_add_cancel_button($form);
+      break;
+
+    case 'views_form_group_add_content_page_1_1':
+      _perls_group_management_add_cancel_button($form);
+      break;
+
+    case 'group_audience_add_form':
+    case 'group_audience_edit_form':
+      $form['revision_information']['#access'] = FALSE;
+      break;
+
+    case 'group_type_edit_form':
+      $group = $form_state->getFormObject()->getEntity();
+      $form['unique_group_title_settings'] = [
+        '#type' => 'details',
+        '#title' => t('Unique group title settings'),
+        '#group' => 'additional_settings',
+        '#open' => TRUE,
+      ];
+      $form['unique_group_title_settings']['unique_group_title'] = [
+        '#title' => t('Enable unique title for this bundle'),
+        '#description' => t('Enabling the unique title will ensure that the title of the node will be different for each content.'),
+        '#type' => 'checkbox',
+        '#default_value' => $group->getThirdPartySetting('perls_group_management', 'unique_group_title'),
+      ];
+      $form['#entity_builders'][] = 'perls_group_management_form_group_type_form_builder';
+      break;
+  }
+}
+
+/**
+ * Implements form builder for node type form.
+ */
+function perls_group_management_form_group_type_form_builder($entity_type, GroupType $type, &$form, FormStateInterface $form_state) {
+  $type->setThirdPartySetting('perls_group_management', 'unique_group_title', $form_state->getValue('unique_group_title'));
+}
+
+/**
+ * Implements hook_entity_bundle_field_info_alter().
+ */
+function perls_group_management_entity_bundle_field_info_alter(&$fields, EntityTypeInterface $entity_type, $bundle) {
+  if ($bundle === 'user') {
+    if (isset($fields['field_add_groups'])) {
+      // Use the ID as defined in the annotation of the constraint definition.
+      $fields['field_add_groups']->addConstraint('GroupVisibilityAccessConstraint');
+    }
+  }
+  if ($entity_type->id() == 'group') {
+    // Add constraint for unique group title.
+    if (isset($fields['label'])) {
+      $fields['label']->addConstraint("UniqueGroupTitle");
+    }
+  }
+}
+
+/**
+ * Implements hook_group_access().
+ */
+function perls_group_management_group_access(GroupInterface $group, $operation, AccountInterface $account) {
+  $access_checker = Drupal::service('perls_group_management.access_check.group_visibility');
+  return $access_checker->access($group, $operation, $account);
+}
+
+/**
+ * Implements hook_options_list_alter().
+ *
+ * Removes groups from option lists that
+ * the user does not have permission to view.
+ */
+function perls_group_management_options_list_alter(array &$options, array $context) {
+  if ($context['fieldDefinition']->getSetting('target_type') !== 'group') {
+    return;
+  }
+
+  $groups = Group::loadMultiple(array_keys($options));
+
+  foreach ($options as $gid => $option) {
+    $group = $groups[$gid];
+    if (!$group || !$group->access('view group')) {
+      unset($options[$gid]);
+    }
+  }
+}
+
+/**
+ * Adds a cancel button to the specified form.
+ *
+ * The current request must have a `destination` query parameter
+ * or the cancel button will not be added.
+ *
+ * @param array $form
+ *   The form to alter.
+ */
+function _perls_group_management_add_cancel_button(array &$form) {
+  // For some unknown reason, Views Bulk Operations poisons the request object
+  // and removes the destination so we have to directly access it via $_GET.
+  // see ViewsBulkOperationsBulkForm::updateTempstoreData.
+  if (empty($_GET['destination'])) {
+    return;
+  }
+
+  $destination = $_GET['destination'];
+
+  try {
+    $url = Url::fromUserInput($destination);
+  }
+  catch (\InvalidArgumentException $exception) {
+    \Drupal::logger('perls_group_management')->notice('@destination is not a valid destination: %message', [
+      '@destination' => $destination,
+      '%message' => $exception->getMessage(),
+    ]);
+    return;
+  }
+
+  $cancel = [
+    '#type' => 'link',
+    '#title' => t('Cancel'),
+    '#url' => $url,
+    '#attributes' => ['class' => ['button', 'button--cancel']],
+    '#weight' => 10,
+  ];
+
+  $form['actions']['cancel'] = $cancel;
+  if (isset($form['header']) && isset($form['header']['views_bulk_operations_bulk_form'])) {
+    $form['header']['views_bulk_operations_bulk_form']['actions']['cancel'] = $cancel;
+  }
+}
+
+/**
+ * Implements hook_entity_type_alter().
+ *
+ * Provides a custom delete form handler for group content.
+ */
+function perls_group_management_entity_type_alter(array &$entity_types) {
+  if (empty($entity_types['group_content'])) {
+    return;
+  }
+  $group_content = $entity_types['group_content'];
+  $handlers = $group_content->getHandlerClasses();
+  if (empty($handlers['form'])) {
+    return;
+  }
+
+  $handlers['form']['delete'] = 'Drupal\perls_group_management\Form\GroupContentDeleteForm';
+  $group_content->setHandlerClass('form', $handlers['form']);
+}
+
+/**
+ * Implements hook_entity_operation_alter().
+ *
+ * Modify list of group operations.
+ */
+function perls_group_management_entity_operation_alter(array &$operations, EntityInterface $entity) {
+  if ($entity->getEntityTypeId() !== 'group') {
+    return;
+  }
+
+  if (isset($operations['nodes'])) {
+    $operations['nodes']['title'] = t('Content');
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_access() for group_content.
+ *
+ * Disables the edit form for editing group content.
+ */
+function perls_group_management_group_content_access(GroupContent $entity, $operation, AccountInterface $account) {
+  // @todo Only disable editing if the group content has no fields.
+  if ($operation === 'update') {
+    return AccessResult::forbidden();
+  }
+
+  return AccessResult::neutral();
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_view() for group_content.
+ *
+ * Redirects viewing group content to the entity view.
+ */
+function perls_group_management_group_content_view(array &$build, GroupContent $group_content, EntityViewDisplayInterface $display, $view_mode) {
+  // @todo Only redirect if the group content has no fields.
+  $entity_url = $group_content->getEntity()->toUrl();
+  $entity_url->setOption('absolute', TRUE);
+  $response = new RedirectResponse($entity_url->toString());
+  $response->send();
+  exit;
+}

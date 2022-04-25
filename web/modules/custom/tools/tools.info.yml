@@ -1,0 +1,6 @@
+name: "Tools"
+type: module
+description: "Useful tools"
+core: 8.x
+core_version_requirement: ^8 || ^9
+dependencies: {}

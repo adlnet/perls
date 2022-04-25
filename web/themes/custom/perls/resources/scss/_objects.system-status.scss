@@ -1,0 +1,148 @@
+/* ------------------------------------ *\
+    $SYSTEM STATUS REPORTS
+\* ------------------------------------ */
+
+.system-status-general-info {
+  > * {
+    margin: $space 0 0 0;
+  }
+
+  &__items {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-auto-rows: auto;
+    grid-column-gap: $space-half;
+    grid-row-gap: $space-half;
+  }
+
+  &__item {
+    margin: 0;
+    padding: $space;
+    border-radius: $border-radius--card;
+    border: $border--light;
+
+    > * {
+      margin-bottom: $space;
+      display: inline-flex;
+
+      &:last-child:not(:first-child) {
+        margin-bottom: 0;
+      }
+    }
+
+    &:nth-child(7) {
+      grid-column: 1 / 4;
+    }
+
+    &-title {
+      display: block;
+      width: 100%;
+      padding-bottom: $space-quarter;
+      border-bottom: $border--standard;
+      margin-bottom: $space;
+    }
+
+    a + h4,
+    h3 + h4 {
+      margin-top: 0;
+    }
+
+    h4,
+    h5,
+    h6 {
+      display: block;
+      width: 100%;
+      margin-bottom: 0;
+      margin-top: $space;
+    }
+
+    .cron-description__run-cron {
+      display: table;
+    }
+  }
+}
+
+.system-status-report {
+  &__group {
+    > * {
+      margin-top: $space;
+    }
+
+    &__item {
+      border: $border--light;
+      border-radius: $border-radius--card;
+      padding: $space;
+
+      > * {
+        margin-top: $space-half;
+      }
+    }
+  }
+
+  &__status-title {
+    background-color: $c-gray--light;
+  }
+
+  &__entry {
+    border: $border--light;
+    border-radius: $border-radius--card;
+    overflow: hidden;
+  }
+
+  &__entry__value {
+    padding: $space;
+    font-weight: bold;
+
+    h3 {
+      margin-top: $space;
+      margin-bottom: $space-quarter;
+    }
+
+    ul {
+      list-style-type: circle;
+    }
+
+    dt {
+      margin-top: $space;
+    }
+
+    .description {
+      font-weight: normal;
+    }
+
+    .cron-description__run-cron {
+      margin-top: $space;
+    }
+  }
+}
+
+.system-status-report-counters {
+  flex-wrap: nowrap;
+
+  &__item {
+    border-radius: $border-radius;
+    margin: $space-quarter;
+  }
+}
+
+.info-elements {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-auto-rows: auto;
+  grid-column-gap: $space;
+  grid-row-gap: $space;
+
+  .info-element {
+    display: flex;
+    flex-direction: column;
+    border: $border--light;
+    border-radius: $border-radius--card;
+    background-color: $c-gray--light;
+    padding: $space-half;
+
+    &__label {
+      border-bottom: $border--standard;
+      margin-bottom: $space-quarter;
+    }
+  }
+}

@@ -1,0 +1,83 @@
+uuid: b7056453-6809-4b9c-af85-ac1dd2efa098
+langcode: en
+status: true
+dependencies:
+  module:
+    - notifications
+id: push_notification--push_notification
+disabled: true
+path: push_notification/push_notification
+resourceType: push_notification--push_notification
+resourceFields:
+  id:
+    disabled: false
+    fieldName: id
+    publicName: id
+    enhancer:
+      id: ''
+  uuid:
+    disabled: false
+    fieldName: uuid
+    publicName: uuid
+    enhancer:
+      id: ''
+  auth_user_id:
+    disabled: false
+    fieldName: auth_user_id
+    publicName: auth_user_id
+    enhancer:
+      id: ''
+  recipients:
+    disabled: false
+    fieldName: recipients
+    publicName: recipients
+    enhancer:
+      id: ''
+  topics:
+    disabled: false
+    fieldName: topics
+    publicName: topics
+    enhancer:
+      id: ''
+  title:
+    disabled: false
+    fieldName: title
+    publicName: title
+    enhancer:
+      id: ''
+  content:
+    disabled: false
+    fieldName: content
+    publicName: content
+    enhancer:
+      id: ''
+  created:
+    disabled: false
+    fieldName: created
+    publicName: created
+    enhancer:
+      id: ''
+  changed:
+    disabled: false
+    fieldName: changed
+    publicName: changed
+    enhancer:
+      id: ''
+  status:
+    disabled: false
+    fieldName: status
+    publicName: status
+    enhancer:
+      id: ''
+  sent:
+    disabled: false
+    fieldName: sent
+    publicName: sent
+    enhancer:
+      id: ''
+  send_time:
+    disabled: false
+    fieldName: send_time
+    publicName: send_time
+    enhancer:
+      id: ''

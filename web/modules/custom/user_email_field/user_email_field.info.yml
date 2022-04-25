@@ -1,0 +1,7 @@
+name: "User email field"
+description: "Provides some customization for email field in profile."
+type: module
+package: Custom
+core_version_requirement: ^8 || ^9
+dependencies:
+  - drupal:user

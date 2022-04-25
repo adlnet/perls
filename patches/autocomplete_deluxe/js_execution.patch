@@ -1,0 +1,24 @@
+diff --git a/assets/js/autocomplete_deluxe.js b/assets/js/autocomplete_deluxe.js
+index 6171c61..7b8543b 100755
+--- a/assets/js/autocomplete_deluxe.js
++++ b/assets/js/autocomplete_deluxe.js
+@@ -382,9 +382,7 @@
+     }
+
+     this.value = item.value;
+-    this.element = $(
+-      '<span class="autocomplete-deluxe-item">' + item.label + "</span>"
+-    );
++    this.element = $('<span class="autocomplete-deluxe-item">').text(item.label);
+     this.widget = widget;
+     this.item = item;
+     const self = this;
+@@ -478,7 +476,7 @@
+             ? value.substr(1, value.length - 2)
+             : value;
+         let itemInit = {
+-          label: Drupal.checkPlain(label),
++          label: label,
+           value: value
+         };
+         let item = new Drupal.autocomplete_deluxe.MultipleWidget.Item(

@@ -1,0 +1,4 @@
+xapi-content:
+  version: 1.x
+  js:
+    js/xapi.js: {}

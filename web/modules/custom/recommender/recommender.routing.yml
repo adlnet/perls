@@ -1,0 +1,35 @@
+recommender.admin_settings_form:
+  path: "/admin/config/system/recommender_engine/configure"
+  defaults:
+    _form: '\Drupal\recommender\Form\RecommendationAdminSettingsForm'
+    _title: "Recommendations Engine Configuration"
+  requirements:
+    _permission: "administer recommendations"
+recommender.batch_recommendation_form:
+  path: "/admin/config/system/recommender_engine/batch"
+  defaults:
+    _title: "Batch User Recommendations"
+    _form: '\Drupal\recommender\Form\GetUserRecommendationsBatchForm'
+  requirements:
+    _permission: "administer recommendations"
+recommender.batch_delete_recommendation_form:
+  path: "/admin/config/system/recommender_engine/delete/batch"
+  defaults:
+    _title: "Delete User Recommendations"
+    _form: '\Drupal\recommender\Form\DeleteRecommendationsBatchForm'
+  requirements:
+    _permission: "administer recommendations"
+entity.sl_user_recommendation_status.collection:
+  path: "/admin/config/system/recommender_engine/statuslist"
+  defaults:
+    _entity_list: "sl_user_recommendation_status"
+    _title: "User Recommendation Status list"
+  requirements:
+    _permission: "administer user recommendation status entities"
+  base_route: recommender.admin_settings_form
+recommender.ajax_recommendations:
+  path: '/recommender/get_recommendations'
+  defaults:
+    _controller: '\Drupal\recommender\Controller\AjaxRecommendations::getAjaxRecommendations'
+  requirements:
+    _permission: 'access content'

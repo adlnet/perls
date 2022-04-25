@@ -1,0 +1,23 @@
+uuid: c2d65cfa-4cd4-4c00-8ae8-b84eb0f32b77
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_correct
+    - paragraphs.paragraphs_type.quiz_option
+id: paragraph.quiz_option.field_correct
+field_name: field_correct
+entity_type: paragraph
+bundle: quiz_option
+label: Correct
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'Yes'
+  off_label: 'No'
+field_type: boolean

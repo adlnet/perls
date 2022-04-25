@@ -1,0 +1,55 @@
+body.perls-learner.l-page--path--user.l-page--user-annotations .l-main {
+  max-width: 1260px;
+}
+
+.annotation-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.annotation-container {
+  display: flex;
+  padding: 10px;
+}
+
+.annotation-container .information {
+  flex-grow: 100;
+  margin-right: 30px;
+}
+.annotation-container .information:hover {
+  cursor: pointer;
+}
+
+.information p {
+  font-size: 16px;
+}
+
+.quote {
+  background-color: #e8f5f9;
+  padding: 10px 20px;
+}
+
+.subtitle {
+  font-size: 11px;
+  color: #333333;
+  margin-top: 10px;
+}
+
+.subtitle:after {
+  display: flex;
+  content: '';
+  width: 75%;
+  height: 1px;
+  background: #b5b5b5;
+  margin-top: 10px;
+}
+
+.delete button {
+  background-image: url('./images/trash-can.png');
+  width: 30px;
+  height: 45px;
+  background-repeat: no-repeat;
+  background-size: contain;
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0);
+}

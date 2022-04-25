@@ -1,0 +1,44 @@
+uuid: f508ae56-c508-489d-ae51-8a35829570ab
+langcode: en
+status: true
+dependencies:
+  config:
+    - page_manager.page.homepage
+  module:
+    - switches_additions
+    - user
+id: homepage-http_status_code-3
+label: 'Learner''s new Homepage'
+weight: 0
+variant: http_status_code
+variant_settings:
+  id: http_status_code
+  label: null
+  weight: 0
+  uuid: e9c14267-efce-48be-873b-0d89dcc4150a
+  status_code: 302
+  redirect_location: /start
+page: homepage
+selection_criteria:
+  -
+    id: user_role
+    negate: false
+    context_mapping:
+      user: '@user.current_user_context:current_user'
+    roles:
+      authenticated: authenticated
+  -
+    id: user_role
+    negate: true
+    context_mapping:
+      user: '@user.current_user_context:current_user'
+    roles:
+      content_manager: content_manager
+  -
+    id: feature_enabled
+    negate: false
+    context_mapping: {  }
+    switches:
+      new_dashboard: new_dashboard
+selection_logic: and
+static_context: {  }

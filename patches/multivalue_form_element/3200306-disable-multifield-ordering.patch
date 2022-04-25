@@ -1,0 +1,20 @@
+diff --git a/src/Element/MultiValue.php b/src/Element/MultiValue.php
+index a21de24..10b59d0 100644
+--- a/src/Element/MultiValue.php
++++ b/src/Element/MultiValue.php
+@@ -140,6 +140,7 @@ class MultiValue extends FormElement {
+     $class = get_class($this);
+     return [
+       '#input' => TRUE,
++      '#orderable' => TRUE,
+       '#theme' => 'field_multiple_value_form',
+       '#cardinality_multiple' => TRUE,
+       '#description' => NULL,
+@@ -174,6 +175,7 @@ class MultiValue extends FormElement {
+     $cardinality = $element['#cardinality'];
+
+     $element['#tree'] = TRUE;
++    $element['#theme'] = $element['#orderable'] ? 'field_multiple_value_form' : 'field_multiple_value_without_order_form';
+     $element['#field_name'] = $element_name;
+
+     $element_state = static::getElementState($parents, $element_name, $form_state);

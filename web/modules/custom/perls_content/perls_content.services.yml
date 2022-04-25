@@ -1,0 +1,7 @@
+services:
+  perls_content.route_subscriber:
+    class: Drupal\perls_content\Routing\RouteSubscriber
+    tags:
+      - { name: event_subscriber }
+  perls_content.entity_update_checker:
+    class: Drupal\perls_content\EntityUpdateChecker

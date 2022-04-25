@@ -1,0 +1,50 @@
+uuid: 4e9652f6-d21b-4b60-8885-0bcefe610cc7
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_related_content
+    - node.type.course
+    - node.type.event
+    - node.type.flash_card
+    - node.type.learn_article
+    - node.type.learn_file
+    - node.type.learn_link
+    - node.type.learn_package
+    - node.type.podcast
+    - node.type.podcast_episode
+    - node.type.quiz
+    - node.type.test
+    - node.type.tip_card
+id: node.event.field_related_content
+field_name: field_related_content
+entity_type: node
+bundle: event
+label: 'Related Content'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      learn_article: learn_article
+      course: course
+      learn_file: learn_file
+      event: event
+      flash_card: flash_card
+      podcast: podcast
+      podcast_episode: podcast_episode
+      quiz: quiz
+      test: test
+      tip_card: tip_card
+      learn_link: learn_link
+      learn_package: learn_package
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: learn_article
+field_type: entity_reference

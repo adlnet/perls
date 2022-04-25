@@ -1,0 +1,34 @@
+uuid: 5115245d-0dc6-4175-a2d4-0c95c87c37e0
+langcode: en
+status: true
+dependencies:
+  module:
+    - perls_learner_browse
+    - taxonomy
+id: topic_completed
+label: 'Topic completed'
+bundles:
+  - category
+entity_type: taxonomy_term
+global: false
+flag_short: 'Flag this item'
+flag_long: ''
+flag_message: ''
+unflag_short: 'Unflag this item'
+unflag_long: ''
+unflag_message: ''
+unflag_denied_text: ''
+weight: 0
+flag_type: 'entity:taxonomy_term'
+link_type: plain_text
+flagTypeConfig:
+  show_in_links: {  }
+  show_as_field: false
+  show_on_form: false
+  show_contextual_link: false
+  extra_permissions: {  }
+linkTypeConfig:
+  markup_text_flag: ''
+  markup_text_unflag: ''
+  markup_text_unflagged: ''
+  markup_text_flagged: ''

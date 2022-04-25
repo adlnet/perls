@@ -1,0 +1,13 @@
+uuid: 4b98374d-1374-4117-858a-6f90f4a35503
+langcode: en
+status: true
+dependencies:
+  module:
+    - flag
+id: flag_action.completed_unflag
+label: 'Uncomplete '
+type: node
+plugin: 'flag_action:completed_unflag'
+configuration:
+  flag_id: completed
+  flag_action: unflag

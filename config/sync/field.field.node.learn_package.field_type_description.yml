@@ -1,0 +1,24 @@
+uuid: e895de7f-ba72-4adc-827e-1a3a717907af
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_type_description
+    - node.type.learn_package
+  module:
+    - description_field
+id: node.learn_package.field_type_description
+field_name: field_type_description
+entity_type: node
+bundle: learn_package
+label: 'Type Description'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  long_description:
+    value: 'If you already have content created in an eLearning authoring tool, you can export that as a Tin Can or xAPI-compliant package and upload it here.'
+    format: basic_filter
+field_type: description_field

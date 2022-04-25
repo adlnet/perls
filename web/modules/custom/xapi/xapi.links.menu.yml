@@ -1,0 +1,5 @@
+xapi.admin_settings_form:
+  title: 'xAPI Content'
+  parent: system.admin_config_system
+  description: 'Configure LRS endpoint for xAPI content'
+  route_name: xapi.admin_settings_form

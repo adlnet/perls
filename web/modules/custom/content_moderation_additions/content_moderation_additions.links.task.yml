@@ -1,0 +1,5 @@
+content_moderation_additions.discussion:
+  route_name: content_moderation_additions.discussion
+  title: 'Discussion'
+  base_route: entity.node.canonical
+  weight: 2

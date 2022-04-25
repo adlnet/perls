@@ -1,0 +1,39 @@
+uuid: 88cc9e14-cef5-4489-9f01-d3363024bc5b
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.content_type.audience-group_node-tip_card
+  module:
+    - field_layout
+    - layout_discovery
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings:
+      label: ''
+id: group_content.audience-group_node-tip_card.default
+targetEntityType: group_content
+bundle: audience-group_node-tip_card
+mode: default
+content:
+  entity_id:
+    type: entity_reference_autocomplete
+    weight: 1
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  langcode:
+    type: language_select
+    weight: 0
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
+hidden:
+  path: true
+  uid: true

@@ -1,0 +1,18 @@
+uuid: cf440f6b-0f2d-4c72-9fc6-4b23782eaba0
+langcode: en
+status: true
+dependencies:
+  module:
+    - paragraphs
+id: paragraph.field_test_result
+field_name: field_test_result
+entity_type: paragraph
+type: float
+settings: {  }
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

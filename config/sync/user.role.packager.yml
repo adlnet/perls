@@ -1,0 +1,18 @@
+uuid: bd140f17-679f-4c74-89f1-65f64ae0abdc
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.learn_article
+  module:
+    - group
+    - node
+_core:
+  default_config_hash: Ztf2kPGhtd19BvSUqGQGVS1cZqpYlahLIiRrQFnQy-c
+id: packager
+label: packager
+weight: 10004
+is_admin: null
+permissions:
+  - 'bypass group access'
+  - 'edit any learn_article content'

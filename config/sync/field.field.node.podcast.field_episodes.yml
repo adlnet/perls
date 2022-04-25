@@ -1,0 +1,34 @@
+uuid: 7efb39aa-67d2-48ae-b500-a37268df4cb8
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_episodes
+    - node.type.podcast
+    - node.type.podcast_episode
+  module:
+    - require_on_publish
+third_party_settings:
+  require_on_publish:
+    require_on_publish: true
+id: node.podcast.field_episodes
+field_name: field_episodes
+entity_type: node
+bundle: podcast
+label: Episodes
+description: 'Subscribers will receive notifications for each new episode added to the podcast. Episodes are shown to learners in descending order by release date.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      podcast_episode: podcast_episode
+    sort:
+      field: field_release_date
+      direction: DESC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

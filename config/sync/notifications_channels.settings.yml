@@ -1,0 +1,8 @@
+send_notifications: '1'
+notify_type:
+  - course
+  - learn_article
+  - learn_file
+  - learn_link
+  - learn_package
+  - event

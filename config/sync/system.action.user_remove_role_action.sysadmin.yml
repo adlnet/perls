@@ -1,0 +1,14 @@
+uuid: 6a07fc48-68b2-43c5-acce-5759426fa12e
+langcode: en
+status: true
+dependencies:
+  config:
+    - user.role.sysadmin
+  module:
+    - user
+id: user_remove_role_action.sysadmin
+label: 'Remove the Sysadmin role from the selected user(s)'
+type: user
+plugin: user_remove_role_action
+configuration:
+  rid: sysadmin

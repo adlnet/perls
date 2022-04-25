@@ -1,0 +1,31 @@
+<?php
+
+/**
+ * @file
+ * Contains hooks for date_recur_events module.
+ */
+
+use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
+
+/**
+ * Implements hook_cron().
+ *
+ * Dispatches starting and ending events for entity occurrences.
+ */
+function date_recur_events_cron() {
+  $last_cron = \Drupal::state()->get('system.cron_last');
+  $shift = \Drupal::config('date_recur_events.settings')->get('starting_range') ?? 'now';
+
+  /** @var Drupal\date_recur_events\DateRecurOccurrenceNotifierInterface $notifier */
+  $notifier = \Drupal::service('date_recur.notifier');
+
+  // Shifts the time frame for starting events so there is
+  // some advance notice to starting times.
+  $start = new \DateTime();
+  $start->setTimezone(new \DateTimeZone(DateTimeItemInterface::STORAGE_TIMEZONE));
+  $start->setTimestamp($last_cron);
+  $start->add(\DateInterval::createFromDateString($shift));
+
+  $notifier->dispatchStartingEvents($start->getTimestamp(), $shift);
+  $notifier->dispatchEndingEvents($last_cron);
+}

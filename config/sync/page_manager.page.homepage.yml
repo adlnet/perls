@@ -1,0 +1,12 @@
+uuid: 6b1fb27f-fe13-434e-a4a4-ae04572016f3
+langcode: en
+status: true
+dependencies: {  }
+id: homepage
+label: Homepage
+description: 'The main page of the website, differs for users with specific roles.'
+use_admin_theme: false
+path: /home
+access_logic: and
+access_conditions: {  }
+parameters: {  }

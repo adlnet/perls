@@ -1,0 +1,18 @@
+uuid: 45a051a2-84dc-4d53-8b7d-5649b0253532
+langcode: en
+status: true
+dependencies:
+  module:
+    - group
+    - serialization
+    - simple_oauth
+id: entity.group
+plugin_id: 'entity:group'
+granularity: resource
+configuration:
+  methods:
+    - GET
+  formats:
+    - json
+  authentication:
+    - oauth2

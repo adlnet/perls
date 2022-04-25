@@ -1,0 +1,7 @@
+annotator_ui.list_annotations:
+  path: '/user/annotations'
+  defaults:
+    _controller: '\Drupal\annotator_ui\Controller\AnnotationController::view'
+    _title: 'Annotations'
+  requirements:
+    _permission: 'access content'

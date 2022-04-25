@@ -1,0 +1,65 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_column_left
+    - paragraphs.paragraphs_type.layout_two_column
+  module:
+    - entity_reference_revisions
+id: paragraph.layout_two_column.field_column_left
+field_name: field_column_left
+entity_type: paragraph
+bundle: layout_two_column
+label: 'Left column'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    negate: 1
+    target_bundles:
+      layout_two_column: layout_two_column
+    target_bundles_drag_drop:
+      layout_two_column:
+        enabled: true
+        weight: -27
+      image:
+        weight: -26
+        enabled: false
+      text:
+        weight: -25
+        enabled: false
+      list_unordered:
+        weight: -24
+        enabled: false
+      list_ordered:
+        weight: -23
+        enabled: false
+      audio:
+        weight: -22
+        enabled: false
+      callout:
+        weight: -21
+        enabled: false
+      document:
+        weight: -20
+        enabled: false
+      heading:
+        weight: -19
+        enabled: false
+      references:
+        weight: -18
+        enabled: false
+      table:
+        weight: -17
+        enabled: false
+      video:
+        weight: -16
+        enabled: false
+      xapi_package:
+        weight: -15
+        enabled: false
+field_type: entity_reference_revisions

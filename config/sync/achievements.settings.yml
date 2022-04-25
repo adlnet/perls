@@ -1,0 +1,16 @@
+_core:
+  default_config_hash: NHFm2qHgyTvn50cnII-dPC1RvLrCGZDFgG-40EfdUTE
+image_hidden: null
+send_notification: '1'
+xapi_session_timeout: '5'
+disabled_plugins:
+  - 'flag_badge_plugin:bookmark'
+  - 'flag_badge_plugin:recommendation'
+  - 'flag_badge_plugin:started_course'
+  - 'flag_badge_plugin:test_results'
+  - 'flag_badge_plugin:topic_completed'
+  - 'flag_count_badge_plugin:recommendation'
+  - 'flag_count_badge_plugin:started_course'
+  - 'flag_count_badge_plugin:test_results'
+  - 'flag_count_badge_plugin:topic_completed'
+  - touchpoint_badge_plugin

@@ -1,0 +1,46 @@
+uuid: d669922e-605b-48d9-906e-5b11b17e8f5c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_audio_file
+    - node.type.podcast_episode
+  module:
+    - file
+    - filefield_paths
+third_party_settings:
+  filefield_paths:
+    enabled: true
+    file_path:
+      value: 'podcasts/[date:custom:Y]-[date:custom:m]/[node:title]-[node:uuid]'
+      options:
+        slashes: true
+        pathauto: true
+        transliterate: true
+    file_name:
+      value: '[file:ffp-name-only-original].[file:ffp-extension-original]'
+      options:
+        slashes: false
+        pathauto: false
+        transliterate: false
+    redirect: false
+    retroactive_update: false
+    active_updating: false
+id: node.podcast_episode.field_audio_file
+field_name: field_audio_file
+entity_type: node
+bundle: podcast_episode
+label: 'Audio file'
+description: "Recommended settings:\r\n<ul>\r\n<li><strong>Bitrate:</strong> 96Kbps, constant bit rate (CBR)</li>\r\n<li><strong>Sample rate:</strong> 44.1kHz</li>\r\n<li>Mono</li>\r\n</ul>\r\n\r\n<em>The settings above are optimized for solo or conversational shows. If the episode contains a lot of music or sound effects, you may need to change to Stereo and increase the bitrate.</em>"
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:file'
+  handler_settings: {  }
+  file_directory: 'podcasts/[date:custom:Y]-[date:custom:m]'
+  file_extensions: mp3
+  max_filesize: ''
+  description_field: false
+field_type: file

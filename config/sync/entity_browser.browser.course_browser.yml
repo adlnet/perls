@@ -1,0 +1,42 @@
+uuid: ae2ad1cd-d73a-4688-8c9b-3c19ceedb563
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.entity_browser_lists
+  module:
+    - entity_browser_entity_form
+    - views
+name: course_browser
+label: 'Course browser'
+display: modal
+display_configuration:
+  width: ''
+  height: ''
+  link_text: 'Add course'
+  auto_open: false
+selection_display: no_display
+selection_display_configuration: {  }
+widget_selector: tabs
+widget_selector_configuration: {  }
+widgets:
+  dc602d62-9f99-457d-a700-6c0d3c7a887d:
+    id: view
+    uuid: dc602d62-9f99-457d-a700-6c0d3c7a887d
+    label: 'Existing courses'
+    weight: 1
+    settings:
+      submit_text: 'Add course'
+      auto_select: false
+      view: entity_browser_lists
+      view_display: entity_browser_courses
+  c52aea0c-59ac-48b4-a2c2-2379b959fe6a:
+    id: entity_form
+    uuid: c52aea0c-59ac-48b4-a2c2-2379b959fe6a
+    label: 'New course'
+    weight: 2
+    settings:
+      submit_text: 'Create course'
+      entity_type: node
+      bundle: course
+      form_mode: default

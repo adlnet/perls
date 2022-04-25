@@ -1,0 +1,8 @@
+perls_recommendation.recommendation_status:
+  route_name: view.recommendation_queue_status.page_1
+  base_route: perls_recommendation.admin_settings_form
+  title: "User Recommendation Status"
+perls_recommendation.recommendation_admin:
+  route_name: perls_recommendation.admin_settings_form
+  base_route: perls_recommendation.admin_settings_form
+  title: "User Recommendation Configuration"

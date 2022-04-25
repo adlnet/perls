@@ -1,0 +1,14 @@
+uuid: b347f71e-c39d-470f-b272-67a0882a8fcb
+langcode: en
+status: true
+dependencies: {  }
+id: promote_to_front_page_action
+label: 'Promote to front page'
+description: 'Promotes Event entities to the front page if they are not promoted yet.'
+type: promote_to_front_page_action
+target_entity_type: node
+target_bundle: event
+tags: {  }
+settings:
+  field: promote
+  promoted: '0'

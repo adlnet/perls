@@ -1,0 +1,15 @@
+{% if in_modal == true %}
+  <ul>
+{% endif %}
+  <li class="form prompt-questions">
+    <div class="c-stack">
+      {{ prompts }}
+      <div class="prompt-wrapper u-spacing summary">
+        <div class="summary--title">{{ "Thanks for the feedback!" | t }}</div>
+        <div class="summary--description">{{ "We'll use this to improve your recommendations." | t }}</div>
+      </div>
+    </div>
+  </li>
+{% if in_modal == true %}
+  </ul>
+{% endif %}

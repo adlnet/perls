@@ -1,0 +1,6 @@
+name: 'Perls Cards'
+type: module
+description: 'Customization for card-based content in Perls'
+core: 8.x
+core_version_requirement: ^8 || ^9
+package: 'Perls'

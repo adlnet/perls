@@ -1,0 +1,6 @@
+services:
+  business_rules_date_recur.event_subscriber:
+    class: Drupal\business_rules_date_recur\EventSubscriber\BusinessRulesEventHandlerSubscriber
+    arguments: ['@event_dispatcher', '@plugin.manager.business_rules.reacts_on']
+    tags:
+      - { name: event_subscriber }

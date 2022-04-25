@@ -1,0 +1,18 @@
+uuid: 3f066c36-289d-4579-9b7d-20a26b45009b
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.audience
+  enforced:
+    config:
+      - user.role.sysadmin
+id: audience-6d6cf8886
+label: Sysadmin
+weight: 9999
+internal: true
+audience: outsider
+group_type: audience
+permissions_ui: false
+permissions:
+  - 'administer members'

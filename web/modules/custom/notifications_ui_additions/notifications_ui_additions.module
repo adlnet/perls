@@ -1,0 +1,46 @@
+<?php
+
+/**
+ * @file
+ * Contains notifications_ui_additions.module.
+ */
+
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function notifications_ui_additions_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the notifications_ui_additions module.
+    case 'help.page.notifications_ui_additions':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('API and UI for associating content with push notifications to send to the mobile app.') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_view().
+ */
+function notifications_ui_additions_push_notification_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+  $item = \Drupal::service('notifications_ui_additions.default')->getRelatedItem($entity);
+  if (!$item) {
+    return;
+  }
+
+  $builder = \Drupal::entityTypeManager()->getViewBuilder($item->getEntityTypeId());
+  $build['related_item'] = [
+    '#type' => 'container',
+    '#attributes' => [
+      'class' => ['push-notification-related-item'],
+    ],
+  ];
+  $build['related_item']['preview'] = $builder->view($item, 'tile');
+  $build['#attached']['library'][] = 'notifications_ui_additions/related-item-preview';
+}

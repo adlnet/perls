@@ -1,0 +1,12 @@
+name: 'Perls xapi reporting'
+description: 'Adds extra Xapi event reports.'
+type: module
+core: 8.x
+core_version_requirement: ^8 || ^9
+package: 'Custom'
+dependencies:
+  - xapi:xapi_reporting
+  - hook_event_dispatcher:core_event_dispatcher
+  - hook_event_dispatcher:user_event_dispatcher
+  - perls_goals_log:perls_goals_log
+  - perls_content:perls_content

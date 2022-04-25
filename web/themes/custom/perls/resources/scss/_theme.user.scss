@@ -1,0 +1,194 @@
+/**
+ * Learner user edit page
+ */
+body.perls-learner.l-page--path--user {
+  .l-main {
+    max-width: $max-width-small;
+
+    @include u-center-block;
+  }
+
+  &.l-page--user-interests,
+  &.l-page--user-content-my-content,
+  &.l-page--user-groups,
+  &.page--user_insights {
+    .l-main {
+      max-width: $max-width;
+    }
+
+    .iso-grid {
+      max-height: none;
+    }
+  }
+
+  .l-grid:not(.c-user-menu__header) {
+    display: block;
+  }
+}
+
+/**
+ * User login page
+ */
+body.l-page--path--user.l-page--user-login {
+  background-color: $c-login--background;
+  background-image: $login--background-image;
+  background-blend-mode: $login--background-blend;
+  background-repeat: $login--background-repeat;
+  background-position: $login--background-position;
+  background-size: $login--background-size;
+  color: $c-login--foreground;
+
+  .l-main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: $space-double;
+    padding-bottom: $space-double;
+    max-width: none;
+    margin: 0;
+
+    $current-height-of-login-form: 600px;
+    @media screen and (min-height: $current-height-of-login-form) {
+      min-height: 100vh;
+    }
+  }
+
+  .simplesamlphp-auth-login-link {
+    display: block;
+  }
+
+  .o-logo {
+    margin-bottom: $space-double;
+
+    @include big-logo;
+
+
+    @include media("<small") {
+      img {
+        max-width: 100%;
+      }
+    }
+  }
+}
+
+/**
+ * User password page
+ */
+body.l-page--path--user.l-page--user-password {
+  background-color: $c-login--background;
+  background-image: $login--background-image;
+  background-blend-mode: $login--background-blend;
+  background-repeat: $login--background-repeat;
+  background-position: $login--background-position;
+  background-size: $login--background-size;
+  color: $c-login--foreground;
+
+  .o-page-title {
+    display: none;
+  }
+
+  .o-icon {
+    fill: $c-login--foreground;
+  }
+
+  .l-main {
+    max-width: none;
+    margin: 0;
+  }
+}
+
+/**
+ * User register page
+ */
+body.l-page--path--user.l-page--user-register {
+  background-color: $c-login--background;
+  background-image: $login--background-image;
+  background-blend-mode: $login--background-blend;
+  background-repeat: $login--background-repeat;
+  background-position: $login--background-position;
+  background-size: $login--background-size;
+  color: $c-login--foreground;
+
+  .o-page-title {
+    display: none;
+  }
+
+  .l-main {
+    max-width: none;
+    margin: 0;
+  }
+
+  select {
+    width: 100%;
+  }
+}
+
+.l-page--path--user {
+  .c-form--user-form,
+  .user-register-form {
+    select {
+      width: 100%;
+    }
+  }
+}
+
+.l-article__user-register,
+.l-article__user-password {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  @include media(">small") {
+    justify-content: flex-start;
+  }
+
+
+  .l-article__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: $space-double 0;
+
+    .o-logo {
+      margin-left: $space-double;
+
+      @include small-logo;
+    }
+  }
+
+  .l-article__body {
+    flex: 1;
+
+    @include media(">small") {
+      flex: inherit;
+
+      @include u-center-block;
+    }
+
+
+    .o-icon {
+      display: block;
+      margin: 0 auto $space-double auto;
+    }
+  }
+
+  .timezone-wrapper {
+    display: none;
+  }
+}
+
+.l-article__user-password {
+  .l-article__body {
+    @include media(">small") {
+      max-width: 320px;
+      padding-top: 10vh;
+    }
+  }
+}
+
+.l-article__user-register {
+  .l-article__body {
+    margin-bottom: $space-double;
+  }
+}

@@ -1,0 +1,14 @@
+ics:
+  js:
+    libraries/ics/ics.deps.min.js: { minified: true }
+  dependencies:
+    - core/jquery
+date_recur:
+  js:
+    js/date_recur.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/jquery.once
+    - core/drupalSettings
+    - date_recur_ical/ics

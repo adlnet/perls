@@ -1,0 +1,29 @@
+uuid: bf8e5a7e-6a3b-43b6-9f33-002a578e86b8
+langcode: en
+status: true
+dependencies:
+  module:
+    - options
+    - paragraphs
+_core:
+  default_config_hash: NTyOr7tbx-e7AdsDkK_Ojkn0OYu5-qswZd9E6E64W3A
+id: paragraph.field_type
+field_name: field_type
+entity_type: paragraph
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: tip
+      label: Tip
+    -
+      value: warning
+      label: Warning
+  allowed_values_function: perls_authoring_callout_types
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

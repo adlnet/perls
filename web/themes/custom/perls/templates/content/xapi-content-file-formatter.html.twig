@@ -1,0 +1,20 @@
+{#
+/**
+ * @file
+ * Default formatter for an xAPI package file.
+ *
+ * Available variables:
+ * - link: The link to launch the activity.
+ * - name: The name of the activity.
+ * - description: The description of the activity.
+ *
+ * @see template_preprocess()
+ *
+ * @ingroup themeable
+ */
+#}
+<h3 class="xapi-content title">{{ name }}</h3>
+{% if description %}
+    <p class="xapi-content description">{{ description }}</p>
+{% endif %}
+<div class="xapi-content-button">{{ link }}</div>

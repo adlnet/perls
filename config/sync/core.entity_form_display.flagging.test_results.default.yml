@@ -1,0 +1,34 @@
+uuid: 0fc9acae-e601-428c-acc8-a805a1be5b6f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.flagging.test_results.field_test_attempts
+    - flag.flag.test_results
+  module:
+    - field_layout
+    - layout_discovery
+    - paragraphs
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings:
+      label: ''
+id: flagging.test_results.default
+targetEntityType: flagging
+bundle: test_results
+mode: default
+content:
+  field_test_attempts:
+    type: entity_reference_paragraphs
+    weight: 4
+    region: content
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: open
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: ''
+    third_party_settings: {  }
+hidden: {  }

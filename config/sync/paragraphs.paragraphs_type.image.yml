@@ -1,0 +1,12 @@
+uuid: 1633e421-69db-4656-9b5b-4b5d9cf838a9
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: oiLX9zaHH2MkY84jTrjaItI84D3mTkEjCX1H6lVZCnM
+id: image
+label: Image
+icon_uuid: null
+icon_default: null
+description: 'Add an image'
+behavior_plugins: {  }

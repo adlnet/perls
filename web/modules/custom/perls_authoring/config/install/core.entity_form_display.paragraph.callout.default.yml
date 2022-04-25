@@ -1,0 +1,54 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.callout.field_content
+    - field.field.paragraph.callout.field_title
+    - field.field.paragraph.callout.field_type
+    - paragraphs.paragraphs_type.callout
+  module:
+    - content_moderation
+    - field_layout
+    - layout_discovery
+    - text
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings: {  }
+id: paragraph.callout.default
+targetEntityType: paragraph
+bundle: callout
+mode: default
+content:
+  field_content:
+    weight: 102
+    settings:
+      rows: 3
+      placeholder: ''
+    third_party_settings: {  }
+    type: text_textarea
+    region: content
+  field_title:
+    weight: 101
+    settings:
+      size: 60
+      placeholder: 'Add a title for the callout (optional)'
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  field_type:
+    weight: 103
+    settings: {  }
+    third_party_settings: {  }
+    type: options_select
+    region: content
+  moderation_state:
+    type: moderation_state_default
+    weight: 100
+    settings: {  }
+    region: content
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true
+  uid: true

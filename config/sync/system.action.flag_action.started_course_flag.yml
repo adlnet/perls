@@ -1,0 +1,15 @@
+uuid: 52e1394d-17ae-4886-9e01-47d1bffb2c9d
+langcode: en
+status: true
+dependencies:
+  config:
+    - flag.flag.started_course
+  module:
+    - flag
+id: flag_action.started_course_flag
+label: 'Flag this item'
+type: node
+plugin: 'flag_action:started_course_flag'
+configuration:
+  flag_id: started_course
+  flag_action: flag

@@ -1,0 +1,18 @@
+uuid: 5ba2cc4e-ce23-470c-8219-1e4131f9da9e
+langcode: en
+status: true
+dependencies:
+  module:
+    - paragraphs
+id: paragraph.field_test_complete
+field_name: field_test_complete
+entity_type: paragraph
+type: boolean
+settings: {  }
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

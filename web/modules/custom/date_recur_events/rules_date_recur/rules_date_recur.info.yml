@@ -1,0 +1,8 @@
+name: 'Recurring Date Rules'
+type: module
+description: 'Rules integration for Recurring Date fields'
+core_version_requirement: ^8 || ^9
+package: Rules
+dependencies:
+  - date_recur_events
+  - rules

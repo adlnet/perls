@@ -1,0 +1,4 @@
+name: 'Entity Access Condition'
+type: module
+description: 'Provides condition plugins to verify the current user has permission to access a user or node from the current context.'
+core_version_requirement: ^8.7.7 || ^9

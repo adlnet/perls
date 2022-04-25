@@ -1,0 +1,31 @@
+uuid: b8e35831-26ae-4c95-ad6b-9aff21ac5823
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.entity_browser_users
+  module:
+    - views
+name: author_browser
+label: 'Author Browser'
+display: modal
+display_configuration:
+  width: '650'
+  height: '500'
+  link_text: 'Change author'
+  auto_open: true
+selection_display: no_display
+selection_display_configuration: {  }
+widget_selector: single
+widget_selector_configuration: {  }
+widgets:
+  01d5875d-46ed-4344-80e5-0b6a59bbb1a0:
+    id: view
+    uuid: 01d5875d-46ed-4344-80e5-0b6a59bbb1a0
+    label: 'Select author'
+    weight: 1
+    settings:
+      submit_text: 'Select author'
+      auto_select: false
+      view: entity_browser_users
+      view_display: entity_browser_1

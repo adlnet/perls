@@ -1,0 +1,174 @@
+<?php
+
+/**
+ * @file
+ * Perls course certificates.
+ */
+
+use Drupal\achievements\Entity\AchievementEntity;
+use Drupal\Component\Render\PlainTextOutput;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\file\Entity\File;
+
+/**
+ * Form alter for achievements form.
+ */
+function perls_course_certificates_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $badge_service = \Drupal::service('badges.badge_service');
+  $page_forms = ['node_course_form', 'node_course_edit_form'];
+  if (in_array($form_id, $page_forms, TRUE)) {
+    $entity = $form_state->getFormObject()->getEntity();
+    $default_value = ($badge_service->getAchievementById('course_completion_' . $entity->id())) ? TRUE : FALSE;
+    $form['award_certificate'] = [
+      '#type' => 'checkbox',
+      '#title' => t('Award Certificate'),
+      '#description' => t('When enabled, users will receive a personalized certificate when they complete this course.'),
+      '#default_value' => $default_value,
+      '#group' => 'content',
+      '#weight' => 6,
+    ];
+    $form['actions']['submit']['#submit'][] = 'perls_course_certificates_update_certificate_plugins';
+  }
+}
+
+/**
+ * A submit handler for adding new course completion ceritifcate.
+ */
+function perls_course_certificates_update_certificate_plugins(&$form, FormStateInterface $form_state) {
+  $badge_service = \Drupal::service('badges.badge_service');
+  $entity = $form_state->getFormObject()->getEntity();
+  $award_certificate = $form_state->getValue('award_certificate');
+  $achievement = $badge_service->getAchievementById('course_completion_' . $entity->id());
+  if (!$achievement && $award_certificate) {
+    try {
+      $cert = AchievementEntity::create([
+        'id' => 'course_completion_' . $entity->id(),
+        'label' => $entity->label(),
+        'description' => PlainTextOutput::renderFromHtml(t('Awarded when you complete the @name course',
+          [
+            '@name' => $entity->label(),
+          ]
+        )),
+        'storage' => NULL,
+        'secret' => FALSE,
+        'invisible' => FALSE,
+        'manaual_only' => NULL,
+        'points' => 1,
+        'use_default_image' => TRUE,
+        'locked_image_path' => '',
+        'unlocked_image_path' => '',
+        'third_party_settings' => [
+          'badges' => [
+            'bundle' => 'certificate',
+            'plugin_id' => 'course_completion_certificates',
+            'course_completion_certificates' => [
+              'entities' => $entity->id(),
+            ],
+            'badge_type' => 'Course Completion Certificate',
+          ],
+        ],
+      ]);
+      $cert->save();
+      $queue = \Drupal::queue('award_course_completion_cert');
+      $queue->createItem(
+        [
+          'achievement_id' => $cert->id(),
+          'entity_id' => $entity->id(),
+        ]
+      );
+    }
+    catch (\Exception $e) {
+
+    }
+
+  }
+  elseif ($achievement && $award_certificate) {
+    // Update an existing certificate.
+    $achievement->set('label', $entity->label());
+    $achievement->set('description', PlainTextOutput::renderFromHtml(t('Awarded when you complete the @name course',
+    [
+      '@name' => $entity->label(),
+    ]
+    )));
+    $achievement->save();
+  }
+  elseif ($achievement && !$award_certificate) {
+    $achievement->delete();
+  }
+
+}
+
+/**
+ * If a course is deleted the cert associated with it should be deleted.
+ */
+function perls_course_certificates_node_delete(EntityInterface $entity) {
+  if ($entity->bundle() !== 'course') {
+    return;
+  }
+  /** @var \Drupal\badges\Service\BadgeService $badge_service */
+  $badge_service = \Drupal::service('badges.badge_service');
+  $achievements = $badge_service->getBadgesByType('course_completion_certificates');
+  /** @var \Drupal\badges\Entity\AchievementEntity $achievement */
+  foreach ($achievements as $id => $achievement) {
+    $referenced_entity = $achievement->getThirdPartySetting('badges', 'course_completion_certificates')['entities'];
+    if ($referenced_entity === $entity->id()) {
+      $badge_service->deleteAchievement($achievement);
+    }
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function perls_course_certificates_form_achievements_admin_form_alter(&$form, FormStateInterface $form_state) {
+  $config = \Drupal::config('achievements.settings');
+  $default_image = [];
+  if ($config->get('course_completion_certificate_image.path')) {
+    $files = \Drupal::entityTypeManager()
+      ->getStorage('file')
+      ->loadByProperties(['uri' => $config->get('course_completion_certificate_image.path')]);
+    if (!empty($files)) {
+      $default_image[] = reset($files)->id();
+    }
+  }
+
+  $form['course_completion_certificate_image'] = [
+    '#type' => 'managed_image',
+    '#title' => t('Custom course Completion Certificate Image'),
+    '#description' => t('Upload a blank certificate image that will be used as the default for all course completion certificates.'),
+    '#default_value' => $default_image,
+    '#upload_location' => 'public://badges/',
+    '#upload_validators' => [
+      'file_validate_extensions' => ['png'],
+      'file_validate_is_image' => [],
+      'file_validate_image_resolution' => ['3301x2550', '3301x2550'],
+    ],
+  ];
+
+  $form['#submit'][] = 'perls_course_certificates_achievements_admin_submit';
+}
+
+/**
+ * Method to save send noticiation settings.
+ */
+function perls_course_certificates_achievements_admin_submit(&$form, FormStateInterface $form_state) {
+  $config = \Drupal::service('config.factory')->getEditable('achievements.settings');
+  $field = 'course_completion_certificate_image';
+  $default_key = $field . '.use_default';
+  $path_key = $field . '.path';
+  $value = $form_state->getValue($field);
+  if (!empty($value)) {
+    $file = File::load($value[0]);
+    $file->setPermanent();
+    $file->save();
+
+    $config->set($default_key, 0);
+    $config->set($path_key, $file->getFileUri());
+  }
+  elseif ($config->get($path_key) !== NULL) {
+    $config->set($default_key, 1);
+    $config->set($path_key, NULL);
+  }
+  $config->save();
+}

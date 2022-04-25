@@ -1,0 +1,13 @@
+uuid: 5147d19a-11d3-4037-a3b0-acd98a82c809
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - switches
+id: new_dashboard
+label: 'New dashboard'
+description: 'The new dashboard shows the learner their groups and followed tags in addition to their recommendations.'
+activationConditions: {  }
+activationMethod: manual
+manualActivationStatus: true

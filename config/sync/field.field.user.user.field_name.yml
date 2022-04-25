@@ -1,0 +1,22 @@
+uuid: 97c1d7cf-953a-444a-abd3-8d28a104e863
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.user.field_name
+  module:
+    - user
+_core:
+  default_config_hash: j9-1qZ0L4NmauXGWf-O_vWCmZ60HklKGfwZR2ADTPeU
+id: user.user.field_name
+field_name: field_name
+entity_type: user
+bundle: user
+label: Name
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

@@ -1,0 +1,26 @@
+uuid: 6476e533-eae7-448d-a22b-91726d5176ca
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.user.field_goal_monthly_course_comp
+  module:
+    - user
+id: user.user.field_goal_monthly_course_comp
+field_name: field_goal_monthly_course_comp
+entity_type: user
+bundle: user
+label: 'Courses Completed Per Month'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 6
+default_value_callback: ''
+settings:
+  min: 0
+  max: 100
+  prefix: ''
+  suffix: Courses
+field_type: integer

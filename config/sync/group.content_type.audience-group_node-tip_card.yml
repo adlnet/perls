@@ -1,0 +1,19 @@
+uuid: 4607f9c1-f458-4564-9741-74020c712cab
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.audience
+    - node.type.tip_card
+  module:
+    - gnode
+    - node
+id: audience-group_node-tip_card
+label: 'Group: Group node (Tip Card)'
+description: 'Adds <em class="placeholder">Tip Card</em> content to groups both publicly and privately.'
+group_type: audience
+content_plugin: 'group_node:tip_card'
+plugin_config:
+  group_cardinality: 0
+  entity_cardinality: 1
+  use_creation_wizard: false

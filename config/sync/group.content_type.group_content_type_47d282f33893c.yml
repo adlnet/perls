@@ -1,0 +1,19 @@
+uuid: e1e0a5d3-1a17-46de-9a9c-355e3976a020
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.audience
+    - node.type.learn_article
+  module:
+    - gnode
+    - node
+id: group_content_type_47d282f33893c
+label: 'Group: Group node (Learn Article)'
+description: 'Adds <em class="placeholder">Learn Article</em> content to groups both publicly and privately.'
+group_type: audience
+content_plugin: 'group_node:learn_article'
+plugin_config:
+  group_cardinality: 0
+  entity_cardinality: 1
+  use_creation_wizard: false

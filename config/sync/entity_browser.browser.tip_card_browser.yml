@@ -1,0 +1,42 @@
+uuid: 833f93f6-59c5-4c87-bbaa-23499aae9522
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.entity_browser_lists
+  module:
+    - entity_browser_entity_form
+    - views
+name: tip_card_browser
+label: 'Tip card browser'
+display: modal
+display_configuration:
+  width: ''
+  height: ''
+  link_text: 'Add tip card'
+  auto_open: false
+selection_display: no_display
+selection_display_configuration: {  }
+widget_selector: tabs
+widget_selector_configuration: {  }
+widgets:
+  c633c630-f03f-4307-885c-2eea023ea67d:
+    id: entity_form
+    uuid: c633c630-f03f-4307-885c-2eea023ea67d
+    label: 'New tip card'
+    weight: -9
+    settings:
+      submit_text: 'Create tip card'
+      entity_type: node
+      bundle: tip_card
+      form_mode: default
+  d920ce4a-28ab-407f-98e6-5b7bb9fbf723:
+    id: view_exclude_selection
+    uuid: d920ce4a-28ab-407f-98e6-5b7bb9fbf723
+    label: 'Existing tip card'
+    weight: -10
+    settings:
+      view: entity_browser_lists
+      view_display: entity_browser_tip_card
+      submit_text: 'Add tip card'
+      auto_select: 0

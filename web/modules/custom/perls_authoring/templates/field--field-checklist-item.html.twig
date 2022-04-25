@@ -1,0 +1,68 @@
+{#
+/**
+ * @file
+ * Extends default implementation of field to add checkboxes.
+ *
+ * Available variables:
+ * - attributes: HTML attributes for the containing element.
+ * - label_hidden: Whether to show the field label or not.
+ * - title_attributes: HTML attributes for the title.
+ * - label: The label for the field.
+ * - multiple: TRUE if a field can contain multiple items.
+ * - items: List of all the field items. Each item contains:
+ *   - attributes: List of HTML attributes for each item.
+ *   - content: The field item's content.
+ * - entity_type: The entity type to which the field belongs.
+ * - entity_uuid: The UUID of the entity to which the field belongs.
+ * - field_name: The name of the field.
+ * - field_type: The type of the field.
+ * - label_display: The display settings for the label.
+ *
+ * @see template_preprocess_field()
+ *
+ * @ingroup themeable
+ */
+#}
+{%
+set classes = [
+'field',
+'field--name-' ~ field_name|clean_class,
+'field--type-' ~ field_type|clean_class,
+'field--label-' ~ label_display,
+]
+%}
+{%
+set title_classes = [
+'field__label',
+label_display == 'visually_hidden' ? 'visually-hidden',
+]
+%}
+{% if label_hidden %}
+  {% if multiple %}
+    <div{{ attributes.addClass(classes, 'field__items') }}>
+      {% for delta, item in items %}
+        <div{{ item.attributes.addClass('field__item') }}><input type="checkbox" value="{{ delta }}" class="form-checkbox checklist-item-checkbox" id="checklist/{{ entity_uuid }}/{{ delta }}" name="checklist/{{ entity_uuid }}"><label for="checklist/{{ entity_uuid }}/{{ delta }}">{{ item.content }}</label></div>
+      {% endfor %}
+    </div>
+  {% else %}
+    {% for item in items %}
+      <div{{ item.attributes.addClass('field__item') }}><input type="checkbox" value="{{ delta }}" class="form-checkbox checklist-item-checkbox" id="checklist/{{ entity_uuid }}/{{ delta }}" name="checklist/{{ entity_uuid }}"><label for="checklist/{{ entity_uuid }}/{{ delta }}">{{ item.content }}</label></div>
+    {% endfor %}
+  {% endif %}
+{% else %}
+  <div{{ attributes.addClass(classes) }}>
+    <div{{ title_attributes.addClass(title_classes) }}>{{ label }}</div>
+
+    {% if multiple %}
+      <div class="field__items">
+    {% endif %}
+
+    {% for item in items %}
+      <div{{ item.attributes.addClass('field__item') }}><input type="checkbox" value="{{ delta }}" class="form-checkbox checklist-item-checkbox" id="checklist/{{ entity_uuid }}/{{ delta }}" name="checklist/{{ entity_uuid }}"><label for="checklist/{{ entity_uuid }}/{{ delta }}">{{ item.content }}</label></div>
+    {% endfor %}
+
+    {% if multiple %}
+      </div>
+    {% endif %}
+  </div>
+{% endif %}

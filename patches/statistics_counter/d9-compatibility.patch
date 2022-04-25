@@ -1,0 +1,33 @@
+diff --git a/statistics_counter.info.yml b/statistics_counter.info.yml
+index ebe2843..591416b 100644
+--- a/statistics_counter.info.yml
++++ b/statistics_counter.info.yml
+@@ -6,6 +6,7 @@ package: 'Statistics'
+ # core: 8.x
+ dependencies:
+   - statistics
++core_version_requirement: ^8 || ^9
+
+ # Information added by Drupal.org packaging script on 2015-10-18
+ version: '8.x-1.0-beta2'
+diff --git a/statistics_counter.install b/statistics_counter.install
+index ed8facd..93390e1 100644
+--- a/statistics_counter.install
++++ b/statistics_counter.install
+@@ -51,7 +51,7 @@ function statistics_counter_install() {
+   } catch (\Exception $e) {
+     $transaction->rollback();
+     watchdog_exception('php', $e);
+-    drupal_set_message(t('Cannot create new fields'), 'error');
++    \Drupal::messenger()->addError(t('Cannot create new fields'));
+   }
+ }
+
+@@ -73,6 +73,6 @@ function statistics_counter_uninstall() {
+   } catch (\Exception $e) {
+     $transaction->rollback();
+     watchdog_exception('php', $e);
+-    drupal_set_message(t('Cannot drop fields'), 'error');
++    \Drupal::messenger()->addError(t('Cannot drop fields'));
+   }
+ }

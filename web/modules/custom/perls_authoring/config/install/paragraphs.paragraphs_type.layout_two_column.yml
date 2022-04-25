@@ -1,0 +1,8 @@
+langcode: en
+status: true
+dependencies: {  }
+id: layout_two_column
+label: 'Two-column layout'
+icon_uuid: null
+description: 'Add a left and right column to display content side-by-side.'
+behavior_plugins: {  }

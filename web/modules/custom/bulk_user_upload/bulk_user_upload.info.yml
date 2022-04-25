@@ -1,0 +1,5 @@
+name: Bulk User Upload
+type: module
+description: Provide the ability to bulk upload multiple users via CSV.
+core: 8.x
+package: Perls

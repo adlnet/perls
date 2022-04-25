@@ -1,0 +1,82 @@
+<?php
+
+/**
+ * @file
+ * PERLS Learner State -- learner-specific information for content.
+ */
+
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\node\NodeInterface;
+use Drupal\perls_learner_state\Event\NodeCrudEvent;
+
+/**
+ * Implements hook_node_update().
+ */
+function perls_learner_state_node_update(NodeInterface $node) {
+  if ($node->getType() !== 'course') {
+    return;
+  }
+
+  \Drupal::service('perls_learner_state.completion_tracking')->checkCompletionForEnrolledUsers($node);
+}
+
+/**
+ * Implements hook_entity_update().
+ */
+function perls_learner_state_entity_update(EntityInterface $entity) {
+  if ($entity->getEntityTypeId() === 'comment') {
+    perls_learner_state_send_commented_statement($entity);
+  }
+  if ($entity->getEntityTypeId() === 'node') {
+    $event_dispatcher = \Drupal::service('event_dispatcher');
+    $event_dispatcher->dispatch(NodeCrudEvent::EVENT_NAME, new NodeCrudEvent($entity, NodeCrudEvent::UPDATE));
+  }
+}
+
+/**
+ * Implements hook_entity_insert().
+ */
+function perls_learner_state_entity_insert(EntityInterface $entity) {
+  if ($entity->getEntityTypeId() === 'comment') {
+    perls_learner_state_send_commented_statement($entity);
+  }
+
+  if ($entity->getEntityTypeId() === 'node') {
+    $event_dispatcher = \Drupal::service('event_dispatcher');
+    $event_dispatcher->dispatch(NodeCrudEvent::EVENT_NAME, new NodeCrudEvent($entity, NodeCrudEvent::CREATE));
+  }
+}
+
+/**
+ * Implements hook_entity_delete().
+ */
+function perls_learner_state_entity_delete(EntityInterface $entity) {
+  if ($entity->getEntityTypeId() === 'node') {
+    $event_dispatcher = \Drupal::service('event_dispatcher');
+    $event_dispatcher->dispatch(NodeCrudEvent::EVENT_NAME, new NodeCrudEvent($entity, NodeCrudEvent::DELETE));
+  }
+}
+
+/**
+ * Send a commented xapi statement when user left a comment.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The drupal comment.
+ */
+function perls_learner_state_send_commented_statement(EntityInterface $entity) {
+  /** @var \Drupal\perls_learner_state\Plugin\XapiStateManager $statement_manager */
+  $statement_manager = \Drupal::service('plugin.manager.state_manager');
+  $statement_manager->sendStatement('xapi_user_commented', $entity);
+}
+
+/**
+ * Implements hook_xapi_statement_validator().
+ */
+function perls_learner_state_xapi_statement_validator($statement) {
+  // Checks that statements contains a valid verb.
+  $verb = \Drupal::service('perls_learner_state.flagging_helper')->getFlagOperationFromStatement($statement);
+  if (empty($verb)) {
+    return FALSE;
+  }
+
+}

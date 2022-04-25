@@ -1,0 +1,50 @@
+uuid: 3a37fd4a-83cc-4a2d-a765-1f3e3866eacf
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.search_index
+    - field.field.node.tip_card.field_card_front
+    - field.field.node.tip_card.field_difficulty
+    - field.field.node.tip_card.field_parent_content
+    - field.field.node.tip_card.field_tags
+    - field.field.node.tip_card.field_topic
+    - field.field.node.tip_card.field_type_description
+    - node.type.tip_card
+  module:
+    - field_layout
+    - layout_builder
+    - layout_discovery
+    - user
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings:
+      label: ''
+  layout_builder:
+    enabled: false
+    allow_custom: false
+id: node.tip_card.search_index
+targetEntityType: node
+bundle: tip_card
+mode: search_index
+content: {  }
+hidden:
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  entitygroupfield: true
+  field_card_front: true
+  field_difficulty: true
+  field_parent_content: true
+  field_tags: true
+  field_topic: true
+  field_type_description: true
+  flag_bookmark: true
+  flag_completed: true
+  flag_recommendation: true
+  group_content: true
+  langcode: true
+  links: true
+  recommendation_reason: true
+  search_api_excerpt: true

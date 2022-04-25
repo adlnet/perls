@@ -1,0 +1,86 @@
+/* ------------------------------------ *\
+    $DIALOGS
+\* ------------------------------------ */
+
+.ui-dialog {
+  .ui-dialog-titlebar {
+    background-color: $c-admin--background;
+    border-width: 0;
+
+    &-close {
+      right: 1em;
+    }
+  }
+
+  .ui-dialog-content {
+    padding: 1em;
+
+    .c-node--card {
+      .c-card {
+        min-height: 600px;
+      }
+    }
+  }
+  .ui-dialog-buttonpane {
+    border-width: 0;
+
+    .ui-button {
+      margin: 10px 15px 10px 0;
+
+      &.button--primary {
+        @include o-button-form;
+      }
+
+      &:not(.button--primary) {
+        @include o-button-reverse;
+      }
+    }
+  }
+}
+
+.ui-button {
+  .ui-icon {
+    background-image: url("data:image/svg+xml,%3Csvg id='Capa_1' enable-background='new 0 0 386.667 386.667' height='512' viewBox='0 0 386.667 386.667' width='512' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='m386.667 45.564-45.564-45.564-147.77 147.769-147.769-147.769-45.564 45.564 147.769 147.769-147.769 147.77 45.564 45.564 147.769-147.769 147.769 147.769 45.564-45.564-147.768-147.77z' fill='%23232323'/%3E%3C/svg%3E%0A");
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+  &:hover {
+    .ui-icon {
+      background-image: url("data:image/svg+xml,%3Csvg id='Capa_1' enable-background='new 0 0 386.667 386.667' height='512' viewBox='0 0 386.667 386.667' width='512' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='m386.667 45.564-45.564-45.564-147.77 147.769-147.769-147.769-45.564 45.564 147.769 147.769-147.769 147.77 45.564 45.564 147.769-147.769 147.769 147.769 45.564-45.564-147.768-147.77z' fill='%23232323'/%3E%3C/svg%3E%0A");
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+  }
+}
+
+.ui-widget-overlay {
+  background-color: $c-black;
+}
+
+.l--entity-browser--iframe {
+  .o-page-title {
+    color: $c-admin--foreground;
+  }
+}
+
+/**
+ * Achievement notification hide when content-only class exists.
+ */
+.content-only {
+  .achievement-notification-dialog {
+    display: none !important;
+  }
+}
+
+/**
+ * Fix for safari enter key submission of ckeditor link modal via hidden input.
+ */
+.editor-link-dialog {
+  .form-actions input[type="submit"] {
+    display: inline !important;
+    opacity: 0;
+  }
+}

@@ -1,0 +1,9 @@
+_core:
+  default_config_hash: jdY7AU0tU-QsjmiOw3W8vwpYMb-By--_MSFgbqKUTYM
+definitions:
+  perls_default_content__learner_profile:
+    menu_name: learner-user-menu
+    parent: ''
+    weight: -50
+    expanded: false
+    enabled: true

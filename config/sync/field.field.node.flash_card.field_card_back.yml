@@ -1,0 +1,81 @@
+uuid: e9cd9d81-b15f-485d-9ecf-c8b38b88b3ad
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_card_back
+    - node.type.flash_card
+    - paragraphs.paragraphs_type.image
+    - paragraphs.paragraphs_type.text
+  module:
+    - entity_reference_revisions
+id: node.flash_card.field_card_back
+field_name: field_card_back
+entity_type: node
+bundle: flash_card
+label: 'Card Back'
+description: 'Add text here that you want the learner to see on the back of the flashcard. Try to limit text to one or two sentences.'
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      image: image
+      text: text
+    negate: 0
+    target_bundles_drag_drop:
+      audio:
+        weight: 16
+        enabled: false
+      callout:
+        weight: 17
+        enabled: false
+      checklist:
+        weight: 18
+        enabled: false
+      document:
+        weight: 20
+        enabled: false
+      goal_log:
+        weight: 22
+        enabled: false
+      heading:
+        weight: 21
+        enabled: false
+      image:
+        weight: 22
+        enabled: true
+      layout_two_column:
+        weight: 24
+        enabled: false
+      list_ordered:
+        weight: 25
+        enabled: false
+      list_unordered:
+        weight: 26
+        enabled: false
+      quiz_option:
+        weight: 28
+        enabled: false
+      references:
+        weight: 27
+        enabled: false
+      table:
+        weight: 28
+        enabled: false
+      test_attempt:
+        weight: 31
+        enabled: false
+      test_question_answer:
+        weight: 32
+        enabled: false
+      text:
+        weight: 29
+        enabled: true
+      video:
+        weight: 30
+        enabled: false
+field_type: entity_reference_revisions

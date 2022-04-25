@@ -1,0 +1,91 @@
+{#
+/**
+ * @file
+ * Theme override for a field.
+ *
+ * To override output, copy the "field.html.twig" from the templates directory
+ * to your theme's directory and customize it, just like customizing other
+ * Drupal templates such as page.html.twig or node.html.twig.
+ *
+ * Instead of overriding the theming for all fields, you can also just override
+ * theming for a subset of fields using
+ * @link themeable Theme hook suggestions. @endlink For example,
+ * here are some theme hook suggestions that can be used for a field_foo field
+ * on an article node type:
+ * - field--node--field-foo--article.html.twig
+ * - field--node--field-foo.html.twig
+ * - field--node--article.html.twig
+ * - field--field-foo.html.twig
+ * - field--text-with-summary.html.twig
+ * - field.html.twig
+ *
+ * Available variables:
+ * - attributes: HTML attributes for the containing element.
+ * - label_hidden: Whether to show the field label or not.
+ * - title_attributes: HTML attributes for the title.
+ * - label: The label for the field.
+ * - multiple: TRUE if a field can contain multiple items.
+ * - items: List of all the field items. Each item contains:
+ *   - attributes: List of HTML attributes for each item.
+ *   - content: The field item's content.
+ * - entity_type: The entity type to which the field belongs.
+ * - field_name: The name of the field.
+ * - field_type: The type of the field.
+ * - label_display: The display settings for the label.
+ *
+ *
+ * @see template_preprocess_field()
+ */
+#}
+{%
+  set classes = [
+    'c-field',
+    'c-field--name-' ~ field_name|clean_class,
+    'c-field--type-' ~ field_type|clean_class,
+    'c-field--label-' ~ label_display,
+    'u-space--double--top'
+  ]
+%}
+<div{{ attributes.addClass(classes) }}>
+  {% if multiple %}
+    <div class="c-field__items c-quiz__options u-spacing">
+  {% endif %}
+
+  {% for item in items %}
+    <div class="c-field__item c-quiz__option js-this" option-counter="{{ loop.index }}">
+      <a href="#{{ item.content['#paragraph'].id.0.value }}" class="c-quiz__question js-toggle" data-toggled="this" data-prefix="this">
+        {{ item.content['#paragraph'].field_answer.0.value }}
+      </a>
+
+      <div id="{{ item.content['#paragraph'].id.0.value }}" class="c-quiz__answer">
+        <div class="answer--inner u-spacing">
+          {% if (item.content['#paragraph'].field_correct.0.value == 1) %}
+            {% set status_label = "CORRECT!" %}
+            {% set status_value = "correct" %}
+          {% else %}
+            {% set status_label = "INCORRECT" %}
+            {% set status_value = "incorrect" %}
+          {% endif %}
+
+          <span class="o-icon o-icon--round--outline o-icon--{{ status_value }}"></span>
+
+          <h4>{{ status_label }}</h4>
+
+          <p>{{ item.content['#paragraph'].field_rationale.0.value }}</p>
+
+          {% if (item.content['#paragraph'].field_correct.0.value == 0 and not is_test) %}
+            <button class="c-quiz__button o-button--card quiz-button-try-again js-toggle quiz-button-try-again" data-toggled="this" data-prefix="this">Try Again</button>
+          {% endif %}
+
+          {% if is_test %}
+            <button class="c-quiz__button o-button--card stack-advance">{{ 'Next'|t }}</button>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+
+  {% if multiple %}
+    </div>
+  {% endif %}
+</div>

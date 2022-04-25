@@ -1,0 +1,7 @@
+services:
+  perls_course_certificates.flag_subscriber:
+    class: Drupal\perls_course_certificates\EventSubscriber\FlagSubscriber
+    arguments:
+      - '@badges.badge_service'
+    tags:
+      - { name: event_subscriber }

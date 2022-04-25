@@ -1,0 +1,20 @@
+uuid: 362b2479-88ba-4e39-8b5f-7fa6844e843a
+langcode: en
+status: true
+dependencies:
+  module:
+    - serialization
+    - simple_oauth
+    - annotator
+    - user
+id: annotations_resource
+plugin_id: annotations_resource
+granularity: resource
+configuration:
+  methods:
+    - GET
+  formats:
+    - json
+  authentication:
+    - oauth2
+    - cookie

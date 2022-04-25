@@ -1,0 +1,22 @@
+diff --git a/src/Plugin/Derivative/PdbBlockDeriver.php b/src/Plugin/Derivative/PdbBlockDeriver.php
+index 62e8bca..5c8dfd7 100644
+--- a/src/Plugin/Derivative/PdbBlockDeriver.php
++++ b/src/Plugin/Derivative/PdbBlockDeriver.php
+@@ -3,7 +3,7 @@
+ namespace Drupal\pdb\Plugin\Derivative;
+
+ use Drupal\Component\Plugin\Derivative\DeriverBase;
+-use Drupal\Core\Plugin\Context\ContextDefinition;
++use Drupal\Core\Plugin\Context\EntityContextDefinition;
+ use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
+ use Drupal\pdb\ComponentDiscoveryInterface;
+ use Symfony\Component\DependencyInjection\ContainerInterface;
+@@ -72,7 +72,7 @@ class PdbBlockDeriver extends DeriverBase implements ContainerDeriverInterface {
+     $contexts_definitions = [];
+     if (isset($contexts['entity'])) {
+       // @todo Check entity type exists and fail!
+-      $contexts_definitions['entity'] = new ContextDefinition('entity:' . $contexts['entity']);
++      $contexts_definitions['entity'] = new EntityContextDefinition('entity:' . $contexts['entity']);
+     }
+     // @todo Dynamically handle unknown context definitions
+     return $contexts_definitions;

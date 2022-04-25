@@ -1,0 +1,58 @@
+uuid: 5ac61eae-ebc6-4413-a868-9e3ef717ba4c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_schedule
+    - node.type.event
+  module:
+    - date_recur
+id: node.event.field_schedule
+field_name: field_schedule
+entity_type: node
+bundle: event
+label: Schedule
+description: ''
+required: true
+translatable: false
+default_value:
+  -
+    default_date_time_zone: UTC
+default_value_callback: ''
+settings:
+  precreate: P1Y
+  parts:
+    all: false
+    frequencies:
+      SECONDLY: {  }
+      MINUTELY: {  }
+      HOURLY: {  }
+      DAILY:
+        - BYDAY
+        - COUNT
+        - DTSTART
+        - INTERVAL
+        - UNTIL
+        - WKST
+      WEEKLY:
+        - BYDAY
+        - COUNT
+        - DTSTART
+        - INTERVAL
+        - UNTIL
+        - WKST
+      MONTHLY:
+        - BYDAY
+        - COUNT
+        - DTSTART
+        - INTERVAL
+        - UNTIL
+        - WKST
+      YEARLY:
+        - BYDAY
+        - COUNT
+        - DTSTART
+        - INTERVAL
+        - UNTIL
+        - WKST
+field_type: date_recur

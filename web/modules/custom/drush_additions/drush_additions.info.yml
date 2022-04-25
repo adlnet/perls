@@ -1,0 +1,4 @@
+name: Drush Additions
+description: This module provides drush commands that are helpful for Perls projects.
+core: 8.x
+type: module

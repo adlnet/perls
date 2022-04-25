@@ -1,0 +1,42 @@
+<?php
+
+/**
+ * @file
+ * Contains veracity_vql.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function veracity_vql_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the veracity_vql module.
+    case 'help.page.veracity_vql':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Integrates with Veracity API for displaying charts') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_library_info_alter().
+ *
+ * Configures the Veracity renderer library to point to
+ * the same instance of Veracity used for xAPI.
+ */
+function veracity_vql_library_info_alter(&$libraries, $extension) {
+  if ($extension !== 'veracity_vql') {
+    return;
+  }
+
+  $library = \Drupal::service('veracity_vql.api')->getVqlRenderer();
+
+  $renderer = $libraries['vql-renderer']['js']['renderer'];
+  unset($libraries['vql-renderer']['js']['renderer']);
+  $libraries['vql-renderer']['js'][$library] = $renderer;
+}

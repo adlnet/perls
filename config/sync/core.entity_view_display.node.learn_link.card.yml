@@ -1,0 +1,98 @@
+uuid: 3ddd481b-1b10-489d-839e-6e00638e59ac
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.card
+    - field.field.node.learn_link.field_content_link
+    - field.field.node.learn_link.field_course
+    - field.field.node.learn_link.field_custom_uri
+    - field.field.node.learn_link.field_description
+    - field.field.node.learn_link.field_difficulty
+    - field.field.node.learn_link.field_flash_card
+    - field.field.node.learn_link.field_link_type
+    - field.field.node.learn_link.field_media_image
+    - field.field.node.learn_link.field_quiz
+    - field.field.node.learn_link.field_tags
+    - field.field.node.learn_link.field_tip_card
+    - field.field.node.learn_link.field_topic
+    - field.field.node.learn_link.field_type_description
+    - node.type.learn_link
+  module:
+    - field_layout
+    - layout_builder
+    - media
+    - text
+    - user
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings:
+      label: ''
+  layout_builder:
+    enabled: false
+    allow_custom: false
+id: node.learn_link.card
+targetEntityType: node
+bundle: learn_link
+mode: card
+content:
+  field_description:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_media_image:
+    type: media_thumbnail
+    label: hidden
+    settings:
+      image_link: ''
+      image_style: ''
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_tags:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  flag_bookmark:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  flag_completed:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  recommendation_reason:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 5
+    region: content
+hidden:
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  entitygroupfield: true
+  field_content_link: true
+  field_course: true
+  field_custom_uri: true
+  field_difficulty: true
+  field_flash_card: true
+  field_link_type: true
+  field_quiz: true
+  field_tip_card: true
+  field_topic: true
+  field_type_description: true
+  flag_recommendation: true
+  group_content: true
+  langcode: true
+  links: true
+  search_api_excerpt: true

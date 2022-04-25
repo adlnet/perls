@@ -1,0 +1,32 @@
+uuid: d8cc87f0-764d-42cb-9b61-6b0cf54339f9
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_video
+    - paragraphs.paragraphs_type.video
+  module:
+    - video_embed_field
+_core:
+  default_config_hash: PzdOuhL6WprivsNu4OZneC070E3t77tAnTIqqMiUto4
+id: paragraph.video.field_video
+field_name: field_video
+entity_type: paragraph
+bundle: video
+label: Video
+description: 'Paste in a URL to a video on Brightcove, Google Drive, Kaltura, uStudio, Widen, YouTube or Vimeo.'
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  allowed_providers:
+    brightcove: brightcove
+    vimeo: vimeo
+    youtube: youtube
+    youtube_playlist: youtube_playlist
+    google_drive: google_drive
+    kaltura: kaltura
+    ustudio: ustudio
+    widen: widen
+field_type: video_embed_field

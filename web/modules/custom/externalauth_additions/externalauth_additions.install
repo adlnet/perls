@@ -1,0 +1,19 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the externalauth_additions.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function externalauth_additions_install() {
+  // Create required directories.
+  $file_system = \Drupal::service('file_system');
+  $directory_to_create = 'private://saml_config';
+  $status = $file_system->prepareDirectory($directory_to_create);
+  if (!$status) {
+    $file_system->mkdir($directory_to_create);
+  }
+}

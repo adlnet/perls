@@ -1,0 +1,15 @@
+uuid: 60e1ed64-5c9d-4f05-8803-156064d81b8a
+langcode: en
+status: true
+dependencies:
+  config:
+    - flag.flag.attended
+  module:
+    - flag
+id: flag_action.attended_flag
+label: 'Mark as attended'
+type: node
+plugin: 'flag_action:attended_flag'
+configuration:
+  flag_id: attended
+  flag_action: flag

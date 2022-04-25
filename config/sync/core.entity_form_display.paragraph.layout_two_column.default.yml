@@ -1,0 +1,57 @@
+uuid: 10242340-64c8-4925-a377-ac780fb033d0
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.layout_two_column.field_column_left
+    - field.field.paragraph.layout_two_column.field_column_right
+    - paragraphs.paragraphs_type.layout_two_column
+  module:
+    - field_layout
+    - layout_discovery
+    - paragraphs
+third_party_settings:
+  field_layout:
+    id: layout_twocol
+    settings:
+      label: ''
+_core:
+  default_config_hash: hBkIZ9z29Iy77wDiUDvw9YKGIvjxKIBuMjH2JIUfLrM
+id: paragraph.layout_two_column.default
+targetEntityType: paragraph
+bundle: layout_two_column
+mode: default
+content:
+  field_column_left:
+    type: paragraphs
+    weight: 0
+    region: first
+    settings:
+      title: block
+      title_plural: blocks
+      edit_mode: open
+      closed_mode: preview
+      autocollapse: none
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: _none
+    third_party_settings: {  }
+  field_column_right:
+    type: paragraphs
+    weight: 1
+    region: second
+    settings:
+      title: block
+      title_plural: blocks
+      edit_mode: open
+      closed_mode: preview
+      autocollapse: none
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: _none
+    third_party_settings: {  }
+hidden:
+  created: true
+  moderation_state: true
+  status: true
+  uid: true

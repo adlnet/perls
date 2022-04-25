@@ -1,0 +1,25 @@
+uuid: 74dbe08d-f401-46d1-89be-255f5ce72157
+langcode: en
+status: true
+dependencies:
+  module:
+    - file
+    - paragraphs
+_core:
+  default_config_hash: biuf8VhvnVImGjkCbO-ize2noi1fCeCetcCM_Bd97XM
+id: paragraph.field_audio
+field_name: field_audio
+entity_type: paragraph
+type: file
+settings:
+  target_type: file
+  display_field: false
+  display_default: false
+  uri_scheme: private
+module: file
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

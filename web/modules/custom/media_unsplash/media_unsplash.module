@@ -1,0 +1,100 @@
+<?php
+
+/**
+ * @file
+ * Provides definition for Unsplash media integration.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function media_unsplash_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.media_unsplash':
+      $output = '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Unsplash Media module adds the Unsplash widget to the entity browser.') . '</p>';
+      $output .= '<h3>' . t('Features') . '</h3>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Search images - photos and illustrations') . '</dt>';
+      $output .= '<dt>' . t('Save images to your site with a single click.') . '</dt>';
+      $output .= '<h3>' . t('What is Unsplash?') . '</h3>';
+      $output .= '<p>' . t("All images on Unsplash are released free of copyrights under Creative Commons CC0. You may download, modify, distribute, and use them royalty free for anything you like, even in commercial applications. Attribution is not required. More information on this link: <a href ='https://unsplash.com/en/service/faq/'>https://unsplash.com/en/service/faq/</a>");
+      $output .= '<h3>' . t('Requirements') . '</h3>';
+      $output .= '<p>' . t('Core Media module must be enabled.') . '</p>';
+      $output .= '<p>' . t('Entity browser module must be enabled.') . '</p>';
+      $output .= '<h3>' . t('Installation') . '</h3>';
+      $output .= '<p>' . t("Media Unsplash can be installed via the standard Drupal installation process.<br>You can also use composer to download the module.<br><br>composer require drupal/media_unsplash<br><br>Once installed, you must register for a Unsplash API key and enter it into the Media Unsplash configuration page.") . '</p>';
+      return $output;
+
+    default:
+      return [];
+  }
+}
+
+/**
+ * Implements hook_inline_entity_form_entity_form_alter().
+ */
+function media_unsplash_inline_entity_form_entity_form_alter(&$entity_form, FormStateInterface $form_state) {
+  if (!isset($entity_form['field_media_image']) || $entity_form['#entity_type'] !== 'node') {
+    return;
+  }
+  $entity_form['field_media_image']['widget']['#type'] = 'item';
+  // Remove selection details.
+  if (isset($entity_form['field_media_image']['widget']['current']['#prefix'])) {
+    unset($entity_form['field_media_image']['widget']['current']['#prefix']);
+  }
+}
+
+/**
+ * Implements hook_field_widget_WIDGET_TYPE_form_alter().
+ */
+function media_unsplash_field_widget_paragraphs_form_alter(&$element, &$form_state, $context) {
+  if ($element['#paragraph_type'] == 'image') {
+    if (!isset($element['subform']['field_media_image'])) {
+      return;
+    }
+
+    $element['subform']['field_media_image']['widget']['#type'] = 'item';
+    $element['subform']['field_media_image']['#attributes']['class'][] = 'field-media-image-image-paragraph';
+    // Remove selection details.
+    if (isset($element['subform']['field_media_image']['widget']['current']['#prefix'])) {
+      unset($element['subform']['field_media_image']['widget']['current']['#prefix']);
+    }
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function media_unsplash_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+
+  // Array of form ids.
+  $ids = [
+    'taxonomy_term_category_form',
+    'node_learn_article_form',
+    'node_learn_article_edit_form',
+    'node_course_form',
+    'node_course_edit_form',
+    'node_learn_file_form',
+    'node_learn_file_edit_form',
+    'node_quiz_form',
+    'node_quiz_edit_form',
+    'node_learn_link_form',
+    'node_learn_link_edit_form',
+    'node_event_form',
+    'node_event_edit_form',
+    'node_learn_package_form',
+    'node_learn_package_edit_form',
+    'group_audience_add_form',
+  ];
+  if (in_array($form_id, $ids) && isset($form['field_media_image'])) {
+    $form['field_media_image']['widget']['#type'] = 'item';
+    // Remove selection details.
+    if (isset($form['field_media_image']['widget']['current']['#prefix'])) {
+      unset($form['field_media_image']['widget']['current']['#prefix']);
+    }
+  }
+}

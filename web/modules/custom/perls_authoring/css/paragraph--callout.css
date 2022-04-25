@@ -1,0 +1,18 @@
+.paragraph--type--callout {
+  border-radius: 8px;
+  padding: 1em;
+}
+
+.paragraph--type--callout h3 {
+  font-size: 1em;
+  margin: 0;
+}
+
+.paragraph--type--callout.paragraph--callout--tip {
+  border: 5px solid #cdc8c2;
+}
+
+.paragraph--type--callout.paragraph--callout--warning {
+  background-color: #bc473c;
+  color: #fff;
+}

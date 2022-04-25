@@ -1,0 +1,118 @@
+<?php
+
+/**
+ * @file
+ * Very early implementation of mapping SAML attributes to profile fields.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\user\UserInterface;
+
+/**
+ * Implements hook_simplesamlphp_auth_user_attributes().
+ *
+ * Maps fields to the user's name.
+ */
+function externalauth_additions_simplesamlphp_auth_user_attributes(UserInterface $account, $attributes) {
+  $altered = FALSE;
+  $saml_first_name = $attributes['givenName'] ?? [];
+  $saml_last_name = $attributes['sn'] ?? [];
+  if (!empty($saml_first_name) && !empty($saml_last_name)) {
+    $name = reset($saml_first_name) . ' ' . reset($saml_last_name);
+    _externalauth_additions_profile_field_set($account, 'field_name', $name, $altered);
+  }
+
+  // Map SSO organizational attributes to user account fields.
+  if (!empty($attributes['uid'])) {
+    _externalauth_additions_profile_field_set($account, 'field_organization_identifier', reset($attributes['uid']), $altered);
+    // Set value for parameter labeledUri(optional).
+    if (!empty($attributes['labeledUri'])) {
+      _externalauth_additions_profile_field_set($account, 'field_organization_homepage', reset($attributes['labeledUri']), $altered);
+    }
+
+    // Set Name field to email if Name is still empty.
+    $mail = $account->get('mail')->getString();
+    if (empty($account->get('field_name')->getString()) && !empty($mail)) {
+      _externalauth_additions_profile_field_set($account, 'field_name', $mail, $altered);
+    }
+  }
+
+  // Return $account if it's altered based on SAML attributes.
+  if ($altered) {
+    return $account;
+  }
+  return FALSE;
+}
+
+/**
+ * Updates profile field if its value has been modified.
+ *
+ * @param \Drupal\user\UserInterface $account
+ *   User account.
+ * @param string $field_name
+ *   Field name.
+ * @param string $value
+ *   New value.
+ */
+function _externalauth_additions_profile_field_set(UserInterface &$account, $field_name, $value, &$altered) {
+  if (!empty($current = $account->get($field_name)->getString())) {
+    if ($current !== $value) {
+      $account->set($field_name, $value);
+      $altered = TRUE;
+      return;
+    }
+  }
+  // If current value is empty, set the value.
+  $account->set($field_name, $value);
+  $altered = TRUE;
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function externalauth_additions_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $sso_configuration = \Drupal::service('externalauth_additions.manager');
+  switch ($form_id) {
+    case 'xapi_admin_settings':
+      // Remove "Organization Account" option IFI if SSO is disabled.
+      if (!$sso_configuration->isEnabled()) {
+        unset($form['xapi']['xapi_actor_ifi']['#options']['sso']);
+      }
+      break;
+
+    case 'user_admin_settings':
+      // Disabled user registration settings when SSO is required.
+      if ($sso_configuration->isRequired()) {
+        $form['registration_cancellation']['user_register']['#disabled'] = TRUE;
+        $form['registration_cancellation']['user_email_verification']['#disabled'] = TRUE;
+        $form['registration_cancellation']['notice'] = [
+          '#theme' => 'status_messages',
+          '#message_list' => [
+            'warning' => [
+              t('Users are required to use single sign-on.'),
+            ],
+          ],
+          '#weight' => -100,
+        ];
+      }
+      break;
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ *
+ * Hides links and login form on login block when SSO is required.
+ */
+function externalauth_additions_preprocess_block__user_login_block(&$variables) {
+  $sso_configuration = \Drupal::service('externalauth_additions.manager');
+  $allow_local_login = \Drupal::request()->query->getBoolean('local') ?: FALSE;
+
+  if ($sso_configuration->isRequired()) {
+    $variables['#cache']['contexts'][] = 'url.query_args:local';
+    $variables['content']['user_login_form']['name']['#access'] = $allow_local_login;
+    $variables['content']['user_login_form']['pass']['#access'] = $allow_local_login;
+    $variables['content']['user_login_form']['actions']['submit']['#access'] = $allow_local_login;
+    $variables['content']['user_links']['#access'] = $allow_local_login;
+  }
+}

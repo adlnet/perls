@@ -1,0 +1,13 @@
+uuid: e8776c88-6e0f-4f78-a128-f97b14213869
+langcode: en
+status: true
+dependencies:
+  config:
+    - paragraphs.paragraphs_type.callout
+_core:
+  default_config_hash: 5gwrq1CbpvLlE4EjaLKfmIYHEL7U3gWVTr2LkXFp0nc
+id: paragraph.callout
+target_entity_type_id: paragraph
+target_bundle: callout
+default_langcode: site_default
+language_alterable: true

@@ -1,0 +1,34 @@
+uuid: 1076d5e7-e094-4abf-94de-538862f38768
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_list_content
+    - paragraphs.paragraphs_type.list_ordered
+  module:
+    - allowed_formats
+    - text
+third_party_settings:
+  allowed_formats:
+    list: list
+    advanced: '0'
+    basic_filter: '0'
+    inline_styling: '0'
+    plain_text: '0'
+_core:
+  default_config_hash: KN7W3rz4aL6cOKyjkaX7gz7k6TxBfarR0flGNyzlpto
+id: paragraph.list_ordered.field_list_content
+field_name: field_list_content
+entity_type: paragraph
+bundle: list_ordered
+label: 'List Content'
+description: ''
+required: true
+translatable: true
+default_value:
+  -
+    value: "<ol>\r\n\t<li>&nbsp;</li>\r\n</ol>\r\n"
+    format: list
+default_value_callback: ''
+settings: {  }
+field_type: text_long

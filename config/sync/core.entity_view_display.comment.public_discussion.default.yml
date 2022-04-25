@@ -1,0 +1,77 @@
+uuid: 7402fa99-b5cb-4bf2-a03a-3e85c5fcebf5
+langcode: en
+status: true
+dependencies:
+  config:
+    - comment.type.public_discussion
+    - field.field.comment.public_discussion.comment_body
+  module:
+    - field_layout
+    - layout_builder
+    - layout_discovery
+    - text
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings:
+      label: ''
+  layout_builder:
+    enabled: true
+    sections:
+      -
+        layout_id: layout_onecol
+        layout_settings:
+          label: ''
+          context_mapping: {  }
+        components:
+          5455ded5-446c-42a1-a150-01ef302b4392:
+            uuid: 5455ded5-446c-42a1-a150-01ef302b4392
+            region: content
+            configuration:
+              id: 'field_block:comment:public_discussion:comment_body'
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              formatter:
+                type: text_default
+                label: hidden
+                settings: {  }
+                third_party_settings: {  }
+            weight: 0
+            additional: {  }
+            third_party_settings: {  }
+          79dbd55c-2bb9-45b7-91a3-885496adf084:
+            uuid: 79dbd55c-2bb9-45b7-91a3-885496adf084
+            region: content
+            configuration:
+              id: 'extra_field_block:comment:public_discussion:links'
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+            weight: 1
+            additional: {  }
+            third_party_settings: {  }
+        third_party_settings: {  }
+id: comment.public_discussion.default
+targetEntityType: comment
+bundle: public_discussion
+mode: default
+content:
+  comment_body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+hidden:
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  langcode: true
+  search_api_excerpt: true

@@ -1,0 +1,88 @@
+uuid: f2687517-aacf-4a6b-8a82-616a9b79f44b
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.card
+    - field.field.node.flash_card.field_card_back
+    - field.field.node.flash_card.field_card_front
+    - field.field.node.flash_card.field_difficulty
+    - field.field.node.flash_card.field_parent_content
+    - field.field.node.flash_card.field_tags
+    - field.field.node.flash_card.field_topic
+    - field.field.node.flash_card.field_type_description
+    - node.type.flash_card
+  module:
+    - entity_reference_revisions
+    - field_layout
+    - layout_builder
+    - layout_discovery
+    - user
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings:
+      label: ''
+  layout_builder:
+    enabled: false
+    allow_custom: false
+id: node.flash_card.card
+targetEntityType: node
+bundle: flash_card
+mode: card
+content:
+  field_card_back:
+    type: entity_reference_revisions_entity_view
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    weight: 5
+    region: content
+  field_card_front:
+    type: entity_reference_revisions_entity_view
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_tags:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  flag_bookmark:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  flag_completed:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  recommendation_reason:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  entitygroupfield: true
+  field_difficulty: true
+  field_parent_content: true
+  field_topic: true
+  field_type_description: true
+  flag_recommendation: true
+  group_content: true
+  langcode: true
+  links: true
+  search_api_excerpt: true

@@ -1,0 +1,64 @@
+uuid: a0330df2-85ed-41f3-9b6a-a6d126ac9994
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.tile
+    - field.field.node.podcast_episode.field_audio_file
+    - field.field.node.podcast_episode.field_description
+    - field.field.node.podcast_episode.field_duration
+    - field.field.node.podcast_episode.field_release_date
+    - field.field.node.podcast_episode.field_tags
+    - field.field.node.podcast_episode.field_type_description
+    - node.type.podcast_episode
+  module:
+    - field_layout
+    - layout_builder
+    - user
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings:
+      label: ''
+  layout_builder:
+    enabled: false
+    allow_custom: false
+id: node.podcast_episode.tile
+targetEntityType: node
+bundle: podcast_episode
+mode: tile
+content:
+  field_tags:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  flag_bookmark:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  flag_completed:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+hidden:
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  entitygroupfield: true
+  field_audio_file: true
+  field_description: true
+  field_duration: true
+  field_release_date: true
+  field_type_description: true
+  flag_recommendation: true
+  group_content: true
+  langcode: true
+  links: true
+  recommendation_reason: true
+  search_api_excerpt: true

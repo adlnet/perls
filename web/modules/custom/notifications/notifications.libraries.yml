@@ -1,0 +1,4 @@
+notifications:
+  css:
+    theme:
+      css/theme.css: {}

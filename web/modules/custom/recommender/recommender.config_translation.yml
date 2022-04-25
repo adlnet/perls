@@ -1,0 +1,11 @@
+recommender.settings:
+  title: 'Recommendation Engine'
+  base_route_name: recommender.admin_settings_form
+  names:
+   - recommender.plugin.new_content_recommendation_plugin.settings
+   - recommender.plugin.trending_content_recommendation_plugin.settings
+   - recommender.plugin.pad_results_recommendation_plugin.settings
+   - recommender.plugin.random_recommendation_plugin.settings
+   - recommender.plugin.similar_content_recommendation_plugin.settings
+   - recommender.plugin.averaged_score_combine.settings
+   - recommender.plugin.weighted_score_combine.settings

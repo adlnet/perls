@@ -1,0 +1,16 @@
+name: Core
+description: 'Core functionality shared between all Perls features.'
+type: module
+core: 8.x
+core_version_requirement: ^8 || ^9
+dependencies:
+  - block
+  - field
+  - file
+  - filter
+  - image
+  - node
+  - taxonomy
+  - user
+  - user_email_access
+  - views

@@ -1,0 +1,29 @@
+uuid: f76b374e-b352-4def-944e-58607edc88de
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_difficulty
+    - node.type.learn_package
+    - taxonomy.vocabulary.difficulty
+id: node.learn_package.field_difficulty
+field_name: field_difficulty
+entity_type: node
+bundle: learn_package
+label: Difficulty
+description: 'Select the difficulty. Options include: Expert, Intermediate, and Novice.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      difficulty: difficulty
+    sort:
+      field: name
+      direction: asc
+    auto_create: true
+    auto_create_bundle: ''
+field_type: entity_reference

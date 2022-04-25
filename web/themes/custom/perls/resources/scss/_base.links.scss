@@ -1,0 +1,37 @@
+/* ------------------------------------ *\
+    $LINKS
+\* ------------------------------------ */
+
+a {
+  text-decoration: none;
+  color: $c-link;
+  transition: $transition;
+
+  &:hover {
+    color: $c-link--hover;
+  }
+}
+
+@mixin o-link {
+  font-size: var(--font-size-s, $font-size-s);
+  font-weight: normal;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  color: $c-link;
+  text-decoration: underline;
+  background-color: transparent;
+  line-height: 1;
+  height: auto;
+
+  &:hover,
+  &:focus {
+    color: $c-link--hover;
+    background-color: transparent;
+  }
+}
+
+.link,
+.o-link {
+  @include o-link;
+}

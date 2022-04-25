@@ -1,0 +1,28 @@
+<?php
+
+/**
+ * @file
+ * Contains oauthgrant_skip.module.
+ */
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function oauthgrant_skip_form_simple_oauth_authorize_form_alter(&$form, &$form_state, $form_id) {
+  // We only want to run this code if grant button has not been pushed.
+  if ($form_state->get('auth_request') && empty($form_state->getValue('input'))) {
+    \Drupal::service('page_cache_kill_switch')->trigger();
+    unset($form['#token']);
+    // We need to make hidden form data look like it was sub.
+    $values['op'] = 'grant';
+    $values['form_id'] = $form_id;
+    $values['form_build_id'] = $form['form_build_id']["#value"];
+    $values['redirect_uri'] = $form['redirect_uri']['#value'];
+    // Add data to the form state.
+    $form_state->setValues($values);
+    // Set that this form is automatically filled out.
+    $form_state->setProgrammed();
+    // Set that this form has been submitted.
+    $form_state->setSubmitted();
+  }
+}

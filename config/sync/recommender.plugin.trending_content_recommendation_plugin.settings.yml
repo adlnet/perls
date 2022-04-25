@@ -1,0 +1,5 @@
+recommendation_reason: popular
+number_candidates_generated: '5'
+weight:
+  '[generate_candidates]': 0
+  '[score_candidates]': 0

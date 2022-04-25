@@ -1,0 +1,11 @@
+/* ------------------------------------ *\
+    $AJAX
+\* ------------------------------------ */
+
+// Remove ajax throbber when clicking on flash_card tile, tip_card tile and quiz tile.
+// This is for to maintain layout.
+.c-card {
+  .ajax-progress-throbber {
+    display: none;
+  }
+}

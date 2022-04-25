@@ -1,0 +1,8 @@
+name: 'Perls Goal Log'
+description: 'Report xapi statement if a user achieved a goal and store this info'
+core: 8.x
+type: module
+package: "Perls"
+core_version_requirement: ^8 || ^9
+dependencies:
+  - perls_goals:perls_goals

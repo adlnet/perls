@@ -1,0 +1,270 @@
+uuid: 1955aee8-f949-44d4-8439-a15906c4d869
+langcode: en
+status: true
+dependencies:
+  config:
+    - page_manager.page.user_insights
+id: user_insights-layout_builder-0
+label: Insights
+weight: 0
+variant: layout_builder
+variant_settings:
+  id: layout_builder
+  label: null
+  weight: 0
+  uuid: 3df63c11-16a4-4016-be5e-35af79a0a058
+  sections:
+    -
+      layout_id: layout_onecol
+      layout_settings:
+        label: ''
+        context_mapping: {  }
+      components:
+        2cabb59a-25a9-41ad-92e5-b06bab62ae8d:
+          uuid: 2cabb59a-25a9-41ad-92e5-b06bab62ae8d
+          region: content
+          configuration:
+            id: veracity_chart_block
+            label: 'Items Viewed Per Week'
+            label_display: visible
+            provider: veracity_vql
+            context_mapping:
+              user: user
+            vql: "{\r\n  \"title\": \"Learning Objects Viewed Per Week\",\r\n \"block_identifier\": \"lo_viewed_week\",\r\n \"filter\": {\r\n    \"object.definition.type\": \"http://activitystrea.ms/schema/1.0/article\",\r\n    \"verb.id\": \"http://adlnet.gov/expapi/verbs/launched\"\r\n  },\r\n  \"process\": [\r\n    {\r\n      \"$frequentValues\": {\r\n        \"path\": \"object.id\",\r\n        \"limit\": 1000,\r\n        \"metrics\": {\r\n          \"timestamp\": {\r\n            \"$min\": \"timestamp\"\r\n          }\r\n        },\r\n        \"sort\": {\r\n          \"timestamp\": \"desc\"\r\n        }\r\n      }\r\n    },\r\n    {\r\n      \"$project\": {\r\n        \"_id\": {\r\n          \"year\": {\r\n            \"$year\": {\r\n              \"date\": \"$timestamp\",\r\n              \"timezone\": \"UTC\"\r\n            }\r\n          },\r\n          \"week\": {\r\n            \"$week\": {\r\n              \"date\": \"$timestamp\",\r\n              \"timezone\": \"UTC\"\r\n            }\r\n          }\r\n        }\r\n      }\r\n    },\r\n    {\r\n      \"$group\": {\r\n        \"_id\": {\r\n          \"$convert\": {\r\n            \"input\": {\r\n              \"$dateFromString\": {\r\n                \"dateString\": {\r\n                  \"$concat\": [\r\n                    {\r\n                      \"$toString\": \"$_id.year\"\r\n                    },\r\n                    \"-\",\r\n                    {\r\n                      \"$toString\": \"$_id.week\"\r\n                    }\r\n                  ]\r\n                },\r\n                \"format\": \"%G-%V\"\r\n              }\r\n            },\r\n            \"to\": \"long\"\r\n          }\r\n        },\r\n        \"count\": {\r\n          \"$sum\": 1\r\n        }\r\n      }\r\n    },\r\n    {\r\n      \"$sort\": {\r\n        \"_id\": 1\r\n      }\r\n    },\r\n    {\r\n      \"$serialChart\": {}\r\n    }\r\n  ]\r\n}"
+            post_process:
+              axis_range:
+                status: 1
+                value: '[user:field_goal_weekly_views:value]'
+                label: 'Goal ([user:field_goal_weekly_views:value])'
+                color: '#797979'
+            pre_process:
+              filter_by_user:
+                status: 1
+              filter_by_context:
+                status: 0
+                context: grouping
+                activity_id: ''
+              filter_by_context_node:
+                status: 0
+                context: grouping
+                activity_id: null
+              filter_by_node:
+                status: 0
+              filter_by_date_range:
+                status: 0
+                relative_timestamp: ''
+              process_by_timezone:
+                status: 1
+                timezone: ''
+          weight: 0
+          additional: {  }
+          third_party_settings: {  }
+        d01c70eb-5203-46e6-a328-6a2efb7559ed:
+          uuid: d01c70eb-5203-46e6-a328-6a2efb7559ed
+          region: content
+          configuration:
+            id: veracity_chart_block
+            label: 'Items Completed Per Week'
+            label_display: visible
+            provider: veracity_vql
+            context_mapping:
+              user: user
+            vql: "{\r\n  \"title\": \"Learning Objects Completed Per Week\",\r\n\"block_identifier\": \"lo_completed_week\",\r\n  \"filter\": {\r\n    \"object.definition.type\": \"http://activitystrea.ms/schema/1.0/article\",\r\n    \"verb.id\": \"http://adlnet.gov/expapi/verbs/completed\"\r\n  },\r\n  \"process\": [\r\n    {\r\n      \"$frequentValues\": {\r\n        \"path\": \"object.id\",\r\n        \"limit\": 1000,\r\n        \"metrics\": {\r\n          \"timestamp\": {\r\n            \"$min\": \"timestamp\"\r\n          }\r\n        },\r\n        \"sort\": {\r\n          \"timestamp\": \"desc\"\r\n        }\r\n      }\r\n    },\r\n    {\r\n      \"$project\": {\r\n        \"_id\": {\r\n          \"year\": {\r\n            \"$year\": {\r\n              \"date\": \"$timestamp\",\r\n              \"timezone\": \"UTC\"\r\n            }\r\n          },\r\n          \"week\": {\r\n            \"$week\": {\r\n              \"date\": \"$timestamp\",\r\n              \"timezone\": \"UTC\"\r\n            }\r\n          }\r\n        }\r\n      }\r\n    },\r\n    {\r\n      \"$group\": {\r\n        \"_id\": {\r\n          \"$convert\": {\r\n            \"input\": {\r\n              \"$dateFromString\": {\r\n                \"dateString\": {\r\n                  \"$concat\": [\r\n                    {\r\n                      \"$toString\": \"$_id.year\"\r\n                    },\r\n                    \"-\",\r\n                    {\r\n                      \"$toString\": \"$_id.week\"\r\n                    }\r\n                  ]\r\n                },\r\n                \"format\": \"%G-%V\"\r\n              }\r\n            },\r\n            \"to\": \"long\"\r\n          }\r\n        },\r\n        \"count\": {\r\n          \"$sum\": 1\r\n        }\r\n      }\r\n    },\r\n    {\r\n      \"$sort\": {\r\n        \"_id\": 1\r\n      }\r\n    },\r\n    {\r\n      \"$serialChart\": {}\r\n    }\r\n  ]\r\n}"
+            post_process:
+              axis_range:
+                status: 1
+                value: '[user:field_goal_weekly_completions:value]'
+                label: 'Goal ([user:field_goal_weekly_completions:value])'
+                color: '#797979'
+            pre_process:
+              filter_by_user:
+                status: 1
+              filter_by_context:
+                status: 0
+                context: grouping
+                activity_id: ''
+              filter_by_context_node:
+                status: 0
+                context: grouping
+                activity_id: null
+              filter_by_node:
+                status: 0
+              filter_by_date_range:
+                status: 0
+                relative_timestamp: ''
+              process_by_timezone:
+                status: 1
+                timezone: ''
+          weight: 2
+          additional: {  }
+          third_party_settings: {  }
+        e7aeca1c-2dbb-4f74-a9c0-808e27a23518:
+          uuid: e7aeca1c-2dbb-4f74-a9c0-808e27a23518
+          region: content
+          configuration:
+            id: veracity_chart_block
+            label: 'Average Test Score Per Week'
+            label_display: visible
+            provider: veracity_vql
+            context_mapping:
+              user: user
+            vql: "{\r\n  \"title\": \"Test Average by Week\",\r\n\"block_identifier\": \"average_test_week\",\r\n  \"filter\": {\r\n    \"object.definition.type\": \"http://adlnet.gov/expapi/activities/assessment\",\r\n    \"verb.id\": \"http://adlnet.gov/expapi/verbs/completed\"\r\n  },\r\n  \"process\": [\r\n    {\r\n      \"$group\": {\r\n        \"_id\": {\r\n          \"object\": \"$statement.object.id\",\r\n          \"timestamp\": {\r\n            \"$dateToString\": {\r\n              \"format\": \"%G-%V\",\r\n              \"date\": \"$statement.timestamp\",\r\n              \"timezone\": \"UTC\"\r\n            }\r\n          }\r\n        },\r\n        \"score\": {\r\n          \"$max\": \"$statement.result.score.scaled\"\r\n        }\r\n      }\r\n    },\r\n    {\r\n      \"$group\": {\r\n        \"_id\": {\r\n          \"$convert\": {\r\n            \"input\": {\r\n              \"$dateFromString\": {\r\n                \"dateString\": \"$_id.timestamp\",\r\n                \"format\": \"%G-%V\"\r\n              }\r\n            },\r\n            \"to\": \"long\"\r\n          }\r\n        },\r\n        \"score\": {\r\n          \"$avg\": \"$score\"\r\n        }\r\n      }\r\n    },\r\n    {\r\n      \"$addFields\": {\r\n        \"score\": {\r\n          \"$multiply\": [\r\n            \"$score\",\r\n            100\r\n          ]\r\n        }\r\n      }\r\n    },\r\n    {\r\n      \"$sort\": {\r\n        \"_id\": 1\r\n      }\r\n    },\r\n    {\r\n      \"$serialChart\": {\r\n        \"valuePath\": \"score\"\r\n      }\r\n    },\r\n    {\r\n      \"$addFields\": {\r\n        \"chart.yAxes.0.min\": 0,\r\n        \"chart.yAxes.0.max\": 100\r\n      }\r\n    }\r\n  ]\r\n}"
+            post_process:
+              axis_range:
+                status: 1
+                value: '[user:field_goal_weekly_test_average:value]'
+                label: 'Goal ([user:field_goal_weekly_test_average])'
+                color: '#797979'
+            pre_process:
+              filter_by_user:
+                status: 1
+              filter_by_context:
+                status: 0
+                context: grouping
+                activity_id: ''
+              filter_by_context_node:
+                status: 0
+                context: grouping
+                activity_id: null
+              filter_by_node:
+                status: 0
+              filter_by_date_range:
+                status: 0
+                relative_timestamp: ''
+              process_by_timezone:
+                status: 1
+                timezone: ''
+          weight: 4
+          additional: {  }
+          third_party_settings: {  }
+        a35c1ee0-0456-4db2-abbf-d7ed50488543:
+          uuid: a35c1ee0-0456-4db2-abbf-d7ed50488543
+          region: content
+          configuration:
+            id: veracity_chart_block
+            label: 'Courses Completed Per Month'
+            label_display: visible
+            provider: veracity_vql
+            context_mapping:
+              user: user
+            vql: "{\r\n  \"title\": \"Courses Completed Per Month\",\r\n\"block_identifier\": \"c_completed_month\",\r\n  \"filter\": {\r\n    \"object.definition.type\": \"http://adlnet.gov/expapi/activities/course\",\r\n    \"verb.id\": \"http://adlnet.gov/expapi/verbs/completed\"\r\n  },\r\n  \"process\": [\r\n    {\r\n      \"$frequentValues\": {\r\n        \"path\": \"object.id\",\r\n        \"limit\": 1000,\r\n        \"metrics\": {\r\n          \"timestamp\": {\r\n            \"$min\": \"timestamp\"\r\n          }\r\n        },\r\n        \"sort\": {\r\n          \"timestamp\": \"desc\"\r\n        }\r\n      }\r\n    },\r\n    {\r\n      \"$timeSeries\": {\r\n        \"path\": \"$timestamp\",\r\n        \"span\": \"monthly\",\r\n              \"timezone\": \"UTC\"      }\r\n    },\r\n    {\r\n      \"$serialChart\": {}\r\n    }\r\n  ]\r\n}"
+            post_process:
+              axis_range:
+                status: 1
+                value: '[user:field_goal_monthly_course_comp:value]'
+                label: 'Goal ([user:field_goal_monthly_course_comp:value])'
+                color: '#797979'
+            pre_process:
+              filter_by_user:
+                status: 1
+              filter_by_context:
+                status: 0
+                context: grouping
+                activity_id: ''
+              filter_by_context_node:
+                status: 0
+                context: grouping
+                activity_id: null
+              filter_by_node:
+                status: 0
+              filter_by_date_range:
+                status: 0
+                relative_timestamp: ''
+              process_by_timezone:
+                status: 1
+                timezone: ''
+          weight: 6
+          additional: {  }
+          third_party_settings: {  }
+        568fa8ee-8212-4e35-a242-a1315cef1e91:
+          uuid: 568fa8ee-8212-4e35-a242-a1315cef1e91
+          region: content
+          configuration:
+            id: veracity_chart_block
+            label: 'Goal Completions'
+            label_display: visible
+            provider: veracity_vql
+            context_mapping:
+              user: user
+            vql: "{\r\n  \"title\": \"Goal Completions\",\r\n\"block_identifier\": \"goal_completion\",\r\n  \"filter\": {\r\n    \"object.definition.type\": \"http://id.tincanapi.com/activitytype/goal\",\r\n    \"verb.id\": \"http://adlnet.gov/expapi/verbs/completed\"\r\n  },\r\n  \"process\": [\r\n    {\r\n        \"$count\": \"count\"\r\n    },\r\n    {\r\n        \"$notice\": {\r\n            \"title\": \"${value.count}\",\r\n            \"icon\": \"flag\",\r\n            \"subtitle\": \"Total Goals Completed\",\r\n            \"precision\": 0\r\n        }\r\n    }\r\n  ]\r\n}"
+            post_process:
+              axis_range:
+                status: 0
+                value: ''
+                label: Goal
+                color: '#797979'
+            pre_process:
+              filter_by_user:
+                status: 1
+              filter_by_context:
+                status: 0
+                context: grouping
+                activity_id: ''
+              filter_by_context_node:
+                status: 0
+                context: grouping
+                activity_id: null
+              filter_by_node:
+                status: 0
+              filter_by_date_range:
+                status: 0
+                relative_timestamp: ''
+              process_by_timezone:
+                status: 0
+                timezone: ''
+          weight: 8
+          additional: {  }
+          third_party_settings: {  }
+        f8547e56-1148-430d-97dc-9a7d7ea16307:
+          uuid: f8547e56-1148-430d-97dc-9a7d7ea16307
+          region: content
+          configuration:
+            id: 'simple_block:update_goal_items_viewed_per_week'
+            label: 'Update Goal: Items Viewed Per Week'
+            label_display: '0'
+            provider: simple_block
+            context_mapping: {  }
+          weight: 1
+          additional: {  }
+          third_party_settings: {  }
+        403813f2-a7bc-4eeb-80c9-df80f40314e1:
+          uuid: 403813f2-a7bc-4eeb-80c9-df80f40314e1
+          region: content
+          configuration:
+            id: 'simple_block:update_goal_items_completed_per_week'
+            label: 'Update Goal: Items Completed Per Week'
+            label_display: '0'
+            provider: simple_block
+            context_mapping: {  }
+          weight: 3
+          additional: {  }
+          third_party_settings: {  }
+        31e8b8c2-3510-4f53-bba4-2e3f46d9f37d:
+          uuid: 31e8b8c2-3510-4f53-bba4-2e3f46d9f37d
+          region: content
+          configuration:
+            id: 'simple_block:update_goal_average_test_score_per_week'
+            label: 'Update Goal: Average Test Score Per Week'
+            label_display: '0'
+            provider: simple_block
+            context_mapping: {  }
+          weight: 5
+          additional: {  }
+          third_party_settings: {  }
+        a5a52065-1d85-42fc-afe3-43511ded3ef4:
+          uuid: a5a52065-1d85-42fc-afe3-43511ded3ef4
+          region: content
+          configuration:
+            id: 'simple_block:update_goal_courses_completed_per_month'
+            label: 'Update Goal: Courses Completed Per Month'
+            label_display: '0'
+            provider: simple_block
+            context_mapping: {  }
+          weight: 7
+          additional: {  }
+          third_party_settings: {  }
+      third_party_settings: {  }
+page: user_insights
+selection_criteria: {  }
+selection_logic: and
+static_context: {  }

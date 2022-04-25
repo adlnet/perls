@@ -1,0 +1,17 @@
+
+# task menu items definition
+entity.task.collection:
+  title: 'Task list'
+  route_name: entity.task.collection
+  description: 'List task entities'
+  parent: system.admin_content
+  weight: 100
+
+
+# task type menu items definition
+entity.task_type.collection:
+  title: 'Task type'
+  route_name: entity.task_type.collection
+  description: 'List task type (bundles)'
+  parent: system.admin_structure
+  weight: 99

@@ -1,0 +1,11 @@
+uuid: 01c6f987-b76e-4fc7-b11f-12f19e3116d8
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.learn_package
+id: node.learn_package
+target_entity_type_id: node
+target_bundle: learn_package
+default_langcode: site_default
+language_alterable: false

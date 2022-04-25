@@ -1,0 +1,12 @@
+recommender.recommendation_status:
+  route_name: view.recommendation_queue_status.page_1
+  base_route: recommender.admin_settings_form
+  title: "User Recommendation Status"
+recommender.recommendation_candidates:
+  route_name: view.recommendation_candidates.page_1
+  base_route: recommender.admin_settings_form
+  title: "Recommendation Candidates"
+recommender.recommendation_admin:
+  route_name: recommender.admin_settings_form
+  base_route: recommender.admin_settings_form
+  title: "User Recommendation Configuration"

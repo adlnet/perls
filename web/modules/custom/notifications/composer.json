@@ -1,0 +1,12 @@
+{
+  "name": "float/notifications",
+  "type": "drupal-module",
+  "description": "Service and API for sending push notifications to mobile app",
+  "version": "2.0.0-rc2",
+  "keywords": ["Drupal", "firebase"],
+  "require": {
+    "drupal/firebase": "*",
+    "drupal/simple_oauth": "*",
+    "drupal/views_bulk_operations": "*"
+  }
+}

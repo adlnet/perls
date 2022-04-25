@@ -1,0 +1,30 @@
+uuid: d1c5bed3-6dac-461d-a045-fd2acd6a01f5
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.revision_log
+  module:
+    - system
+    - views
+  theme:
+    - perls_content_manager
+id: views_block__revision_log_block_1
+theme: perls_content_manager
+region: content
+weight: 0
+provider: null
+plugin: 'views_block:revision_log-block_1'
+settings:
+  id: 'views_block:revision_log-block_1'
+  label: ''
+  label_display: visible
+  provider: views
+  context_mapping: {  }
+  views_label: ''
+  items_per_page: none
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    pages: '/node/*/edit'

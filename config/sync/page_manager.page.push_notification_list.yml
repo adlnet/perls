@@ -1,0 +1,25 @@
+uuid: 18b0ddad-be0d-4998-b52b-2a0fc2a004c3
+langcode: en
+status: true
+dependencies:
+  module:
+    - user
+_core:
+  default_config_hash: vXwwe1YrRzEeENapznD36PnDDuZWMpVrH1Ax6FdjEYA
+id: push_notification_list
+label: 'Push Notification List'
+description: 'This page organizes the blocks of queued, sent and cancelled push notification messages on the cms.'
+use_admin_theme: false
+path: /manage/push-notifications
+access_logic: and
+access_conditions:
+  -
+    id: user_role
+    negate: false
+    context_mapping:
+      user: current_user
+    roles:
+      sysadmin: sysadmin
+      perls_system_admin: perls_system_admin
+      content_manager: content_manager
+parameters: {  }

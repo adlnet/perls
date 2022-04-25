@@ -1,0 +1,236 @@
+:root {
+  --task-btn-color: #e2e2e2;
+  --complete-color: #2cad90;
+  --svg-fill: #464646;
+}
+
+.task-list {
+  display: flex;
+  flex-direction: column;
+  max-width: min(100%, 800px);
+  margin: auto;
+  opacity: 0;
+}
+
+.task-list.ready {
+  opacity: 1;
+  transition: all 0.25s cubic-bezier(0.86, 0, 0.07, 1);
+}
+
+.task-list__task-container {
+  padding-top: 10px;
+}
+
+.task-list__add-container {
+  text-align: center;
+}
+
+.task-list__notice-message {
+  margin-top: 10px;
+}
+
+/**
+ * Task styles.
+ */
+.task {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 10px 0;
+  border-bottom: 1px solid #cccccc;
+  align-items: center;
+}
+
+.task .task__name {
+  flex: 1;
+}
+
+.task .task__complete {
+  margin-right: 20px;
+}
+
+[dir="rtl"] .task .task__complete {
+  flex: 1;
+  margin-left: 20px;
+}
+
+.task__drag-to-reorder {
+  margin-top: 20px;
+}
+
+.task[draggable="true"]:hover {
+  cursor: move;
+}
+
+/* Enter and leave animations using vue transition element. */
+.slide-fade-enter-active {
+  transition: all 0.25s cubic-bezier(0.86, 0, 0.07, 1);;
+}
+
+.slide-fade-leave-active {
+  transition: all 0.25s cubic-bezier(0.86, 0, 0.07, 1);
+}
+
+.slide-fade-enter,
+.slide-fade-leave-to {
+  transform: translateX(10px);
+  opacity: 0;
+}
+
+.task__name p {
+  font-size: 16px;
+}
+
+.task__errors {
+  flex: 0 1 100%;
+  padding: 10px 10px 0 10px;
+  color: red;
+}
+
+.task__errors ul {
+  list-style: disc;
+  margin: 0 20px;
+}
+
+button.task__add {
+  display: inline-flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  max-width: 336px;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+  line-height: 1;
+}
+
+button.task__add svg {
+  margin: -2px 10px 0 0;
+}
+
+/* Hide the icon to prevent line wrap on very small displays. */
+@media only screen and (max-width: 285px) {
+  button.task__add svg {
+    display: none;
+  }
+}
+
+[dir="rtl"] button.task__add svg {
+  margin: -2px 0 0 10px;
+}
+
+.task__complete button,
+.task__cancel button,
+.task__edit button,
+.task__save button {
+  text-indent: -9999px;
+  overflow: hidden;
+  font-size: 0;
+  height: 32px;
+  width: 32px;
+  vertical-align: middle;
+  background-color: var(--task-btn-color);
+}
+
+.task__complete button:active {
+  background-color: var(--complete-color);
+}
+
+.task__complete button svg {
+  box-sizing: content-box;
+  margin: auto;
+}
+
+.task__cancel button.cancel,
+.task__edit button.edit,
+.task__save button.save {
+  box-sizing: content-box;
+  background: transparent;
+  height: 24px;
+  fill: var(--svg-fill);
+}
+
+.task__cancel button svg {
+  fill: var(--svg-fill);
+  margin: auto;
+}
+
+.task__edit button.edit svg {
+  margin: auto;
+}
+
+.task__save button svg {
+  fill: none;
+  stroke: var(--svg-fill);
+  stroke-width: 2;
+  stroke-linecap: square;
+  stroke-miterlimit: 10;
+  margin: auto;
+}
+
+/**
+ * Delete functionality styles.
+ */
+.task__delete {
+  padding: 0 5px;
+}
+
+.task__delete button.destroy {
+  background-image: url('./images/trash-can.png');
+  width: 30px;
+  height: 45px;
+  background-repeat: no-repeat;
+  background-size: 23px;
+  background-color: transparent;
+  margin: auto;
+  background-position: center;
+  vertical-align: middle;
+}
+
+.task__delete-dialog-prompt {
+  display: grid;
+  margin-top: 40px;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 20px;
+}
+
+.task__delete-dialog-prompt input[type="submit"] {
+  line-height: 1.6;
+  height: 46px;
+  font-size: 17px;
+  font-weight: bold;
+}
+
+/**
+ * Dialog styles.
+ */
+.dialog-container,
+.dialog-overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.dialog-container {
+  z-index: 3;
+  display: flex;
+  padding: 20px;
+}
+
+.dialog-container[aria-hidden='true'] {
+  display: none;
+}
+
+.dialog-overlay {
+  background-color: rgba(43, 46, 56, 0.9);
+}
+
+.dialog-content {
+  margin: auto;
+  z-index: 4;
+  position: relative;
+  background-color: white;
+  border-radius: 6px;
+  padding: 20px;
+}

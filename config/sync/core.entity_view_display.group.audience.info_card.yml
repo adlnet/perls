@@ -1,0 +1,57 @@
+uuid: 1d599777-5438-4ec3-8e8e-1f2b460511bc
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.group.info_card
+    - field.field.group.audience.field_description
+    - field.field.group.audience.field_media_image
+    - field.field.group.audience.field_visibility
+    - group.type.audience
+  module:
+    - field_layout
+    - layout_builder
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings:
+      label: ''
+  layout_builder:
+    enabled: false
+    allow_custom: false
+id: group.audience.info_card
+targetEntityType: group
+bundle: audience
+mode: info_card
+content:
+  field_description:
+    type: basic_string
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_media_image:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  membership_link:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+hidden:
+  changed: true
+  created: true
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  field_visibility: true
+  label: true
+  langcode: true
+  search_api_excerpt: true
+  uid: true

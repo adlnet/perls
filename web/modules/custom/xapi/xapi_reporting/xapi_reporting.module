@@ -1,0 +1,40 @@
+<?php
+
+/**
+ * @file
+ * Implements hooks for enabling xAPI reporting.
+ */
+
+use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Asset\AttachedAssetsInterface;
+
+/**
+ * Implements hook_js_settings_alter().
+ *
+ * Adds a template xAPI statement to the JS.
+ */
+function xapi_reporting_js_settings_alter(array &$settings, AttachedAssetsInterface $assets) {
+  if (!isset($settings['Xapi'])) {
+    return;
+  }
+
+  $settings['Xapi']['systemName'] = \Drupal::config('system.site')->get('name');
+
+  $entity = NULL;
+
+  // Assume that the first entity in the route parameters is our page object.
+  foreach (\Drupal::routeMatch()->getParameters() as $param) {
+    if ($param instanceof ContentEntityInterface) {
+      $entity = $param;
+      break;
+    }
+  }
+
+  $statement_creator = \Drupal::service('xapi_reporting.xapi_statement_creator');
+  if ($entity) {
+    $settings['Xapi']['templateStatement'] = $statement_creator->getEntityTemplateStatement($entity);
+  }
+  else {
+    $settings['Xapi']['templateStatement'] = $statement_creator->getTemplateStatement();
+  }
+}

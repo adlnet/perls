@@ -1,0 +1,15 @@
+uuid: 0a2de26f-f236-4cb4-8a77-3d35eca88b09
+langcode: en
+status: true
+dependencies:
+  config:
+    - flag.flag.following
+  module:
+    - flag
+id: flag_action.following_flag
+label: 'Flag this item'
+type: taxonomy_term
+plugin: 'flag_action:following_flag'
+configuration:
+  flag_id: following
+  flag_action: flag

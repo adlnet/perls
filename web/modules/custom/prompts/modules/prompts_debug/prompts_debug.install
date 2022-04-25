@@ -1,0 +1,32 @@
+<?php
+
+/**
+ * @file
+ * Hooks of prompts module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function prompts_debug_install() {
+  $prompt_manager = \Drupal::service('plugin.manager.prompt');
+  $prompt_plugins = $prompt_manager->getDefinitions();
+  foreach ($prompt_plugins as $plugin_name => $plugin) {
+    /** @var \Drupal\prompts\Prompt\PromptTypeInterface $plugin_object */
+    $plugin_object = $prompt_manager->createInstance($plugin_name);
+    $plugin_object->debugInstall();
+  }
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function prompts_debug_uninstall() {
+  $prompt_manager = \Drupal::service('plugin.manager.prompt');
+  $prompt_plugins = $prompt_manager->getDefinitions();
+  foreach ($prompt_plugins as $plugin_name => $plugin) {
+    /** @var \Drupal\prompts\Prompt\PromptTypeInterface $plugin_object */
+    $plugin_object = $prompt_manager->createInstance($plugin_name);
+    $plugin_object->debugUninstall();
+  }
+}

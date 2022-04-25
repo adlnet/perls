@@ -1,0 +1,5 @@
+react_comments.admin:
+  title: 'React Comments'
+  description: 'Administer react comments configuration'
+  parent: system.admin_config
+  route_name: react_comments.settings

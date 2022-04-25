@@ -1,0 +1,6 @@
+veracity_vql.veracity_config_form:
+  title: 'Veracity'
+  route_name: veracity_vql.veracity_config_form
+  description: 'Configure integration with Veracity'
+  parent: system.admin_config_services
+  weight: 99

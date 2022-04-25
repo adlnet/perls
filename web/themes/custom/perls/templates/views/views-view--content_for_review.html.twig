@@ -1,0 +1,129 @@
+{#
+/**
+ * @file
+ * Theme override for a main view template.
+ *
+ * Available variables:
+ * - attributes: Remaining HTML attributes for the element.
+ * - css_name: A css-safe version of the view name.
+ * - css_class: The user-specified classes names, if any.
+ * - header: The optional header.
+ * - footer: The optional footer.
+ * - rows: The results of the view query, if any.
+ * - empty: The content to display if there are no rows.
+ * - pager: The optional pager next/prev links to display.
+ * - exposed: Exposed widget form/info to display.
+ * - feed_icons: Optional feed icons to display.
+ * - more: An optional link to the next page of results.
+ * - title: Title of the view, only used when displaying in the admin preview.
+ * - title_prefix: Additional output populated by modules, intended to be
+ *   displayed in front of the view title.
+ * - title_suffix: Additional output populated by modules, intended to be
+ *   displayed after the view title.
+ * - attachment_before: An optional attachment view to be displayed before the
+ *   view content.
+ * - attachment_after: An optional attachment view to be displayed after the
+ *   view content.
+ * - dom_id: Unique id for every view being printed to give unique class for
+ *   Javascript.
+ *
+ * @see template_preprocess_views_view()
+ */
+#}
+{%
+  set classes = [
+  'c-view',
+  'c-view--manage-content',
+  'c-content-list',
+  'c-view--' ~ id|clean_class,
+  'c-view-id--' ~ id,
+  'c-view-display-id--' ~ display_id,
+  dom_id ? 'js-view-dom-id-' ~ dom_id,
+  'u-spacing',
+]
+%}
+
+{% set extra_title %}
+  {% if view.exposedInput is empty %}
+    {% trans %}All {{ view.getTitle() }}{% endtrans %}
+  {% else %}
+    {% trans %}Filtered {{ view.getTitle() }}{% endtrans %}
+  {% endif %}
+{% endset %}
+
+<div{{ attributes.addClass(classes) }}>
+  {% if header or title or exposed %}
+    <section class="c-view__banner">
+      {% if header %}
+        <div class="c-view__header">
+          {{ header }}
+        </div>
+      {% elseif title %}
+        <div class="c-view__title">
+          {% if title_prefix %}
+            <span class="c-view__title-prefix">{{ title_prefix }}</span>
+          {% endif %}
+
+          {{ title }}
+
+          {% if title_suffix %}
+            <span class="c-view__title-suffix">{{ title_suffix }}</span>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      {% if exposed %}
+        <div class="c-view__filters">
+          {% if extra_title %}
+            <div class="c-view__extra-title">
+              {{ extra_title|trim|spaceless }}
+            </div>
+          {% endif %}
+          {{ exposed }}
+        </div>
+      {% endif %}
+    </section>
+  {% endif %}
+
+  {% if attachment_before %}
+    <section class="c-view__attachment c-view__attachment--before">
+      {{ attachment_before }}
+    </section>
+  {% endif %}
+
+  <section class="c-view__body">
+    {% if rows %}
+      <div class="c-view__content">
+        {{ rows }}
+      </div>
+    {% elseif empty %}
+      <div class="c-view__empty">
+        {{ empty }}
+      </div>
+    {% endif %}
+
+    {% if footer %}
+      <footer class="c-view__footer u-spacing">
+        {{ footer }}
+      </footer>
+    {% endif %}
+
+    {% if pager %}
+      <div class="c-view__pager">
+        {{ pager }}
+      </div>
+    {% endif %}
+
+    {% if more %}
+      <div class="c-view__more">
+        {{ more }}
+      </div>
+    {% endif %}
+  </section>
+
+  {% if attachment_after %}
+    <section class="c-view__attachment c-view__attachment--after">
+      {{ attachment_after }}
+    </section>
+  {% endif %}
+</div>

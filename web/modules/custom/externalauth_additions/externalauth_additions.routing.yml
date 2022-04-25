@@ -1,0 +1,15 @@
+externalauth_additions.sso_config:
+  path: '/manage/sso-config'
+  defaults:
+    _title: 'SSO Configuration'
+    _form: 'Drupal\externalauth_additions\Form\SSOconfigForm'
+  requirements:
+    _permission: 'administer externalauth_additions configuration'
+
+externalauth_additions.download_metadata:
+  path: '/perls-sso/download-sp-metadata'
+  defaults:
+    _title: 'Download SP Metadata'
+    _controller: '\Drupal\externalauth_additions\Controller\PerlsSsoController::downloadMetadata'
+  requirements:
+    _permission: 'administer externalauth_additions configuration'

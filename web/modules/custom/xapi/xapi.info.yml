@@ -1,0 +1,11 @@
+name: xAPI
+type: module
+description: Adds support for uploading and displaying xAPI content packages.
+core: 8.x
+core_version_requirement: ^8 || ^9
+configure: xapi.routing.yml
+dependencies:
+  - file
+  - drupal:node
+  - drupal:flag
+  - drupal:views_field_formatter

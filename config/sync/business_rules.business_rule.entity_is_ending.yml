@@ -1,0 +1,19 @@
+uuid: e387d1f6-5650-42f8-9918-50069fb1b209
+langcode: en
+status: true
+dependencies:
+  config:
+    - business_rules.action.demote_from_front_page_action
+id: entity_is_ending
+label: 'Entity is ending'
+description: 'Actions to be made when an entity is ending.'
+reacts_on: entity_is_ending
+target_entity_type: node
+target_bundle: event
+items:
+  demote_from_front_page_action:
+    type: action
+    id: demote_from_front_page_action
+    weight: -9
+tags: {  }
+enabled: null

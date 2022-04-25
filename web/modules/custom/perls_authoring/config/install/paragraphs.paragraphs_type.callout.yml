@@ -1,0 +1,8 @@
+langcode: en
+status: true
+dependencies: {  }
+id: callout
+label: Callout
+icon_uuid: null
+description: 'A key excerpt or detail (such as a tip or a warning).'
+behavior_plugins: {  }

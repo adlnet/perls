@@ -1,0 +1,18 @@
+uuid: 2f046291-f01f-4774-878b-21ed96cec171
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.tip_card
+id: node.tip_card.title
+field_name: title
+entity_type: node
+bundle: tip_card
+label: Title
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

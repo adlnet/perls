@@ -1,0 +1,255 @@
+uuid: d64fa891-9237-40b2-927a-570af5f8ffd5
+langcode: en
+status: open
+dependencies: {  }
+weight: 0
+open: null
+close: null
+uid: 1
+template: false
+archive: false
+id: content_suggestions
+title: 'Content Suggestions & Questions'
+description: 'A&nbsp;webform for learners where they can make content requests or ask questions.'
+category: ''
+elements: |-
+  content_suggestions_submission_page:
+    '#type': webform_wizard_page
+    '#title': Submission
+    '#next_button_label': Overview
+    content_suggestions_description:
+      '#type': webform_markup
+      '#markup': |
+        <p>[site:name] was started for YOU, so if you have suggestions or feedback on how we can improve, please let us know. If you want to see a specific topic covered, an answer to a specific question, or anything else of this sort, don&rsquo;t hesitate to let us know. We do our best to keep up!</p>
+        
+        <h3><br />
+        For content requests</h3>
+        
+        <p>If you want to see a specific topic covered, let us know why you want to see it covered and how it will help the audience. We appreciate all your ideas so keep them up.</p>
+        
+        <h3><br />
+        For questions</h3>
+        
+        <p>For questions, please be as detailed and thorough as you can so we can do a write-up on our site and answer your question completely. Not all questions will be answered on this site. If the question is more personal, then we will deal with it through email.</p>
+        
+    content_suggestions_topic:
+      '#type': textfield
+      '#title': Topic
+      '#description_display': before
+      '#placeholder': Topic...
+      '#autocomplete': 'off'
+      '#required': true
+      '#required_error': 'You must give the topic of your submission.'
+    content_suggestions_message:
+      '#type': textarea
+      '#title': Message
+      '#title_display': before
+      '#placeholder': 'Start writing your content request or question here...'
+      '#autocomplete': 'off'
+      '#required': true
+      '#required_error': 'You need to fill the message field.'
+  actions:
+    '#type': webform_actions
+    '#title': 'Submit button(s)'
+    '#submit__label': Submit
+css: ''
+javascript: ''
+settings:
+  ajax: false
+  ajax_scroll_top: ''
+  ajax_progress_type: ''
+  ajax_effect: ''
+  ajax_speed: null
+  page: true
+  page_submit_path: /suggestions
+  page_confirm_path: ''
+  page_theme_name: ''
+  form_title: source_entity_webform
+  form_submit_once: false
+  form_open_message: 'Enter your suggestions below for content or send us your questions.'
+  form_close_message: ''
+  form_exception_message: ''
+  form_previous_submissions: false
+  form_confidential: false
+  form_confidential_message: ''
+  form_disable_remote_addr: false
+  form_convert_anonymous: false
+  form_prepopulate: false
+  form_prepopulate_source_entity: false
+  form_prepopulate_source_entity_required: false
+  form_prepopulate_source_entity_type: ''
+  form_unsaved: false
+  form_disable_back: false
+  form_submit_back: false
+  form_disable_autocomplete: false
+  form_novalidate: false
+  form_disable_inline_errors: false
+  form_required: true
+  form_autofocus: false
+  form_details_toggle: false
+  form_reset: false
+  form_access_denied: default
+  form_access_denied_title: ''
+  form_access_denied_message: ''
+  form_access_denied_attributes: {  }
+  form_file_limit: ''
+  share: false
+  share_node: false
+  share_theme_name: ''
+  share_title: true
+  share_page_body_attributes: {  }
+  submission_label: 'Content requests or questions'
+  submission_exception_message: ''
+  submission_locked_message: ''
+  submission_log: false
+  submission_excluded_elements: {  }
+  submission_exclude_empty: false
+  submission_exclude_empty_checkbox: false
+  submission_views: {  }
+  submission_views_replace:
+    webform_routes: {  }
+    node_routes: {  }
+  submission_user_columns: {  }
+  submission_user_duplicate: false
+  submission_access_denied: default
+  submission_access_denied_title: ''
+  submission_access_denied_message: ''
+  submission_access_denied_attributes: {  }
+  previous_submission_message: ''
+  previous_submissions_message: ''
+  autofill: false
+  autofill_message: ''
+  autofill_excluded_elements: {  }
+  wizard_progress_bar: false
+  wizard_progress_pages: false
+  wizard_progress_percentage: false
+  wizard_progress_link: true
+  wizard_progress_states: false
+  wizard_start_label: ''
+  wizard_preview_link: false
+  wizard_confirmation: true
+  wizard_confirmation_label: ''
+  wizard_auto_forward: true
+  wizard_auto_forward_hide_next_button: false
+  wizard_keyboard: true
+  wizard_track: ''
+  wizard_prev_button_label: ''
+  wizard_next_button_label: ''
+  wizard_toggle: false
+  wizard_toggle_show_label: ''
+  wizard_toggle_hide_label: ''
+  preview: 0
+  preview_label: ''
+  preview_title: ''
+  preview_message: ''
+  preview_attributes: {  }
+  preview_excluded_elements: {  }
+  preview_exclude_empty: true
+  preview_exclude_empty_checkbox: false
+  draft: none
+  draft_multiple: false
+  draft_auto_save: false
+  draft_saved_message: ''
+  draft_loaded_message: ''
+  draft_pending_single_message: ''
+  draft_pending_multiple_message: ''
+  confirmation_type: page
+  confirmation_url: ''
+  confirmation_title: 'Thank you for your submission!'
+  confirmation_message: 'We got your submission, our staff is working on your request.'
+  confirmation_attributes: {  }
+  confirmation_back: true
+  confirmation_back_label: 'Send in another suggestion'
+  confirmation_back_attributes: {  }
+  confirmation_exclude_query: false
+  confirmation_exclude_token: false
+  confirmation_update: false
+  limit_total: null
+  limit_total_interval: null
+  limit_total_message: ''
+  limit_total_unique: false
+  limit_user: null
+  limit_user_interval: null
+  limit_user_message: ''
+  limit_user_unique: false
+  entity_limit_total: null
+  entity_limit_total_interval: null
+  entity_limit_user: null
+  entity_limit_user_interval: null
+  purge: none
+  purge_days: null
+  results_disabled: false
+  results_disabled_ignore: false
+  results_customize: false
+  token_view: false
+  token_update: false
+  serial_disabled: false
+access:
+  create:
+    roles:
+      - authenticated
+    users: {  }
+    permissions: {  }
+  view_any:
+    roles:
+      - sysadmin
+      - content_manager
+      - perls_system_admin
+    users: {  }
+    permissions: {  }
+  update_any:
+    roles:
+      - sysadmin
+      - perls_system_admin
+    users: {  }
+    permissions: {  }
+  delete_any:
+    roles:
+      - sysadmin
+      - content_manager
+      - perls_system_admin
+    users: {  }
+    permissions: {  }
+  purge_any:
+    roles:
+      - sysadmin
+      - content_manager
+      - perls_system_admin
+    users: {  }
+    permissions: {  }
+  view_own:
+    roles:
+      - authenticated
+    users: {  }
+    permissions: {  }
+  update_own:
+    roles:
+      - authenticated
+    users: {  }
+    permissions: {  }
+  delete_own:
+    roles:
+      - sysadmin
+      - content_manager
+      - perls_system_admin
+    users: {  }
+    permissions: {  }
+  administer:
+    roles:
+      - sysadmin
+      - content_manager
+      - perls_system_admin
+    users: {  }
+    permissions: {  }
+  test:
+    roles: {  }
+    users: {  }
+    permissions: {  }
+  configuration:
+    roles:
+      - sysadmin
+      - perls_system_admin
+    users: {  }
+    permissions: {  }
+handlers: {  }
+variants: {  }

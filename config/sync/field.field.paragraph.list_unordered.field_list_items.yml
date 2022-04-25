@@ -1,0 +1,31 @@
+uuid: 7aa64e85-d7a3-4e4a-91dc-cd4be97c97c4
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_list_items
+    - paragraphs.paragraphs_type.list_unordered
+  module:
+    - allowed_formats
+    - text
+third_party_settings:
+  allowed_formats:
+    advanced: '0'
+    basic_filter: '0'
+    inline_styling: '0'
+    list: '0'
+    plain_text: '0'
+_core:
+  default_config_hash: sbD8kJzOvc0w5Ax28H9ZrXIp10_GE8dTm3dBtZxaB_w
+id: paragraph.list_unordered.field_list_items
+field_name: field_list_items
+entity_type: paragraph
+bundle: list_unordered
+label: Items
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

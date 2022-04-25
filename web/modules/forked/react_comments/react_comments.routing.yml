@@ -1,0 +1,7 @@
+react_comments.settings:
+  path: '/admin/config/react_comments'
+  defaults:
+    _form: '\Drupal\react_comments\Form\ReactCommentsSettingsForm'
+    _title: React Comments Settings
+  requirements:
+    _permission: 'administer comments'

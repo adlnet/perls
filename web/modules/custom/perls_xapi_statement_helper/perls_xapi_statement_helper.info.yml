@@ -1,0 +1,13 @@
+name: 'Perls xapi statement helper'
+description: 'Provides services to handle properly the statement object.'
+type: module
+core: 8.x
+core_version_requirement: ^8 || ^9
+package: 'Custom'
+dependencies:
+  - file
+  - drupal:node
+  - drupal:flag
+  - perls_core:perls_core
+  - perls_content:perls_content
+  - xapi

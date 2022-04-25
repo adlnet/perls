@@ -1,0 +1,34 @@
+uuid: c31cd6bb-0798-4e4d-8634-c506450267a7
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.video.field_video
+    - paragraphs.paragraphs_type.video
+  module:
+    - field_layout
+    - layout_discovery
+    - video_embed_field
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings:
+      label: ''
+_core:
+  default_config_hash: k2OUgaDC12rAd4EESMZjXD1OrMwTh7BcjQTrqiRzyAo
+id: paragraph.video.default
+targetEntityType: paragraph
+bundle: video
+mode: default
+content:
+  field_video:
+    type: video_embed_field_textfield
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  created: true
+  moderation_state: true
+  status: true
+  uid: true

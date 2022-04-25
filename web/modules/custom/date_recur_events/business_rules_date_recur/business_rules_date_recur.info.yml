@@ -1,0 +1,8 @@
+name: 'Business Rules - Recurring Date'
+type: module
+description: 'Business Rules integration for Recurring Date fields'
+core_version_requirement: ^8 || ^9
+package: Workflow
+dependencies:
+  - date_recur_events
+  - business_rules

@@ -1,0 +1,24 @@
+uuid: ea349df0-2eab-4311-bdb2-57ddc11b000b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_content_description
+    - node.type.learn_article
+  module:
+    - description_field
+id: node.learn_article.field_content_description
+field_name: field_content_description
+entity_type: node
+bundle: learn_article
+label: 'Content description'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  long_description:
+    value: 'A short description about what this page is for.'
+    format: basic_filter
+field_type: description_field

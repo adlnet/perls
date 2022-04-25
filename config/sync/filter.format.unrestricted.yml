@@ -1,0 +1,10 @@
+uuid: 811cb7ff-cfe1-4e6d-a0a6-dc89a1ec61de
+langcode: en
+status: true
+dependencies:
+  module:
+    - media
+name: Unrestricted
+format: unrestricted
+weight: 0
+filters: {  }

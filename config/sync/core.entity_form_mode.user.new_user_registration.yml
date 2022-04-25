@@ -1,0 +1,10 @@
+uuid: 06c7bd5f-2338-4817-9aa8-208f7fda6baf
+langcode: en
+status: true
+dependencies:
+  module:
+    - user
+id: user.new_user_registration
+label: 'New user registration'
+targetEntityType: user
+cache: true

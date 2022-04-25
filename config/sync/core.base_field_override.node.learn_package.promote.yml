@@ -1,0 +1,22 @@
+uuid: ce954f48-e5be-49a7-b553-b6a1ec30004d
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.learn_package
+id: node.learn_package.promote
+field_name: promote
+entity_type: node
+bundle: learn_package
+label: 'Promoted to front page'
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

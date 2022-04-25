@@ -1,0 +1,20 @@
+uuid: dfcf565a-b382-49bf-bd87-d3db23eff4c4
+langcode: en
+status: true
+dependencies:
+  module:
+    - group_membership
+    - serialization
+    - simple_oauth
+id: membership_resource
+plugin_id: membership_resource
+granularity: resource
+configuration:
+  methods:
+    - GET
+    - POST
+    - DELETE
+  formats:
+    - json
+  authentication:
+    - oauth2

@@ -1,0 +1,30 @@
+uuid: 811208f2-8fd2-497d-a452-801f5d505103
+langcode: en
+status: true
+dependencies:
+  config:
+    - system.menu.content-management
+  module:
+    - system
+  theme:
+    - adminimal_theme
+id: contentmanagement
+theme: adminimal_theme
+region: content
+weight: 0
+provider: null
+plugin: 'system_menu_block:content-management'
+settings:
+  id: 'system_menu_block:content-management'
+  label: 'Content Management'
+  label_display: visible
+  provider: system
+  level: 1
+  depth: 0
+  expand_all_items: false
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    context_mapping: {  }
+    pages: "/manage\r\n/manage/*\r\n/node/add/*"

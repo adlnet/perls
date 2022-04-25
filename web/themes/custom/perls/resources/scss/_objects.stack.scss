@@ -1,0 +1,59 @@
+/**
+ * Stack component.
+ *
+ * Lays out it's immediate children to resemble a stack of cards.
+ * The object with the `.top` class is considered to be the top of the stack.
+ * Shows up to three cards at a time--the top card and two behind it.
+ */
+@mixin stack {
+  position: relative;
+
+  // All immediate children are considered the cards in the stack.
+  > * {
+    height: 100%;
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+    transform: translate3d(-50%, 0, 0) rotateY(-90deg);
+    transition: transform 0.5s ease-in-out, filter 0.5s ease-in-out, opacity 0.75s;
+    width: 90%;
+    z-index: 11;
+  }
+
+  // Use to denote the top of the stack.
+  // Can be moved with JavaScript and the stack will animate the change.
+  > .top {
+    opacity: 1;
+    pointer-events: all;
+    transform: none;
+    z-index: 10;
+  }
+
+  > .top + * {
+    filter: brightness(85%);
+    opacity: 1;
+    transform: translate3d(8%, 0, 0) scale(0.95);
+    z-index: 9;
+  }
+
+  > .top + * + * {
+    filter: brightness(70%);
+    opacity: 1;
+    transform: translate3d(16%, 0, 0) scale(0.9);
+    z-index: 8;
+  }
+
+  > .top + * + * + * {
+    filter: brightness(50%);
+    transform: translate3d(24%, 0, 0) scale(0.85);
+    transition: none;
+    z-index: 7;
+  }
+}
+
+.c-stack {
+  @include stack;
+
+  height: 100%;
+  min-height: 600px;
+}

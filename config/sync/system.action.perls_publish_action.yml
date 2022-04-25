@@ -1,0 +1,12 @@
+uuid: b5c699b5-fa54-4f75-a62d-9cbdd4b87925
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - views_bulk_operations
+id: perls_publish_action
+label: Publish
+type: node
+plugin: perls_publish_action
+configuration: {  }

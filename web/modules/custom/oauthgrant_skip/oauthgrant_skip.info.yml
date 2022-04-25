@@ -1,0 +1,7 @@
+name: 'OAuth2 Grant Page Skip'
+type: module
+description: 'This removes the requirement to grant permissions to App after federated login'
+dependencies:
+  - simple_oauth:simple_oauth_extras
+core: 8.x
+core_version_requirement: ^8 || ^9

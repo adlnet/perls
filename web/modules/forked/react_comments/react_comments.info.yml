@@ -1,0 +1,13 @@
+name: 'React Comments'
+description: 'Commenting system built with React'
+type: module
+# core: 8.x
+dependencies:
+  - drupal:comment
+  - drupal:rest
+
+# Information added by Drupal.org packaging script on 2018-12-27
+version: '8.x-1.0-beta1'
+core: '8.x'
+project: 'react_comments'
+datestamp: 1545942484

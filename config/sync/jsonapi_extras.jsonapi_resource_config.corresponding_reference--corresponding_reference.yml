@@ -1,0 +1,83 @@
+uuid: 08f6ca34-e634-4443-92fc-6a389e0ecd9f
+langcode: en
+status: true
+dependencies:
+  module:
+    - cer
+id: corresponding_reference--corresponding_reference
+disabled: true
+path: corresponding_reference/corresponding_reference
+resourceType: corresponding_reference--corresponding_reference
+resourceFields:
+  uuid:
+    disabled: false
+    fieldName: uuid
+    publicName: uuid
+    enhancer:
+      id: ''
+  langcode:
+    disabled: false
+    fieldName: langcode
+    publicName: langcode
+    enhancer:
+      id: ''
+  status:
+    disabled: false
+    fieldName: status
+    publicName: status
+    enhancer:
+      id: ''
+  dependencies:
+    disabled: false
+    fieldName: dependencies
+    publicName: dependencies
+    enhancer:
+      id: ''
+  third_party_settings:
+    disabled: false
+    fieldName: third_party_settings
+    publicName: third_party_settings
+    enhancer:
+      id: ''
+  _core:
+    disabled: false
+    fieldName: _core
+    publicName: _core
+    enhancer:
+      id: ''
+  id:
+    disabled: false
+    fieldName: id
+    publicName: id
+    enhancer:
+      id: ''
+  label:
+    disabled: false
+    fieldName: label
+    publicName: label
+    enhancer:
+      id: ''
+  enabled:
+    disabled: false
+    fieldName: enabled
+    publicName: enabled
+    enhancer:
+      id: ''
+  first_field:
+    disabled: false
+    fieldName: first_field
+    publicName: first_field
+    enhancer:
+      id: ''
+  second_field:
+    disabled: false
+    fieldName: second_field
+    publicName: second_field
+    enhancer:
+      id: ''
+  bundles:
+    disabled: false
+    fieldName: bundles
+    publicName: bundles
+    enhancer:
+      id: ''

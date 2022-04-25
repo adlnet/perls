@@ -1,0 +1,196 @@
+.rc_input {
+    resize: none;
+}
+
+.rc_comment-box-container {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.rc_is-loading .rc_input-wrapper {
+    filter: blur(2px);
+}
+
+.rc_throbber-wrapper {
+    position: relative;
+}
+
+.rc_input-outer-wrapper {
+    flex-grow: 1;
+    min-width: 200px;
+}
+
+.rc_comment-box-container .ReactThrobber {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.rc_comment-container .rc_is-reply {
+    margin-top: 20px;
+    margin-bottom: 0;
+}
+
+.rc_comment-container .rc_is-edit {
+    margin-bottom: 0;
+}
+
+.rc_input-wrapper {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    border: 2px solid #dbdfe4;
+    border-radius: 6px;
+    font-size: 16px;
+    margin: 0;
+    min-height: 48px;
+    transition: min-height 175ms linear;
+}
+
+.rc_is-open .rc_input-wrapper {
+    min-height: 100px;
+    overflow: hidden;
+}
+
+.rc_input-wrapper .DraftEditor-root,
+.rc_input-wrapper .DraftEditor-editorContainer {
+    flex-grow: 1;
+    display: flex;
+}
+
+.rc_input-wrapper .public-DraftEditorPlaceholder-root {
+    position: absolute;
+    padding: 10px;
+    font-size: 18px;
+    color: #7f919e;
+}
+
+.rc_input-wrapper .DraftEditor-editorContainer {
+    position: relative;
+    padding: 10px;
+}
+
+.rc_input-wrapper .public-DraftEditor-content {
+    flex-grow: 1;
+}
+
+.rc_input-wrapper .rc_input-actions {
+    opacity: 0;
+    height: 0;
+    transition: all 175ms linear;
+    display: flex;
+    justify-content: flex-end;
+    overflow: hidden;
+}
+
+.rc_is-open .rc_input-actions {
+    opacity: 1;
+    height: 25px;
+    background: #eee;
+    border-top: 2px solid #dbdfe4;
+    flex-shrink: 0;
+}
+
+.rc_is-open .rc_input-actions button {
+    border: 0;
+    height: 100%;
+}
+
+.rc_login-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    padding: 5px;
+    height: 30px;
+    border: 2px solid #0A76B7;
+    background: #0A76B7;
+    border-radius: 5px;
+    flex-grow: 0;
+    color: white;
+    white-space: nowrap;
+    width: 200px;
+    align-self: flex-start;
+    font-size: 12px;
+}
+
+.rc_login-button:hover {
+    background-color: #0a81c7;
+    color: white;
+}
+
+.rc_anon-wrapper {
+    width: 100%;
+    display: flex;
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
+
+.rc_anon-wrapper > div {
+    margin: 0 10px 10px 0;
+}
+
+.rc_anon-wrapper label {
+    text-transform: uppercase;
+    font-size: 10px;
+    font-family: sans-serif;
+}
+
+.rc_anon-form {
+}
+
+.rc_anon-form-input-wrapper {
+    display: flex;
+    justify-content: space-between;
+}
+
+.rc_anon-form input {
+    display: block;
+    border: 2px solid #dbdfe4;
+    border-radius: 4px;
+    padding: 5px;
+    width: 200px;
+    height: 30px;
+    margin: 0 10px 0 0;
+}
+.rc_anon-form input:first-child {
+    margin-bottom: 5px;
+}
+
+.rc_comment-box-avatar {
+    margin-right: 10px;
+    flex-shrink: 0;
+}
+
+.rc_comment-box-avatar img {
+    width: 48px;
+    height: 48px;
+}
+
+.rc_message {
+    padding: 5px 10px;
+    margin: 2px 0 5px 0;
+    border-radius: 4px;
+}
+
+.rc_message-only .rc_input-wrapper,
+.rc_message-only .rc_anon-wrapper {
+    display:none;
+}
+
+.rc_message-type--error {
+    color: #D8000C;
+    border: 1px solid rgba(216, 0, 12, 0.23);
+    background-color: #FFBABA;
+}
+
+.rc_message-type--success {
+    color: #0cab0c;
+    border: 1px solid rgba(0, 216, 3, 0.23);
+    background-color: #baffba;
+}

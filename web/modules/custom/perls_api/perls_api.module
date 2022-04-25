@@ -1,0 +1,111 @@
+<?php
+
+/**
+ * @file
+ * PERLS API.
+ */
+
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\views\ViewExecutable;
+
+/**
+ * Implements hook_form_FORM_ID_alter() for views_exposed_form.
+ *
+ * Alters the max length of the `nid` parameter to the learner state API.
+ */
+function perls_api_form_views_exposed_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $view = $form_state->getStorage('view');
+
+  if ($view['view']->id() === 'api_learner_state') {
+    $userInput = $form_state->getUserInput();
+    // This view now handles nodes and taxonomy terms.
+    // The filter has been updated to id but to maintain backwards
+    // compatability with the original endpoint we map nid to id here.
+    if (isset($userInput['nid'])) {
+      $userInput['id'] = $userInput['nid'];
+      $userInput['entity_type'] = 'node';
+      unset($userInput['nid']);
+    }
+    if (isset($userInput['tid'])) {
+      $userInput['id'] = $userInput['tid'];
+      $userInput['entity_type'] = 'taxonomy_term';
+      unset($userInput['tid']);
+    }
+    // The filter uses regular expressions to map to entity id.
+    // To avoid partial matches me force an exact match here by adding
+    // start and end expressions.
+    if ($userInput['id'] != "") {
+      $userInput['id'] = '^(' . $userInput['id'] . ')$';
+    }
+    $form_state->setUserInput($userInput);
+    $form['id']['#maxlength'] = NULL;
+  }
+}
+
+/**
+ * Implements template_preprocess_html().
+ *
+ * Adds the "content-only" class to the page if the request
+ * is coming from the app.
+ */
+function perls_api_preprocess_html(&$variables) {
+  if (\Drupal::service('perls_api.request_inspector')->isMobileApp()) {
+    $variables['attributes']['class'][] = 'content-only';
+    $variables["page"]["#cache"]["contexts"][] = 'headers:user-agent';
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_access() for flag entity.
+ *
+ * The learner state api requires that users have access to flag labels.
+ */
+function perls_api_flag_access(EntityInterface $entity, $operation, AccountInterface $account) {
+  if ($operation == 'view' && $account->hasPermission('access content')) {
+    return AccessResult::allowed();
+  }
+  // No opinion.
+  return AccessResult::neutral();
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * Disables the local authentication options for SimpleSAMLphp.
+ * The API requires the use of local accounts.
+ */
+function perls_api_form_simplesamlphp_auth_local_settings_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $form['authentication']['#disabled'] = TRUE;
+  $form['authentication']['notice'] = [
+    '#theme' => 'status_messages',
+    '#message_list' => [
+      'warning' => [
+        t('The mobile app requires the use of local authentication.'),
+      ],
+    ],
+    '#weight' => -100,
+  ];
+}
+
+/**
+ * Implements hook_views_pre_render().
+ */
+function perls_api_views_pre_render(ViewExecutable $view) {
+  if ($view->id() == 'dashboard_tags') {
+    $view->element['#cache']['contexts'][] = 'user';
+  }
+}
+
+/**
+ * Implements hook_rest_resource_alter().
+ */
+function perls_api_rest_resource_alter(array &$definitions) {
+  if (isset($definitions['entity:node'])) {
+    // We want to handle REST requests regarding nodes with our own plugin
+    // to avoid 'Only new entities can be created' error.
+    $definitions['entity:node']['class'] = 'Drupal\perls_api\Plugin\rest\resource\NodeResource';
+  }
+}

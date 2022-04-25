@@ -1,0 +1,33 @@
+uuid: 22a19c63-f136-49ec-a872-c3927d6c392e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_content
+    - paragraphs.paragraphs_type.callout
+  module:
+    - allowed_formats
+    - text
+third_party_settings:
+  allowed_formats:
+    basic_filter: basic_filter
+    card_styling: '0'
+    custom_view_header: '0'
+    inline_styling: '0'
+    list: '0'
+    table: '0'
+    plain_text: '0'
+_core:
+  default_config_hash: jnFs1dMaChPhZL_svUYbC6PDoPAUWBx3n4Obv2KiF9w
+id: paragraph.callout.field_content
+field_name: field_content
+entity_type: paragraph
+bundle: callout
+label: Content
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

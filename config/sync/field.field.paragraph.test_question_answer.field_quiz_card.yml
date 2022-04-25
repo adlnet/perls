@@ -1,0 +1,28 @@
+uuid: 1d88708c-8d17-4853-b0d3-fe3cfa30a327
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_quiz_card
+    - node.type.quiz
+    - paragraphs.paragraphs_type.test_question_answer
+id: paragraph.test_question_answer.field_quiz_card
+field_name: field_quiz_card
+entity_type: paragraph
+bundle: test_question_answer
+label: 'Quiz Card'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      quiz: quiz
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

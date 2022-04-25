@@ -1,0 +1,14 @@
+content_moderation_additions.discussion:
+  path: '/node/{node}/moderation-discussion'
+  defaults:
+    _entity_view: 'node.discussion'
+  requirements:
+    _discussion_custom_access: 'TRUE'
+
+content_moderation_additions.admin_settings_form:
+  path: '/admin/config/system/content_moderation_additions/configure'
+  defaults:
+    _form: '\Drupal\content_moderation_additions\Form\ModerationAdditionsAdminSettingsForm'
+    _title: 'Moderation Additions Configuration'
+  requirements:
+    _permission: 'administer content types'

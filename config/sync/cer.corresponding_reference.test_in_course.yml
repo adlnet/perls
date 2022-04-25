@@ -1,0 +1,13 @@
+uuid: 57ec03df-9536-4047-b666-1cb81ae14447
+langcode: en
+status: true
+dependencies: {  }
+id: test_in_course
+label: 'Test in Course'
+enabled: true
+first_field: field_learning_content
+second_field: field_test_course
+bundles:
+  node:
+    - course
+    - test

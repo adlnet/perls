@@ -1,0 +1,16 @@
+<?php
+
+/**
+ * @file
+ * Module related hooks.
+ */
+
+/**
+ * Implements hook_page_attachments().
+ */
+function user_task_page_attachments(array &$page) {
+  $route_name = \Drupal::routeMatch()->getRouteName();
+  if ($route_name === "user_task.my_list") {
+    $page['#attached']['library'][] = 'user_task/user_task.draggable';
+  }
+}

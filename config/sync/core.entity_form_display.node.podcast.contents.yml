@@ -1,0 +1,93 @@
+uuid: 8e62812b-f86d-4f43-a008-c4448256e3f0
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_form_mode.node.contents
+    - entity_browser.browser.podcast_episode_browser
+    - field.field.node.podcast.field_artwork
+    - field.field.node.podcast.field_content_description
+    - field.field.node.podcast.field_description
+    - field.field.node.podcast.field_episodes
+    - field.field.node.podcast.field_tags
+    - node.type.podcast
+  module:
+    - entity_browser
+    - field_layout
+    - layout_discovery
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings:
+      label: ''
+id: node.podcast.contents
+targetEntityType: node
+bundle: podcast
+mode: contents
+content:
+  field_episodes:
+    type: entity_browser_entity_reference
+    weight: 0
+    region: content
+    settings:
+      entity_browser: podcast_episode_browser
+      field_widget_display: label
+      field_widget_edit: true
+      field_widget_remove: true
+      field_widget_replace: false
+      open: true
+      field_widget_display_settings: {  }
+      selection_mode: selection_append
+    third_party_settings: {  }
+  moderation_state:
+    type: moderation_state_default
+    weight: 100
+    region: content
+    settings:
+      orderable: true
+    third_party_settings: {  }
+  publish_on:
+    type: datetime_timestamp_no_default
+    weight: 30
+    region: content
+    settings:
+      orderable: true
+    third_party_settings: {  }
+  publish_state:
+    type: scheduler_moderation
+    weight: 30
+    region: content
+    settings:
+      orderable: true
+    third_party_settings: {  }
+  unpublish_on:
+    type: datetime_timestamp_no_default
+    weight: 30
+    region: content
+    settings:
+      orderable: true
+    third_party_settings: {  }
+  unpublish_state:
+    type: scheduler_moderation
+    weight: 30
+    region: content
+    settings:
+      orderable: true
+    third_party_settings: {  }
+hidden:
+  created: true
+  entitygroupfield: true
+  field_artwork: true
+  field_content_description: true
+  field_description: true
+  field_image: true
+  field_tags: true
+  group_content: true
+  langcode: true
+  path: true
+  promote: true
+  status: true
+  sticky: true
+  title: true
+  uid: true
+  url_redirects: true

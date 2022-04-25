@@ -1,0 +1,12 @@
+uuid: e48aeebe-9c9e-4d5f-b4e3-d1b95c106b13
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: E13KsEOvEfFkC4x2O3DWZ9dhOF_UU5evI-gb4ZuONJM
+id: document
+label: Document
+icon_uuid: null
+icon_default: null
+description: 'Upload documents anywhere in the article'
+behavior_plugins: {  }

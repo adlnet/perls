@@ -1,0 +1,23 @@
+uuid: 304ede1b-bf7e-4319-9b23-ebf6dd292467
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_test_question_count
+    - paragraphs.paragraphs_type.test_attempt
+id: paragraph.test_attempt.field_test_question_count
+field_name: field_test_question_count
+entity_type: paragraph
+bundle: test_attempt
+label: 'Test question count'
+description: 'The number of questions in the test when this attempt was taken. (Equivalent to MAX in xapi statement)'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: 0
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

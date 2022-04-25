@@ -1,0 +1,23 @@
+uuid: 51c66cb1-5c23-4fb9-a3db-ea7bb4d599bc
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_test_passed
+    - paragraphs.paragraphs_type.test_attempt
+id: paragraph.test_attempt.field_test_passed
+field_name: field_test_passed
+entity_type: paragraph
+bundle: test_attempt
+label: 'Test Passed'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: Passed
+  off_label: Failed
+field_type: boolean

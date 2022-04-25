@@ -1,0 +1,8 @@
+name: 'PERLS Learner Browse'
+type: module
+description: 'Provides UI to promote content to learners before they search for content'
+core: 8.x
+core_version_requirement: ^8 || ^9
+package: 'PERLS'
+dependencies:
+  - views

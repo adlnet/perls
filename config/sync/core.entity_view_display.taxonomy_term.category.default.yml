@@ -1,0 +1,39 @@
+uuid: 7d6d0ca9-9fdd-421a-8d92-4f3aeade31c4
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.taxonomy_term.category.field_description
+    - field.field.taxonomy_term.category.field_media_image
+    - taxonomy.vocabulary.category
+  module:
+    - field_layout
+    - layout_builder
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings:
+      label: ''
+  layout_builder:
+    enabled: false
+    allow_custom: false
+id: taxonomy_term.category.default
+targetEntityType: taxonomy_term
+bundle: category
+mode: default
+content:
+  field_description:
+    type: basic_string
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  description: true
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  field_media_image: true
+  langcode: true
+  search_api_excerpt: true

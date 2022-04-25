@@ -1,0 +1,34 @@
+uuid: 774c7011-5f29-4889-8e21-dbe1122d5699
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.checklist.field_checklist_item
+    - paragraphs.paragraphs_type.checklist
+  module:
+    - field_layout
+    - layout_discovery
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings:
+      label: ''
+_core:
+  default_config_hash: 8pNEcH-DN2IzHbm5OzgHqF4_3vPQhxj_E541K4sOMVU
+id: paragraph.checklist.default
+targetEntityType: paragraph
+bundle: checklist
+mode: default
+content:
+  field_checklist_item:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: 'Add a checklist item...'
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true
+  uid: true

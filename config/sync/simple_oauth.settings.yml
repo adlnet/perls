@@ -1,0 +1,10 @@
+_core:
+  default_config_hash: iyQ3vimEIAGk_tbNATkrngrUKL81DVBPm2ScMKENWlU
+access_token_expiration: 86400
+authorization_code_expiration: 86400
+refresh_token_expiration: 1209600
+token_cron_batch_size: 0
+public_key: ../private/public.key
+private_key: ../private/private.key
+remember_clients: true
+use_implicit: false

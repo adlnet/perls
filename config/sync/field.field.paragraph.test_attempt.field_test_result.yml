@@ -1,0 +1,23 @@
+uuid: 46161603-4e8f-4aca-831c-0de894144b49
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_test_result
+    - paragraphs.paragraphs_type.test_attempt
+id: paragraph.test_attempt.field_test_result
+field_name: field_test_result
+entity_type: paragraph
+bundle: test_attempt
+label: 'Test result'
+description: 'The score as a fraction between 0 and 1. ( multiple by 100 for percentage - equivalent to scaled in xapi statement)'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: !!float 0
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: float

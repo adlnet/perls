@@ -1,0 +1,628 @@
+<?php
+
+/**
+ * @file
+ * Contains badges.module.
+ */
+
+use Drupal\achievements\Entity\AchievementEntity as AchievementEntityOriginal;
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Url;
+use Drupal\file\Entity\File;
+use Drupal\flag\FlaggingInterface;
+use Drupal\badges\Entity\AchievementEntity;
+use Drupal\user\Entity\User;
+
+/**
+ * Form alter for achievements form.
+ */
+function badges_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $badge_service = \Drupal::service('badges.badge_service');
+
+  if ($form_id === 'achievement_entity_edit_form' || $form_id === 'achievement_entity_add_form') {
+    // Set maxlength of machine name.
+    $form['id']['#maxlength'] = 32;
+    $config_entity = $form_state->getFormObject()->getEntity();
+    // Hide some data from form.
+    $form['points']['#type'] = 'hidden';
+    $form['points']['#value'] = 1;
+    $form['secret']['#type'] = 'hidden';
+    $form['secret']['#value'] = FALSE;
+    $form['invisible']['#type'] = 'hidden';
+    $form['invisible']['#value'] = FALSE;
+
+    // Give Image previews of badges.
+    array_unshift($form['actions']['submit']['#submit'], 'badges_achievement_submit');
+    // TODO: make all badge images managed. This is complicated by our
+    // default badge names which are lower camel case. Drupal enforces
+    // all lower case when file is managed so existing badges might
+    // break.
+    if (isset($form['image']['settings']['unlocked_image_path']['#default_value'])) {
+      $files = \Drupal::entityTypeManager()
+        ->getStorage('file')
+        ->loadByProperties(['uri' => 'public://' . $form['image']['settings']['unlocked_image_path']['#default_value']]);
+      if (!empty($files)) {
+        $form['image']['settings']['unlocked_image_upload']['#default_value'][] = reset($files)->id();
+      }
+      else {
+        // Achievements allows for unmanaged files too.
+        // This element displays unmanged images.
+        $form['image']['settings']['locked_preview'] = [
+          '#weight' => 5,
+          '#theme' => 'image_style',
+          '#style_name' => 'thumbnail',
+          '#uri' => 'public://' . $form['image']['settings']['unlocked_image_path']['#default_value'],
+          '#attributes' => [
+            'class' => [
+              'image-preview',
+            ],
+          ],
+        ];
+      }
+    }
+    if (isset($form['image']['settings']['locked_image_path']['#default_value'])) {
+      $files = \Drupal::entityTypeManager()
+        ->getStorage('file')
+        ->loadByProperties(['uri' => 'public://' . $form['image']['settings']['locked_image_path']['#default_value']]);
+      if (!empty($files)) {
+        $form['image']['settings']['locked_image_upload']['#default_value'][] = reset($files)->id();
+      }
+      else {
+        // Achievements allows for unmanaged files too.
+        // This element displays unmanged images.
+        $form['image']['settings']['unlocked_preview'] = [
+          '#weight' => 10,
+          '#theme' => 'image_style',
+          '#style_name' => 'thumbnail',
+          '#uri' => 'public://' . $form['image']['settings']['locked_image_path']['#default_value'],
+          '#attributes' => [
+            'class' => [
+              'image-preview',
+            ],
+          ],
+        ];
+
+      }
+    }
+
+    $form['image']['settings']['unlocked_image_path']['#weight'] = 3;
+    $form['image']['settings']['unlocked_image_upload']['#weight'] = 6;
+    $form['image']['settings']['unlocked_image_upload']['#type'] = 'achievement_image_upload';
+    $form['image']['settings']['unlocked_image_upload']['#upload_location'] = 'public://badges/';
+    unset($form['image']['settings']['unlocked_image_upload']['#maxlength']);
+    $form['image']['settings']['locked_image_path']['#weight'] = 9;
+    $form['image']['settings']['locked_image_upload']['#weight'] = 11;
+    $form['image']['settings']['locked_image_upload']['#type'] = 'achievement_image_upload';
+    $form['image']['settings']['locked_image_upload']['#upload_location'] = 'public://badges/';
+    unset($form['image']['settings']['locked_image_upload']['#maxlength']);
+    // Certificate or Badge Type.
+    $saved_type = $config_entity->getThirdPartySetting('badges', 'bundle');
+    $saved_type = $saved_type ?: 'badge';
+    $form['bundle'] = [
+      '#type' => 'select',
+      '#title' => t('Achievement Type'),
+      '#description' => t('Is this achievement a badge or a Certificate.'),
+      '#options' => $badge_service->getAchievementTypeOptions(),
+      '#default_value' => $saved_type,
+      '#weight' => 1,
+    ];
+    // The plugin information.
+    $saved_value = $config_entity->getThirdPartySetting('badges', 'plugin_id');
+    $saved_value = $saved_value ?: 'manual';
+    $form['plugin_id'] = [
+      '#type' => 'select',
+      '#title' => t('Achievement Processor'),
+      '#description' => t('Select the Achievement Plugin to process this achievement.'),
+      '#options' => $badge_service->getBadgePluginOptions(),
+      '#default_value' => $saved_value,
+      '#weight' => 1,
+    ];
+
+    foreach ($badge_service->getBadgePlugins() as $id => $plugin) {
+      $form['settings_' . $id] = [
+        '#type' => 'container',
+        '#states' => [
+          // Hide the image settings when using the default image.
+          'visible' => [
+            'select[name="plugin_id"]' => ['value' => $id],
+          ],
+        ],
+        '#weight' => 2,
+      ];
+      $form['settings_' . $id][$id] = $plugin->buildConfigurationForm($config_entity);
+    }
+    $form['#entity_builders'][] = 'badges_save_config_form';
+  }
+}
+
+/**
+ * Submission handler for achievment entity form.
+ */
+function badges_achievement_submit(&$form, FormStateInterface $form_state) {
+  $values = $form_state->getValues();
+  if (isset($values['unlocked_image_upload']) && !empty($values['unlocked_image_upload'])) {
+    $file = File::load($values['unlocked_image_upload'][0]);
+    $file->setPermanent();
+    $file->save();
+    $values['unlocked_image_path'] = $file->getFileUri();
+  }
+  if (isset($values['locked_image_upload']) && !empty($values['locked_image_upload'])) {
+    $file = File::load($values['locked_image_upload'][0]);
+    $file->setPermanent();
+    $file->save();
+    $values['locked_image_path'] = $file->getFileUri();
+  }
+  if ($values['use_default_image']) {
+    $values['locked_image_path'] = '';
+    $values['unlocked_image_path'] = '';
+  }
+  unset($values['locked_image_upload']);
+  unset($values['unlocked_image_upload']);
+  $form_state->setValues($values);
+}
+
+/**
+ * Submit handler for config form.
+ */
+function badges_save_config_form($entity_type, AchievementEntityOriginal $achievement, &$form, FormStateInterface $form_state) {
+  $bundle = $form_state->getValue('bundle');
+  if ($bundle) {
+    $achievement->setThirdPartySetting('badges', 'bundle', $form_state->getValue('bundle'));
+  }
+  else {
+    $achievement->unsetThirdPartySetting('badges', 'bundle');
+  }
+  $plugin_id = $form_state->getValue('plugin_id');
+  if ($plugin_id) {
+    $achievement->setThirdPartySetting('badges', 'plugin_id', $form_state->getValue('plugin_id'));
+  }
+  else {
+    $achievement->unsetThirdPartySetting('badges', 'plugin_id');
+  }
+  // Save the plugin data.
+  $badge_label = t('Manual');
+  $badge_service = \Drupal::service('badges.badge_service');
+  foreach ($badge_service->getBadgePlugins() as $id => $plugin) {
+    if ($plugin_id === $id) {
+      // Only save data from the plugin that was selected.
+      $plugin->updateConfigWithBadgeSettings($form_state, $achievement);
+      $badge_label = $plugin->getBadgeTypeLabel();
+    }
+    else {
+      // Delete all other previously saved data.
+      $plugin->removeBadgeSettingsFromConfig($achievement);
+    }
+  }
+  $achievement->setThirdPartySetting('badges', 'badge_type', $badge_label);
+}
+
+/**
+ * Create theme suggestions for achievements.
+ */
+function badges_theme_suggestions_achievement_alter(array &$suggestions, array $variables) {
+  $achievement = $variables['achievement_entity'];
+  $achievement_type = $achievement->getType();
+  $achievement_state = ($variables['unlock']) ? 'unlocked' : 'locked';
+
+  $suggestions[] = 'achievement__' . $achievement_type;
+  $suggestions[] = 'achievement__' . $achievement_state;
+  $suggestions[] = 'achievement__' . $achievement_type . '__' . $achievement_state;
+  $suggestions[] = 'achievement__' . $achievement->id();
+  $suggestions[] = 'achievement__' . $achievement->id() . '__' . $achievement_state;
+  $suggestions[] = 'achievement__' . $achievement_type;
+}
+
+/**
+ * Override the acheivements certificate theme.
+ */
+function badges_theme($existing, $type, $theme, $path) {
+  return [
+    'achievement__certificate' => [
+      'path' => $path . '/templates',
+      'template' => 'achievement--certificate',
+      'base hook' => 'achievement',
+    ],
+    'achievement_modalview' => [
+      'path' => $path . '/templates',
+      'variables' => [
+        'achievement' => NULL,
+        'user' => NULL,
+      ],
+      'template' => 'achievement-modalview',
+    ],
+  ];
+}
+
+/**
+ * Process variables for achievement.tpl.php.
+ *
+ * We use this method to remove certain variables from achievements.
+ */
+function badges_preprocess_achievement(&$variables) {
+  $achievement = $variables['achievement_entity'];
+  $variables['achievement_type'] = $achievement->getType();
+  $variables['classes'][] = 'achievement-' . $variables['achievement_type'];
+  $variables['achievement_uuid'] = $achievement->uuid();
+  unset($variables['image']['#path']);
+  unset($variables['achievement_title']['#type']);
+  // No longer a link type.
+  $variables['achievement_title']['#markup'] = $variables['achievement_title']['#title'];
+  $achievement->set('points', NULL);
+  $variables['achievement_points'] = NULL;
+  $variables['unlocked_rank']['#markup'] = NULL;
+
+  if (!empty($variables['unlock']['timestamp']) && $variables['unlock']['timestamp']) {
+    $unlock_time = \Drupal::service('date.formatter')->format($variables['unlock']['timestamp'], 'short');
+    $unlock_time = explode('-', $unlock_time)[0];
+    // We don't show rank or points, so we've room to make this a bit clearer.
+    $variables['unlocked_date']['#markup'] = t('Earned on @timestamp', ['@timestamp' => $unlock_time]);
+  }
+
+  // Add the operation link variable.
+  $badge_service = \Drupal::service('badges.badge_service');
+  $user = \Drupal::routeMatch()->getParameter('user');
+  if ($user) {
+    if (!$user instanceof AccountInterface) {
+      $user = User::load($user);
+    }
+    $variables['achievement_operation'] =
+    [
+      '#type' => 'dropbutton',
+      '#links' =>
+      [
+        'award_revoke' => $badge_service->getAwardRevokeLink($achievement->id(), $user->id(), $variables['state']),
+        'reset' => $badge_service->getResetLink($achievement->id(), $user->id()),
+      ],
+    ];
+    $variables['achievement_operation_class'] = 'badges_' . $achievement->id();
+  }
+  else {
+    $user = User::load(\Drupal::currentUser()->id());
+  }
+  // Fix images when viewing user achievements that are not current user.
+  $variables['image']['#item']->uri = $achievement->getImageUrl($user, $variables['state']);
+  // Make the default height bigger.
+  $variables['image']['#item']->height = NULL;
+  $variables['image']['#item']->width = NULL;
+  if ($variables['state'] === 'unlocked') {
+    $url = $achievement->getImageUrl($user, 'sharable');
+    if (substr($url, 0, 4) === "http") {
+      $attributes = [
+        'target' => '_blank',
+        'class' => ['view-link'],
+      ];
+      $sharable_url = Url::fromRoute('badges.view_certificate',
+        [
+          'user' => $user->id(),
+          'achievement' => $achievement->id(),
+        ],
+        ['attributes' => $attributes]
+      );
+      $variables['image']['#url'] = $sharable_url;
+      $variables['modal_url'] = Link::fromTextAndUrl(t('View'), $sharable_url);
+
+      $download_attributes = [
+        'download' => $achievement->id(),
+      ];
+      $variables['download_url'] = Link::fromTextAndUrl(t('Download'), Url::fromUri($url, ['attributes' => $download_attributes]));
+      $printable_url = Url::fromRoute('badges.view_certificate',
+      [
+        'user' => $user->id(),
+        'achievement' => $achievement->id(),
+      ],
+        [
+          'query' => [
+            'print' => 'true',
+          ],
+          'attributes' => [
+            'class' => [
+              'print-url',
+            ],
+          ],
+        ]
+      );
+      $variables['print_url'] = Link::fromTextAndUrl(t('Print'), $printable_url);
+    }
+  }
+  $link_url = $badge_service->getAchievementPageUrl($achievement);
+  $link = Link::fromTextAndUrl(t('Open Achievement'), $link_url);
+  $variables['achievement_url'] = $link->toRenderable();
+
+  $variables['achievement_id'] = $achievement->id();
+}
+
+/**
+ * Implements hook_page_attachments().
+ */
+function badges_page_attachments(array &$attachments) {
+  $attachments['#attached']['library'][] = 'badges/badges';
+}
+
+/**
+ * Process variables for achievement-notification.tpl.php.
+ */
+function badges_preprocess_achievement_notification(&$variables) {
+  badges_preprocess_achievement($variables);
+}
+
+/**
+ * Implements hook_preprocess_achievement_modalview().
+ */
+function badges_preprocess_achievement_modalview(&$variables) {
+  $achievement = $variables['achievement'];
+  $user = $variables['user'];
+  $data = $achievement->getInfo($user);
+  $variables = array_merge($variables, $data);
+  $badge_service = \Drupal::service('badges.badge_service');
+  // Format the timestamp.
+  if ($variables['unlocked_timestamp']) {
+    $unlock_time = \Drupal::service('date.formatter')->format($variables['unlocked_timestamp'], 'short');
+    $unlock_time = explode('-', $unlock_time)[0];
+    // We don't show rank or points, so we've room to make this a bit clearer.
+    $variables['unlocked_timestamp'] = [
+      '#markup' => t('Earned on @timestamp', ['@timestamp' => $unlock_time]),
+    ];
+  }
+  // Format the images.
+  $variables['locked_image'] = [
+    '#theme' => 'image',
+    '#uri' => $variables['locked_image_url'],
+    '#title' => $achievement->label(),
+    '#alt' => t('Locked acheivement image'),
+    '#attributes' => [
+      'classes' => [
+        'achievement-modal-image',
+        'achievement-modal-image-locked',
+      ],
+    ],
+  ];
+  $variables['unlocked_image'] = [
+    '#theme' => 'image',
+    '#uri' => $variables['unlocked_image_url'],
+    '#title' => $achievement->label(),
+    '#alt' => t('Unlocked acheivement image'),
+    '#attributes' => [
+      'classes' => [
+        'achievement-modal-image',
+        'achievement-modal-image-unlocked',
+      ],
+    ],
+  ];
+  $variables['sharable_image'] = [
+    '#theme' => 'image',
+    '#uri' => $variables['sharable_image_url'],
+    '#title' => $achievement->label(),
+    '#alt' => t('Unlocked acheivement image'),
+    '#attributes' => [
+      'classes' => [
+        'achievement-modal-image',
+        'achievement-modal-image-unlocked',
+      ],
+    ],
+  ];
+
+}
+
+/**
+ * Alter a user's achievement stats.
+ */
+function badges_preprocess_achievement_user_stats(&$variables) {
+  $variables['message'] = t('@name has unlocked @unlocks_count of @total_count achievements.', [
+    '@name'           => $variables['stats']['name'],
+    '@unlocks_count'  => $variables['stats']['unlocks_count'],
+    '@total_count'    => $variables['stats']['total_count'],
+  ]);
+}
+
+/**
+ * Implements hook_theme_registry_alter().
+ *
+ * Override the template files to use template files from this function.
+ */
+function badges_theme_registry_alter(&$theme_registry) {
+  $path = drupal_get_path('module', 'badges') . '/templates';
+  $theme_registry['achievement']['path'] = $path;
+  $theme_registry['achievement_notification']['path'] = $path;
+}
+
+/**
+ * Implements hook_flagging_insert().
+ *
+ * This method monitors completed flags to update touchpoint complete badges.
+ */
+function badges_flagging_insert(FlaggingInterface $flag) {
+  $badge_service = \Drupal::service('badges.badge_service');
+  // Flag badges.
+  if ($badge_plugin = $badge_service->getBadgePlugin('flag_badge_plugin:' . $flag->bundle())) {
+    $badge_plugin->updateUserProgress($flag->getOwner());
+  }
+  // Flag count badges.
+  if ($badge_plugin = $badge_service->getBadgePlugin('flag_count_badge_plugin:' . $flag->bundle())) {
+    $badge_plugin->updateUserProgress($flag->getOwner(), ['entity' => $flag->getFlaggable()]);
+  }
+  // Touch point badges.
+  if ($flag->bundle() !== 'elearning_content_completion') {
+    return;
+  }
+  // Get touchpoint badge plugin.
+  if ($touchpoint_badge_plugin = $badge_service->getBadgePlugin('touchpoint_badge_plugin')) {
+    $touchpoint_badge_plugin->updateUserProgress($flag->getOwner());
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function badges_form_achievements_admin_form_alter(&$form, FormStateInterface $form_state) {
+  $config = \Drupal::config('achievements.settings');
+  $form['xapi_session_timeout'] =
+    [
+      '#type' => 'textfield',
+      '#title' => 'Xapi Session Timeout (Minutes)',
+      '#description' => 'Adjust how often XAPI statements have to be received to be counted as a single session.',
+      '#default_value' => $config->get('xapi_session_timeout') ?: 5,
+    ];
+  $form['plugins'] = [
+    '#type' => 'details',
+    '#title' => t('Disable Plugins'),
+    '#description' => t('Choose which achievement plugins should be hidden from the UI'),
+  ];
+  $badge_service = \Drupal::service('badges.badge_service');
+  $plugins = $badge_service->getBadgePlugins(TRUE);
+  $disabled_plugins = $config->get('disabled_plugins');
+  if (!$disabled_plugins) {
+    $disabled_plugins = [];
+  }
+  foreach ($plugins as $plugin_id => $plugin) {
+    $form['plugins'][$plugin_id] = [
+      '#type' => 'checkbox',
+      '#title' => $plugin->label(),
+      '#default_value' => in_array($plugin_id, $disabled_plugins),
+      '#description' => $plugin->getDescription(),
+    ];
+  }
+  $form['#submit'][] = 'badges_achievements_admin_submit';
+
+  // Allow admin to alter default images.
+  $form['default_images'] = [
+    '#type' => 'details',
+    '#title' => t('Default Images'),
+    '#open' => FALSE,
+  ];
+
+  $default_image = [];
+  if ($config->get('default_locked_image')) {
+    $files = \Drupal::entityTypeManager()
+      ->getStorage('file')
+      ->loadByProperties(['uri' => $config->get('default_locked_image')]);
+    if (!empty($files)) {
+      $default_image[] = reset($files)->id();
+    }
+  }
+
+  $form['default_images']['default_locked_image'] = [
+    '#type' => 'achievement_image_upload',
+    '#title' => t('Default locked Iimage'),
+    '#description' => t('The image that will be used when no image given for a badge when locked'),
+    '#default_value' => $default_image,
+    '#upload_location' => 'public://badges/',
+  ];
+
+  $default_image = [];
+  if ($config->get('default_unlocked_image')) {
+    $files = \Drupal::entityTypeManager()
+      ->getStorage('file')
+      ->loadByProperties(['uri' => $config->get('default_unlocked_image')]);
+    if (!empty($files)) {
+      $default_image[] = reset($files)->id();
+    }
+  }
+
+  $form['default_images']['default_unlocked_image'] = [
+    '#type' => 'achievement_image_upload',
+    '#title' => t('Default unlocked Image'),
+    '#description' => t('The image that will be used when no image given for a badge when unlocked.'),
+    '#default_value' => $default_image,
+    '#upload_location' => 'public://badges/',
+  ];
+}
+
+/**
+ * Method to save send noticiation settings.
+ */
+function badges_achievements_admin_submit(&$form, FormStateInterface $form_state) {
+  $config = \Drupal::service('config.factory')->getEditable('achievements.settings');
+  $config->set('xapi_session_timeout', $form_state->getValue('xapi_session_timeout'));
+  $badge_service = \Drupal::service('badges.badge_service');
+  $plugins = $badge_service->getBadgePlugins(TRUE);
+  $disabled_plugins = [];
+  foreach ($plugins as $plugin_id => $plugin) {
+    if ($form_state->getValue($plugin_id)) {
+      $disabled_plugins[] = $plugin_id;
+    }
+  }
+  $config->set('disabled_plugins', $disabled_plugins);
+  // Check for default images.
+  $value = $form_state->getValue('default_unlocked_image');
+  if (!empty($value)) {
+    $file = File::load($value[0]);
+    $file->setPermanent();
+    $file->save();
+    $config->set('default_unlocked_image', $file->getFileUri());
+  }
+  elseif ($config->get('default_unlocked_image') !== NULL) {
+    $config->set('default_unlocked_image', '');
+  }
+  $value = $form_state->getValue('default_locked_image');
+  if (!empty($value)) {
+    $file = File::load($value[0]);
+    $file->setPermanent();
+    $file->save();
+    $config->set('default_locked_image', $file->getFileUri());
+  }
+  elseif ($config->get('default_locked_image') !== NULL) {
+    $config->set('default_locked_image', '');
+  }
+  $config->save();
+}
+
+/**
+ * Update achievement permissions.
+ */
+function badges_achievements_access_earn($uid) {
+  $user = \Drupal::service('entity_type.manager')->getStorage('user')->load($uid);
+
+  if ($user && $user->hasPermission('earn achievements')) {
+    return TRUE;
+  }
+
+  return FALSE;
+}
+
+/**
+ * Implements hook_entity_type_alter().
+ */
+function badges_entity_type_alter(array &$entity_types) {
+  $entity_types['achievement_entity']->setClass(AchievementEntity::class);
+}
+
+/**
+ * Implements hook_page_alter().
+ */
+function badges_page_bottom(array &$page_bottom) {
+  // Achievement module does not deal with caching correctly.
+  if (isset($page_bottom['achievements'])) {
+    $page_bottom['achievements']['#cache'] = [
+      'max-age' => 0,
+    ];
+  }
+}
+
+/**
+ * Implements hook_js_alter().
+ *
+ * Override default javascript for achievment pop-up.
+ */
+function badges_js_alter(&$javascript) {
+  $achievements_library = drupal_get_path('module', 'achievements') . '/achievements.js';
+  if (isset($javascript[$achievements_library])) {
+    $javascript[$achievements_library]['data'] = drupal_get_path('module', 'badges') . '/js/achievements.js';
+  }
+}
+
+/**
+ * Implements hook_achievement_entity_access().
+ *
+ * Override the default access for achievements.
+ */
+function badges_achievement_entity_access(EntityInterface $entity, $operation, AccountInterface $account) {
+  $result = AccessResult::neutral();
+  if ($operation == 'view') {
+    $result = AccessResult::allowedIfHasPermission($account, 'earn achievements');
+  }
+  return $result;
+}

@@ -1,0 +1,5 @@
+media_unsplash.admin.config:
+  title: 'Unsplash Media'
+  description: 'Settings for the Media Unsplash module.'
+  parent: system.admin_config_media
+  route_name: media_unsplash.admin.config

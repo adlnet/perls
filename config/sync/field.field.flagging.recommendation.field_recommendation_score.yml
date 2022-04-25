@@ -1,0 +1,23 @@
+uuid: 7ef8f2cb-ae93-498c-9385-404c931545d3
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.flagging.field_recommendation_score
+    - flag.flag.recommendation
+id: flagging.recommendation.field_recommendation_score
+field_name: field_recommendation_score
+entity_type: flagging
+bundle: recommendation
+label: Score
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: float

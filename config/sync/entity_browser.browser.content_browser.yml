@@ -1,0 +1,31 @@
+uuid: 71a70d5d-a49a-4324-99d5-9b10105a6a3b
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.entity_browser_lists
+  module:
+    - views
+name: content_browser
+label: 'Content Browser'
+display: modal
+display_configuration:
+  width: ''
+  height: ''
+  link_text: 'Select Content'
+  auto_open: false
+selection_display: no_display
+selection_display_configuration: {  }
+widget_selector: tabs
+widget_selector_configuration: {  }
+widgets:
+  4a583e28-da68-4cfd-8202-5a81bb8e014f:
+    id: view_exclude_selection
+    uuid: 4a583e28-da68-4cfd-8202-5a81bb8e014f
+    label: 'Existing Content'
+    weight: 2
+    settings:
+      view: entity_browser_lists
+      view_display: entity_browser_content
+      submit_text: 'Add Content'
+      auto_select: 0

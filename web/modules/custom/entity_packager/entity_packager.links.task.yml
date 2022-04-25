@@ -1,0 +1,8 @@
+entity_packager.admin_setting:
+  route_name: entity_packager.admin_settings_form
+  title: 'Settings'
+  base_route: entity_packager.admin_settings_form
+entity_packager.page_generate:
+  route_name: entity_packager.batch_generate
+  title: 'Generate node packages'
+  base_route: entity_packager.admin_settings_form

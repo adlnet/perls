@@ -1,0 +1,70 @@
+<?php
+
+/**
+ * @file
+ * Install scripts and requirements for recommender module.
+ */
+
+use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Url;
+
+/**
+ * Implements hook_requirements().
+ */
+function recommender_requirements($phase) {
+  $requirements = [];
+
+  if ($phase == 'runtime') {
+    // 1 - Attempt to gather Recommendation engine status details.
+    try {
+      $recommendationService = \Drupal::service('recommender.recommendation_service');
+      $response = $recommendationService->checkStatus();
+    }
+    catch (\Exception $e) {
+      $requirements['recommender']['title'] = t('Recommendation Engine');
+      $requirements['recommender']['value'] = t('Recommendation Engine service failed to get status.');
+      $requirements['recommender']['description'] = t('Recommendation engine service failed to get status and returned this Message: @message',
+       [
+         '@message' => $e->getMessage(),
+       ]);
+      $requirements['recommender']['severity'] = REQUIREMENT_ERROR;
+      return $requirements;
+    }
+    // 2 - Check that check Status returned values.
+    if (empty($response)) {
+      $url = Url::fromRoute('recommender.admin_settings_form');
+      $requirements['recommender']['title'] = t('Recommendation Engine');
+      $requirements['recommender']['value'] = t('No Recommendation Engines Plugins enabled');
+      $requirements['recommender']['description'] = t('Recommendation Engine not configured. Please ensure you have enabled one of the <a href=":url">Recommendation Plugins</a> .', [':url' => $url->toString()]);
+      $requirements['recommender']['severity'] = REQUIREMENT_ERROR;
+      // Log connectivity issue.
+      \Drupal::logger('recommender')
+        ->error('Recommendation engine no recommendation plugins enabled.');
+      return $requirements;
+    }
+    // 3 - Report on each plugin individually.
+    foreach ($response as $id => $data) {
+      $requirements[$id]['title'] = (isset($data['title'])) ? $data['title'] : $id;
+      $requirements[$id]['description'] = (isset($data['description'])) ? $data['description'] : '';
+      if (isset($data['status']) && $data['status'] === TRUE) {
+        $requirements[$id]['value'] = t('Connected and ready to use');
+        $requirements[$id]['severity'] = REQUIREMENT_OK;
+        \Drupal::logger('recommender')
+          ->info('Recommendation engine @id is enabled and ready to use.', ['@id' => $id]);
+      }
+      else {
+        $requirements[$id]['value'] = t('Not Connected');
+        $requirements[$id]['severity'] = REQUIREMENT_ERROR;
+        \Drupal::logger('recommender')
+          ->error('Recommendation engine @id is not connected: @reason.',
+            [
+              '@id' => $id,
+              '@reason' => $data['description'],
+            ]
+          );
+      }
+    }
+
+  }
+  return $requirements;
+}

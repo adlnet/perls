@@ -1,0 +1,38 @@
+uuid: febf4d52-8f2e-4f26-bdac-ef35c44567a7
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.table.field_table
+    - paragraphs.paragraphs_type.table
+  module:
+    - field_layout
+    - layout_builder
+    - layout_discovery
+    - text
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings: {  }
+  layout_builder:
+    enabled: false
+    allow_custom: false
+_core:
+  default_config_hash: eRwAjgqn5GAhCywY80CWAcpngfz4jMKHvXEdDmKWOyU
+id: paragraph.table.default
+targetEntityType: paragraph
+bundle: table
+mode: default
+content:
+  field_table:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  search_api_excerpt: true

@@ -1,0 +1,13 @@
+services:
+  drush_additions.commands:
+    class: Drupal\drush_additions\Commands\DrushAdditions
+    tags:
+      - { name: drush.command }
+  drush_additions.file_clean:
+    class: Drupal\drush_additions\Commands\PerlsFileCleaner
+    arguments:
+     - '@messenger'
+     - '@stream_wrapper_manager'
+     - '@file_system'
+    tags:
+      - { name: drush.command }

@@ -1,0 +1,22 @@
+uuid: 916aa552-d59a-42bc-9384-56f81b258b97
+langcode: en
+status: true
+dependencies:
+  module:
+    - file
+    - node
+    - xapi
+id: node.field_learning_package
+field_name: field_learning_package
+entity_type: node
+type: field_xapi_content_file_item
+settings:
+  target_type: file
+  uri_scheme: private
+module: xapi
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

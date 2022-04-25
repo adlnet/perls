@@ -1,0 +1,9 @@
+name: 'Goal notification'
+type: module
+description: 'User will get notification about their goal status.'
+core: 8.x
+core_version_requirement: ^8 || ^9
+package: 'PERLS'
+dependencies:
+  - perls_goals:perls_goals
+  - task:task

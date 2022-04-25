@@ -1,0 +1,75 @@
+body.perls-learner {
+  background-color: $c-content--background;
+  color: $c-content--foreground;
+
+  .l-main {
+    margin-bottom: $space-quad;
+  }
+
+  .o-page-title {
+    color: $c-content--foreground;
+  }
+
+  .c-header {
+    background-color: $c-learner-header--background;
+  }
+
+  .c-search-block {
+    &__toggle {
+      svg path {
+        fill: $c-learner-nav--icon;
+      }
+    }
+  }
+
+  .c-tabs {
+    position: relative;
+    left: auto;
+
+    ul {
+      border-bottom: $border--light;
+
+      li a {
+        background-color: $c-gray--light;
+
+        &:hover {
+          background-color: darken($c-gray--light, 5%);
+        }
+      }
+    }
+  }
+
+  .c-pager {
+    margin-top: $space;
+
+    &__items {
+      justify-content: center;
+    }
+
+    @include pagerColorVariant($c-content--foreground, $c-link, transparent, $c-link--hover, $c-content--background, $c-content--background, $c-content--foreground);
+  }
+
+  &.l-page--acknowledgements,
+  &.l-page--terms-of-use {
+    .l-content {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+  }
+
+  /**
+   * Normalize search page width and title.
+   */
+  &.l-page--path--node.path-search,
+  &.l-page--path--search {
+    .l-content {
+      max-width: inherit;
+    }
+  }
+
+  &.path-search {
+    .o-page-title {
+      margin: $space-double 0 $space 0;
+    }
+  }
+}

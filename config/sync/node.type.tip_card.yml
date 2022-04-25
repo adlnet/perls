@@ -1,0 +1,20 @@
+uuid: 75eaa09c-35c0-4c5a-bd32-f04dd2335339
+langcode: en
+status: true
+dependencies:
+  module:
+    - menu_ui
+    - node_title_help_text
+third_party_settings:
+  menu_ui:
+    available_menus: {  }
+    parent: ''
+  node_title_help_text:
+    title_help: 'A good title is short and representative of the tip card. Avoid jargon and acronyms when possible.'
+name: Tip
+type: tip_card
+description: 'A single content item with relevant information about a topic that can be displayed alongside learning objects.'
+help: ''
+new_revision: true
+preview_mode: 1
+display_submitted: false

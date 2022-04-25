@@ -1,0 +1,40 @@
+{#
+/**
+ * @file
+ * Default theme implementation for an achievement's full display.
+ *
+ * @see template_preprocess_THEME_HOOK()
+ * @ingroup themeable
+ *
+ * Available variables:
+ * - $achievement: The achievement being displayed, as an array.
+ * - $unlock: An array of unlocked 'rank' and 'timestamp', if applicable.
+ * - $unlocked_date: A renderable string of the user's unlock timestamp.
+ * - $unlocked_rank: A renderable string of the user's unlock ranking.
+ * - $image: The renderable achievement's linked image (default or otherwise).
+ * - $image_path: The raw path to the context-aware achievement image.
+ * - $achievement_url: Direct URL of the current achievement.
+ * - $achievement_title: The renderable and linked achievement title.
+ * - $achievement_id: The achievement id.
+ * - $achievement_points: A renderable string of "$n points".
+ * - $state: The 'unlocked', 'locked', or 'secret' achievement state.
+ * - $classes: String of classes for this achievement.
+ * - $achievement_uuid: The uuid of the achievement.
+ * - $achievement_operation: A link to apply or revoke the badge.
+
+ */
+#}
+<div {{ attributes.addClass(classes).setAttribute('id', achievement_id).setAttribute('uuid', achievement_uuid) }}>
+  <div class="achievement-image">{{ image }}</div>
+
+  <div class="achievement-points-box">
+    <div class="achievement-operations {{achievement_operation_class}}">{{ achievement_operation }}</div>
+  </div>
+
+  <div class="achievement-body">
+    <div class="achievement-title">{{ achievement_title  }}</div>
+    <div class="achievement-description">{{ achievement_entity.description }}</div>
+    <div class="achievement-unlocked-date">{{ unlocked_date }}</div>
+    <div class="achievement-links">{{modal_url}} {{download_url}} {{print_url}}</div>
+  </div>
+</div>

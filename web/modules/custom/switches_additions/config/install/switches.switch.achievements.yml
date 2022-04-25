@@ -1,0 +1,16 @@
+id: achievements
+entity_type: switch
+label: Achievements
+description: Switch for Achievements
+status: true
+weight: 0
+langcode: en
+dependencies:
+  enforced:
+    module:
+      - switches
+activationMethod: manual
+manualActivationStatus: false
+defaultValue: null
+overrideable: null
+activationConditions: []

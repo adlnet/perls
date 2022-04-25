@@ -1,0 +1,9 @@
+perls_api.settings:
+  path: '/admin/config/services/perls-api'
+  defaults:
+    _form: '\Drupal\perls_api\Form\PerlsApiConfigForm'
+    _title: 'Perls API'
+  requirements:
+    _permission: 'administer perls api settings'
+  options:
+    _admin_route: TRUE

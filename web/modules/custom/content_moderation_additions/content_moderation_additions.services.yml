@@ -1,0 +1,15 @@
+services:
+  content_moderation_additions.comment_storage:
+    class: Drupal\content_moderation_additions\ModerationCommentStorage
+    arguments: ['@content_moderation.moderation_information']
+  content_moderation_additions.node_reviewer:
+    class: Drupal\content_moderation_additions\ModerationNodeReviewer
+    arguments: ['@entity_type.manager','@module_handler']
+  logger.channel.content_moderation_additions:
+    parent: logger.channel_base
+    arguments: ['Content Moderation']
+  content_moderation_additions.discussion_access_checker:
+    class: Drupal\content_moderation_additions\Access\DiscussionAccessCheck
+    arguments: ['@config.factory', '@content_moderation.moderation_information']
+    tags:
+      - { name: access_check, applies_to: _discussion_custom_access }

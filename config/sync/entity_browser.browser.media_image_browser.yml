@@ -1,0 +1,42 @@
+uuid: d3a2e2e5-d07d-408f-8ea3-81d27ba3d40f
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.media_entity_browser_list
+  module:
+    - entity_browser_entity_form
+    - views
+name: media_image_browser
+label: 'Media Image browser'
+display: modal
+display_configuration:
+  width: ''
+  height: ''
+  link_text: 'Add image'
+  auto_open: false
+selection_display: no_display
+selection_display_configuration: {  }
+widget_selector: tabs
+widget_selector_configuration: {  }
+widgets:
+  858aff2b-3a5c-4f45-8f43-386c2455fc78:
+    id: view
+    uuid: 858aff2b-3a5c-4f45-8f43-386c2455fc78
+    label: 'Existing image'
+    weight: -9
+    settings:
+      submit_text: 'Add image'
+      auto_select: false
+      view: media_entity_browser_list
+      view_display: entity_browser_media_image_list
+  257794db-2be7-400a-b16d-e94c75f2890b:
+    id: entity_form
+    uuid: 257794db-2be7-400a-b16d-e94c75f2890b
+    label: 'New image'
+    weight: -10
+    settings:
+      submit_text: 'Create new image'
+      entity_type: media
+      bundle: image
+      form_mode: default

@@ -1,0 +1,9 @@
+name: 'Business Rules Additions'
+type: module
+description: 'Contains additional Business Rules actions, conditions, reacts on plugins.'
+core_version_requirement: ^8 || ^9
+package: Workflow
+configure: entity.business_rule.collection
+dependencies:
+  - business_rules
+  - drupal:content_moderation

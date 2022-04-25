@@ -1,0 +1,18 @@
+uuid: dc1ef7ae-92bf-4d3f-aeff-b97ab54474a3
+langcode: en
+status: true
+dependencies: {  }
+third_party_settings:
+  textimage:
+    uri_scheme: public
+name: artwork_1400x1400
+label: 'Artwork (1400x1400)'
+effects:
+  5853d84c-92a8-4923-a001-748cce974fac:
+    uuid: 5853d84c-92a8-4923-a001-748cce974fac
+    id: image_scale_and_crop
+    weight: 1
+    data:
+      width: 1400
+      height: 1400
+      anchor: center-center

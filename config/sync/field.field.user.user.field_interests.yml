@@ -1,0 +1,30 @@
+uuid: 1a2f99cd-6229-445a-994c-87b21e30318b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.user.field_interests
+    - taxonomy.vocabulary.category
+  module:
+    - user
+id: user.user.field_interests
+field_name: field_interests
+entity_type: user
+bundle: user
+label: Interests
+description: 'We''ll pick content specifically tailored to your interests. <small>(You can leave this blank if you''re not sure.)</small>'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      category: category
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

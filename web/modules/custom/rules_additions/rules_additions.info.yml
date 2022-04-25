@@ -1,0 +1,6 @@
+name: "Rules additions"
+description: "Contains additional rules actions, events, data processors."
+type: module
+core: 8.x
+core_version_requirement: ^8 || ^9
+package: 'Custom'

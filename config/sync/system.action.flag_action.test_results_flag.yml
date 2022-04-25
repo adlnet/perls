@@ -1,0 +1,15 @@
+uuid: 4b50c650-2218-4e31-9eb4-1220d5726da0
+langcode: en
+status: true
+dependencies:
+  config:
+    - flag.flag.test_results
+  module:
+    - flag
+id: flag_action.test_results_flag
+label: 'Flag this item'
+type: node
+plugin: 'flag_action:test_results_flag'
+configuration:
+  flag_id: test_results
+  flag_action: flag

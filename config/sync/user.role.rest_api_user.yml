@@ -1,0 +1,9 @@
+uuid: 859fd415-0dd7-4341-bbee-af4e5b4853df
+langcode: en
+status: true
+dependencies: {  }
+id: rest_api_user
+label: 'Rest API user'
+weight: -8
+is_admin: null
+permissions: {  }

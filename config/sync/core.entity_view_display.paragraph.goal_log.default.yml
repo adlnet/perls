@@ -1,0 +1,56 @@
+uuid: ebff1e91-e53c-4cf5-aaf5-41c98bf00711
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.goal_log.field_goal_log_goal_name
+    - field.field.paragraph.goal_log.field_goal_log_time_indicator
+    - field.field.paragraph.goal_log.field_goal_log_timeframe
+    - paragraphs.paragraphs_type.goal_log
+  module:
+    - field_layout
+    - layout_builder
+    - layout_discovery
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings:
+      label: ''
+  layout_builder:
+    enabled: false
+    allow_custom: false
+id: paragraph.goal_log.default
+targetEntityType: paragraph
+bundle: goal_log
+mode: default
+content:
+  field_goal_log_goal_name:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_goal_log_time_indicator:
+    type: number_integer
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_goal_log_timeframe:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 1
+    region: content
+hidden:
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  search_api_excerpt: true

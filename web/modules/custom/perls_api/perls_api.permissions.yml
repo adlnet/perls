@@ -1,0 +1,5 @@
+access jsonapi:
+  title: 'Access JSON:API'
+administer perls api settings:
+  title: 'Administer Perls API settings'
+  description: 'Allows to change settings of PERLS API'

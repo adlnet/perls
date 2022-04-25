@@ -1,0 +1,29 @@
+uuid: 0d1ec462-d0be-4eb9-b402-0e86eda48cdc
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_audio
+    - paragraphs.paragraphs_type.audio
+  module:
+    - file
+_core:
+  default_config_hash: jEMwJmzL3qg8SV9xOXpgRaMZswBeg_dM9nc4pWQ6_a4
+id: paragraph.audio.field_audio
+field_name: field_audio
+entity_type: paragraph
+bundle: audio
+label: Audio
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:file'
+  handler_settings: {  }
+  file_directory: '[date:custom:Y]-[date:custom:m]'
+  file_extensions: mp3
+  max_filesize: ''
+  description_field: false
+field_type: file

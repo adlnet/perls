@@ -1,0 +1,10 @@
+.paragraph--type--tip {
+  border: 4px solid #cdc8c2;
+  border-radius: 5px;
+  padding: 1em;
+}
+
+.paragraph--type--tip h3 {
+  font-size: 1em;
+  margin: 0;
+}

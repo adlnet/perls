@@ -1,0 +1,10 @@
+uuid: 0de09358-3672-495a-9733-b94f298c25d7
+langcode: en
+status: true
+dependencies: {  }
+id: achievements
+label: Achievements
+description: 'Switch for Achievements'
+activationConditions: {  }
+activationMethod: manual
+manualActivationStatus: false

@@ -1,0 +1,12 @@
+administer xapi content:
+  title: 'Administer xAPI Content'
+  description: 'Configure xAPI content settings.'
+communicate lrs endpoint:
+  title: 'Communicate with LRS endpoint'
+  description: 'Send and receive information with the LRS endpoint'
+set user completions:
+  title: 'Set User Completions'
+  description: 'Set completions on behalf of another user'
+view paragraph content xapi_package:
+  title: 'Access to xapi package app'
+  description: 'Allow access to start a xapi package app.'

@@ -1,0 +1,107 @@
+uuid: 825ff396-f036-4256-9f68-f6233255f5fb
+langcode: en
+status: true
+dependencies:
+  module:
+    - achievements
+id: achievement_entity--achievement_entity
+disabled: true
+path: achievement_entity/achievement_entity
+resourceType: achievement_entity--achievement_entity
+resourceFields:
+  uuid:
+    disabled: false
+    fieldName: uuid
+    publicName: uuid
+    enhancer:
+      id: ''
+  langcode:
+    disabled: false
+    fieldName: langcode
+    publicName: langcode
+    enhancer:
+      id: ''
+  status:
+    disabled: false
+    fieldName: status
+    publicName: status
+    enhancer:
+      id: ''
+  dependencies:
+    disabled: false
+    fieldName: dependencies
+    publicName: dependencies
+    enhancer:
+      id: ''
+  third_party_settings:
+    disabled: false
+    fieldName: third_party_settings
+    publicName: third_party_settings
+    enhancer:
+      id: ''
+  _core:
+    disabled: false
+    fieldName: _core
+    publicName: _core
+    enhancer:
+      id: ''
+  id:
+    disabled: false
+    fieldName: id
+    publicName: id
+    enhancer:
+      id: ''
+  label:
+    disabled: false
+    fieldName: label
+    publicName: label
+    enhancer:
+      id: ''
+  description:
+    disabled: false
+    fieldName: description
+    publicName: description
+    enhancer:
+      id: ''
+  secret:
+    disabled: false
+    fieldName: secret
+    publicName: secret
+    enhancer:
+      id: ''
+  invisible:
+    disabled: false
+    fieldName: invisible
+    publicName: invisible
+    enhancer:
+      id: ''
+  manual_only:
+    disabled: false
+    fieldName: manual_only
+    publicName: manual_only
+    enhancer:
+      id: ''
+  points:
+    disabled: false
+    fieldName: points
+    publicName: points
+    enhancer:
+      id: ''
+  use_default_image:
+    disabled: false
+    fieldName: use_default_image
+    publicName: use_default_image
+    enhancer:
+      id: ''
+  locked_image_path:
+    disabled: false
+    fieldName: locked_image_path
+    publicName: locked_image_path
+    enhancer:
+      id: ''
+  unlocked_image_path:
+    disabled: false
+    fieldName: unlocked_image_path
+    publicName: unlocked_image_path
+    enhancer:
+      id: ''

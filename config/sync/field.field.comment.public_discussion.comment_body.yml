@@ -1,0 +1,31 @@
+uuid: 37607478-e847-46d7-a396-30453dc6fcdd
+langcode: en
+status: true
+dependencies:
+  config:
+    - comment.type.public_discussion
+    - field.storage.comment.comment_body
+  module:
+    - allowed_formats
+    - text
+third_party_settings:
+  allowed_formats:
+    basic_filter: basic_filter
+    card_styling: '0'
+    custom_view_header: '0'
+    inline_styling: '0'
+    list: '0'
+    table: '0'
+    plain_text: '0'
+id: comment.public_discussion.comment_body
+field_name: comment_body
+entity_type: comment
+bundle: public_discussion
+label: Comment
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

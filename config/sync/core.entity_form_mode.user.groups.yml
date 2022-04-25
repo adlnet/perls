@@ -1,0 +1,10 @@
+uuid: 056215e9-2d64-4561-94bb-b93d314b7961
+langcode: en
+status: true
+dependencies:
+  module:
+    - user
+id: user.groups
+label: Groups
+targetEntityType: user
+cache: true

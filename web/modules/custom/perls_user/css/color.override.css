@@ -1,0 +1,22 @@
+/**
+ * @file
+ * Stylesheet for the administration pages of the Color module.
+ */
+.system-theme-settings .color-form {
+  max-width: none;
+}
+.system-theme-settings .js-color-palette {
+  margin-top: 50px;
+}
+.system-theme-settings .help-text {
+  display: inline;
+  margin-left: 35px;
+  position: relative;
+  top: -15px;
+}
+.system-theme-settings .color-palette__lock {
+  top: -3.5em;
+}
+.system-theme-settings .color-form .form-item label {
+  margin-top: 15px;
+}

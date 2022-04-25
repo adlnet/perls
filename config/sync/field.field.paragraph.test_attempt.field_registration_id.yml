@@ -1,0 +1,19 @@
+uuid: 9e1e19ac-f2d0-4a66-b8dc-4d8d95b0feab
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_registration_id
+    - paragraphs.paragraphs_type.test_attempt
+id: paragraph.test_attempt.field_registration_id
+field_name: field_registration_id
+entity_type: paragraph
+bundle: test_attempt
+label: 'Registration Id'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

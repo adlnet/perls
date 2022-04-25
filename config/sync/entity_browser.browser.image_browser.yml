@@ -1,0 +1,56 @@
+uuid: 09839d3c-404e-4764-b27b-7d4caadf7c01
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.media_entity_browser
+  module:
+    - entity_browser_entity_form
+    - media_unsplash
+    - views
+name: image_browser
+label: 'Featured image Browser'
+display: modal
+display_configuration:
+  width: ''
+  height: ''
+  link_text: 'Add Image'
+  auto_open: false
+selection_display: no_display
+selection_display_configuration: {  }
+widget_selector: tabs
+widget_selector_configuration: {  }
+widgets:
+  633ff948-7ff9-433c-a016-a7a0d4ebd254:
+    id: view
+    uuid: 633ff948-7ff9-433c-a016-a7a0d4ebd254
+    label: 'Choose From Existing Images'
+    weight: -10
+    settings:
+      submit_text: 'Insert Selected'
+      auto_select: false
+      view: media_entity_browser
+      view_display: media_browser_all
+  91c4d184-a0c9-4cdc-9c5d-2c992fc4489a:
+    id: unsplash
+    uuid: 91c4d184-a0c9-4cdc-9c5d-2c992fc4489a
+    label: 'Choose From Unsplash Images'
+    weight: -8
+    settings:
+      upload_location: 'public://unsplash/[UNSPLASH_SEARCH_TERM]/'
+      multiple: 0
+      submit_text: 'Insert Selected'
+      search_text: 'Search Unsplash'
+      search_placeholder: 'Enter search terms...'
+      extensions: 'png jpg jpeg'
+      media_type: image
+  c9f9dbb0-bcfe-4f49-9aef-b5e0d8dc2151:
+    id: entity_form
+    uuid: c9f9dbb0-bcfe-4f49-9aef-b5e0d8dc2151
+    label: 'Upload Image'
+    weight: -9
+    settings:
+      submit_text: Upload
+      entity_type: media
+      bundle: image
+      form_mode: default

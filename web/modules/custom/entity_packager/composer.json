@@ -1,0 +1,9 @@
+{
+    "name": "float/entity_packager",
+    "description": "Provides offline package generator.",
+    "type": "drupal-module",
+    "version": "2.0.0-rc1",
+    "keywords": [
+        "Drupal"
+    ]
+}

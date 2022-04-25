@@ -1,0 +1,76 @@
+uuid: 04d7cde9-7e16-4c7e-b2c0-7a34a6c20003
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.flagging.field_test_attempts
+    - flag.flag.test_results
+    - paragraphs.paragraphs_type.test_attempt
+  module:
+    - entity_reference_revisions
+id: flagging.test_results.field_test_attempts
+field_name: field_test_attempts
+entity_type: flagging
+bundle: test_results
+label: 'Test attempts'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      test_attempt: test_attempt
+    negate: 0
+    target_bundles_drag_drop:
+      audio:
+        weight: 17
+        enabled: false
+      callout:
+        weight: 18
+        enabled: false
+      checklist:
+        weight: 19
+        enabled: false
+      document:
+        weight: 20
+        enabled: false
+      heading:
+        weight: 21
+        enabled: false
+      image:
+        weight: 22
+        enabled: false
+      layout_two_column:
+        weight: 23
+        enabled: false
+      list_ordered:
+        weight: 24
+        enabled: false
+      list_unordered:
+        weight: 25
+        enabled: false
+      quiz_option:
+        weight: 26
+        enabled: false
+      references:
+        weight: 27
+        enabled: false
+      table:
+        weight: 28
+        enabled: false
+      test_attempt:
+        weight: 29
+        enabled: true
+      test_question_answer:
+        weight: 30
+        enabled: false
+      text:
+        weight: 31
+        enabled: false
+      video:
+        weight: 32
+        enabled: false
+field_type: entity_reference_revisions

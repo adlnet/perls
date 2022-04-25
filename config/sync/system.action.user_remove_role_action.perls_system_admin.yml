@@ -1,0 +1,14 @@
+uuid: ff856bf1-b0d8-48a3-944e-72d9efe50e82
+langcode: en
+status: true
+dependencies:
+  config:
+    - user.role.perls_system_admin
+  module:
+    - user
+id: user_remove_role_action.perls_system_admin
+label: 'Remove the Perls system admin role from the selected user(s)'
+type: user
+plugin: user_remove_role_action
+configuration:
+  rid: perls_system_admin

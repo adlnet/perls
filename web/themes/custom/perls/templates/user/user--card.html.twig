@@ -1,0 +1,52 @@
+{#
+/**
+ * @file
+ * Theme override to present all user data.
+ *
+ * This template is used when viewing a registered user's page,
+ * e.g., example.com/user/123. 123 being the user's ID.
+ *
+ * Available variables:
+ * - content: A list of content items. Use 'content' to print all content, or
+ *   print a subset such as 'content.field_example'. Fields attached to a user
+ *   such as 'user_picture' are available as 'content.user_picture'.
+ * - attributes: HTML attributes for the container element.
+ * - user: A Drupal User entity.
+ * - view_mode: display mode of user.
+ * - created: date of creation. Format of date example 'Friday, June 1, 2019'.
+ * - url: url to edit page of user.
+ *
+ * @see template_preprocess_user()
+ */
+#}
+
+{%
+  set classes = [
+  'c-user-profile',
+  view_mode ? 'c-user-profile--' ~ view_mode|clean_class,
+  'c-user-profile--' ~ role|clean_class,
+  view_mode ? 'c-user--' ~ view_mode|clean_class ~ '--' ~ role|clean_class,
+]
+%}
+<article{{ attributes.addClass(classes) }}>
+  <div class="c-user-profile__card c-card">
+    <div class="c-card__content">
+      <div class="c-card__content__left" style="background-image: url({{ user_picture_uri }})"></div>
+      <div class="c-card__content__right">
+        <div class="c-user-profile__actions">
+          <a class="c-user-profile__actions-edit" href="{{ url }}">Edit</a>
+        </div>
+        <div class="c-user-profile__details">
+          <span class="c-user-profile__details__user-name">{{ content.field_name }}</span>
+          <span class="c-user-profile__details__role">{{ role }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="c-card__footer">
+      <div class="c-user-profile__created">
+        <span class="c-user-profile__created__label">Created</span>
+        <span class="c-user-profile__created__content">{{ created }}</span>
+      </div>
+    </div>
+  </div>
+</article>

@@ -1,0 +1,21 @@
+uuid: 9f51e2c0-eda8-44a8-9371-949cde4c8e7f
+langcode: en
+status: true
+dependencies:
+  module:
+    - pdb_vue
+  theme:
+    - perls_learner
+id: user_task_list_vue_block
+theme: perls_learner
+region: inactive
+weight: 0
+provider: null
+plugin: 'vue_component:user_task_list'
+settings:
+  id: 'vue_component:user_task_list'
+  label: 'User Task List Block'
+  label_display: 0
+  provider: pdb_vue
+  pdb_configuration: null
+visibility: {  }

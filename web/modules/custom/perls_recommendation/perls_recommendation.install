@@ -1,0 +1,165 @@
+<?php
+
+/**
+ * @file
+ * Install scripts and requirements for perls_recommendation module.
+ */
+
+use Drupal\Core\Config\FileStorage;
+use Drupal\Core\Entity\ContentEntityType;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Url;
+
+/**
+ * Implements hook_schema().
+ */
+function perls_recommendation_schema() {
+  $schema['perls_recommendation_item'] = [
+    'description' => 'Stores remote and local references for each item passed to remote recommendation engines, and their state.',
+    'fields' => [
+      'plugin_id' => [
+        'description' => 'The plugin ID of the recommendation this item belongs to',
+        'type' => 'varchar',
+        'length' => 50,
+        'not null' => TRUE,
+      ],
+      'item_id' => [
+        'description' => 'The unique identifier of this item',
+        'type' => 'varchar',
+        'length' => 150,
+        'not null' => TRUE,
+      ],
+      'item_type' => [
+        'description' => 'The entity type of this item',
+        'type' => 'varchar',
+        'length' => 150,
+        'not null' => TRUE,
+      ],
+      'remote_id' => [
+        'description' => 'The ID given to this item by recommendation engine',
+        'type' => 'varchar',
+        'length' => 50,
+        'not null' => TRUE,
+      ],
+      'remote_type' => [
+        'description' => 'The object type given to this item by recommendation engine',
+        'type' => 'varchar',
+        'length' => 50,
+        'not null' => TRUE,
+      ],
+      'status' => [
+        'description' => 'Boolean indicating the sync status, "0" needs syncing, and "1" current',
+        'type' => 'int',
+        'not null' => TRUE,
+      ],
+    ],
+    'indexes' => [
+      'indexing' => ['plugin_id', 'status', 'item_id'],
+    ],
+    'primary key' => ['plugin_id', 'item_id'],
+  ];
+
+  return $schema;
+}
+
+/**
+ * Implements hook_requirements().
+ */
+function perls_recommendation_requirements($phase) {
+  $requirements = [];
+
+  if ($phase == 'runtime') {
+    // 1 - Attempt to gather Recommendation engine status details.
+    try {
+      $recommendationService = \Drupal::service('perls_recommendation.recommend');
+      $response = $recommendationService->checkStatus();
+    }
+    catch (\Exception $e) {
+      $requirements['perls_recommendation']['title'] = t('Recommendation Engine');
+      $requirements['perls_recommendation']['value'] = t('Recommendation Engine service failed to get status.');
+      $requirements['perls_recommendation']['description'] = t('Recommendation engine service failed to get status and returned this Message: @message',
+       [
+         '@message' => $e->getMessage(),
+       ]);
+      $requirements['perls_recommendation']['severity'] = REQUIREMENT_ERROR;
+      return $requirements;
+    }
+    // 2 - Check that check Status returned values.
+    if (empty($response)) {
+      $url = Url::fromRoute('perls_recommendation.admin_settings_form');
+      $requirements['perls_recommendation']['title'] = t('Recommendation Engine');
+      $requirements['perls_recommendation']['value'] = t('No Recommendation Engines Plugins enabled');
+      $requirements['perls_recommendation']['description'] = t('Recommendation Engine not configured. Please ensure you have enabled one of the <a href=":url">Recommendation Plugins</a> .', [':url' => $url->toString()]);
+      $requirements['perls_recommendation']['severity'] = REQUIREMENT_ERROR;
+      // Log connectivity issue.
+      \Drupal::logger('perls_recommendation')
+        ->error('Recommendation engine no recommendation plugins enabled.');
+      return $requirements;
+    }
+    // 3 - Report on each plugin individually.
+    foreach ($response as $id => $data) {
+      $requirements[$id]['title'] = (isset($data['title'])) ? $data['title'] : $id;
+      $requirements[$id]['description'] = (isset($data['description'])) ? $data['description'] : '';
+      if (isset($data['status']) && $data['status'] === TRUE) {
+        $requirements[$id]['value'] = t('Connected and ready to use');
+        $requirements[$id]['severity'] = REQUIREMENT_OK;
+        \Drupal::logger('perls_recommendation')
+          ->info('Recommendation engine @id is enabled and ready to use.', ['@id' => $id]);
+      }
+      else {
+        $requirements[$id]['value'] = t('Not Connected');
+        $requirements[$id]['severity'] = REQUIREMENT_ERROR;
+        \Drupal::logger('perls_recommendation')
+          ->error('Recommendation engine @id is not connected: @reason.',
+            [
+              '@id' => $id,
+              '@reason' => $data['description'],
+            ]
+          );
+      }
+    }
+
+  }
+  return $requirements;
+}
+
+/**
+ * Implements hook_update_N().
+ */
+function perls_recommendation_update_8701() {
+  /** @var \Drupal\Core\Entity\EntityFieldManager $entity_field_manager */
+  $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+  $definition_update_manager->installEntityType(new ContentEntityType([
+    'id' => "user_recommendation_status",
+    'label' => new TranslatableMarkup("User recommendation status"),
+    'handlers' => [
+      "view_builder" => "Drupal\Core\Entity\EntityViewBuilder",
+      "list_builder" => "Drupal\perls_recommendation\UserRecommendationStatusListBuilder",
+      "views_data" => "Drupal\perls_recommendation\Entity\UserRecommendationStatusViewsData",
+      "access" => "Drupal\perls_recommendation\UserRecommendationStatusAccessControlHandler",
+    ],
+    'base_table' => "user_recommendation_status",
+    'translatable' => FALSE,
+    'admin_permission' => "administer user recommendation status entities",
+    'entity_keys' => [
+      "id" => "id",
+      "label" => "user_id",
+      "uuid" => "uuid",
+    ],
+  ]));
+
+  // Install topic_Completed flag.
+  $config_path = '../config/sync';
+  $source      = new FileStorage($config_path);
+
+  \Drupal::service('entity_type.manager')->getStorage('flag')
+    ->create($source->read('flag.flag.topic_completed'))
+    ->save();
+}
+
+/**
+ * Clean up before you uninstall module.
+ */
+function perls_recommendation_uninstall() {
+  \Drupal::database()->truncate('user_recommendation_status')->execute();
+}

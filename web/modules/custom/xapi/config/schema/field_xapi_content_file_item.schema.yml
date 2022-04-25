@@ -1,0 +1,33 @@
+xapi.settings:
+  type: config_object
+  label: 'xAPI content settings'
+  mapping:
+    lrs_url:
+      type: string
+      label: 'LRS endpoint URL'
+    lrs_username:
+      type: string
+      label: 'LRS username'
+    lrs_password:
+      type: string
+      label: 'LRS password'
+
+field.storage_settings.field_xapi_content_file_item:
+  type: field.storage_settings.file
+  label: 'xAPI Content file storage settings'
+
+field.field_settings.field_xapi_content_file_item:
+  type: base_file_field_field_settings
+  label: 'xAPI Content file field settings'
+
+field.formatter.settings.field_xapi_content_file_formatter:
+  type: mapping
+  label: 'xAPI Content file formatter settings'
+
+field.widget.settings.field_xapi_content_file_widget:
+  type: mapping
+  label: 'xAPI Content file widget settings'
+  mapping:
+      progress_indicator:
+        type: string
+        label: 'Progress indicator'

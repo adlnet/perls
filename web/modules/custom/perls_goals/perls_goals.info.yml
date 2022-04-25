@@ -1,0 +1,8 @@
+name: 'Perls Goals'
+type: module
+description: 'User can set goals.'
+core: 8.x
+core_version_requirement: ^8 || ^9
+package: 'Perls'
+dependencies:
+  - perls_api:perls_api

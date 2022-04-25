@@ -1,0 +1,19 @@
+js-client:
+  version: 1.x
+  css:
+    layout:
+      css/VidyoClient.css: {}
+      css/VidyoConnector.css: {}
+      css/VidyoTextChat.css: {}
+      css/Notifications.css: {}
+  js:
+    js/VidyoClient.min.js: {}
+    js/VidyoConnector.js: {}
+    js/VidyoTextChat.js: {}
+    js/Notifications.js: {}
+    js/VidyoInit.js: {}
+  dependencies:
+    - core/jquery
+room-launcher:
+  js:
+    js/RoomLauncher.js: {}

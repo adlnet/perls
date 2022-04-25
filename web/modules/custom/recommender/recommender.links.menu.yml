@@ -1,0 +1,5 @@
+recommender.admin_settings_form:
+  title: "Recommendation Engine Settings"
+  parent: system.admin_config_system
+  description: "Configure Recommendation engine endpoint"
+  route_name: recommender.admin_settings_form

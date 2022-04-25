@@ -1,0 +1,11 @@
+name: 'perls_default_content'
+type: module
+description: 'PERLS Default Content'
+core: 8.x
+core_version_requirement: ^8 || ^9
+package: 'Custom'
+dependencies:
+  - drupal:default_content
+default_content:
+  user:
+    - fada3a59-619f-4554-a599-85de3e73bc41

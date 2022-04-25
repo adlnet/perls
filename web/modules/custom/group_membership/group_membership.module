@@ -1,0 +1,129 @@
+<?php
+
+/**
+ * @file
+ * Contains group_membership.module.
+ */
+
+use Drupal\Component\Serialization\Json;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
+
+/**
+ * Implements hook_help().
+ */
+function group_membership_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the group_membership module.
+    case 'help.page.group_membership':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Adds filters and fields to more easily work with group membership.') . '</p>';
+      return $output;
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function group_membership_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $bundles = \Drupal::service('entity_type.bundle.info')->getBundleInfo('group');
+  $join_form_ids = [];
+  $leave_form_ids = [];
+  foreach (array_keys($bundles) as $id) {
+    $join_form_ids[] = 'group_content_' . $id . '-group_membership_group-join_form';
+    $leave_form_ids[] = 'group_content_' . $id . '-group_membership_group-leave_form';
+  }
+
+  if (in_array($form_id, $leave_form_ids) && isset($form['description'])) {
+    $form['description']['#markup'] = t('If you leave this group, you will no longer be able to access content specific to this group. You can always re-join the group if you change your mind later.');
+  }
+
+  if (in_array($form_id, $join_form_ids)) {
+    $form['description']['#markup'] = t('You are about to join a new group, this is will give you access to content in this group. If you change your mind you can easily leave the group at any time.');
+  }
+
+}
+
+/**
+ * Implements hook_entity_extra_field_info().
+ */
+function group_membership_entity_extra_field_info() {
+  $extra = [];
+
+  $types = \Drupal::entityTypeManager()
+    ->getStorage('group_type')
+    ->loadMultiple();
+
+  foreach ($types as $id => $type) {
+    $extra['group'][$id]['display']['membership_link'] = [
+      'label' => t('Join/Leave group link'),
+      'description' => t('Link to either leave or join the group'),
+      'weight' => 10,
+    ];
+  }
+
+  return $extra;
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_view() for group.
+ *
+ * Renders the join/leave group link.
+ */
+function group_membership_group_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+  if ($display->getComponent('membership_link')) {
+    $group = $entity;
+    $user = \Drupal::currentUser();
+    $current_path = Url::fromRoute('<current>')->toString();
+    $link = NULL;
+
+    if (!$group->getMember($user) && $group->access('join group')) {
+      $link = [
+        '#title' => t('Join group'),
+        '#type' => 'link',
+        '#url' => Url::fromRoute('entity.group.join', ['group' => $group->id()], ['query' => ['destination' => $current_path]]),
+        '#attributes' => [
+          'class' => ['button', 'use-ajax'],
+          'data-dialog-type' => 'modal',
+          'data-dialog-options' => Json::encode([
+            'width' => 700,
+          ]),
+        ],
+        '#cache' => [
+          'context' => ['user'],
+          'tags' => ['group_content_list'],
+        ],
+      ];
+    }
+    elseif (($membership = $group->getMember($user)) && $group->access('leave group')) {
+      $link = [
+        '#title' => t('Leave group'),
+        '#type' => 'link',
+        '#url' => Url::fromRoute('entity.group.leave', ['group' => $group->id()], ['query' => ['destination' => $current_path]]),
+        '#attributes' => [
+          'class' => ['button', 'use-ajax'],
+          'data-dialog-type' => 'modal',
+          'data-dialog-options' => Json::encode([
+            'width' => 700,
+          ]),
+        ],
+        '#cache' => [
+          'context' => $membership->getCacheContexts(),
+          'tags' => $membership->getCacheTags(),
+        ],
+      ];
+    }
+
+    if ($link) {
+      $build['membership_link'] = [
+        '#type' => 'container',
+        '#attributes' => ['class' => 'membership-link'],
+        'link' => $link,
+      ];
+    }
+  }
+}

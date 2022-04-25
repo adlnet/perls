@@ -1,0 +1,132 @@
+uuid: bc98c92b-4e32-4d45-a7f3-19a8dc703679
+langcode: en
+status: true
+dependencies:
+  config:
+    - filter.format.basic_filter
+    - filter.format.card_styling
+    - filter.format.inline_styling
+    - filter.format.list
+    - rest.resource.annotations_resource
+    - rest.resource.available_badges_api
+    - rest.resource.browse_resource
+    - rest.resource.channels_resource
+    - rest.resource.comment
+    - rest.resource.comments
+    - rest.resource.configuration_settings_resource
+    - rest.resource.current_user_resource
+    - rest.resource.earned_certificate_api
+    - rest.resource.me
+    - rest.resource.membership_resource
+    - rest.resource.push_notification_tokens
+    - rest.resource.site_dashboard_resource
+    - rest.resource.switches_rest_resource
+    - rest.resource.user_stats_resource
+    - workflows.workflow.content_moderation
+  module:
+    - achievements
+    - comment
+    - content_moderation
+    - disable_messages
+    - entity_browser
+    - field_permissions
+    - filter
+    - flag
+    - form_mode_manager
+    - media
+    - node
+    - rest
+    - save_edit
+    - simple_oauth
+    - system
+    - task
+    - taxonomy
+    - veracity_vql
+    - vidyo_platform
+    - webform
+    - xapi
+_core:
+  default_config_hash: dJ0L2DNSj5q6XVZAGsuVDpJTh5UeYkIPwKrUOOpr8YI
+id: authenticated
+label: Learner
+weight: -9
+is_admin: false
+permissions:
+  - 'access achievements'
+  - 'access comments'
+  - 'access content'
+  - 'access image_browser entity browser pages'
+  - 'access taxonomy overview'
+  - 'access veracity charts'
+  - 'access vidyo rooms'
+  - 'cancel account'
+  - 'communicate lrs endpoint'
+  - 'create user_task task'
+  - 'delete own user_task task'
+  - 'earn achievements'
+  - 'edit own comments'
+  - 'edit own user_task task'
+  - 'edit own webform submission'
+  - 'flag bookmark'
+  - 'flag completed'
+  - 'flag following'
+  - 'flag started_course'
+  - 'flag test_results'
+  - 'grant simple_oauth codes'
+  - 'post comments'
+  - 'restful delete comment'
+  - 'restful delete membership_resource'
+  - 'restful delete push_notification_tokens'
+  - 'restful get annotations_resource'
+  - 'restful get available_badges_api'
+  - 'restful get browse_resource'
+  - 'restful get channels_resource'
+  - 'restful get comments'
+  - 'restful get configuration_settings_resource'
+  - 'restful get current_user_resource'
+  - 'restful get earned_certificate_api'
+  - 'restful get me'
+  - 'restful get membership_resource'
+  - 'restful get site_dashboard_resource'
+  - 'restful get switches_rest_resource'
+  - 'restful get user_stats_resource'
+  - 'restful patch comment'
+  - 'restful patch current_user_resource'
+  - 'restful post comments'
+  - 'restful post membership_resource'
+  - 'restful post push_notification_tokens'
+  - 'restful put comment'
+  - 'skip comment approval'
+  - 'unflag bookmark'
+  - 'unflag following'
+  - 'use content_moderation transition create_new_draft'
+  - 'use content_moderation transition restore_to_draft'
+  - 'use content_moderation transition return_to_draft'
+  - 'use content_moderation transition send_for_review'
+  - 'use node.default form mode'
+  - 'use save and edit'
+  - 'use text format basic_filter'
+  - 'use text format card_styling'
+  - 'use text format inline_styling'
+  - 'use text format list'
+  - 'use user.default form mode'
+  - 'view error messages'
+  - 'view field_completion_strategy'
+  - 'view field_difficulty'
+  - 'view field_flash_card'
+  - 'view field_quiz'
+  - 'view field_tip_card'
+  - 'view latest version'
+  - 'view media'
+  - 'view own field_completion_strategy'
+  - 'view own field_difficulty'
+  - 'view own field_flash_card'
+  - 'view own field_quiz'
+  - 'view own field_tip_card'
+  - 'view own unpublished content'
+  - 'view own user_task task'
+  - 'view own webform submission'
+  - 'view paragraph content xapi_package'
+  - 'view status messages'
+  - 'view user_task revisions'
+  - 'view warning messages'

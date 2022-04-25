@@ -1,0 +1,12 @@
+uuid: 5322d3da-ce97-44d2-8867-d172f54c4810
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: AMwKi9GpXHMHAIDZZXJ1znA7ep5atwgP6cCrAXtKV90
+id: audio
+label: Audio
+icon_uuid: null
+icon_default: null
+description: 'Add an audio file'
+behavior_plugins: {  }

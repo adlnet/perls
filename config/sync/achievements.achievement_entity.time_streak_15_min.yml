@@ -1,0 +1,22 @@
+uuid: e0afb66d-765a-4da1-9ba7-fd0f8fdacd1d
+langcode: en
+status: true
+dependencies:
+  module:
+    - badges
+third_party_settings:
+  badges:
+    plugin_id: time_based_badge_plugin
+    badge_type: 'Time Attack'
+    time_based_badge_plugin:
+      minutes: '15'
+id: time_streak_15_min
+label: 'Time Streak 15 min'
+description: 'Awarded to any user who uses the app for 15 minutes.'
+secret: false
+invisible: false
+manual_only: null
+points: 1
+use_default_image: false
+locked_image_path: 'public://badges/lockedBadge.png'
+unlocked_image_path: 'public://badges/15minutes.png'

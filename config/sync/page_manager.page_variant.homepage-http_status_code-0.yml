@@ -1,0 +1,32 @@
+uuid: 90673113-d37f-4dc8-a8e1-202d18d014ac
+langcode: en
+status: true
+dependencies:
+  config:
+    - page_manager.page.homepage
+  module:
+    - user
+id: homepage-http_status_code-0
+label: 'Content Manager''s Homepage'
+weight: -10
+variant: http_status_code
+variant_settings:
+  id: http_status_code
+  label: null
+  weight: 0
+  uuid: 64927b37-0ba1-479e-84b6-be4148af6dbb
+  status_code: 302
+  redirect_location: /dashboard
+page: homepage
+selection_criteria:
+  -
+    id: user_role
+    negate: false
+    context_mapping:
+      user: '@user.current_user_context:current_user'
+    roles:
+      sysadmin: sysadmin
+      content_manager: content_manager
+      perls_system_admin: perls_system_admin
+selection_logic: and
+static_context: {  }

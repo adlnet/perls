@@ -1,0 +1,19 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - content_moderation
+    - user
+id: content_moderation_state.field_reviewer
+field_name: field_reviewer
+entity_type: content_moderation_state
+type: entity_reference
+settings:
+  target_type: user
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

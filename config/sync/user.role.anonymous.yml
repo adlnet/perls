@@ -1,0 +1,20 @@
+uuid: 230e5535-1a2f-4d22-b1b5-ad5ea0d81556
+langcode: en
+status: true
+dependencies:
+  module:
+    - disable_messages
+    - form_mode_manager
+    - media
+_core:
+  default_config_hash: j5zLMOdJBqC0bMvSdth5UebkprJB8g_2FXHqhfpJzow
+id: anonymous
+label: 'Anonymous user'
+weight: -10
+is_admin: false
+permissions:
+  - 'use user.default form mode'
+  - 'view error messages'
+  - 'view media'
+  - 'view status messages'
+  - 'view warning messages'

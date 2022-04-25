@@ -1,0 +1,12 @@
+perls_content.manage.categories:
+  title: Categories
+  description: Manage categories
+  route_name: perls_content.manage.categories
+  parent: system.admin
+  weight: -200
+perls_content.perls_config_form:
+  title: 'Perls Settings'
+  route_name: perls_content.perls_config_form
+  description: 'Basic settings for Perls'
+  parent: system.admin_config_system
+  weight: 99

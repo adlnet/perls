@@ -1,0 +1,15 @@
+uuid: f38b954d-13b6-44ac-a9d6-2ad4e08271fa
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - switches
+_core:
+  default_config_hash: zEUwEjx-CoCw0FKtCPni6icPFPyEq8ALhg7vY-Jsuyo
+id: offline_support
+label: 'Offline Support'
+description: 'Switch for offline support'
+activationConditions: {  }
+activationMethod: manual
+manualActivationStatus: true

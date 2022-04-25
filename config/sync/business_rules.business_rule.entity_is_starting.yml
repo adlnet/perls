@@ -1,0 +1,19 @@
+uuid: df192e40-96f6-47e3-8987-715c6f12aa4b
+langcode: en
+status: true
+dependencies:
+  config:
+    - business_rules.action.promote_to_front_page_action
+id: entity_is_starting
+label: 'Entity is starting'
+description: 'Actions to be made when an entity is starting.'
+reacts_on: entity_is_starting
+target_entity_type: node
+target_bundle: event
+items:
+  promote_to_front_page_action:
+    type: action
+    id: promote_to_front_page_action
+    weight: -9
+tags: {  }
+enabled: null

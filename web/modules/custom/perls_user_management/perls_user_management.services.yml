@@ -1,0 +1,13 @@
+services:
+  perls_user_management.route_subscriber:
+    class: Drupal\perls_user_management\Routing\RouteSubscriber
+    tags:
+      - { name: event_subscriber }
+  perls_user_management.cancel_own_account_access:
+    class: Drupal\perls_user_management\Access\CancelOwnAccountAccess
+    arguments: ['@perls_user_management.registration_access_check']
+    tags:
+      - { name: access_check, applies_to: _cancel_own_account }
+  perls_user_management.registration_access_check:
+    class: Drupal\perls_user_management\RegistrationAccessCheck
+    arguments: ['@config.factory', '@current_user', '@entity_type.manager']

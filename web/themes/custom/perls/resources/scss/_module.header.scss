@@ -1,0 +1,193 @@
+/* ------------------------------------ *\
+    $HEADER
+\* ------------------------------------ */
+
+.c-header {
+  display: flex;
+  flex-direction: row;
+  padding-top: $space-double;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+
+  &__logo {
+    align-self: flex-start;
+    text-align: center;
+    width: var(--l-sidebar-width, $l-sidebar-width);
+    padding-top: $space;
+    padding-bottom: $space;
+
+    @include logo;
+  }
+
+  &__content {
+    padding: 0 $space $space-double $space;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    flex-direction: column;
+    width: var(--l-main-width, $l-main-width);
+
+    @include media(">xlarge") {
+      flex-direction: row;
+      padding: 0 $space-double $space-double $space-double;
+    }
+
+
+    &--left {
+      order: 1;
+
+      @include media(">large") {
+        order: 0;
+      }
+    }
+
+    &--right {
+      order: 0;
+      display: flex;
+      flex-wrap: nowrap;
+      justify-content: flex-end;
+      align-items: center;
+      margin: $space-half 0;
+      width: 100%;
+
+      & > * + * {
+        margin-left: $space;
+      }
+
+      @include media(">large") {
+        order: 1;
+        width: auto;
+        margin: 0 0 0 $space;
+
+        & > * + * {
+          margin-left: $space-double;
+        }
+      }
+    }
+  }
+
+  &__tabs {
+    width: 100%;
+    padding: 0 $space $space-half $space-half;
+
+    @include media(">large") {
+      padding-left: $space-and-half;
+    }
+  }
+
+  &--learner {
+    margin-bottom: $space-double;
+    box-shadow: 0 0 10px $c-shadow;
+
+    .c-header__logo {
+      padding-left: $space;
+      text-align: left;
+      width: 50%;
+
+      @include media(">large") {
+        padding-left: $space-double;
+        width: var(--l-sidebar-width, $l-sidebar-width);
+      }
+    }
+
+    .c-header__content {
+      flex-direction: row;
+      flex-wrap: nowrap;
+      width: auto;
+      padding-bottom: 0;
+      justify-content: flex-end;
+      padding-right: $space-double;
+
+      @include media(">xxxlarge") {
+        padding-right: $space-double;
+        padding-bottom: $space;
+      }
+
+      @include media(">large") {
+        padding-bottom: $space;
+      }
+
+      & > * + * {
+        @include media(">xlarge") {
+          margin-left: $space;
+        }
+
+        @include media(">xxxlarge") {
+          margin-left: $space-double;
+        }
+      }
+    }
+
+    @include media("<=large") {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding-top: 0;
+      box-shadow: none;
+
+      .c-header__logo {
+        order: 1;
+        padding: 0 $space $space $space;
+      }
+
+      .c-header__content {
+        width: 100%;
+        order: 0;
+        padding: 0 $space;
+        padding-top: 70px;
+        display: flex;
+        flex-direction: row;
+
+        .c-nav__learner {
+          width: 100%;
+          flex: auto;
+          position: absolute;
+          top: 0;
+          left: 0;
+          height: 50px;
+          align-items: center;
+          justify-content: center;
+          overflow: hidden;
+
+          ul {
+            height: 100%;
+            display: flex;
+            align-items: stretch;
+          }
+        }
+      }
+
+      .c-header__tabs {
+        order: 2;
+      }
+    }
+  }
+}
+
+// Adjuct header for Learner article create/edit page
+.perls-content-manager.l-page--path--node:not(.toolbar-fixed) {
+  .c-header__content--left {
+    flex: 1;
+  }
+
+  .c-header__content--right {
+    align-self: flex-start;
+  }
+
+  .c-nav__learner {
+    margin-top: 25px;
+    margin-bottom: 20px;
+
+    ul {
+      justify-content: flex-end;
+    }
+  }
+}
+
+// Adjust heading for dragable field.
+table .label {
+  display: inline-block;
+}

@@ -1,0 +1,13 @@
+services:
+  perls_recommendation.recommend:
+    class: Drupal\perls_recommendation\RecommendService
+    arguments:
+      - "@current_user"
+      - "@config.factory"
+      - "@queue"
+      - "@plugin.manager.recommendation_engine"
+      - "@flag"
+      - "@entity_type.manager"
+  plugin.manager.recommendation_engine:
+    class: Drupal\perls_recommendation\RecommendationEnginePluginManager
+    parent: default_plugin_manager

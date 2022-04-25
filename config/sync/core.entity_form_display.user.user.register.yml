@@ -1,0 +1,149 @@
+uuid: 4407c4c2-48a2-41f5-a24e-0d56f077e890
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_form_mode.user.register
+    - field.field.user.user.field_add_groups
+    - field.field.user.user.field_goal_log
+    - field.field.user.user.field_goal_monthly_course_comp
+    - field.field.user.user.field_goal_weekly_completions
+    - field.field.user.user.field_goal_weekly_test_average
+    - field.field.user.user.field_goal_weekly_views
+    - field.field.user.user.field_interests
+    - field.field.user.user.field_name
+    - field.field.user.user.field_notification_days
+    - field.field.user.user.field_notification_time
+    - field.field.user.user.field_organization_homepage
+    - field.field.user.user.field_organization_identifier
+    - field.field.user.user.user_picture
+    - image.style.user_profile_circle
+  module:
+    - field_group
+    - field_layout
+    - image
+    - layout_discovery
+    - perls_user
+    - user
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings:
+      label: ''
+  field_group:
+    group_step_1_basic_info:
+      children:
+        - field_name
+        - account
+        - user_picture
+        - timezone
+      label: 'Tell us about yourself'
+      region: content
+      parent_name: ''
+      weight: 0
+      format_type: form_step
+      format_settings:
+        next_button_text: Continue
+        back_button_show: '1'
+        back_button_text: ''
+        id: ''
+        classes: ''
+        show_step_title: 0
+    group_step_2_groups:
+      children:
+        - field_add_groups
+      label: 'Join a Group'
+      region: content
+      parent_name: ''
+      weight: 1
+      format_type: form_step
+      format_settings:
+        next_button_text: Continue
+        back_button_show: '1'
+        back_button_text: ''
+        id: ''
+        classes: ''
+        show_step_title: 0
+    group_step_3_topics:
+      children:
+        - field_interests
+      label: 'What are you interested in?'
+      region: content
+      parent_name: ''
+      weight: 2
+      format_type: form_step
+      format_settings:
+        next_button_text: Finish
+        back_button_show: '1'
+        back_button_text: ''
+        id: ''
+        classes: register-step
+        show_step_title: 0
+_core:
+  default_config_hash: IiUTp1Z1vK4YvGt1rFZm_lg79Q6UKh9nU2B9nCsur5Y
+id: user.user.register
+targetEntityType: user
+bundle: user
+mode: register
+content:
+  account:
+    weight: 2
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  contact:
+    weight: 5
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_add_groups:
+    type: filtered_with_isotope_widget
+    weight: 4
+    region: content
+    settings:
+      placeholder: 'Start typing a group name...'
+    third_party_settings: {  }
+  field_interests:
+    type: filtered_with_isotope_widget
+    weight: 21
+    region: content
+    settings:
+      placeholder: 'Start typing a topic...'
+    third_party_settings: {  }
+  field_name:
+    type: string_textfield
+    weight: 1
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  timezone:
+    weight: 4
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  user_picture:
+    type: image_image
+    weight: 3
+    region: content
+    settings:
+      progress_indicator: throbber
+      preview_image_style: user_profile_circle
+    third_party_settings: {  }
+hidden:
+  entitygroupfield: true
+  field_goal_log: true
+  field_goal_monthly_course_comp: true
+  field_goal_weekly_completions: true
+  field_goal_weekly_test_average: true
+  field_goal_weekly_views: true
+  field_notification_days: true
+  field_notification_time: true
+  field_organization_homepage: true
+  field_organization_identifier: true
+  group_content: true
+  langcode: true
+  language: true
+  path: true
+  simplesamlphp_auth_user_enable: true

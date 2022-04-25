@@ -1,0 +1,11 @@
+services:
+  perls_learner.redirectlearnerlink:
+    class: Drupal\perls_learner\EventSubscriber\LearnerLinkSubscriber
+    arguments: ['@current_user', '@flag', '@plugin.manager.state_manager']
+    tags:
+      - { name: event_subscriber }
+  perls_learner.clear_entity_cache:
+    class: Drupal\perls_learner\EventSubscriber\FlagEventSubscriber
+    arguments: ['@cache_tags.invalidator']
+    tags:
+      - { name: event_subscriber }

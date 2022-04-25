@@ -1,0 +1,27 @@
+/* ------------------------------------ *\
+    $HELPER/TRUMP CLASSES
+\* ------------------------------------ */
+
+/**
+ * Completely remove from the flow but leave available to screen readers.
+ */
+.is-vishidden,
+.visually-hidden {
+  position: absolute !important;
+  overflow: hidden;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  border: 0;
+  clip: rect(1px, 1px, 1px, 1px);
+}
+
+.is-vishidden,
+.visually-hidden,
+input[type="hidden"] {
+  margin-top: 0 !important;
+}
+
+.stop-scroll {
+  overflow: hidden;
+}

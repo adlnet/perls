@@ -1,0 +1,23 @@
+uuid: 04d75a08-bc20-4e01-bc01-58307b930a53
+langcode: en
+status: true
+dependencies:
+  module:
+    - user
+id: analytics
+label: Analytics
+description: ''
+use_admin_theme: false
+path: /analytics/overview
+access_logic: and
+access_conditions:
+  -
+    id: user_role
+    negate: false
+    context_mapping:
+      user: '@user.current_user_context:current_user'
+    roles:
+      content_manager: content_manager
+      perls_system_admin: perls_system_admin
+      sysadmin: sysadmin
+parameters: {  }

@@ -1,0 +1,27 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - comment.type.moderation
+    - field.field.comment.moderation.comment_message
+id: comment.moderation.default
+targetEntityType: comment
+bundle: moderation
+mode: default
+content:
+  author:
+    weight: 1
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  comment_message:
+    type: string_textarea
+    weight: 0
+    region: content
+    settings:
+      rows: 3
+      placeholder: 'Add a note...'
+    third_party_settings: {  }
+hidden:
+  langcode: true
+  subject: true

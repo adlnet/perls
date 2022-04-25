@@ -1,0 +1,70 @@
+uuid: 7ba76e6d-ed73-4683-a106-3f975aac1461
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_file
+    - node.type.learn_file
+    - paragraphs.paragraphs_type.document
+  module:
+    - entity_reference_revisions
+id: node.learn_file.field_file
+field_name: field_file
+entity_type: node
+bundle: learn_file
+label: File
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      document: document
+    negate: 0
+    target_bundles_drag_drop:
+      audio:
+        weight: 15
+        enabled: false
+      callout:
+        weight: 16
+        enabled: false
+      checklist:
+        weight: 17
+        enabled: false
+      document:
+        weight: 18
+        enabled: true
+      heading:
+        weight: 19
+        enabled: false
+      image:
+        weight: 20
+        enabled: false
+      layout_two_column:
+        weight: 21
+        enabled: false
+      list_ordered:
+        weight: 22
+        enabled: false
+      list_unordered:
+        weight: 23
+        enabled: false
+      quiz_option:
+        weight: 24
+        enabled: false
+      references:
+        weight: 25
+        enabled: false
+      table:
+        weight: 26
+        enabled: false
+      text:
+        weight: 27
+        enabled: false
+      video:
+        weight: 28
+        enabled: false
+field_type: entity_reference_revisions

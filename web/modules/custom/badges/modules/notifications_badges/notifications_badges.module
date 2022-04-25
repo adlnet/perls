@@ -1,0 +1,67 @@
+<?php
+
+/**
+ * @file
+ * Contains notifications_badges.module.
+ */
+
+use Drupal\achievements\Entity\AchievementEntity;
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Send a push notification if badge is awarded.
+ */
+function notifications_badges_achievements_unlocked(AchievementEntity $achievement, $uid) {
+  // Only send push notifcations if that setting is enabled.
+  if (!\Drupal::config('achievements.settings')->get('send_notification') ?: 0) {
+    return;
+  }
+
+  $push_notification_service = \Drupal::service('notifications.firebase.message');
+  $uid = $uid ?: \Drupal::currentUser()->id();
+  if ($push_notification_service->isRegisteredForNotifications($uid)) {
+    $push_notification_service->sendPushNotification(
+      t('You earned @badge', ['@badge' => $achievement->label()]),
+      $achievement->getDescription(),
+      $uid,
+      [
+        'action' => 'achievementEarned',
+        'item' => [
+          'type' => $achievement->getType(),
+          'url' => $achievement->getType() . '/' . $achievement->uuid(),
+        ],
+      ]
+    );
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function notifications_badges_form_achievements_admin_form_alter(&$form, FormStateInterface $form_state) {
+  $config = \Drupal::config('achievements.settings');
+  $form['send_notification'] =
+    [
+      '#type' => 'select',
+      '#title' => 'Send Push Notifications',
+      '#description' => 'Send a push notification to user when an achievement is earned.',
+      '#options' =>
+      [
+        0 => 'No',
+        1 => 'Yes',
+      ],
+      '#default_value' => $config->get('send_notification') ?: 0,
+      '#weight' => -1,
+    ];
+
+  $form['#submit'][] = 'notifications_badges_achievements_admin_submit';
+}
+
+/**
+ * Method to save send noticiation settings.
+ */
+function notifications_badges_achievements_admin_submit(&$form, FormStateInterface $form_state) {
+  $config = \Drupal::service('config.factory')->getEditable('achievements.settings');
+  $config->set('send_notification', $form_state->getValue('send_notification'));
+  $config->save();
+}

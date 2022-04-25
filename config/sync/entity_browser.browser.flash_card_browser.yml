@@ -1,0 +1,42 @@
+uuid: 3bb78050-aaf5-451b-a1a7-53bf4daf4f9d
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.entity_browser_lists
+  module:
+    - entity_browser_entity_form
+    - views
+name: flash_card_browser
+label: 'Flashcard browser'
+display: modal
+display_configuration:
+  width: ''
+  height: ''
+  link_text: 'Add flashcard'
+  auto_open: false
+selection_display: no_display
+selection_display_configuration: {  }
+widget_selector: tabs
+widget_selector_configuration: {  }
+widgets:
+  d87f4391-86aa-46f6-8800-e532c8c7c397:
+    id: entity_form
+    uuid: d87f4391-86aa-46f6-8800-e532c8c7c397
+    label: 'New flashcard'
+    weight: -9
+    settings:
+      submit_text: 'Create flashcard'
+      entity_type: node
+      bundle: flash_card
+      form_mode: default
+  aa5aa8c3-f214-46d1-bcb1-566371dedbcb:
+    id: view_exclude_selection
+    uuid: aa5aa8c3-f214-46d1-bcb1-566371dedbcb
+    label: 'Existing flashcards'
+    weight: -10
+    settings:
+      view: entity_browser_lists
+      view_display: entity_browser_flash_cards
+      submit_text: 'Add flashcard'
+      auto_select: 0

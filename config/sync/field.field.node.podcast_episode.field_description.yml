@@ -1,0 +1,31 @@
+uuid: 2c991622-cd70-46fe-8c9c-4f73f2c1c069
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_description
+    - node.type.podcast_episode
+  module:
+    - allowed_formats
+    - text
+third_party_settings:
+  allowed_formats:
+    plain_text: plain_text
+    basic_filter: '0'
+    card_styling: '0'
+    custom_view_header: '0'
+    inline_styling: '0'
+    list: '0'
+    table: '0'
+id: node.podcast_episode.field_description
+field_name: field_description
+entity_type: node
+bundle: podcast_episode
+label: Description
+description: 'A good description contains a brief overview and list of topics covered in this episode. It''s also a good place to give credit to any special guests that may be appearing in this episode.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

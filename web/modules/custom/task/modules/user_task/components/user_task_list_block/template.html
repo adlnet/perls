@@ -1,0 +1,95 @@
+<section class="userTaskListApp">
+  <div class="task-list" :class="{ready: isPageReady}">
+    <div class="task-list__add-container">
+      <div v-if="tasks.length < 10">
+        <button class="task__add button button--primary" v-on:click="addNewTask()">
+          <svg id="custom-goal-svg" width="23" height="22" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:avocode="https://avocode.com/" viewBox="0 0 23 22"><g><g><title>Path 971</title><path d="M19.4668,21.86597h-18c-0.55228,0 -1,-0.44772 -1,-1v-18c0,-0.55228 0.44772,-1 1,-1h14v0v2v0h-13v0v16v0h16v0v-10v0h2v0v11c0,0.55228 -0.44772,1 -1,1z" fill="#ffffff" fill-opacity="1"></path></g><g><title>Path 970</title><path d="M10.4668,13.86597c-0.26498,0 -0.51932,-0.10534 -0.70685,-0.29285l-4.70715,-4.70715v0l1.414,-1.414v0l4,4v0l11,-11v0l1.414,1.414v0l-11.707,11.707c-0.18749,0.18755 -0.4418,0.29294 -0.707,0.293z" fill="#ffffff" fill-opacity="1"></path></g></g></svg>
+          <span class="task__add-text">Add Custom Goal</span>
+        </button>
+        <div v-if="tasks.length === 0" class="task-list__notice-message">
+          <span class="message">You have not created any goals yet.</span>
+        </div>
+      </div>
+      <div v-if="tasks.length >= 10" class="task-list__notice-message">
+        <span class="message">You have 10 active goals. Try updating or completing your current goals.</span>
+      </div>
+    </div>
+    <div v-if="tasks.length > 1" class="task__drag-to-reorder">
+      <input
+        id="disabled"
+        type="checkbox"
+        v-model="userDragEnabled"
+        class="form-check-input"
+      />
+      <label class="form-check-label" for="disabled">Drag to Re-Order</label>
+    </div>
+    <draggable v-model="tasks" draggable=".task" class="task-list__task-container" :disabled="!userDragEnabled || dialogActive">
+      <div v-for="task in tasks" :key="task.id" class="task">
+        <div v-if="!task.isEditing" class="task__complete">
+          <button class="complete-task" v-on:click="markTaskAsComplete(task)">
+            Mark as Completed
+            <svg id="SVGDoc" width="25" height="19" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:avocode="https://avocode.com/" viewBox="0 0 25 19"><defs></defs><g><g><title>Line 272</title><path d="M1.25,9.5l9,8" fill-opacity="0" fill="#ffffff" stroke-dashoffset="0" stroke-linejoin="miter" stroke-linecap="butt" stroke-opacity="1" stroke="#ffffff" stroke-miterlimit="20" stroke-width="3"></path></g><g><title>Line 273</title><path d="M22.75,1.5l-14,16" fill-opacity="0" fill="#ffffff" stroke-dashoffset="0" stroke-linejoin="miter" stroke-linecap="butt" stroke-opacity="1" stroke="#ffffff" stroke-miterlimit="20" stroke-width="3"></path></g></g></svg>
+          </button>
+        </div>
+        <div class="task__name">
+          <span v-if="!task.isEditing">{{ task.name }}</span>
+          <input v-else type="text" :value="task.name" v-on:keyup="validateTask(task)" v-on:keyup.enter="saveTask(task)" v-model="task.name"/>
+        </div>
+        <div v-if="!task.isEditing" class="task__edit">
+          <button class="edit" v-on:click="task.isEditing = !task.isEditing">
+            <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 32 32" style="enable-background:new 0 0 32 32;" xml:space="preserve"> <g> <path class="st0" d="M8.4,23.6l2.7-8.1L26,0.6L31.4,6L16.5,20.9L8.4,23.6z M12.9,16.5l-1.3,3.9l3.9-1.3L28.6,6L26,3.4L12.9,16.5z M16,20L16,20L16,20z"/> </g> <path class="st0" d="M25.7,16.6v11c0,0.9-0.7,1.7-1.7,1.7H4.5c-0.9,0-1.7-0.7-1.7-1.7V8.1c0-0.9,0.7-1.7,1.7-1.7h11.1v-2H4.5 c-2,0-3.7,1.6-3.7,3.7v19.5c0,2,1.6,3.7,3.7,3.7H24c2,0,3.7-1.6,3.7-3.7v-11H25.7z"/> </svg>
+            Edit
+          </button>
+        </div>
+        <div v-if="task.isEditing" class="task__save">
+          <button class="save" v-on:click="saveTask(task)">
+            <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 32 32" style="enable-background:new 0 0 32 32;" xml:space="preserve"> <g> <polyline class="st0" points="20,6 20,11 7,11 7,6 	"/> <polyline class="st0" points="7,26 7,19 25,19 25,26 	"/> <path class="st0" d="M27,30H5c-1.7,0-3-1.3-3-3V5c0-1.7,1.3-3,3-3h19l6,6v19C30,28.7,28.7,30,27,30z"/> </g> </svg>
+            Save
+          </button>
+        </div>
+        <div v-if="task.isEditing" class="task__cancel">
+          <button class="cancel" v-on:click="cancelEditTask(task)">
+            <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve"> <g> <rect x="1.1" y="11" transform="matrix(0.7071 -0.7071 0.7071 0.7071 -4.9706 12)" class="st0" width="21.8" height="2"/> <rect x="11" y="1.1" transform="matrix(0.7071 -0.7071 0.7071 0.7071 -4.9706 12)" class="st0" width="2" height="21.8"/> </g> </svg>
+            Cancel
+          </button>
+        </div>
+        <div v-if="!task.isEditing" class="task__delete">
+          <button class="destroy" v-bind:data-a11y-dialog-show="'task__delete-dialog-' + task.id"></button>
+          <div
+          class="task__delete-dialog dialog-container"
+          v-bind:id="'task__delete-dialog-' + task.id"
+          aria-hidden="true"
+          >
+          <div class="dialog-overlay" data-a11y-dialog-hide></div>
+          <div class="dialog-content" role="document">
+            <h4>Are you sure you want to delete "{{ task.name }}"?</h4>
+            <div class="task__delete-dialog-prompt">
+              <input
+              type="submit"
+              class="dialog-confirm button button--primary"
+              aria-label="Delete the goal"
+              v-on:click="deleteTask(task)"
+              value="Delete"
+              >
+              <input
+              data-a11y-dialog-hide
+              class="dialog-close"
+              aria-label="Close this dialog and preserve goal"
+              value="Cancel"
+              type="submit"
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+      <transition name="slide-fade">
+        <div class="task__errors" :class="" v-if="task.errors.length">
+          <ul>
+            <li v-for="error in task.errors">{{ error }}</li>
+          </ul>
+        </div>
+      </transition>
+    </div>
+  </draggable>
+</div>
+</section>

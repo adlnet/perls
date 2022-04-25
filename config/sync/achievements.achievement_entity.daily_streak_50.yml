@@ -1,0 +1,22 @@
+uuid: 7f416aa0-268c-4792-a49f-a2135cd8d718
+langcode: en
+status: true
+dependencies:
+  module:
+    - badges
+third_party_settings:
+  badges:
+    plugin_id: streak_badge_plugin
+    streak_badge_plugin:
+      days: '50'
+    badge_type: 'Log in Streak'
+id: daily_streak_50
+label: 'Daily Streak 50'
+description: 'Awarded to any user who achieves a streak of 50.'
+secret: false
+invisible: false
+manual_only: null
+points: 1
+use_default_image: false
+locked_image_path: 'public://badges/lockedBadge.png'
+unlocked_image_path: 'public://badges/50daystreak.png'

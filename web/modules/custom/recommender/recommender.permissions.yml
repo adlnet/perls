@@ -1,0 +1,19 @@
+add user recommendation status entities:
+  title: "Create new User recommendation status entities"
+
+administer user recommendation status entities:
+  title: "Administer User recommendation status entities"
+  description: "Allow to access the administration form to configure User recommendation status entities."
+  restrict access: true
+
+delete user recommendation status entities:
+  title: "Delete User recommendation status entities"
+
+edit user recommendation status entities:
+  title: "Edit User recommendation status entities"
+
+view published user recommendation status entities:
+  title: "View published User recommendation status entities"
+
+view unpublished user recommendation status entities:
+  title: "View unpublished User recommendation status entities"

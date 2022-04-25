@@ -1,0 +1,23 @@
+/* ------------------------------------ *\
+    Logo
+\* ------------------------------------ */
+
+@mixin logo($size: 120px) {
+  text-align: center;
+
+  img {
+    display: inline-block;
+    height: auto;
+    max-height: $size;
+    // In most cases, we're height-constrained--so we allow the logo to be up to twice the width as it is tall.
+    max-width: $size * 2;
+  }
+}
+
+@mixin small-logo {
+  @include logo(100px);
+}
+
+@mixin big-logo {
+  @include logo(200px);
+}

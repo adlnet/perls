@@ -1,0 +1,10 @@
+name: "PERLS API"
+description: "Provides entity and formatting configuration for the PERLS API"
+type: module
+core: 8.x
+core_version_requirement: ^8 || ^9
+dependencies:
+  - entity_normalization
+  - entity_packager
+  - perls_learner_state:perls_learner_state
+package: 'Custom'

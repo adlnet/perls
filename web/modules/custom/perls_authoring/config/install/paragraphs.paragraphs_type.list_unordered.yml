@@ -1,0 +1,8 @@
+langcode: en
+status: true
+dependencies: {  }
+id: list_unordered
+label: 'Bullet list'
+icon_uuid: null
+description: 'Add a bulleted list of items'
+behavior_plugins: {  }

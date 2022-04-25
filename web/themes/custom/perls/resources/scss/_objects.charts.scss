@@ -1,0 +1,45 @@
+/* ------------------------------------ *\
+    Charts
+\* ------------------------------------ */
+
+.c-block-veracity-chart-block {
+  h2 {
+    @include o-heading--l;
+  }
+
+  .no-data {
+    align-items: center;
+    border: $border--light;
+    color: $c-empty;
+    display: flex;
+    justify-content: center;
+
+    .empty-message {
+      @include add-icon('icon-chart-gray.svg', $icon-xlarge, $icon-xlarge);
+    }
+  }
+
+}
+
+.veracity-result-render.progresschange {
+  height: 300px;
+}
+
+.page-variant--user-insights .update-goal-button {
+  display: none;
+}
+
+body.content-only.page-variant--user-insights {
+  h1 {
+    display: none;
+  }
+
+  .update-goal-button {
+    display: inline-block;
+  }
+  // The vql charts have their own padding and are offset left. A negative
+  // margin aligns the block title with the chart y-axis label.
+  .veracity-result-render:not(.no-data) {
+    margin-left: - #{$space + $space-quarter};
+  }
+}

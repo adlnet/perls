@@ -1,0 +1,12 @@
+uuid: 3f6e1a07-5932-4638-afc0-1957e30af23a
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: '-KfiLEm8Cq3xAWw0pHITtqzvGCxJA8fWUAeqqf9wfXc'
+id: table
+label: Table
+icon_uuid: null
+icon_default: null
+description: 'Displays table rows/cells'
+behavior_plugins: {  }

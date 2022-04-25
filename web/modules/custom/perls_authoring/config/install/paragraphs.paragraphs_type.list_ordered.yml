@@ -1,0 +1,8 @@
+langcode: en
+status: true
+dependencies: {  }
+id: list_ordered
+label: 'Number list'
+icon_uuid: null
+description: 'Add a list of numbered items'
+behavior_plugins: {  }

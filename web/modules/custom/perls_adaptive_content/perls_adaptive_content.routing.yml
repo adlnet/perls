@@ -1,0 +1,13 @@
+perls_adaptive_content.refresh_course:
+  path: "/adaptive/refresh_course/{course}"
+  options:
+    _auth: ["cookie"]
+    parameters:
+      course:
+        type: entity:node
+  defaults:
+    _controller: '\Drupal\perls_adaptive_content\Controller\AdaptiveContentController::refreshCourse'
+    _title: "Adaptive Content Refresh Course"
+  requirements:
+    _permission: "communicate lrs endpoint"
+  methods: [POST]

@@ -1,0 +1,91 @@
+uuid: 7b620c59-8e9c-4309-ae40-db7e9e1e9a32
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.tile
+    - field.field.node.learn_package.field_course
+    - field.field.node.learn_package.field_description
+    - field.field.node.learn_package.field_difficulty
+    - field.field.node.learn_package.field_flash_card
+    - field.field.node.learn_package.field_learning_package
+    - field.field.node.learn_package.field_media_image
+    - field.field.node.learn_package.field_quiz
+    - field.field.node.learn_package.field_tags
+    - field.field.node.learn_package.field_tip_card
+    - field.field.node.learn_package.field_topic
+    - field.field.node.learn_package.field_type_description
+    - node.type.learn_package
+  module:
+    - field_layout
+    - layout_builder
+    - media
+    - user
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings:
+      label: ''
+  layout_builder:
+    enabled: false
+    allow_custom: false
+id: node.learn_package.tile
+targetEntityType: node
+bundle: learn_package
+mode: tile
+content:
+  field_media_image:
+    type: media_thumbnail
+    label: hidden
+    settings:
+      image_link: ''
+      image_style: ''
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_tags:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 5
+    region: content
+  flag_bookmark:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  flag_completed:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  flag_recommendation:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  recommendation_reason:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  entitygroupfield: true
+  field_course: true
+  field_description: true
+  field_difficulty: true
+  field_flash_card: true
+  field_learning_package: true
+  field_quiz: true
+  field_tip_card: true
+  field_topic: true
+  field_type_description: true
+  group_content: true
+  langcode: true
+  links: true
+  search_api_excerpt: true

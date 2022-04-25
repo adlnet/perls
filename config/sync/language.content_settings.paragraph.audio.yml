@@ -1,0 +1,13 @@
+uuid: a30382ab-ce24-41b3-90cf-be77413c01a6
+langcode: en
+status: true
+dependencies:
+  config:
+    - paragraphs.paragraphs_type.audio
+_core:
+  default_config_hash: hHFfarFLLlif1_Tou240c0VlB-W8URabmuNR84oBVtY
+id: paragraph.audio
+target_entity_type_id: paragraph
+target_bundle: audio
+default_langcode: site_default
+language_alterable: false

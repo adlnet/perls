@@ -1,0 +1,244 @@
+/* ------------------------------------ *\
+    $COMPONENTS
+\* ------------------------------------ */
+
+/**
+ * Field tags
+ */
+.c-field--name-field-tags {
+  display: flex;
+  flex-wrap: wrap;
+
+  & > * + * {
+    margin-top: 0;
+  }
+
+  .c-field__item {
+    margin-right: $space-half;
+
+    a {
+      &:hover {
+        text-decoration: underline;
+      }
+
+      &::before {
+        content: "#";
+      }
+    }
+  }
+}
+
+/**
+ * Field title
+ */
+.c-field--name-field-title {
+  h3 {
+    @include o-heading--s;
+  }
+}
+
+/**
+ * Field caption
+ */
+.c-field--name-field-caption {
+  font-size: var(--font-size-xs, $font-size-xs);
+  font-style: italic;
+  margin-top: $space-quarter !important;
+}
+
+/**
+ * Field body
+ */
+.c-field--name-field-body,
+.c-field--name-field-paragraph-body,
+.c-field--name-field-learning-content,
+.c-field--type-text-long {
+  & > * + * {
+    margin-top: $space;
+  }
+}
+
+/**
+ * Field option
+ */
+
+.c-quiz__question {
+  @include u-visible;
+
+  position: relative;
+  border-radius: $border-radius--card;
+  border: 1px solid $c-white;
+  padding: $space-half;
+  padding-left: $space-double;
+  cursor: pointer;
+  height: auto;
+  z-index: 1;
+
+  &::before {
+    content: "";
+    display: inline-block;
+    height: 10px;
+    width: 10px;
+    border-radius: 10px;
+    border: 1px solid $c-white;
+    background-color: transparent;
+    position: absolute;
+    left: 15px;
+    top: 15px;
+    transition: $transition;
+  }
+
+  &:hover,
+  &:focus,
+  &:active,
+  &:target,
+  &.this-is-active {
+    background-color: rgba($c-white, 0.2);
+    border-color: transparent;
+
+    &::before {
+      background-color: $c-white;
+    }
+  }
+}
+
+.c-quiz__answer {
+  @include u-hidden;
+
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+  overflow: hidden;
+
+  .answer--inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: $space;
+    margin: auto 0;
+  }
+}
+
+.c-quiz__button {
+  color: $c-card--quiz;
+}
+
+.c-field--name-field-prerequisites {
+  > .c-field__label {
+    @include o-heading--xs;
+  }
+
+  .c-field__items {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: center;
+
+    .c-field__item {
+      flex-basis: auto;
+      margin: $space-quarter $space-half $space-quarter 0;
+    }
+
+    a {
+      display: block;
+      border-radius: $border-radius--card;
+      background-color: $c-secondary;
+      padding: $space-half $space;
+      color: $c-white;
+
+      &::before {
+        content: "#";
+      }
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+.c-field--name-field-description {
+  @include scrollbars;
+
+  max-height: 250px;
+  overflow-y: auto;
+
+  .card--description & {
+    max-height: 400px;
+    overflow: hidden;
+  }
+
+  .c-node--card--course & {
+    overflow: hidden;
+    max-height: 75px; // 3 lines.
+  }
+  // Show only first p if description has been clamped. See clamp.init.js.
+  &.perls-clamp p ~ p {
+    display: none;
+  }
+}
+
+.xapi-content-button > .link {
+  @include o-button;
+
+  display: inline-block;
+  text-decoration: none;
+}
+
+.field--type-description-field {
+  // field on the "form display" at content types.
+  @include description-container;
+}
+
+.form-item {
+  &-topic,
+  &-field-topic,
+  &-entitygroupfield-add-more-add-relation {
+    select {
+      width: 60%;
+    }
+
+    .form--inline & {
+      select {
+        width: 300px;
+      }
+    }
+  }
+}
+
+/**
+ * Event page fields.
+ */
+.c-field--name-field-related-content {
+  .js-slick-slider {
+    padding: $space 0;
+
+    li::before {
+      content: "";
+    }
+  }
+}
+
+.c-field--name-field-schedule {
+  .c-field__label {
+    font-size: var(--font-size-l, $font-size-l);
+  }
+
+  .date-recur-occurrences li,
+  .date-recur-date {
+    font-size: var(--font-size-m, $font-size-m);
+  }
+}
+
+.c-field--name-field-additional-details {
+  .c-field__label {
+    font-size: var(--font-size-l, $font-size-l);
+  }
+}

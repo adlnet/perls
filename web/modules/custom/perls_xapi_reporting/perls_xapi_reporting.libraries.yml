@@ -1,0 +1,39 @@
+perls_xapi_reporting_cards:
+  version: 1.x
+  js:
+    js/perls_xapi_reporting-card-interaction.js: {}
+perls_xapi_reporting_article_completed:
+  version: 1.x
+  js:
+    js/perls_xapi_reporting-article-completed.js: {}
+  dependencies:
+    - xapi_reporting/xapi-reporting.lib-common
+perls_xapi_reporting_link_completed:
+  version: 1.x
+  js:
+    js/perls_xapi_reporting-link-completed.js: {}
+  dependencies:
+    - xapi_reporting/xapi-reporting.lib-common
+perls_xapi_reporting_file_completed:
+  version: 1.x
+  js:
+    js/perls_xapi_reporting-file-completed.js: {}
+  dependencies:
+    - xapi_reporting/xapi-reporting.lib-common
+perls_xapi_reporting_taxonomy:
+  version: 1.x
+  js:
+    js/perls_xapi_reporting-taxonomy.js: {}
+  dependencies:
+    - xapi_reporting/xapi-reporting.lib-common
+perls_xapi_reporting_search:
+  version: 1.x
+  js:
+    js/perls_xapi_reporting-search.js: {}
+perls_xapi_reporting_vidyo:
+  version: 1.x
+  js:
+    js/perls_xapi_reporting-vidyo-reporting.js: {}
+  dependencies:
+    - core/drupalSettings
+    - xapi_reporting/xapi-reporting.lib-common

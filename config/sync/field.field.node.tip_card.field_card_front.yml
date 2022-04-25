@@ -1,0 +1,81 @@
+uuid: f09fe4fe-4f16-48b1-bdaf-094a3d71dc60
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_card_front
+    - node.type.tip_card
+    - paragraphs.paragraphs_type.image
+    - paragraphs.paragraphs_type.text
+  module:
+    - entity_reference_revisions
+id: node.tip_card.field_card_front
+field_name: field_card_front
+entity_type: node
+bundle: tip_card
+label: Body
+description: 'Keep the text on tip cards short (two or three sentences).'
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      image: image
+      text: text
+    negate: 0
+    target_bundles_drag_drop:
+      audio:
+        weight: 16
+        enabled: false
+      callout:
+        weight: 17
+        enabled: false
+      checklist:
+        weight: 18
+        enabled: false
+      document:
+        weight: 20
+        enabled: false
+      goal_log:
+        weight: 22
+        enabled: false
+      heading:
+        weight: 21
+        enabled: false
+      image:
+        weight: 22
+        enabled: true
+      layout_two_column:
+        weight: 24
+        enabled: false
+      list_ordered:
+        weight: 25
+        enabled: false
+      list_unordered:
+        weight: 26
+        enabled: false
+      quiz_option:
+        weight: 26
+        enabled: false
+      references:
+        weight: 27
+        enabled: false
+      table:
+        weight: 28
+        enabled: false
+      test_attempt:
+        weight: 31
+        enabled: false
+      test_question_answer:
+        weight: 32
+        enabled: false
+      text:
+        weight: 29
+        enabled: true
+      video:
+        weight: 30
+        enabled: false
+field_type: entity_reference_revisions

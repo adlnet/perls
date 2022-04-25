@@ -1,0 +1,14 @@
+perls_user.user.interests:
+  path: '/user/interests'
+  defaults:
+    _controller: '\Drupal\perls_user\Controller\UserInterestForm::getForm'
+    _title: 'Edit Interests'
+  requirements:
+    _permission: 'access content'
+perls_user.user.groups:
+  path: '/user/groups'
+  defaults:
+    _controller: '\Drupal\perls_user\Controller\UserGroupsForm::getForm'
+    _title: 'Edit Groups'
+  requirements:
+    _permission: 'access content'

@@ -1,0 +1,24 @@
+uuid: 1945c98b-d580-481b-820a-76dc9673a1af
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_type_description
+    - node.type.learn_article
+  module:
+    - description_field
+id: node.learn_article.field_type_description
+field_name: field_type_description
+entity_type: node
+bundle: learn_article
+label: 'Type Description'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  long_description:
+    value: "An <strong>article</strong> allows you to build and publish content directly to learners. Try focusing your articles to a single learning objective. You can create many articles under the same topic or course to provide your learners a comprehensive set of content.\r\n"
+    format: basic_filter
+field_type: description_field

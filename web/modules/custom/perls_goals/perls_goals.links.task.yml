@@ -1,0 +1,4 @@
+perls_goals.admin_setting:
+  route_name: perls_goals.settings
+  title: 'Settings'
+  base_route: perls_goals.settings

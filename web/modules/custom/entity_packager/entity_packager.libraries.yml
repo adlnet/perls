@@ -1,0 +1,6 @@
+node_packager:
+  version: 1.x
+  js:
+    js/entity_packager.js: {}
+  dependencies:
+    - core/jquery

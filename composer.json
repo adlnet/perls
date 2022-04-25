@@ -1,0 +1,438 @@
+{
+    "name": "drupal-composer/drupal-project",
+    "description": "Project template for Drupal 8 projects with composer",
+    "type": "project",
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "",
+            "role": ""
+        }
+    ],
+    "repositories": [
+        {
+            "type": "package",
+            "package": {
+                "name": "jquery/icheck",
+                "version": "1.0.2 ",
+                "type": "drupal-library",
+                "extra": {
+                    "installer-name": "jquery.icheck"
+                },
+                "dist": {
+                    "url": "https://github.com/dargullin/icheck/zipball/refs/heads/1.0.2",
+                    "type": "zip"
+                }
+            }
+        },
+        {
+            "type": "composer",
+            "url": "https://packages.drupal.org/8"
+        },
+        {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "ckeditor/tabletoolstoolbar",
+                "version": "0.0.1",
+                "type": "drupal-library",
+                "dist": {
+                    "url": "https://download.ckeditor.com/tabletoolstoolbar/releases/tabletoolstoolbar_0.0.1.zip",
+                    "type": "zip"
+                }
+            }
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "jameswilson/filename_transliteration",
+                "version": "1.0",
+                "type": "drupal-module",
+                "source": {
+                    "url": "https://github.com/jameswilson/filename_transliteration.git",
+                    "type": "git",
+                    "reference": "1.0.x"
+                }
+            }
+        }
+    ],
+    "require": {
+        "php": ">=7.0",
+        "behat/mink-selenium2-driver": "dev-master as 1.3.x-dev",
+        "bex/behat-screenshot": "^1.2",
+        "bower-asset/isotope": "^3.0",
+        "ckeditor/tabletoolstoolbar": "^0.0.1",
+        "composer/installers": "^1.2",
+        "cweagans/composer-patches": "^1.6.5",
+        "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
+        "dmore/behat-chrome-extension": "^1.3",
+        "doctrine/lexer": "^1.0",
+        "drupal/achievements": "dev-2.x",
+        "drupal/admin_toolbar": "^3.0",
+        "drupal/adminimal_theme": "^1.5",
+        "drupal/administerusersbyrole": "^3.0@beta",
+        "drupal/allowed_formats": "^1.1",
+        "drupal/audiofield": "^1.11",
+        "drupal/autocomplete_deluxe": "^2.0",
+        "drupal/autosave_form": "^1.3",
+        "drupal/backward_compatibility": "^1.0",
+        "drupal/block_exclude_pages": "^2.0",
+        "drupal/block_field": "^1.0@RC",
+        "drupal/business_rules": "^2.0@beta",
+        "drupal/cer": "^4.0@alpha",
+        "drupal/ckeditor_tabletoolstoolbar": "^1.0",
+        "drupal/coder": "^8.3",
+        "drupal/config_filter": "^2.2",
+        "drupal/config_ignore": "^2.2",
+        "drupal/config_split": "^2.0",
+        "drupal/console": "^1.0.2",
+        "drupal/core": "9.3.3 as 8.9.99",
+        "drupal/core-composer-scaffold": "^9.2",
+        "drupal/core-dev": "^9.2",
+        "drupal/core-project-message": "^9.2",
+        "drupal/core-recommended": "^9.2.9",
+        "drupal/csv_serialization": "^2.0",
+        "drupal/ctools": "^3.7",
+        "drupal/date_recur": "^3.0",
+        "drupal/date_recur_modular": "^3.0",
+        "drupal/default_content": "^2.0@alpha",
+        "drupal/description_field": "1.x-dev",
+        "drupal/devel": "^4.0",
+        "drupal/dis": "^1.0",
+        "drupal/disable_messages": "^2.0",
+        "drupal/drupal-extension": "^4.1",
+        "drupal/email_registration": "^1.0@RC",
+        "drupal/entity_browser": "^2.6",
+        "drupal/entity_clone": "^1.0@beta",
+        "drupal/entity_normalization": "^1.0",
+        "drupal/entity_print": "^2.1",
+        "drupal/entitygroupfield": "^1.0@alpha",
+        "drupal/exif_orientation": "^1.0",
+        "drupal/field_group": "^3.1",
+        "drupal/field_permissions": "^1.1",
+        "drupal/filefield_paths": "^1.0@beta",
+        "drupal/firebase": "^3.0",
+        "drupal/flag": "4.x-dev#d1671b83",
+        "drupal/form_mode_manager": "^2.0",
+        "drupal/formatter_suite": "^1.3",
+        "drupal/formtips": "^1.3",
+        "drupal/go_back_history": "^1.0",
+        "drupal/group": "^1.4",
+        "drupal/header_formatter": "^1.0",
+        "drupal/hook_event_dispatcher": "^2.5",
+        "drupal/inline_entity_form": "^1.0@RC",
+        "drupal/jquery_ui_effects": "^1.1",
+        "drupal/jsonapi_extras": "^3.19",
+        "drupal/layout_builder_tabs": "^1.0@beta",
+        "drupal/log_stdout": "^2.0",
+        "drupal/maxlength": "^2.0@RC",
+        "drupal/media_entity_browser": "^2.0",
+        "drupal/monolog": "^2",
+        "drupal/multivalue_form_element": "^1.0@beta",
+        "drupal/node_title_help_text": "^1.2",
+        "drupal/page_manager": "^4.0@beta",
+        "drupal/paragraphs": "^1.8",
+        "drupal/pathauto": "^1.8",
+        "drupal/pdb_vue": "^1.0@alpha",
+        "drupal/queue_ui": "^2.1",
+        "drupal/r4032login": "^2.1",
+        "drupal/recreate_block_content": "2.x-dev",
+        "drupal/redirect": "^1.5",
+        "drupal/redis": "^1.5",
+        "drupal/require_on_publish": "^1.6",
+        "drupal/responsive_favicons": "^1.5",
+        "drupal/rest_export_nested": "^1.0",
+        "drupal/restui": "^1.20",
+        "drupal/rules": "3.x-dev@dev",
+        "drupal/rules_send_big_email": "^1.4",
+        "drupal/save_edit": "^1.3",
+        "drupal/scheduler": "^1.4",
+        "drupal/scheduler_content_moderation_integration": "^1.3",
+        "drupal/search_api": "^1.20",
+        "drupal/search_api_autocomplete": "^1.5",
+        "drupal/search_api_solr": "^4.2",
+        "drupal/select2": "^1.13",
+        "drupal/simple_block": "^1.3",
+        "drupal/simple_multistep": "^1.0@dev",
+        "drupal/simple_oauth": "^5.2.0",
+        "drupal/simplesamlphp_auth": "^3.2",
+        "drupal/smtp": "^1.0",
+        "drupal/stage_file_proxy": "^1.0",
+        "drupal/statistics_counter": "^1.0",
+        "drupal/switches": "1.x-dev",
+        "drupal/textimage": "^4.1",
+        "drupal/time_field": "^2.0",
+        "drupal/twig_tweak": "^3.1",
+        "drupal/username_enumeration_prevention": "^1.2",
+        "drupal/video_embed_brightcove": "^1.0@alpha",
+        "drupal/video_embed_field": "^2.1",
+        "drupal/video_embed_google_drive": "^1.2",
+        "drupal/video_embed_kaltura": "^1.2",
+        "drupal/views_add_button": "^2.0",
+        "drupal/views_autocomplete_filters": "^1.2",
+        "drupal/views_block_filter_block": "^1.0",
+        "drupal/views_bulk_operations": "^4.0",
+        "drupal/views_custom_cache_tag": "^1.1",
+        "drupal/views_field_formatter": "^1.10",
+        "drupal/webform": "^6.0",
+        "drupal/webform_views": "^5.0@alpha",
+        "drush/drush": "^10.6",
+        "james-heinrich/getid3": "v2.0.0-beta4",
+        "jameswilson/filename_transliteration": "^1.0",
+        "jquery/icheck": "1.0.2",
+        "npm-asset/clamp-js": "^0.7.0",
+        "npm-asset/select2": "^4.0",
+        "npm-asset/slick-carousel": "^1.8",
+        "npm-asset/sticky-js": "^1.3",
+        "nuvoleweb/drupal-behat": "^1.1",
+        "oomphinc/composer-installers-extender": "^2.0",
+        "simplesamlphp/simplesamlphp": "^1.19",
+        "vlucas/phpdotenv": "^2.4",
+        "webflo/drupal-finder": "^1.0.0",
+        "webmozart/path-util": "^2.3",
+        "wikimedia/composer-merge-plugin": "^2.0",
+        "zaporylie/composer-drupal-optimizations": "^1.0"
+    },
+    "require-dev": {
+        "drupal/twig_vardumper": "^3.0",
+        "integratedexperts/behat-screenshot": "^0.7.3",
+        "mglaman/drupal-check": "^1.1"
+    },
+    "conflict": {
+        "drupal/drupal": "*"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "config": {
+        "sort-packages": true,
+        "discard-changes": true,
+        "allow-plugins": {
+            "cweagans/composer-patches": true,
+            "composer/installers": true,
+            "drupal/core-composer-scaffold": true,
+            "drupal/core-project-message": true,
+            "wikimedia/composer-merge-plugin": true,
+            "zaporylie/composer-drupal-optimizations": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "drupal/console-extend-plugin": true,
+            "simplesamlphp/composer-module-installer": true,
+            "oomphinc/composer-installers-extender": true
+        }
+    },
+    "autoload": {
+        "classmap": [
+            "composer/ScriptHandler.php"
+        ],
+        "files": [
+            "load.environment.php"
+        ]
+    },
+    "scripts": {
+        "pre-install-cmd": [
+            "DrupalProject\\composer\\ScriptHandler::checkComposerVersion"
+        ],
+        "pre-update-cmd": [
+            "DrupalProject\\composer\\ScriptHandler::checkComposerVersion"
+        ],
+        "post-install-cmd": [
+            "DrupalProject\\composer\\ScriptHandler::createRequiredFiles",
+            "php -r \"symlink('vendor/simplesamlphp/simplesamlphp', 'simplesamlphp');\"",
+            "cp -R simplesamlphp_config/* simplesamlphp"
+        ],
+        "post-update-cmd": [
+            "DrupalProject\\composer\\ScriptHandler::createRequiredFiles"
+        ]
+    },
+    "extra": {
+        "composer-exit-on-patch-failure": true,
+        "merge-plugin": {
+            "include": [
+                "web/modules/contrib/webform/composer.libraries.json"
+            ],
+            "ignore-duplicates": true
+        },
+        "patchLevel": {
+            "drupal/core": "-p2"
+        },
+        "installer-types": [
+            "npm-asset",
+            "bower-asset"
+        ],
+        "installer-paths": {
+            "web/core": [
+                "type:drupal-core"
+            ],
+            "web/libraries/{$name}": [
+                "type:drupal-library",
+                "type:npm-asset",
+                "type:bower-asset"
+            ],
+            "web/modules/contrib/{$name}": [
+                "type:drupal-module"
+            ],
+            "web/profiles/contrib/{$name}": [
+                "type:drupal-profile"
+            ],
+            "web/themes/contrib/{$name}": [
+                "type:drupal-theme"
+            ],
+            "drush/Commands/{$name}": [
+                "type:drupal-drush"
+            ],
+            "simplesamlphp": [
+                "vendor/simplesamlphp"
+            ]
+        },
+        "patches": {
+            "drupal/achievements": {
+                "Fixed image upload bug": "https://www.drupal.org/files/issues/2020-11-05/3180872-image-upload-1.patch",
+                "Fix form in D9": "https://www.drupal.org/files/issues/2020-11-14/achievements-D9_form_fix-0.diff"
+            },
+            "drupal/autocomplete_deluxe": {
+                "Client JS execution": "./patches/autocomplete_deluxe/js_execution.patch"
+            },
+            "drupal/core": {
+                "Plugin ID menu_link_content was not found in _menu_link_content_update_path_alias() when does not yet exist": "https://www.drupal.org/files/issues/2019-08-04/menu_link_content_check_definition-3072557-1.patch",
+                "2982729 - REST views: pagination information and total count result": "https://www.drupal.org/files/issues/2021-08-04/2982729-add-option-to-add-pager-information-to-rest-export-45_0.patch",
+                "2974925 - Default 'rid' value for Change User Roles causes an illegal error": "https://www.drupal.org/files/issues/2018-05-24/2974925-default-rid-config-causes-illegal-error.patch",
+                "2986958 - Allow negate user role in block visibility settings": "https://www.drupal.org/files/issues/2018-07-19/enable-block-visibility-user-role-negation-2986958-2.patch",
+                "3041463 - Support Entity UUID (and other properties) in the generic Entity Argument Validator": "https://www.drupal.org/files/issues/2021-03-13/support_uuid_views_arguement_validator-3041463-19.patch",
+                "1819538 - More link disappears when time-based views cache is enabled": "https://www.drupal.org/files/issues/2021-03-10/1819538-65.patch",
+                "2463753 - Do not bypass route access with 'link to any page' permissions": "https://www.drupal.org/files/issues/2021-09-15/2463753-87_0.patch",
+                "3015152 - Allow to set settings to layout builder components": "https://www.drupal.org/files/issues/2021-12-13/3015152-tps-9.3.x-128.patch",
+                "2700667 - Undefined index: #type in drupal_process_states()": "https://www.drupal.org/files/issues/2021-05-12/2700667-133a.patch",
+                "1650930 - Prevents deadlock after cache clear": "https://www.drupal.org/files/issues/2021-03-23/1650930-109.patch",
+                "2935999 - Removed field UI dependncy from Layout builder": "./patches/core/2935999-remove_field_ui_dependency_layout_builder-9.3.x.patch",
+                "2264739 - Allow multiple field widgets to not use tabledrag": "https://www.drupal.org/files/issues/2021-12-02/2264739-116-9.3.x.patch",
+                "2329937 - Allow definition objects to provide options": "https://www.drupal.org/files/issues/2021-12-18/2329937-75.options-provider.patch",
+                "3021671 - Node revisions tab have 'Current Version' on every Page": "https://www.drupal.org/files/issues/2022-01-15/3021671-16-determine_current_revision.patch",
+                "2681953 - Allow exposed form to preserve URL query parameters": "https://www.drupal.org/files/issues/2020-10-23/2681953-25.patch"
+            },
+            "drupal/ctools": {
+                "2475595 - Views exposed filters missing autosubmit option": "https://www.drupal.org/files/issues/2475595-ctools-autocomplete-fix-47.patch"
+            },
+            "drupal/description_field": {
+                "Drupal 9 compatibility": "https://www.drupal.org/files/issues/2020-05-23/description_field.1.x-dev.rector.patch"
+            },
+            "drupal/entity_browser": {
+                "Auto open cause ajax infinite loop": "https://www.drupal.org/files/issues/entity_browser-auto_open_once-2857339-2.patch",
+                "3123876 - Entity display plugin 'Rendered Entity' should only add cache key if the entity is render cached": "https://www.drupal.org/files/issues/2020-09-23/rendered-entity-cache-keys-tags-3123876-6.patch",
+                "3038050 - Entity browser does not edit latest version": "https://www.drupal.org/files/issues/2019-03-06/entity_browser-content_moderation-3038050-2.patch",
+                "3104901 - Entity Browser used in a entity referenced field of a layout builder custom block is not working": "https://www.drupal.org/files/issues/2020-03-25/3104901.patch"
+            },
+            "drupal/entity_clone": {
+                "3112577 - Cloning child references to nodes has potential to cause memory resource issues": "https://www.drupal.org/files/issues/2020-02-10/entity_clone-child-node-system-drain-3112577-1.patch"
+            },
+            "drupal/cer": {
+                "3200122 - Delete hook throws Drupal\\Core\\Entity\\EntityStorageException: Update existing 'node' entity while changing the ID is not supported": "https://www.drupal.org/files/issues/2021-02-24/delete-hook-added-in-dev-causes-test-failures.patch"
+            },
+            "drupal/flag": {
+                "3229964 - TypeError: Argument 5 passed to Drupal\\Core\\Template\\TwigExtension::__construct()": "https://www.drupal.org/files/issues/2021-08-26/flag-TypeError-3229964-2.patch"
+            },
+            "drupal/filefield_paths": {
+                "2718783 - Call to undefined method BaseFieldDefinition::getThirdPartySettings()": "https://www.drupal.org/files/issues/2021-03-18/call_to_undefined-2718783-45.patch"
+            },
+            "drupal/form_mode_manager": {
+                "Field UI disabled": "./patches/form_mode_manager/form-ui-disable-D9-compatible.patch"
+            },
+            "drupal/formatter_suite": {
+                "3162381 - Allow 0 decimal": "https://www.drupal.org/files/issues/2020-07-30/3162381-allow-0-decimal-1.patch"
+            },
+            "drupal/switches": {
+                "0001 - Fixes Deprecation": "./patches/switches/0001-Fixes-Deprecation.patch",
+                "0002 - Fixes Issue When Saving Switch": "./patches/switches/0002-Fix-Issue-When-Saving-Switch.patch",
+                "0003 - Fixes Conditional Logic": "./patches/switches/0003-Fixes-Conditional-Logic.patch",
+                "3238790 - Error message An illegal choice...": "https://www.drupal.org/files/issues/2021-09-24/switches-illegal_choice_has_been_detected-3238790-5.patch"
+            },
+            "drupal/group": {
+                "2942657 - /views/ajax?_wrapper_format=drupal_ajax HTTP/1.1 - HTTP/1.1 403 Forbidden": "https://www.drupal.org/files/issues/2019-06-27/group_route_ajax_route-2942657-18.patch",
+                "3161707 - hook_query_TAG_alter does not handle empty MetaData.": "https://www.drupal.org/files/issues/2020-07-27/group__3161707__handle_empty_metadata__2.patch",
+                "2876696 - Add support for 'view own unpublished entity' permission": "https://git.drupalcode.org/project/group/-/merge_requests/9.patch"
+            },
+            "drupal/entity_normalization": {
+                "3160617 - Add access check to field item list": "https://www.drupal.org/files/issues/2020-07-23/add-access-check-field-item-list-3160617-3.patch"
+            },
+            "drupal/layout_builder_tabs": {
+                "3150894 - Users error in log when in Layout tab": "https://www.drupal.org/files/issues/2020-07-27/layout_builder_tabs-user_errors-3150894-5.patch"
+            },
+            "drupal/media_entity_browser": {
+                "2939543 - Improving JS behavior to comply with field cardinality": "https://www.drupal.org/files/issues/2019-06-25/media_entity_browser-ported-file-browser-cadinality-support-2939543-17.patch"
+            },
+            "drupal/paragraphs": {
+                "2901390 - Integrity constraint violation: 1048 Column 'langcode' cannot be null": "https://www.drupal.org/files/issues/2019-07-10/paragraphs-set_langcode_widgets-2901390-29.patch"
+            },
+            "drupal/r4032login": {
+                "Drupal 9 fixes": "./patches/r4032login/drupal-9-fix.patch"
+            },
+            "drupal/save_edit": {
+                "3026200 - Inherit all submit handlers from save": "https://www.drupal.org/files/issues/2019-10-28/inline_entity_forms_not_saving-3026200-12.patch"
+            },
+            "drupal/simple_oauth": {
+                "Avoid access token revoke on user update": "https://www.drupal.org/files/issues/2019-04-15/simple_oauth-auth-revoke-2946882-34.patch",
+                "Better error messages:": "https://www.drupal.org/files/issues/2020-05-29/simple_oauth2_error_message_hint.patch",
+                "3082984 - Reduce logging severity/don't log expired tokens/401s": "https://www.drupal.org/files/issues/2021-08-11/reduce-reporting-severtiy-3082984-8_2.patch"
+            },
+            "drupal/stage_file_proxy": {
+                "3175045 - Error retrieving images from styles that use ConvertImageEffect": "https://www.drupal.org/files/issues/2021-11-16/3175045-03.patch",
+                "2833845 - styleOriginalPath() finds wrong path when using a Convert effect": "https://www.drupal.org/files/issues/2020-10-30/stage_file_proxy-2833845-convert-image-style-16.patch"
+            },
+            "drupal/statistics_counter": {
+                "2693019 - Use state instead of config for cron timestamp": "https://www.drupal.org/files/issues/2018-08-14/statistics_counter-2693019-4.patch",
+                "2861191 - Fixed hook_disable for Drupal 8": "https://www.drupal.org/files/issues/statistics_counter-hook-0.patch",
+                "2860205 - Replace deprecated uses": "https://www.drupal.org/files/issues/statistics_counter-replace_deprecated_uses-2860205-2.patch",
+                "2905572 - Fixed php error on node sub-pages": "./patches/statistics_counter/php_error_in_updateStatistics-2905572-5.patch",
+                "Drupal 9 compatibility patch": "./patches/statistics_counter/d9-compatibility.patch"
+            },
+            "drupal/simplesamlphp_auth": {
+                "3120326 - Disable default SAML authentication if local login is enabled": "https://www.drupal.org/files/issues/2020-03-17/disable-default-saml-login-3120326-1.patch",
+                "3186552 - Preserve URL parameters on authentication": "https://www.drupal.org/files/issues/2020-12-04/3186552-2.patch"
+            },
+            "drupal/token": {
+                "3047568 - Consistent tokens support across all entities and fields": "https://www.drupal.org/files/issues/2020-09-21/token-consistent-entity-and-field-support-3047568-12.patch"
+            },
+            "drupal/video_embed_kaltura": {
+                "3212315 - Invalid url string cause undefined index error": "https://www.drupal.org/files/issues/2021-05-05/3212315-validate-url-1_0.patch"
+            },
+            "drupal/views_bulk_operations": {
+                "3216584 - Unable to cancel a user account if it has more then 10 content": "https://www.drupal.org/files/issues/2021-06-03/3216584-unable-cancel-user-account-10-content-8_1.patch"
+            },
+            "drupal/page_manager": {
+                "3201744 - Change block configuration to use SubFormState and other inline block changes.": "https://www.drupal.org/files/issues/2021-08-05/3201744-4.patch"
+            },
+            "float/recommender": {
+                "Moved getScoreEntity method to base class": "./patches/recommender/move-getScoreEntity-function-1.1.1.patch"
+            },
+            "drupal/block_field": {
+                "Fix the block field widget issue.": "./patches/block_field/fix_empty_block_issue_widget.patch"
+            },
+            "drupal/rules": {
+                "2664280 - Select lists in action & condition configuration forms": "https://www.drupal.org/files/issues/2021-09-20/2664280-89.select-lists.patch",
+                "3161036 - CurrentPathContext inadvertently bubbles up 'route' cache context": "https://www.drupal.org/files/issues/2021-01-02/rules-3161036-6-v1.patch"
+            },
+            "drupal/multivalue_form_element": {
+                "3200306 - Add support for non-orderable multivalue form elements": "./patches/multivalue_form_element/3200306-disable-multifield-ordering.patch"
+            },
+            "drupal/scheduler": {
+                "3238643: Route \"view.scheduler_scheduled_content.overview\" does not exist": "https://www.drupal.org/files/issues/2021-10-14/because_of_changes_to_scheduler.links_.task_.yml-3238643-1.patch"
+            },
+            "drupal/business_rules": {
+                "3200711: cannot add an action to a condition": "https://www.drupal.org/files/issues/2021-05-15/cannot_add_action-3200711-29.patch"
+            }
+        },
+        "drupal-scaffold": {
+            "initial": {
+                ".editorconfig": "../.editorconfig",
+                ".gitattributes": "../.gitattributes"
+            },
+            "locations": {
+                "web-root": "./web"
+            },
+            "file-mapping": {
+                "[web-root]/sites/development.services.yml": false
+            }
+        }
+    }
+}

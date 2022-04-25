@@ -1,0 +1,50 @@
+uuid: 0d4c4beb-f00d-4d4b-abc2-04710318816d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.layout_two_column.field_column_left
+    - field.field.paragraph.layout_two_column.field_column_right
+    - paragraphs.paragraphs_type.layout_two_column
+  module:
+    - entity_reference_revisions
+    - field_layout
+    - layout_builder
+    - layout_discovery
+third_party_settings:
+  field_layout:
+    id: layout_twocol
+    settings: {  }
+  layout_builder:
+    enabled: false
+    allow_custom: false
+_core:
+  default_config_hash: HsqNylrPvjdVrGhpE6stlgObSSnQtVv3E3KCf6CybrE
+id: paragraph.layout_two_column.default
+targetEntityType: paragraph
+bundle: layout_two_column
+mode: default
+content:
+  field_column_left:
+    type: entity_reference_revisions_entity_view
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    weight: 0
+    region: first
+  field_column_right:
+    type: entity_reference_revisions_entity_view
+    label: hidden
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    weight: 1
+    region: second
+hidden:
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  search_api_excerpt: true

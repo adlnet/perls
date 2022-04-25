@@ -1,0 +1,20 @@
+uuid: b82f129f-f2fb-446c-a3ca-734f0fa5fd9a
+langcode: en
+status: true
+dependencies:
+  config:
+    - paragraphs.paragraphs_type.references
+_core:
+  default_config_hash: d3RXaxwCvB8Avw-bPF-1B5eoWgFF7NaYI-9nMqiNgz0
+id: paragraph.references.created
+field_name: created
+entity_type: paragraph
+bundle: references
+label: 'Authored on'
+description: 'The time that the Paragraph was created.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: created

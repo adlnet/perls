@@ -1,0 +1,31 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.audio.field_audio
+    - paragraphs.paragraphs_type.audio
+  module:
+    - field_layout
+    - file
+    - layout_discovery
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings: {  }
+id: paragraph.audio.default
+targetEntityType: paragraph
+bundle: audio
+mode: default
+content:
+  field_audio:
+    weight: 0
+    settings:
+      progress_indicator: throbber
+    third_party_settings: {  }
+    type: file_generic
+    region: content
+hidden:
+  created: true
+  moderation_state: true
+  status: true
+  uid: true

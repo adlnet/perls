@@ -1,0 +1,18 @@
+uuid: 88d91669-8150-4eae-a64b-d4283d8568a5
+langcode: en
+status: true
+dependencies: {  }
+third_party_settings:
+  textimage:
+    uri_scheme: public
+name: user_profile_circle
+label: 'User profile circle'
+effects:
+  9d4340ce-28f8-4a60-a437-d9f4c27f2736:
+    uuid: 9d4340ce-28f8-4a60-a437-d9f4c27f2736
+    id: image_scale_and_crop
+    weight: 1
+    data:
+      width: 200
+      height: 200
+      anchor: center-center

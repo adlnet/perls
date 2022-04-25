@@ -1,0 +1,7 @@
+uuid: 62b457e8-bde1-4fc0-a442-687db2795447
+langcode: en
+status: true
+dependencies: {  }
+type: user_task
+label: 'User Task'
+description: null

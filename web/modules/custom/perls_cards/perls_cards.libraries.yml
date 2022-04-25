@@ -1,0 +1,4 @@
+perls-test:
+  version: 1.x
+  js:
+    js/tests.js: {}

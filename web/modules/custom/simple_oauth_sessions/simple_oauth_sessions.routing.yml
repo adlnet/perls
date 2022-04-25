@@ -1,0 +1,10 @@
+simple_oauth_sessions.start_session:
+  path: '/start-session/{access_token}'
+  defaults:
+    _controller: '\Drupal\simple_oauth_sessions\Controller\SimpleOauthSessionController::getSession'
+    access_token: ''
+  requirements:
+    # The path will be validated by token.
+    _access: 'TRUE'
+  options:
+    no_cache: TRUE

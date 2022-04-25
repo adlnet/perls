@@ -1,0 +1,49 @@
+uuid: 914342c6-4446-4186-9fe4-41241cfe4708
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.audience
+  enforced:
+    config:
+      - user.role.perls_system_admin
+id: audience-36d5040e8
+label: Owner
+weight: 10003
+internal: true
+audience: outsider
+group_type: audience
+permissions_ui: false
+permissions:
+  - 'access content overview'
+  - 'access group_node overview'
+  - 'administer group'
+  - 'administer members'
+  - 'create group_node:course content'
+  - 'create group_node:flash_card content'
+  - 'create group_node:learn_article content'
+  - 'create group_node:learn_link content'
+  - 'create group_node:learn_package content'
+  - 'create group_node:quiz content'
+  - 'create group_node:tip_card content'
+  - 'view group_node:course content'
+  - 'view group_node:course entity'
+  - 'view group_node:flash_card content'
+  - 'view group_node:flash_card entity'
+  - 'view group_node:learn_article content'
+  - 'view group_node:learn_article entity'
+  - 'view group_node:learn_link content'
+  - 'view group_node:learn_link entity'
+  - 'view group_node:learn_package content'
+  - 'view group_node:learn_package entity'
+  - 'view group_node:quiz content'
+  - 'view group_node:quiz entity'
+  - 'view group_node:tip_card content'
+  - 'view group_node:tip_card entity'
+  - 'view unpublished group_node:course entity'
+  - 'view unpublished group_node:flash_card entity'
+  - 'view unpublished group_node:learn_article entity'
+  - 'view unpublished group_node:learn_link entity'
+  - 'view unpublished group_node:learn_package entity'
+  - 'view unpublished group_node:quiz entity'
+  - 'view unpublished group_node:tip_card entity'

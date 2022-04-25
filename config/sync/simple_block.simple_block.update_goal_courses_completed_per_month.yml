@@ -1,0 +1,11 @@
+uuid: aa9624aa-9c79-47f6-a8b1-27257da241b8
+langcode: en
+status: true
+dependencies:
+  config:
+    - filter.format.unrestricted
+id: update_goal_courses_completed_per_month
+title: 'Update Goal: Courses Completed Per Month'
+content:
+  value: '<a href="[site:url]goal#completecoursespermonth" class="o-button-reverse update-goal-button" data-dialog-type="modal">Update Goal</a>'
+  format: unrestricted

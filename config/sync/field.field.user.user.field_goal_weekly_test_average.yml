@@ -1,0 +1,26 @@
+uuid: d981d382-0f71-496a-b152-451e4997db47
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.user.field_goal_weekly_test_average
+  module:
+    - user
+id: user.user.field_goal_weekly_test_average
+field_name: field_goal_weekly_test_average
+entity_type: user
+bundle: user
+label: 'Average Test Score Per Week'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 70
+default_value_callback: ''
+settings:
+  min: 0
+  max: 100
+  prefix: ''
+  suffix: '%'
+field_type: integer

@@ -1,0 +1,5 @@
+recommendation_reason: 'similar to content you’ve completed'
+number_candidates_generated: '10'
+weight:
+  '[generate_candidates]': 0
+  '[score_candidates]': 0

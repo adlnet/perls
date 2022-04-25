@@ -1,0 +1,42 @@
+uuid: 4b371f27-5251-402f-9b88-8b893f4ca18d
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.entity_browser_lists
+  module:
+    - entity_browser_entity_form
+    - views
+name: quiz_browser
+label: 'Quiz browser'
+display: modal
+display_configuration:
+  width: ''
+  height: ''
+  link_text: 'Add question'
+  auto_open: false
+selection_display: no_display
+selection_display_configuration: {  }
+widget_selector: tabs
+widget_selector_configuration: {  }
+widgets:
+  d5fa4387-b500-442d-968f-4632dcd30645:
+    id: entity_form
+    uuid: d5fa4387-b500-442d-968f-4632dcd30645
+    label: 'New quiz'
+    weight: -9
+    settings:
+      submit_text: 'Create quiz'
+      entity_type: node
+      bundle: quiz
+      form_mode: default
+  80c8eea1-c090-4f96-9382-01980c3f2d0b:
+    id: view_exclude_selection
+    uuid: 80c8eea1-c090-4f96-9382-01980c3f2d0b
+    label: 'Existing quizzes'
+    weight: -10
+    settings:
+      view: entity_browser_lists
+      view_display: entity_browser_quiz
+      submit_text: 'Add quiz'
+      auto_select: 0

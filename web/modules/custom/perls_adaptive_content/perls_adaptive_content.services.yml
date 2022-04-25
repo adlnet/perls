@@ -1,0 +1,22 @@
+services:
+  perls_adaptive_content.xapi_subscriber:
+    arguments:
+      [
+        "@xapi.xapi_statement_helper",
+        "@perls_adaptive_content.adaptive_content_service",
+      ]
+    class: Drupal\perls_adaptive_content\EventSubscriber\XapiEventSubscriber
+    tags:
+      - { name: "event_subscriber" }
+  perls_adaptive_content.adaptive_content_service:
+    class: Drupal\perls_adaptive_content\AdaptiveContentService
+    arguments:
+      - "@current_user"
+      - "@config.factory"
+      - "@plugin.manager.perls_adaptive_content"
+      - "@flag"
+      - "@entity_type.manager"
+      - "@logger.factory"
+  plugin.manager.perls_adaptive_content:
+    class: Drupal\perls_adaptive_content\AdaptiveContentPluginManager
+    parent: default_plugin_manager

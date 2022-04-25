@@ -1,0 +1,9 @@
+rules_entity_starting:
+  event: starting
+  deriver: '\Drupal\rules_date_recur\Plugin\RulesEvent\EntityOccurrenceDeriver'
+  class: '\Drupal\rules\EventHandler\ConfigurableEventHandlerEntityBundle'
+
+rules_entity_ending:
+  event: ending
+  deriver: '\Drupal\rules_date_recur\Plugin\RulesEvent\EntityOccurrenceDeriver'
+  class: '\Drupal\rules\EventHandler\ConfigurableEventHandlerEntityBundle'

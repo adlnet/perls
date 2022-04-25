@@ -1,0 +1,19 @@
+uuid: 1f9aec8c-8ac1-46f0-94e5-e839fc08c514
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.audience
+    - node.type.learn_link
+  module:
+    - gnode
+    - node
+id: audience-group_node-learn_link
+label: 'Group: Group node (Learn Link)'
+description: 'Adds <em class="placeholder">Learn Link</em> content to groups both publicly and privately.'
+group_type: audience
+content_plugin: 'group_node:learn_link'
+plugin_config:
+  group_cardinality: 0
+  entity_cardinality: 1
+  use_creation_wizard: false

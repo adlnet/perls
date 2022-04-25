@@ -1,0 +1,4 @@
+services:
+  plugin.manager.exposed_config_normalizer:
+    class: Drupal\config_resource\ExposedConfigNormalizerPluginManager
+    parent: default_plugin_manager

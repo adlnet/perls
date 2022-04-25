@@ -1,0 +1,12 @@
+{
+  "name": "float/simple_oauth_sessions",
+  "type": "drupal-module",
+  "description": "Provide session handling for an outer app.",
+  "version": "1.0.0-rc2",
+  "keywords": ["Drupal", "firebase"],
+  "require": {
+    "drupal/firebase": "*",
+    "drupal/simple_oauth": "*",
+    "drupal/views_bulk_operations": "*"
+  }
+}

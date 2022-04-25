@@ -1,0 +1,7 @@
+.form-tablefield textarea {
+  height: 60px;
+}
+
+.field--widget-paragraphs table.field-multiple-table .form-tablefield td {
+  padding: 5px;
+}

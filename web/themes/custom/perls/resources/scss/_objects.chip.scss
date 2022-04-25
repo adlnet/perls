@@ -1,0 +1,58 @@
+/* ------------------------------------ *\
+    $CHIP
+\* ------------------------------------ */
+$chip-padding: $space - $space-quarter $space-double;
+.c-chip__link {
+  // Style for "Rectangle".
+  border-radius: $border-radius;
+  background-color: $c-chip;
+  color: $c-chip-text;
+  transition: $transition;
+  display: block;
+  padding: $chip-padding;
+  line-height: 1rem;
+
+  &:hover {
+    background-color: $c-chip-hover;
+    color: $c-chip-text;
+  }
+
+  &:hover {
+    color: $c-chip-text;
+  }
+}
+
+.chip__title {
+  color: inherit;
+  font-size: var(--font-size-m, $font-size-m);
+  line-height: inherit;
+  font-weight: normal;
+
+  & > * {
+    display: inline-block;
+  }
+}
+
+.chip-list {
+  li {
+    display: inline-block;
+    padding: $space $space 0 0;
+    vertical-align: middle;
+
+    [dir="rtl"] & {
+      margin: $space 0 0 $space;
+    }
+  }
+}
+
+.c-chip--more .more-link {
+  a {
+    @include o-button;
+
+    line-height: 1rem;
+    border-radius: 6px;
+    padding: $chip-padding;
+    display: block;
+    font-weight: 400;
+  }
+}

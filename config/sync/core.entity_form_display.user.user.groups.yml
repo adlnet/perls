@@ -1,0 +1,69 @@
+uuid: aca15efc-454d-4bde-b5e4-a19b982e0ec2
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_form_mode.user.groups
+    - field.field.user.user.field_add_groups
+    - field.field.user.user.field_goal_log
+    - field.field.user.user.field_goal_monthly_course_comp
+    - field.field.user.user.field_goal_weekly_completions
+    - field.field.user.user.field_goal_weekly_test_average
+    - field.field.user.user.field_goal_weekly_views
+    - field.field.user.user.field_interests
+    - field.field.user.user.field_name
+    - field.field.user.user.field_notification_days
+    - field.field.user.user.field_notification_time
+    - field.field.user.user.field_organization_homepage
+    - field.field.user.user.field_organization_identifier
+    - field.field.user.user.user_picture
+  module:
+    - field_layout
+    - layout_discovery
+    - perls_user
+    - user
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings:
+      label: ''
+_core:
+  default_config_hash: IiUTp1Z1vK4YvGt1rFZm_lg79Q6UKh9nU2B9nCsur5Y
+id: user.user.groups
+targetEntityType: user
+bundle: user
+mode: groups
+content:
+  contact:
+    weight: 5
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_add_groups:
+    type: filtered_with_isotope_widget
+    weight: 0
+    region: content
+    settings:
+      placeholder: 'Search here...'
+    third_party_settings: {  }
+hidden:
+  account: true
+  entitygroupfield: true
+  field_goal_log: true
+  field_goal_monthly_course_comp: true
+  field_goal_weekly_completions: true
+  field_goal_weekly_test_average: true
+  field_goal_weekly_views: true
+  field_interests: true
+  field_name: true
+  field_notification_days: true
+  field_notification_time: true
+  field_organization_homepage: true
+  field_organization_identifier: true
+  group_content: true
+  langcode: true
+  language: true
+  path: true
+  simplesamlphp_auth_user_enable: true
+  timezone: true
+  user_picture: true

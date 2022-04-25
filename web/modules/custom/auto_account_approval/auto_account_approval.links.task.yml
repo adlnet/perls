@@ -1,0 +1,5 @@
+auto_account_approval.admin_display:
+  title: 'Automatic registration approval'
+  base_route: entity.user.admin_form
+  description: 'Configure Auto Account approval module.'
+  route_name: auto_account_approval.config_form

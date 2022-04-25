@@ -1,0 +1,88 @@
+uuid: cd494d7a-b20d-4fea-b9fb-2e6392d3f5bf
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.learn_article
+  module:
+    - content_moderation
+id: content_moderation
+label: 'Content Moderation'
+type: content_moderation
+type_settings:
+  states:
+    archived:
+      label: Archived
+      weight: 1
+      published: false
+      default_revision: true
+    draft:
+      label: Draft
+      weight: -2
+      published: false
+      default_revision: false
+    published:
+      label: Published
+      weight: 0
+      published: true
+      default_revision: true
+    review:
+      label: Review
+      weight: -1
+      published: false
+      default_revision: false
+  transitions:
+    approve_and_publish:
+      label: 'Approve and Publish'
+      from:
+        - review
+      to: published
+      weight: -4
+    archive:
+      label: Archive
+      from:
+        - archived
+        - draft
+        - published
+        - review
+      to: archived
+      weight: 2
+    create_new_draft:
+      label: 'Create new draft'
+      from:
+        - draft
+        - published
+      to: draft
+      weight: -2
+    publish:
+      label: Publish
+      from:
+        - archived
+        - draft
+        - published
+      to: published
+      weight: -3
+    restore_to_draft:
+      label: 'Restore to draft'
+      from:
+        - archived
+      to: draft
+      weight: 1
+    return_to_draft:
+      label: 'Return to draft'
+      from:
+        - review
+      to: draft
+      weight: 0
+    send_for_review:
+      label: 'Send for review'
+      from:
+        - draft
+        - published
+        - review
+      to: review
+      weight: -1
+  entity_types:
+    node:
+      - learn_article
+  default_moderation_state: draft

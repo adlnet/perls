@@ -1,0 +1,512 @@
+/* ------------------------------------ *\
+    $BLOCKS
+\* ------------------------------------ */
+
+/**
+ * Header search block
+ */
+.c-search-block {
+  display: flex;
+  overflow: hidden;
+
+  &__form {
+    opacity: 0;
+    visibility: hidden;
+    width: 0;
+    transition: opacity 0.25s $hard-ease-in;
+    position: relative;
+    right: 65px;
+    z-index: 0;
+
+    form {
+      & > * + * {
+        margin-top: 0;
+      }
+    }
+
+    .form-item-search-api-fulltext {
+      margin-right: $space;
+    }
+
+    input {
+      border-radius: $border-radius--button;
+    }
+  }
+
+  &__toggle {
+    color: $c-content--foreground;
+    background-color: transparent;
+    border-radius: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+
+    svg path {
+      transition: $transition;
+    }
+
+    &:hover {
+      background-color: transparent;
+
+      svg path {
+        fill: $c-link--hover !important;
+      }
+    }
+  }
+
+  &__icon {
+    width: 30px;
+    height: 30px;
+
+    @include media(">xlarge") {
+      width: 50px;
+      height: 50px;
+    }
+  }
+
+  &.this-is-active {
+    .c-search-block__form {
+      opacity: 1;
+      visibility: visible;
+      width: 300px;
+      right: 0;
+    }
+  }
+}
+
+/**
+ * System block
+ */
+.c-block-system,
+.annotator-wrapper {
+  > *:not(.annotator-adder) {
+    margin-top: $space-double;
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+}
+
+/**
+ * Live preview block
+ */
+.c-block-node-live-preview {
+  @include media(">xlarge") {
+    padding-top: $space * 6;
+  }
+
+  .c-card__footer {
+    .c-field--name-field-tags {
+      color: #fff;
+
+      .c-field__item::before {
+        content: '#';
+        position: relative;
+        display: inline-block;
+      }
+
+      .c-field__item a {
+        display: inline-block;
+        position: relative;
+
+        &::before {
+          content: '';
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Block Content - Text block
+ */
+.c-block-block-content-text-block {
+  margin: $space auto;
+
+  h2,
+  h3 {
+    margin-top: 20px;
+  }
+
+  p {
+    margin-top: 30px;
+  }
+
+  ol {
+    margin-top: 30px;
+    padding-left: 30px;
+    list-style: decimal;
+
+    ol {
+      margin-top: 30px;
+      list-style: lower-alpha;
+    }
+  }
+
+  li {
+    margin-top: 20px;
+  }
+}
+
+/**
+ * Block webform - Content Specific Feedback
+ */
+.c-block--content-specific-feedback,
+.c-block-taxonomy-specific-feedback {
+  background-color: $c-content--background;
+  border-top: $border--light;
+  margin: $space-double auto;
+
+  h2 {
+    margin: $space 0;
+  }
+
+  .webform-options-display-buttons {
+    display: flex;
+
+    .webform-options-display-buttons-wrapper {
+      margin: 0 5px 10px 5px;
+    }
+  }
+
+  .fieldset-legend {
+    font-weight: normal;
+    padding-bottom: 10px;
+    font-size: $font-size-s;
+  }
+
+  .form-item-content-relevant {
+    margin: 0;
+
+    label {
+      background: $c-white;
+      border: 1px solid $c-link;
+      border-radius: 7px;
+      padding: $space-quarter $space-and-half;
+      color: $c-link;
+      line-height: $font-size-s;
+
+      &:hover {
+        background: $c-link--hover;
+        color: $c-white;
+
+        &::before {
+          background: $c-white;
+        }
+      }
+
+      &::before {
+        background: $c-link;
+        content: '';
+        width: 20px;
+        height: 19px;
+        background-size: 20px 19px;
+        display: inline-block;
+        vertical-align: -2px;
+        padding-right: 10px;
+      }
+    }
+
+    input:checked + label,
+    input:hover + label {
+      background: $c-link;
+      border-color: $c-link;
+      color: $c-white;
+
+      &::before {
+        background: $c-white;
+      }
+    }
+  }
+
+  // Set the proper like and dislike icon.
+  input[value="-1"] {
+    & + label::before {
+      mask: url("../img/icons/icon-dislike.svg") no-repeat;
+    }
+  }
+
+  input[value="1"] {
+    & + label::before {
+      mask: url("../img/icons/icon-like.svg") no-repeat;
+    }
+  }
+
+  .webform-submission-information {
+    display: none;
+  }
+}
+// Specific margin for feedback form.
+.c-block--content-specific-feedback {
+  .relevant-content-rate,
+  .webform-confirmation {
+    margin-top: $space;
+  }
+
+  .relevant-content-rate {
+    .fieldset-legend.form-required::after {
+      display: none;
+    }
+  }
+}
+
+/**
+ * Block Group/User Statistics.
+ */
+.c-block-user-statistics-block,
+.c-block-group-statistics-block,
+.c-block-node-statistics-block
+ {
+  h2 {
+    @include o-heading--m;
+
+    margin-bottom: $space;
+  }
+
+  > fieldset {
+    margin-bottom: $space;
+    padding-left: 25px;
+
+    legend {
+      margin-bottom: 0;
+    }
+
+    .fieldset-legend {
+      display: flex;
+      align-items: center;
+    }
+
+    .fieldset-wrapper {
+      display: grid;
+      grid-template-columns: 100px 100px;
+      grid-auto-rows: 25px;
+    }
+    &.node-statistics-feedback_average > .fieldset-wrapper{
+      display: block;
+    }
+  }
+
+  // Assigning icons to categories.
+  $statistics-icons:
+    recommendation url("/themes/custom/perls/img/icons/icon-stats-recommended.svg"),
+    seen url("/themes/custom/perls/img/icons/icon-stats-viewed.svg"),
+    bookmarked url("/themes/custom/perls/img/icons/icon-stats-bookmarked.svg"),
+    completed url("/themes/custom/perls/img/icons/icon-stats-completed.svg"),
+    members url("/themes/custom/perls/img/icons/icon-stats-members.svg"),
+    feedback url("/themes/custom/perls/img/icons/icon-stats-feedback-submissions.svg"),
+    feedback_average url("/themes/custom/perls/img/icons/icon-stats-learner-feedback.svg"),
+    comments url("/themes/custom/perls/img/icons/icon-stats-comments-posted.svg");
+
+  $icon-width: 15px;
+  @each $name, $icon in $statistics-icons {
+    .group-statistics,
+    .node-statistics,
+    .user-statics {
+      &-#{$name} {
+        .fieldset-legend::before {
+          display: inline-block;
+          content: "";
+          width: $icon-width;
+          height: $icon-width;
+          min-height: $icon-width;
+          margin: 0 10px 0 (-25px);
+          background-image: $icon;
+          background-size: $icon-width $icon-width;
+          background-repeat: no-repeat;
+          background-position: center;
+        }
+      }
+    }
+  }
+}
+
+.c-block-node-statistics-block {
+  padding-top: $space-double;
+}
+
+/**
+ * New dashboard start page block.
+ */
+.page-variant--new-dashboard .c-block {
+  & > h2 {
+    font-size: var(--font-size-l, $font-size-l);
+    margin-bottom: $space + $space-quarter;
+  }
+
+  .dashboard-more-url {
+    display: none;
+  }
+
+  .layout-section {
+    margin: 0;
+
+    .l-grid-item:nth-child(1) > * {
+      margin-top: $space-double + $space-half;
+    }
+
+    &:first-of-type  {
+      margin-top: 0;
+    }
+
+    // Without a min-width set by minmax for the grid column, slick carousel
+    // cannot properly size itself.
+    &.l-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .js-slick-slider {
+      margin-bottom: -$space;
+
+      // Reset flex layout for cards
+      .c-node--tile .c-card {
+        flex: inherit;
+      }
+    }
+  }
+
+
+  .c-block-views-blockgroup-index-my-groups-block,
+  .c-block-views-blockdashboard-tags-following-tags-block {
+    & > h2 {
+      margin-bottom: 0;
+    }
+  }
+
+  .layout-section--following .l-grid-item > div {
+    border-top: 1px solid #b5b3b1;
+    padding-top: $space-double + $space-half;
+    padding-bottom: $space-double + $space-half;
+  }
+
+  .layout-section--my-groups {
+    .l-grid-item > div {
+      padding-bottom: $space + $space-half;
+    }
+  }
+
+  .layout-section--following,
+  .layout-section--my-groups {
+    .l-grid-item > div {
+      border-bottom: 1px solid #b5b3b1;
+    }
+  }
+}
+
+.c-block-vidyo-room-block {
+  h2 {
+    margin: $space 0;
+  }
+}
+
+/**
+ * Related course content block.
+ */
+.related-course-content {
+  border-top: $border--light;
+  margin-top: $space-double;
+  padding-top: $space;
+
+  &__list-item {
+    margin-bottom: $space-double;
+    width: 100%;
+    min-width: 250px;
+    flex-grow: 0;
+    flex-shrink: 1;
+    flex-basis: calc(33% - #{$space});
+
+    @include media(">medium") {
+      // Override the slick slider ruleset to prevent size inconsistency between
+      // stacked slider elements.
+      width: 33% !important;
+      min-width: 250px !important;
+    }
+
+    [dir="rtl"] & {
+      margin-left: $space;
+    }
+
+    .c-node--learn-link .c-node__card{
+      margin-top: 0;
+    }
+  }
+
+  &__list {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  &__list-item-content {
+    width: 100%;
+  }
+
+  &__course-info {
+    margin-bottom: $space-half + $space-quarter;
+  }
+
+  &__course-title {
+    display: inline-block;
+    margin-right: $space-half;
+    font-size: var(--font-size-m, $font-size-m);
+    font-weight: bold;
+  }
+
+  &__course-title-text {
+    font-style: italic;
+  }
+
+  &__course-link {
+    display: inline-block;
+  }
+}
+// Prevent slide box-shadow bleed on next course item slider.
+.c-block-next-course-content-block {
+  .slick-slide {
+    // Hide the shadow as the base rule (off screen slides).
+    .c-node__card {
+      box-shadow: none;
+    }
+    // Show the shadow for the active slides (first visible).
+    &.slick-active .c-node__card {
+      box-shadow: $box-shadow;
+    }
+  }
+  // Show the shadow for siblings of the active slide (other visible slides).
+  .slick-slide.slick-active ~ .slick-slide .c-node__card {
+    box-shadow: $box-shadow;
+  }
+}
+
+/**
+ * History block default styling.
+ */
+.c-block-go-back-history {
+  &.go-back--hidden {
+    height: 0;
+  }
+  // Back button is hidden by default to circumvent FOUC and unnecessary page
+  // height changes if the button needs to be hidden.
+  &.go-back--hidden .go-back-history-btn {
+    opacity: 0;
+  }
+  // JS removes the hidden class from the block and the button "gracefully"
+  // transitions opacity to being visible.
+  .go-back-history-btn {
+    opacity: 1;
+  }
+}
+
+/**
+ * Task list block styling.
+ */
+.c-block-vue-componentuser-task-list {
+  .task__errors {
+    color: $c-button;
+  }
+}
+
+.page--user-task-my-list.content-only h1 {
+  display: none;
+}

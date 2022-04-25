@@ -1,0 +1,37 @@
+<?php
+
+/**
+ * @file
+ * The module related hooks.
+ */
+
+/**
+ * Implements hook_cron().
+ */
+function perls_goals_log_cron() {
+  $time = \Drupal::time();
+  $state = \Drupal::state();
+  $last_run = $state->get('average_goal_check_last_run');
+  $today = mb_strtolower(date('l', $time->getRequestTime()));
+  // This average check is running one on every week on Saturday.
+  if ($today === 'saturday' &&
+    (empty($last_run) || date('d.m', $last_run) !== date('d.m', $time->getCurrentTime()))) {
+    $queue = \Drupal::service('queue')->get('perls_goal_log_check_avg_goal');
+    /** @var \Drupal\perls_goals\GoalCalculator $calculate_helper */
+    $calculate_helper = \Drupal::service('perls_goals.goals_calculate');
+    $query = \Drupal::entityQuery('user')
+      ->condition('status', 1);
+    // We check only learners and content manager users.
+    $group = $query->orConditionGroup()
+      ->condition('roles', NULL, 'IS NULL')
+      ->condition('roles', 'content_manager');
+    $query->condition($group);
+    $uids = $query->execute();
+    $users_without_goals = $calculate_helper->getUserWithoutGoals();
+    $remained_users = array_diff($uids, $users_without_goals);
+    foreach ($remained_users as $uid) {
+      $queue->createItem(['user' => $uid, 'goal_type' => 'avg']);
+    }
+    $state->set('average_goal_check_last_run', $time->getRequestTime());
+  }
+}

@@ -1,0 +1,201 @@
+<?php
+
+/**
+ * @file
+ * Perls_podcast module.
+ */
+
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\perls_podcast\Event\PodcastEpisodeEvent;
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\node\NodeInterface;
+use Drupal\perls_podcast\Event\PodcastUpdateEvent;
+
+/**
+ * Implements hook_entity_bundle_field_info_alter().
+ */
+function perls_podcast_entity_bundle_field_info_alter(&$fields, EntityTypeInterface $entity_type, $bundle) {
+  switch ($bundle) {
+    case 'podcast_episode':
+      if (isset($fields['field_release_date'])) {
+        $fields['field_release_date']->addConstraint('perls_future_date', []);
+      }
+      break;
+
+    case 'podcast':
+      if (isset($fields['field_episodes'])) {
+        $fields['field_episodes']->addConstraint('LearnUniqueEpisodeReference', []);
+      }
+      break;
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_presave().
+ */
+function perls_podcast_node_presave(NodeInterface $node) {
+  if ($node->bundle() === 'podcast') {
+    $episodes = $node->get('field_episodes');
+    if (!$episodes->isEmpty()) {
+      if ($episodes->count() > 1) {
+        $episodes = $node->get('field_episodes')->getValue();
+        $episode_ids = array_column($episodes, 'target_id');
+
+        $database = \Drupal::database();
+        $query = $database->select('node__field_release_date', 'rd')
+          ->condition('rd.entity_id', $episode_ids, 'IN')
+          ->fields('rd', ['entity_id'])
+          ->orderBy('field_release_date_value', 'DESC');
+        $result = $query->execute();
+
+        if (FALSE !== $result) {
+          $normalized_result = [];
+          // Normalize the result to be able to set it on the node object.
+          foreach ($result as $record) {
+            $normalized_result[]['target_id'] = $record->entity_id;
+          }
+          $node->set('field_episodes', $normalized_result);
+        }
+      }
+    }
+  }
+
+  if ($node->bundle() !== 'podcast_episode') {
+    return;
+  }
+
+  $event = new PodcastEpisodeEvent($node);
+  /** @var Drupal\Component\EventDispatcher\ContainerAwareEventDispatcher $event_dispatcher */
+  $event_dispatcher = \Drupal::service('event_dispatcher');
+  $event_dispatcher->dispatch(PodcastEpisodeEvent::PERLS_PODCAST_INSERT_UPDATE, $event);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_update().
+ */
+function perls_podcast_node_update(NodeInterface $node) {
+  $event = new PodcastUpdateEvent($node);
+  /** @var Drupal\Component\EventDispatcher\ContainerAwareEventDispatcher $event_dispatcher */
+  $event_dispatcher = \Drupal::service('event_dispatcher');
+  $event_dispatcher->dispatch(PodcastUpdateEvent::PERLS_PODCAST_UPDATE, $event);
+}
+
+/**
+ * Implements hook_entity_operation_alter().
+ */
+function perls_podcast_entity_operation_alter(array &$operations, EntityInterface $entity) {
+  if (!(\Drupal::currentUser()->hasPermission('access content'))) {
+    return;
+  }
+  $entityTypeId = $entity->getEntityTypeId();
+  if ($entityTypeId !== 'node') {
+    return;
+  }
+  if ($entity->bundle() !== 'podcast') {
+    return;
+  }
+
+  $operations['contents']['title'] = t('Manage Episodes');
+  unset($operations['clone']);
+
+}
+
+/**
+ * Implements hook_podcast_menu_local_tasks_alter().
+ */
+function perls_podcast_menu_local_tasks_alter(&$data, $route_name) {
+  $related_routes = [
+    'entity.node.edit_form',
+    'entity.node.edit_form.contents',
+  ];
+  if (!in_array($route_name, $related_routes)) {
+    return;
+  }
+  $node = \Drupal::routeMatch()->getParameter('node');
+  if ($node->bundle() !== 'podcast') {
+    return;
+  }
+  $data['tabs'][1]['form_mode_manager.entities:form_mode_manager.node.default.task_tab']['#link']['title'] = t('Edit');
+  $data['tabs'][1]['form_mode_manager.entities:form_mode_manager.node.contents.task_tab']['#link']['title'] = t('Manage Episodes');
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function perls_podcast_form_node_podcast_contents_form_alter(&$form, &$form_state, $form_id) {
+  // Remove unnecessary form elements.
+  unset($form['actions']['preview']);
+  unset($form['actions']['delete']);
+  unset($form['status']);
+  unset($form['meta']);
+  unset($form['menu']);
+  unset($form['path']);
+  unset($form['author']);
+  unset($form['options']);
+  unset($form['revision']);
+  unset($form['revision_information']);
+  unset($form['revision_log']);
+  unset($form['top_preview_button']);
+}
+
+/**
+ * Implements hook_preprocess_html().
+ */
+function perls_podcast_preprocess_html(&$variables) {
+  if (\Drupal::routeMatch()
+    ->getRouteName() !== 'entity.node.edit_form.contents') {
+    return;
+  }
+  $node = \Drupal::routeMatch()->getParameter('node');
+  if ($node->bundle() !== 'podcast') {
+    return;
+  }
+  $variables['head_title']['title'] = t('Manage Episodes');
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function perls_podcast_form_alter(&$form, &$form_state, $form_id) {
+  $allowed_form_ids = [
+    'node_podcast_form',
+    'node_podcast_edit_form',
+    'node_podcast_contents_form',
+  ];
+  if (!in_array($form_id, $allowed_form_ids)) {
+    return;
+  }
+
+  $episode_css_classes = $form['field_episodes']['widget']['current']['#attributes']['class'];
+  $diff = array_diff($episode_css_classes, ['sortable']);
+  $form['field_episodes']['widget']['current']['#attributes']['class'] = $diff;
+  $form['field_episodes']['widget']['current']['#attributes']['class'][] = 'disable-episode-reference-dg';
+}
+
+/**
+ * Implements hook_node_access().
+ *
+ * Only allow users to access podcasts episodes if they can access the podcast.
+ *
+ * @todo Ideally this would be handled within node grants.
+ */
+function perls_podcast_node_access(NodeInterface $node, $op, AccountInterface $account) {
+  if ($node->bundle() !== 'podcast_episode') {
+    return AccessResult::neutral();
+  }
+
+  $podcasts = \Drupal::entityTypeManager()
+    ->getStorage('node')
+    ->loadByProperties([
+      'type' => 'podcast',
+      'field_episodes' => $node->id(),
+    ]);
+
+  // Technically an episode should only be part of one podcast,
+  // but we'll check all results, just in case.
+  return array_reduce($podcasts, function ($access, $podcast) use ($op, $account) {
+    return $access->andIf($podcast->access($op, $account, TRUE));
+  }, AccessResult::neutral());
+}

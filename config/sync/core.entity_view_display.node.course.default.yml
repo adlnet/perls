@@ -1,0 +1,97 @@
+uuid: 9aeb9d37-39e3-49ec-a76e-ba83b19886b9
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.course.field_description
+    - field.field.node.course.field_difficulty
+    - field.field.node.course.field_learning_content
+    - field.field.node.course.field_media_image
+    - field.field.node.course.field_tags
+    - field.field.node.course.field_topic
+    - field.field.node.course.field_type_description
+    - node.type.course
+  module:
+    - field_layout
+    - layout_builder
+    - layout_discovery
+    - media
+    - text
+    - user
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings:
+      label: ''
+  layout_builder:
+    enabled: false
+    allow_custom: false
+id: node.course.default
+targetEntityType: node
+bundle: course
+mode: default
+content:
+  field_description:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 6
+    region: content
+  field_difficulty:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 5
+    region: content
+  field_learning_content:
+    type: entity_reference_entity_view
+    label: hidden
+    settings:
+      view_mode: card
+      link: false
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_media_image:
+    type: media_thumbnail
+    label: above
+    settings:
+      image_link: ''
+      image_style: ''
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_tags:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  flag_bookmark:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  flag_completed:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+hidden:
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  entitygroupfield: true
+  field_topic: true
+  field_type_description: true
+  flag_recommendation: true
+  group_content: true
+  langcode: true
+  links: true
+  recommendation_reason: true
+  search_api_excerpt: true

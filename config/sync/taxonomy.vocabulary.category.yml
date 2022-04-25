@@ -1,0 +1,10 @@
+uuid: 0cc9c964-8d0e-41c3-8271-f930cf31a3bb
+langcode: und
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: r3xGtvCAEZeZRJ_xVPTj2PGYuK5TKC3yZeNTwGt-f-A
+name: Topic
+vid: category
+description: ''
+weight: 0

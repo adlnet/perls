@@ -1,0 +1,21 @@
+uuid: 015b18e3-56f7-46f0-a73b-4c6467affd6e
+langcode: en
+status: true
+dependencies:
+  module:
+    - flag
+id: flagging.field_recommendation_plugin
+field_name: field_recommendation_plugin
+entity_type: flagging
+type: string
+settings:
+  max_length: 255
+  case_sensitive: false
+  is_ascii: false
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

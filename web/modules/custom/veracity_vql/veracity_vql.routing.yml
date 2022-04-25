@@ -1,0 +1,9 @@
+veracity_vql.veracity_config_form:
+  path: '/admin/config/services/veracity'
+  defaults:
+    _form: '\Drupal\veracity_vql\Form\VeracityConfigForm'
+    _title: 'Veracity Integration'
+  requirements:
+    _permission: 'access administration pages'
+  options:
+    _admin_route: TRUE

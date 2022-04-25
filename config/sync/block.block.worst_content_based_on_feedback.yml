@@ -1,0 +1,30 @@
+uuid: 795f8c6a-c717-4fea-950d-4708fc957b44
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.content_feedback_rating
+  module:
+    - system
+    - views
+  theme:
+    - perls_content_manager
+id: worst_content_based_on_feedback
+theme: perls_content_manager
+region: content
+weight: -2
+provider: null
+plugin: 'views_block:content_feedback_rating-block_2'
+settings:
+  id: 'views_block:content_feedback_rating-block_2'
+  label: ''
+  label_display: '0'
+  provider: views
+  views_label: ''
+  items_per_page: none
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    context_mapping: {  }
+    pages: /dashboard

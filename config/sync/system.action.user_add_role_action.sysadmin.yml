@@ -1,0 +1,14 @@
+uuid: 10fc5678-7e8e-488e-b3f9-6ebccad591b9
+langcode: en
+status: true
+dependencies:
+  config:
+    - user.role.sysadmin
+  module:
+    - user
+id: user_add_role_action.sysadmin
+label: 'Add the Sysadmin role to the selected user(s)'
+type: user
+plugin: user_add_role_action
+configuration:
+  rid: sysadmin

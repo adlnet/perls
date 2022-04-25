@@ -1,0 +1,24 @@
+uuid: 533c9ff3-17a5-443e-9e3f-009e1c02e784
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_content_description
+    - node.type.podcast
+  module:
+    - description_field
+id: node.podcast.field_content_description
+field_name: field_content_description
+entity_type: node
+bundle: podcast
+label: 'Type description'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  long_description:
+    value: "Use a <strong>podcast</strong> to guide your learner through a set of audio episodes. Learners are shown episodes in descending order by date published (with the most recent episode first). Learners can subscribe to podcasts to receive notifications of new episodes.<br />\r\n<em><strong>Note:</strong> Although learners can listen to an episode in their browser, viewing and subscribing to podcasts is optimized for the mobile app.</em>"
+    format: basic_filter
+field_type: description_field

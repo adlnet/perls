@@ -1,0 +1,11 @@
+components:
+  css:
+    component:
+      css/paragraph--alert.css: {}
+      css/paragraph--callout.css: {}
+      css/paragraph--image.css: {}
+      css/paragraph--table.css: {}
+      css/paragraph--tip.css: {}
+view:
+  js:
+    js/perls_authoring.view.js: {}

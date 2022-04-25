@@ -1,0 +1,12 @@
+uuid: 2115c027-50bd-465c-bc36-964fadc69efe
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: aOn_HVJujjQEfW73tAYLlJMYlV_tOfgHuRhp7g3S0SM
+id: checklist
+label: Checklist
+icon_uuid: null
+icon_default: null
+description: 'Add a checklist.'
+behavior_plugins: {  }

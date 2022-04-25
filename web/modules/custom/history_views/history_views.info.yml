@@ -1,0 +1,5 @@
+name: 'History Views'
+type: module
+description: 'Views handler to expose user history in views'
+core: 8.x
+core_version_requirement: ^8 || ^9

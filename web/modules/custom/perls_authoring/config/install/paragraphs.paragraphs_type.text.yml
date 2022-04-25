@@ -1,0 +1,8 @@
+langcode: en
+status: true
+dependencies: {  }
+id: text
+label: Text
+icon_uuid: null
+description: 'Add a block of formatted text'
+behavior_plugins: {  }

@@ -1,0 +1,16 @@
+uuid: bcb11d03-96be-49d0-8d5f-ea6920b98648
+langcode: en
+status: true
+dependencies: {  }
+id: course_to_learn_content
+label: 'Course to Learn Content'
+enabled: true
+first_field: field_course
+second_field: field_learning_content
+bundles:
+  node:
+    - course
+    - learn_article
+    - learn_file
+    - learn_link
+    - learn_package

@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - views_bulk_operations
+id: perls_publish_action
+label: 'Publish'
+type: node
+plugin: perls_publish_action
+configuration: { }

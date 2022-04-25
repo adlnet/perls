@@ -1,0 +1,42 @@
+uuid: fee4d8f2-de0c-4e0e-bed0-2c24dccc91b3
+langcode: en
+status: true
+dependencies:
+  config:
+    - business_rules.action.send_email_on_moderation_state_update
+    - business_rules.condition.entity_author_is_not_blocked
+    - business_rules.condition.entity_is_not_new
+    - business_rules.condition.entity_is_not_updated_by_sysadmin
+    - business_rules.condition.not_node_author
+id: not_system_cron_blocked_new
+label: 'Not author, system, blocked, new'
+type: logical_and
+reverse: false
+description: 'Checks that the entity not new, that the author is not blocked, that the current user is not the author nor a sysadmin.'
+target_entity_type: null
+target_bundle: null
+success_items:
+  send_email_on_moderation_state_update:
+    type: action
+    id: send_email_on_moderation_state_update
+    weight: -9
+fail_items: {  }
+tags: {  }
+settings:
+  items:
+    entity_is_not_new:
+      type: condition
+      id: entity_is_not_new
+      weight: -100
+    entity_author_is_not_blocked:
+      type: condition
+      id: entity_author_is_not_blocked
+      weight: -99
+    not_node_author:
+      type: condition
+      id: not_node_author
+      weight: -98
+    entity_is_not_updated_by_sysadmin:
+      type: condition
+      id: entity_is_not_updated_by_sysadmin
+      weight: -96

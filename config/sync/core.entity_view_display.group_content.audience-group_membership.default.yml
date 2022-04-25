@@ -1,0 +1,66 @@
+uuid: b5d8015e-ecae-440d-b98e-0cfbe2f151b3
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.group_content.audience-group_membership.group_roles
+    - group.content_type.audience-group_membership
+  module:
+    - field_layout
+    - layout_builder
+    - layout_discovery
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings:
+      label: ''
+  layout_builder:
+    enabled: true
+    sections:
+      -
+        layout_id: layout_onecol
+        layout_settings:
+          label: ''
+          context_mapping: {  }
+        components:
+          8ec07b05-7e1e-408a-9639-0abe39010756:
+            uuid: 8ec07b05-7e1e-408a-9639-0abe39010756
+            region: content
+            configuration:
+              id: 'field_block:group_content:audience-group_membership:entity_id'
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              formatter:
+                type: entity_reference_entity_view
+                label: hidden
+                settings:
+                  view_mode: default
+                  link: true
+                third_party_settings: {  }
+            weight: 0
+            additional: {  }
+            third_party_settings: {  }
+        third_party_settings: {  }
+id: group_content.audience-group_membership.default
+targetEntityType: group_content
+bundle: audience-group_membership
+mode: default
+content:
+  entity_id:
+    type: entity_reference_entity_view
+    label: hidden
+    settings:
+      view_mode: default
+      link: true
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  group_roles: true
+  langcode: true
+  search_api_excerpt: true
+  uid: true

@@ -1,0 +1,29 @@
+uuid: 66294935-ee1f-4d1d-8c20-e295321fd1ab
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.flagging.completed.field_completion_source
+    - flag.flag.completed
+  module:
+    - field_layout
+    - layout_discovery
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings:
+      label: ''
+id: flagging.completed.default
+targetEntityType: flagging
+bundle: completed
+mode: default
+content:
+  field_completion_source:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden: {  }

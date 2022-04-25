@@ -1,0 +1,39 @@
+{#
+/**
+ * @file
+ * Default theme implementation for an achievement's modal display.
+ *
+ * @see template_preprocess_THEME_HOOK()
+ * @ingroup themeable
+ *
+ * Available variables:
+ * - $achievement: The achievement being displayed, as an array.
+ * - $user: An array of unlocked 'rank' and 'timestamp', if applicable.
+ * - $id: The acheivement id.
+ * - $uuid: The achievement uuid.
+ * - $label: The achievement label.
+ * - $description: The achievement description.
+ * - $type: The achievement type.
+ * - $plugin_type: The achievement plugin.
+ * - $secret: Is secret.
+ * - $invisible: Is invisible.
+ * - $locked_image: Locked image.
+ * - $unlocked_image: Unlocked image.
+ * - $sharable_image: Sharable image.
+ * - $locked_image_url: Locked image url.
+ * - $unlocked_image_url: Unlocked image url.
+ * - $sharable_image_url: Sharable image url.
+ * - $unlocked: Is unlocked.
+ * - $unlocked_timestamp: Timestamp when this was unlocked.
+ * - $status_description: Status.
+ */
+#}
+<div class = "achievement-modal-view achievement">
+  <div class="achievement-modal-image">{{ sharable_image }}</div>
+
+  <div class="achievement-modal-body ">
+    <div class="achievement-title">{{ label  }}</div>
+    <div class="achievement-description">{{ description }}</div>
+    <div class="achievement-unlocked-date">{{ unlocked_timestamp }}</div>
+  </div>
+</div>

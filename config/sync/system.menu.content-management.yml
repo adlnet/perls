@@ -1,0 +1,8 @@
+uuid: 5d6c10dc-80da-46d0-99f9-80df59f21445
+langcode: en
+status: true
+dependencies: {  }
+id: content-management
+label: 'Content Management'
+description: 'Manage Content'
+locked: false

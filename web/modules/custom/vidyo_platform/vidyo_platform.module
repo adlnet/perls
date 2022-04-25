@@ -1,0 +1,40 @@
+<?php
+
+/**
+ * @file
+ * Contains vidyo_platform.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function vidyo_platform_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the vidyo_platform module.
+    case 'help.page.vidyo_platform':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Provides integration with VidyoPlatform.') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function vidyo_platform_theme() {
+  return [
+    'vidyo_offline' => [
+      'variables' => [
+        'offline_message' => NULL,
+        'attributes' => [
+          'class' => ['vidyo-status--offline'],
+        ],
+      ],
+    ],
+  ];
+}

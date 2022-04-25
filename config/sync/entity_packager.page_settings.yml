@@ -1,0 +1,6 @@
+save_directory: 'private://offline_page'
+_core:
+  default_config_hash: G8SSy9ke0724aSQIWcabX4SBXDewzz6xCXzsFIWJyOw
+user_agent: Drupal
+content_types:
+  learn_article: learn_article

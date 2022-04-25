@@ -1,0 +1,32 @@
+name: Authoring
+description: 'Provides an interface for authoring rich content directly within the Web interface.'
+type: module
+core: 8.x
+core_version_requirement: ^8 || ^9
+dependencies:
+  - allowed_formats
+  - audiofield
+  - ckeditor
+  - content_moderation
+  - editor
+  - entity_print
+  - entity_reference_revisions
+  - field
+  - field_layout
+  - file
+  - filter
+  - header_formatter
+  - image
+  - language
+  - layout_discovery
+  - link
+  - menu_ui
+  - node
+  - options
+  - paragraphs
+  - path
+  - perls_content
+  - text
+  - user
+  - video_embed_field
+package: Perls

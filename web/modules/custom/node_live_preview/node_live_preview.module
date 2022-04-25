@@ -1,0 +1,27 @@
+<?php
+
+/**
+ * @file
+ * Node Live Preview module.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_entity_type_alter().
+ */
+function node_live_preview_entity_type_alter(array &$entity_info) {
+  $entity_info['node']->setFormClass('default', 'Drupal\node_live_preview\Form\NodeLivePreviewNodeForm');
+  $entity_info['node']->setFormClass('edit', 'Drupal\node_live_preview\Form\NodeLivePreviewNodeForm');
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function node_live_preview_form_node_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if (isset($form["actions"]["preview"])) {
+    $form["top_preview_button"] = $form["actions"]["preview"];
+    $form["top_preview_button"]["#weight"] = -100;
+  }
+
+}

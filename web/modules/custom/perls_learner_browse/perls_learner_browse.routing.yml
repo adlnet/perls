@@ -1,0 +1,21 @@
+perls_learner_browse.discover:
+  path: '/discover'
+  defaults:
+    _controller: '\Drupal\perls_learner_browse\Controller\BrowseController::browse'
+    _title: 'Discover'
+  requirements:
+    _permission: 'access content'
+perls_learner_browse.following:
+  path: '/following'
+  defaults:
+    _controller: '\Drupal\perls_learner_browse\Controller\BrowseController::following'
+    _title: 'Following'
+  requirements:
+    _permission: 'access content'
+perls_learner_browse.node_course_content_block:
+  path: '/block-ajax-load'
+  defaults:
+    _controller: '\Drupal\perls_learner_browse\Controller\BlockViaAjaxController::renderBlock'
+    _title: 'Render block via Ajax'
+  requirements:
+    _permission: 'access content'

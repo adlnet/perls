@@ -1,0 +1,7 @@
+services:
+  perls_goals.goals_calculate:
+    class: Drupal\perls_goals\GoalCalculator
+    arguments: ['@database', '@perls_api.user_statistics', '@entity_type.manager']
+  perls_goals.goal_helper:
+    class: Drupal\perls_goals\GoalHelper
+    arguments: ['@entity_type.manager', '@config.factory']

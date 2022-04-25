@@ -1,0 +1,11 @@
+uuid: ca6fc975-09af-437a-b71a-a01984c45828
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.tip_card
+id: node.tip_card
+target_entity_type_id: node
+target_bundle: tip_card
+default_langcode: site_default
+language_alterable: false

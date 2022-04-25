@@ -1,0 +1,5 @@
+allowed_tags: '<a><b><em><strong><i><p>'
+prefer_gravatar: false
+user_avatar_image_style: user_profile_circle
+_core:
+  default_config_hash: dDgCqZH6vg84w-bfzjj3BKby-7uET0SrpIK-D6fteVo

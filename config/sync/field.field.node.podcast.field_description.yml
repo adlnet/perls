@@ -1,0 +1,31 @@
+uuid: 43524a09-cc77-490b-bc92-97bb9b4fe90f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_description
+    - node.type.podcast
+  module:
+    - allowed_formats
+    - text
+third_party_settings:
+  allowed_formats:
+    plain_text: plain_text
+    basic_filter: '0'
+    card_styling: '0'
+    custom_view_header: '0'
+    inline_styling: '0'
+    list: '0'
+    table: '0'
+id: node.podcast.field_description
+field_name: field_description
+entity_type: node
+bundle: podcast
+label: Description
+description: 'A good description is short (1 or 2 sentences), avoids jargon, and summarizes the purpose or theme of the podcast.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

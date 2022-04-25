@@ -1,0 +1,6 @@
+.env
+db_backup.sql
+/files/
+/private/
+/simplesamlphp/
+/vendor/

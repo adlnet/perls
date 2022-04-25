@@ -1,0 +1,17 @@
+uuid: a84af05c-80cb-454d-bfaa-3a295af0b51e
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.audience
+  enforced:
+    config:
+      - user.role.rest_json_api_user
+id: audience-b3252b2e4
+label: 'Rest JSON:API User'
+weight: 10005
+internal: true
+audience: outsider
+group_type: audience
+permissions_ui: false
+permissions: {  }

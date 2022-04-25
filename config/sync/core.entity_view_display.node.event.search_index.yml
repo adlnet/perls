@@ -1,0 +1,51 @@
+uuid: e43431bb-3c3d-4348-9181-7c47696580ee
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.search_index
+    - field.field.node.event.field_additional_details
+    - field.field.node.event.field_course
+    - field.field.node.event.field_description
+    - field.field.node.event.field_media_image
+    - field.field.node.event.field_related_content
+    - field.field.node.event.field_schedule
+    - field.field.node.event.field_tags
+    - field.field.node.event.field_topic
+    - field.field.node.event.field_type_description
+    - field.field.node.event.field_virtual_meeting_room
+    - node.type.event
+  module:
+    - layout_builder
+    - user
+third_party_settings:
+  layout_builder:
+    enabled: false
+    allow_custom: false
+id: node.event.search_index
+targetEntityType: node
+bundle: event
+mode: search_index
+content: {  }
+hidden:
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  entitygroupfield: true
+  field_additional_details: true
+  field_course: true
+  field_description: true
+  field_media_image: true
+  field_related_content: true
+  field_schedule: true
+  field_tags: true
+  field_topic: true
+  field_type_description: true
+  field_virtual_meeting_room: true
+  flag_bookmark: true
+  flag_completed: true
+  flag_recommendation: true
+  langcode: true
+  links: true
+  recommendation_reason: true
+  search_api_excerpt: true

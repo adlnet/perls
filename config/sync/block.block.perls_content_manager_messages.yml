@@ -1,0 +1,22 @@
+uuid: 56d91196-6218-4802-9837-86c0d42a8b64
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - perls_content_manager
+_core:
+  default_config_hash: YqKTtloWJ8FjLtfVNfrHaK6kVgxT67lC1cJ3j6i6WLo
+id: perls_content_manager_messages
+theme: perls_content_manager
+region: content
+weight: -10
+provider: null
+plugin: system_messages_block
+settings:
+  id: system_messages_block
+  label: 'Status messages'
+  label_display: '0'
+  provider: system
+visibility: {  }

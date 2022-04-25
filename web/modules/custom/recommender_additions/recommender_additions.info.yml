@@ -1,0 +1,5 @@
+name: "Recommendation additions"
+description: "Provides addons to recommendation engine."
+type: module
+core: 8.x
+core_version_requirement: ^8 || ^9

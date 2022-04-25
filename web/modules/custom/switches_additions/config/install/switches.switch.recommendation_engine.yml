@@ -1,0 +1,16 @@
+id: recommendation_engine
+entity_type: switch
+label: Recommendation Engine
+description: Switch for recommendation engine
+status: true
+weight: 0
+langcode: en
+dependencies:
+  enforced:
+    module:
+      - switches
+activationMethod: manual
+manualActivationStatus: true
+defaultValue: null
+overrideable: null
+activationConditions: []

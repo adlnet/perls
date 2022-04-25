@@ -1,0 +1,28 @@
+services:
+  perls_group_management.access_check.group_visibility:
+    class: Drupal\perls_group_management\Permissions\GroupVisibilityAccess
+    arguments: ['@entity_type.manager', '@group.membership_loader']
+    tags:
+      - { name: access_check }
+  perls_group_management.group_statics:
+    class: Drupal\perls_group_management\GroupStatistics
+    arguments: ['@database']
+  perls_group_management.group_route_context_decorator:
+    class: Drupal\perls_group_management\Context\GroupContext
+    public: false
+    decorates: group.group_route_context
+    arguments: ['@perls_group_management.group_route_context_decorator.inner', '@current_route_match']
+  perls_group_management.flagging_event:
+    class: Drupal\perls_group_management\EventSubscriber\GroupStatisticsEvent
+    arguments:
+      - '@group.membership_loader'
+      - '@cache_tags.invalidator'
+      - '@current_user'
+      - '@perls_learner_state.flagging_helper'
+      - '@xapi.xapi_statement_helper'
+    tags:
+      - { name: event_subscriber }
+  perls_group_management.group_outbound:
+    class: Drupal\perls_group_management\PathProcessor\GroupOutboundPathProcessor
+    tags:
+      - { name: path_processor_outbound, priority: -10 }

@@ -1,0 +1,9 @@
+badges:
+  css:
+    theme:
+      css/theme.css: {}
+  js:
+    js/print_links.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal

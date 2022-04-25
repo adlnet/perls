@@ -1,0 +1,29 @@
+uuid: c4bf4262-b9df-4189-8ae2-5de9e6649bd2
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_tags
+    - node.type.podcast_episode
+    - taxonomy.vocabulary.tags
+id: node.podcast_episode.field_tags
+field_name: field_tags
+entity_type: node
+bundle: podcast_episode
+label: Tags
+description: 'Tags are keywords assigned to specific information, which helps describe the information and allows it to be found by browsing or searching. Try to use existing tags when possible.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      tags: tags
+    sort:
+      field: name
+      direction: asc
+    auto_create: true
+    auto_create_bundle: ''
+field_type: entity_reference

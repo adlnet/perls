@@ -1,0 +1,23 @@
+<?php
+
+/**
+ * @file
+ * Contains simple_oauth_revoke.module.
+ */
+
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Session\AccountInterface;
+
+/**
+ * Implements hook_entity_predelete().
+ */
+function simple_oauth_revoke_user_predelete(EntityInterface $entity) {
+  /** @var \Drupal\simple_oauth\ExpiredCollector $collector */
+  $collector = \Drupal::service('simple_oauth.expired_collector');
+  $storage = \Drupal::entityTypeManager()->getStorage('oauth2_token');
+  // Collect the affected tokens and expire them.
+  if ($entity instanceof AccountInterface) {
+    $tokens = $storage->loadByProperties(['auth_user_id' => $entity->id()]);
+    $collector->deleteMultipleTokens($tokens);
+  }
+}

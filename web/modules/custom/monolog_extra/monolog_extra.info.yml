@@ -1,0 +1,7 @@
+type: module
+name: Monolog Extra
+description: A Framework for integrating with the Monolog library.
+core_version_requirement: ^8.8 || ^9
+package: Development
+dependencies:
+  - monolog:monolog

@@ -1,0 +1,49 @@
+uuid: 667af86f-dee9-4e9a-bdec-0a9790bfc33a
+langcode: en
+status: true
+dependencies: {  }
+id: ignored_config
+label: 'Tenant Settings'
+description: 'Instance-specific configuration. The Drupal configuration items specified here are expected to be customized by a tenant and should not be overwritten during an update.'
+weight: -10
+stackable: false
+storage: database
+folder: ''
+module: {  }
+theme: {  }
+complete_list: {  }
+partial_list:
+  - achievements.settings
+  - config_split.config_split.tenant_overrides
+  - core.menu.static_menu_link_overrides
+  - entity_packager.page_settings
+  - field.field.node.learn_article.field_comments
+  - firebase.settings
+  - media_unsplash.admin.config
+  - notifications_channels.settings
+  - page_manager.page_variant.analytics-block_display-0
+  - perls_api.settings
+  - simplesamlphp_auth.settings
+  - smtp.settings
+  - system.maintenance
+  - system.site
+  - user.mail
+  - user.settings
+  - veracity_vql_additions.settings
+  - video_embed_brightcove.settings
+  - video_embed_kaltura.kaltura_config
+  - vidyo_platform.settings
+  - xapi.settings
+  - color.theme.perls
+  - perls.settings
+  - perls_content_manager.settings
+  - perls_learner.settings
+  - auto_account_approval.settings
+  - veracity_vql.settings
+  - 'switches.switch.*'
+  - 'achievements.achievement_entity.*'
+  - 'business_rules.action.*'
+  - 'business_rules.business_rule.*'
+  - 'business_rules.condition.*'
+  - 'business_rules.variable.*'
+  - 'business_rules.variable.*'

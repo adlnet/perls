@@ -1,0 +1,52 @@
+annotations.base:
+  js:
+    js/annotator.1.2.10/annotator.min.js: {}
+    js/annotator.1.2.10/annotator.permissions.min.js: {}
+    js/plugins/annotator.touch.min.js: {}
+    js/plugins/annotator.xapistore.js: {}
+    js/plugins/view_annotator.js: {}
+    locale/en/annotator.js: {}
+    js/init.js: {}
+  css:
+    component:
+      css/annotator.1.2.10/annotator.min.css: {}
+      css/annotator.touch.css: {}
+      css/style.css: {}
+  dependencies:
+    - core/jquery
+    - xapi_reporting/xapi-reporting.xapi-lib
+    - annotator/jQuery.i18n
+    - annotator/jQuery.dateFormat
+    - annotator/jQuery.slimScroll
+    - annotator/annotations.xapi_state_store
+jQuery.i18n:
+  remote: https://github.com/recurser/jquery-i18n
+  version: 1.1.2
+  license:
+    name: MIT
+    url: https://github.com/recurser/jquery-i18n/blob/develop/LICENSE
+    gpl-compatible: true
+  js:
+    js/lib/jquery.i18n.min.js: { minified: true }
+jQuery.dateFormat:
+  remote: https://github.com/phstc/jquery-dateFormat
+  version: 1.0
+  license:
+    name: MIT
+    url: https://github.com/phstc/jquery-dateFormat/blob/master/MIT-LICENSE.txt
+    gpl-compatible: true
+  js:
+    js/lib/jquery.dateFormat.min.js: { minified: true }
+jQuery.slimScroll:
+  remote: https://github.com/rochal/jQuery-slimScroll
+  version: 1.3.8
+  license:
+    name: MIT
+    gpl-compatible: true
+  js:
+    js/lib/jquery.slimscroll.min.js: { minified: true }
+annotations.xapi_state_store:
+  js:
+    js/xapi_store_helper/xapi_store_helper.web.js: {}
+  dependencies:
+    - xapi_reporting/xapi-reporting.xapi-lib

@@ -1,0 +1,21 @@
+uuid: 153ddca1-7490-4c20-8fa8-76a1b671b4df
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_title
+    - paragraphs.paragraphs_type.image
+_core:
+  default_config_hash: 7DfoEoHpyrIlht6KKFGnv2JuMkwZsNHOsnUkiUrPjkc
+id: paragraph.image.field_title
+field_name: field_title
+entity_type: paragraph
+bundle: image
+label: Title
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

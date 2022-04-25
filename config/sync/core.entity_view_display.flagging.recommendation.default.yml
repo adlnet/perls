@@ -1,0 +1,116 @@
+uuid: 1809a2e6-31b9-461a-958b-74ab12a9561f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.flagging.recommendation.field_recommendation_plugin
+    - field.field.flagging.recommendation.field_recommendation_reason
+    - field.field.flagging.recommendation.field_recommendation_score
+    - flag.flag.recommendation
+  module:
+    - field_layout
+    - layout_builder
+    - layout_discovery
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings: {  }
+  layout_builder:
+    enabled: true
+    sections:
+      -
+        layout_id: layout_onecol
+        layout_settings:
+          label: ''
+          context_mapping: {  }
+        components:
+          bd42838e-42eb-445c-abb2-51845f2e3f99:
+            uuid: bd42838e-42eb-445c-abb2-51845f2e3f99
+            region: content
+            configuration:
+              id: 'field_block:flagging:recommendation:field_recommendation_reason'
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              formatter:
+                type: basic_string
+                label: above
+                settings: {  }
+                third_party_settings: {  }
+            weight: 0
+            additional: {  }
+            third_party_settings: {  }
+          e3a3d98b-73bc-456d-9105-4f344e3d700d:
+            uuid: e3a3d98b-73bc-456d-9105-4f344e3d700d
+            region: content
+            configuration:
+              id: 'field_block:flagging:recommendation:field_recommendation_plugin'
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              formatter:
+                type: string
+                label: above
+                settings:
+                  link_to_entity: false
+                third_party_settings: {  }
+            weight: 1
+            additional: {  }
+            third_party_settings: {  }
+          5c4f0813-bb60-4e28-9582-50e75a4451e2:
+            uuid: 5c4f0813-bb60-4e28-9582-50e75a4451e2
+            region: content
+            configuration:
+              id: 'field_block:flagging:recommendation:field_recommendation_score'
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              formatter:
+                type: number_decimal
+                label: above
+                settings:
+                  thousand_separator: ''
+                  decimal_separator: .
+                  scale: 2
+                  prefix_suffix: true
+                third_party_settings: {  }
+            weight: 2
+            additional: {  }
+            third_party_settings: {  }
+        third_party_settings: {  }
+id: flagging.recommendation.default
+targetEntityType: flagging
+bundle: recommendation
+mode: default
+content:
+  field_recommendation_plugin:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_recommendation_reason:
+    type: basic_string
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_recommendation_score:
+    type: number_decimal
+    label: above
+    settings:
+      thousand_separator: ''
+      decimal_separator: .
+      scale: 2
+      prefix_suffix: true
+    third_party_settings: {  }
+    weight: 3
+    region: content
+hidden:
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  search_api_excerpt: true

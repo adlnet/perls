@@ -1,0 +1,10 @@
+uuid: 1c06f6a8-263f-4ad5-9594-100d5f60bdae
+langcode: en
+status: true
+dependencies:
+  module:
+    - user
+id: user.interests
+label: Interests
+targetEntityType: user
+cache: true

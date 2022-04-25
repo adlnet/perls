@@ -1,0 +1,8 @@
+uuid: 4ff359a8-fbb3-402a-a8da-d50693bff42d
+langcode: en
+status: true
+dependencies: {  }
+id: text_block
+label: 'Text Block'
+revision: 1
+description: 'Text Block used for one off pages that only require some text. Can be used with page manager to create custom pages.'

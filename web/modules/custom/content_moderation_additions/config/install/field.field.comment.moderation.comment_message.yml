@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - comment.type.moderation
+    - field.storage.comment.comment_message
+  module:
+    - text
+id: comment.moderation.comment_message
+field_name: comment_message
+entity_type: comment
+bundle: moderation
+label: Comment
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long

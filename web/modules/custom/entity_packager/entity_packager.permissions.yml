@@ -1,0 +1,3 @@
+administer node packager:
+  title: 'Administer node packager settings'
+  description: 'Allow to change the configuration of node packager module.'

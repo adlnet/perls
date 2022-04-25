@@ -1,0 +1,218 @@
+{#
+/**
+* @file
+* Vidyo Web client.
+*
+* Available variables:
+* - attributes: Attributes to apply to the container.
+* - image_path: The URL where images can be found for building the UI.
+* - room_host: The server host for the room.
+* - room_extension: The room extension.
+* - room_key: The room key.
+* - room_pin: The access PIN for the room.
+* - attendee_name: The display name of the user joining the room.
+* - token: The token for the user joining the room.
+*/
+#}
+<div{{attributes}}>
+  <div id="vidyoConnector" data-conference-mode="group">
+    <button id="optionsVisibilityButton" title="Toggle Options" class="optionsVisibiliyButtonElements hideOptions hidden"></button>
+    <div id="options" class="vidyo-hide-options">
+      <form>
+        <div id="optionsParameters">
+          <p class="hidden">
+            <!-- The host of our backend service. -->
+            <label>Host</label>
+            <input type="text" id="host" value="{{ room_host }}">
+          </p>
+          <p class="hidden">
+            <!-- The Hunter portal room's roomKey. -->
+            <label>Room Key</label>
+            <input type="text" id="roomKey" placeholder="room-key" value="{{ room_key }}">
+          </p>
+          <p class="hidden">
+            <label>Token</label>
+            <input type="text" id="token" placeholder="token" value="{{ token }}">
+          </p>
+          <p class="hidden">
+            <!-- This is the display name that other users will see.
+              -->
+            <label for="displayName">Display Name</label>
+            <input id="displayName" type="text" placeholder="Display Name" value="{{ attendee_name }}">
+          </p>
+          <p class="hidden">
+            <label for="roomPin">roomPin</label>
+            <input id="roomPin" type="text" placeholder="roomPin" value="{{ room_pin }}">
+          </p>
+          <p class="hidden">
+            <!-- This is the "room" or "space" to which you're connecting
+              the user. Other users who join this same Resource will be able to see and hear each other.
+              -->
+            <label for="resourceId">Resource ID</label>
+            <input id="resourceId" type="text" placeholder="Conference Reference" value="">
+          </p>
+        </div>
+        <p>
+          <!-- On page load, this input is filled with a list of all the available cameras on the user's system. -->
+          <label for="cameras">Camera</label>
+          <select id="cameras">
+            <option value='0'>None</option>
+          </select>
+        </p>
+        <p>
+          <!-- On page load, this input is filled with a list of all the available microphones on the user's system. -->
+          <label for="microphones">Microphone</label>
+          <select id="microphones">
+            <option value='0'>None</option>
+          </select>
+        </p>
+        <p>
+          <!-- On page load, this input is filled with a list of all the available microphones on the user's system. -->
+          <label for="speakers">Speaker</label>
+          <select id="speakers">
+            <option value='0'>None</option>
+          </select>
+        </p>
+        <p id="monitorShareParagraph">
+          <!-- On page load, this input is filled with a list of all the available monitor shares on the user's system. -->
+          <label for="monitorShares">Monitor Share</label>
+          <span id="monitorSharesContainer">
+            <select id="monitorShares">
+              <option value='0'>None</option>
+            </select>
+          </span>
+          <br>
+          <span id="monitorSharesSafari" class="monitorSharesSafari"><button id="monitorSharesButtonNone">None</button></span>
+        </p>
+        <p>
+          <!-- On page load, this input is filled with a list of all the available window shares on the user's system. -->
+          <label for="windowShares">Window Share</label>
+          <span id="windowSharesContainer">
+            <select id="windowShares">
+              <option value='0'>None</option>
+            </select>
+          </span>
+          <br>
+          <span id="windowSharesSafari" class="windowSharesSafari"><button id="windowSharesButtonNone">None</button></span>
+        </p>
+        </fieldset>
+      </form>
+      <div id="messages">
+        <!-- All Vidyo-related messages will be inserted into these spans. -->
+        <span id="error"></span>
+        <span id="message"></span>
+      </div>
+    </div>
+    <div id="renderer-container" class="renderer-container rendererWithOptions pluginOverlay hidden rendererWithoutChat">
+      <div id="offline-banner" class="hidden">It seems you're offline. Try reconnecting so that we can get back on track.</div>
+      <div id="indicators-container" class="indicators-container">
+        <div id="dropped-tiles-indicator" class="base-indicator dropped-tiles-indicator">
+          <img class="indicator-icon" src="{{ image_path }}/dropped_tiles.svg">
+          <div class="base-tooltip tooltip">Fewer participants are being displayed<br>until connection improves.</div>
+        </div>
+        <div id="conference-mode-indicator" class="base-indicator conference-mode-indicators">
+          <img src="{{ image_path }}/ic_presenter_active.png" class="indicator-icon conference-mode-indicator-presenter">
+          <div class="base-tooltip tooltip">Presenter mode</div>
+          <img src="{{ image_path }}/ic_group_active.png" class="indicator-icon conference-mode-indicator-group">
+          <div class="base-tooltip tooltip">Group mode</div>
+        </div>
+      </div>
+      <div id="lobby-room-overlay" class="lobby-room-overlay">
+        <span>The meeting will start in few seconds.</span>
+        <span id="lobby-room-name"></span>
+      </div>
+      <!-- This is the div into which the Vidyo component will be inserted. -->
+      <div id="renderer"></div>
+    </div>
+    <div class="toolbar">
+      <div id="toolbarLeft">
+        <span id="participantStatus"></span>
+      </div>
+      <div id="toolbarCenter">
+        <div>
+          <!-- This button toggles the camera privacy on or off. -->
+          <div id="webcasting" title="Webcasting" class="toolbarButton"></div>
+          <div id="recorder" title="Record Status" class="toolbarButton"></div>
+          <!-- This button turns on/off the users' speaker. -->
+          <button id="speakerButton" title="Speaker Privacy" class="toolbarButton speakerOn"></button>
+          <button id="cameraButton" title="Camera Privacy" class="toolbarButton cameraOn tooltip"><span class="hidden tooltiptext"></span></button>
+          <!-- This button joins and leaves the conference. -->
+          <button id="joinLeaveButton" title="Join Conference" class="toolbarButton callStart"></button>
+          <!-- This button mutes and unmutes the users' microphone. -->
+          <button id="microphoneButton" title="Microphone Privacy" class="toolbarButton microphoneOn tooltip"><span class="hidden tooltiptext"></span></button>
+          <!-- This button toggles the chat window. -->
+          <button id="chatButton" title="Toggle Chat" class="notification toolbarButton chaticon">
+          <span class="badge hidden" id="new-message-notification"></span>
+          </button>
+        </div>
+      </div>
+      <div id="toolbarRight">
+        <span id="connectionStatus">Initializing</span>
+        <span id="clientVersion"></span>
+      </div>
+    </div>
+    <div id="failed" class="hidden">
+      <table>
+        <tr>
+          <td><img class="logo" src="{{ image_path }}/VidyoIcon.png"/></td>
+        </tr>
+        <tr>
+          <td id="failedText">Error</td>
+        </tr>
+      </table>
+    </div>
+    <div class="chat-popup" id="myForm">
+      <button id="chatTabButton" class="tablink">Chat</button>
+      <button id="participantTabButton" class="tablink participantTabLink">Participants</button>
+      <div class="tabcontent" id="participantTab">
+        <div class="participant-list">
+          <div class="participant-list-header">Participants <span id="participants-count"></span></div>
+          <table id="participantTable" class="ParticipantTable"></table>
+        </div>
+      </div>
+      <div class="tabcontent" id="chatTab">
+        <div class="chat-container">
+          <div class="chat-search">
+            <div class="chat-search-header">
+              <span>Chat</span>
+              <input placeholder="Type participant name" oninput="searchChannel(event)"/>
+            </div>
+            <div class="chat-search-body">
+              <ul id="chat-search-channels" class="chat-search-channels">
+                <li data-channel-id="group" data-channel-name="Group chat">
+                  <div class="chat-channel-label" onclick="selectChannel(event)">
+                    <div class="avatar-placeholder">
+                      <img src="{{ image_path }}/chat.png">
+                      <span class="unread-messages hidden">0</span>
+                    </div>
+                    <span class="chat-channel-name">Group chat</span>
+                  </div>
+                  <div class="chat-history-popup hidden">
+                    <div class="chat-history-header">
+                      <div class="back-button" onclick="closeChannel()"></div>
+                      <div class="avatar-placeholder">
+                        <img src="{{ image_path }}/chat.png">
+                      </div>
+                      <span>Group chat</span>
+                    </div>
+                    <div class="chat-history-content">
+                      <div class="chat-history"></div>
+                    </div>
+                    <div class="chat-footer">
+                      <form class="message-composer" autocomplete="off" onsubmit="return false;">
+                        <input type="text" placeholder="Type your message here" required></input>
+                        <button type="submit" onclick="sendChatMessage(event)">
+                        <img src="{{ image_path }}/send_chat_message.svg" width="20px" height= "20px">
+                        </button>
+                      </form>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

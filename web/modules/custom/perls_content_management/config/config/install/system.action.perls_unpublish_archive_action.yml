@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - views_bulk_operations
+id: perls_unpublish_archive_action
+label: 'Unpublish/Archive'
+type: node
+plugin: perls_unpublish_archive_action
+configuration: { }

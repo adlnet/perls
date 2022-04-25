@@ -1,0 +1,33 @@
+uuid: f2975edb-3455-4a47-8be7-6c7c10b473c2
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_parent_content
+    - node.type.flash_card
+    - node.type.learn_article
+    - node.type.learn_link
+    - node.type.learn_package
+id: node.flash_card.field_parent_content
+field_name: field_parent_content
+entity_type: node
+bundle: flash_card
+label: 'Parent Content'
+description: 'This is a link to all Learning content that claims this as a piece of child content.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      learn_article: learn_article
+      learn_link: learn_link
+      learn_package: learn_package
+    sort:
+      field: title
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: learn_article
+field_type: entity_reference

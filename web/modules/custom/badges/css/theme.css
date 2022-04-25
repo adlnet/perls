@@ -1,0 +1,189 @@
+.achievement.achievement-locked {
+  filter: unset;
+  opacity: unset;
+}
+
+.achievement .achievement-points-box {
+  width: 20%;
+  height: 110px;
+  background-color: unset;
+  border-left: 0px;
+  padding: 1em;
+}
+.achievements .achievement {
+  padding-bottom: 0.9em;
+}
+.achievement.achievement-locked,
+.achievement.achievement-unlocked,
+.achievement.achievement-modal-view {
+  border: 0;
+  border-bottom: 1px solid #bbb;
+  border-radius: unset;
+  overflow: hidden !important;
+  height: unset !important;
+}
+
+.achievement > .achievement-body {
+  height: 100%;
+  padding: 1em auto;
+}
+
+.achievement .achievement-image img {
+  height: 170px;
+}
+
+.achievement .achievement-body {
+  padding-left: 270px;
+}
+
+.achievement .achievement-image {
+  width: 220px;
+}
+.achievement .achievement-links a {
+  padding-right: 1em;
+}
+
+.achievement .achievement-image img,
+.achievement-modal-image img {
+  margin: auto;
+}
+.achievement-modal-image {
+  height: 700px;
+  max-height: 75%;
+  max-width: 100%;
+  margin: auto;
+}
+.achievement-modal-image img {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+}
+
+.achievement .achievement-title {
+  font-family: "Open Sans",sans-serif;
+  font-size: var(--font-size-l,27px);
+  line-height: 1.1;
+  font-weight: 700;
+  padding-bottom: 0.5em;
+}
+
+.achievement .achievement-modal-body {
+  text-align: center;
+}
+
+.achievement .achievement-unlocked-date {
+  font-style: italic;
+}
+
+.achievements-badge .achievement img {
+  margin: auto;
+  height: 210px;
+}
+
+
+/* Theme the notification */
+.achievement-notification-dialog {
+  background-color: white;
+}
+
+.achievement-notification-dialog {
+  box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+.achievement-notification-dialog .achievement-link {
+  position: absolute;
+  width: 100%;
+  height: 90%;
+}
+
+.achievement-notification-dialog .achievement-link a {
+  display: block;
+  font-size: 0px;
+  width: 100%;
+  height: 100%;
+}
+
+/* Theme the badges page */
+.achievements.achievements-badge {
+  display: grid;
+  grid-template-rows: auto;
+  grid-column-gap: 20px;
+  grid-row-gap: 40px;
+  min-width: 250px;
+  grid-template-columns: repeat(1,1fr);
+}
+@media (min-width: 600px) {
+  .achievements.achievements-badge {
+    grid-template-columns: repeat(2,1fr);
+  }
+}
+@media (min-width: 850px) {
+  .achievements.achievements-badge {
+    grid-template-columns: repeat(3,1fr);
+  }
+}
+@media (min-width: 1101px) {
+  .achievements.achievements-badge {
+    grid-template-columns: repeat(4,1fr);
+  }
+}
+
+.achievements.achievements-badge .achievement {
+  border: 0px;
+  padding: 1em;
+  margin: 1em;
+}
+.achievements-badge .achievement div {
+  position: relative;
+  width: 100%;
+  text-align: center;
+}
+
+.achievements-badge .achievement .achievement-body {
+  padding-left: unset;
+}
+
+.achievements-badge .achievement .achievement-image img {
+  width: 210px;
+  height: auto;
+}
+
+.achievements-badge .achievement .achievement-points-box,
+.achievements-certificate .achievement .achievement-points-box {
+  display: none;
+}
+
+/* Theme the certificates page. */
+@media (max-width: 600px) {
+  .achievements-certificate .achievement div {
+    position: relative;
+    width: 100%;
+    text-align: center;
+  }
+
+  .achievements-certificate .achievement .achievement-body {
+    padding-left: unset;
+  }
+  .achievements-certificate .achievement .achievement-image {
+    z-index: 10;
+  }
+}
+
+@media print {
+  .l-page--path--achievements .achievement-modal-body,
+  .l-page--path--achievements  .c-header {
+    display: none;
+  }
+  .l-page--path--achievements .achievement {
+    border: 0;
+  }
+  .l-page--path--achievements .achievement-modal-image img {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: auto;
+  }
+}

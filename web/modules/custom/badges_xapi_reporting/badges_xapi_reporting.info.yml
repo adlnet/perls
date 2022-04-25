@@ -1,0 +1,12 @@
+name: Badges Xapi Reporting
+type: module
+description: Send xapi statements when user views or is awarded achievements.
+core: 8.x
+core_version_requirement: ^8 || ^9
+package: PERLS
+dependencies:
+  - float:badges
+  - perls_xapi_reporting:perls_xapi_reporting
+  - xapi_reporting:xapi_reporting
+  - perls_learner_state:perls_learner_state
+  - xapi:xapi

@@ -1,0 +1,5 @@
+perls_xapi_reporting.admin_settings_form:
+  title: 'xAPI Reporting'
+  parent: system.admin_config_system
+  description: 'Configure xApi reporting'
+  route_name: perls_xapi_reporting.admin_settings_form

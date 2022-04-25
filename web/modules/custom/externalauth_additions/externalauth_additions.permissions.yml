@@ -1,0 +1,3 @@
+administer externalauth_additions configuration:
+  title: 'Administer SSO configuration'
+  restrict access: true

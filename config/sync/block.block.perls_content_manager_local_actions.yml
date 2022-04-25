@@ -1,0 +1,20 @@
+uuid: 9465bd2e-643c-4e37-bb45-ffc94fbba42e
+langcode: en
+status: true
+dependencies:
+  theme:
+    - perls_content_manager
+_core:
+  default_config_hash: ik4PTMlBD0MWansnSMpSXq5SUlWRJ1IVVt6C7AIbQmc
+id: perls_content_manager_local_actions
+theme: perls_content_manager
+region: content
+weight: -9
+provider: null
+plugin: local_actions_block
+settings:
+  id: local_actions_block
+  label: 'Primary admin actions'
+  label_display: '0'
+  provider: core
+visibility: {  }

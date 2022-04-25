@@ -1,0 +1,26 @@
+fields:
+  field_values:
+    -
+      drupal_field: field_goal_monthly_course_comp
+      api_field: completed_count_course_month
+      stored_value_type: integer
+      time_frame: month
+      goal_type: completed
+    -
+      drupal_field: field_goal_weekly_completions
+      api_field: completed_count_week
+      stored_value_type: integer
+      time_frame: week
+      goal_type: completed
+    -
+      drupal_field: field_goal_weekly_views
+      api_field: seen_count_lo_week
+      stored_value_type: integer
+      time_frame: week
+      goal_type: viewed
+    -
+      drupal_field: field_goal_weekly_test_average
+      api_field: result_avg_test_week
+      stored_value_type: avg
+      time_frame: week
+      goal_type: completed

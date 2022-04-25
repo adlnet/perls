@@ -1,0 +1,5 @@
+name: 'PERLS Analytics'
+description: 'Enhances Veracity reporting tools to provide user and content-specific filtering.'
+type: module
+core: 8.x
+package: Perls

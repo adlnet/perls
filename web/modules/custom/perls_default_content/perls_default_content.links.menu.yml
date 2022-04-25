@@ -1,0 +1,490 @@
+perls_default_content.manage_collections:
+  title: 'Collections'
+  description: 'Manage Courses and Content'
+  parent: content-management
+  menu_name: content-management
+  route_name: view.manage_vocabularies.page_1
+  route_parameters: { taxonomy_vocabulary: 'category' }
+  weight: -101
+
+perls_default_content.contents:
+  title: 'Content'
+  description: 'Content'
+  parent: content-management
+  menu_name: content-management
+  route_name: view.manage_content.page_4
+  route_parameters: { node_type: 'learn_article,learn_link,learn_file,learn_package' }
+  weight: -100
+
+perls_default_content.home:
+  title: 'Home'
+  description: 'Home'
+  parent: learner
+  menu_name: learner
+  route_name: <front>
+  weight: -48
+
+perls_default_content.discover:
+  title: 'Discover'
+  description: 'Discover'
+  parent: learner
+  menu_name: learner
+  route_name: perls_learner_browse.discover
+  weight: -47
+
+perls_default_content.groups:
+  title: 'Groups'
+  description: 'Browse and find groups'
+  menu_name: learner
+  route_name: page_manager.page_view_groups_groups-block_display-0
+  weight: -46
+
+perls_default_content.me:
+  title: 'Me'
+  description: 'Me'
+  menu_name: learner
+  route_name: view.bookmarks.learner_page
+  weight: -45
+
+perls_default_content.for_review:
+  title: 'For Review'
+  description: 'Content awaiting review'
+  parent: perls_default_content.contents
+  menu_name: content-management
+  route_name: view.content_for_review.page_1
+  weight: 10
+
+perls_default_content.manage_courses:
+  title: 'Courses'
+  description: 'Manage Courses'
+  parent: perls_default_content.manage_collections
+  menu_name: content-management
+  route_name: view.manage_content.page_1
+  route_parameters: { node_type: 'course' }
+  weight: 2
+
+perls_default_content.manage_tests:
+  title: 'Tests'
+  description: 'Manage Tests'
+  parent: perls_default_content.manage_courses
+  menu_name: content-management
+  route_name: view.manage_content.manage_tests
+
+perls_default_content.manage_topics:
+  title: 'Topics'
+  description: 'Manage Topics'
+  parent: perls_default_content.manage_collections
+  menu_name: content-management
+  route_name: view.manage_vocabularies.page_1
+  route_parameters: { taxonomy_vocabulary: 'category' }
+  weight: 1
+
+perls_default_content.manage_learning_objects:
+  title: 'Learning Objects'
+  description: 'Manage Learning Objects'
+  parent: perls_default_content.contents
+  menu_name: content-management
+  route_name: view.manage_content.page_4
+  route_parameters:
+    { node_type: 'learn_article,learn_link,learn_file,learn_package' }
+  weight: 3
+
+perls_default_content.manage_events:
+  title: 'Events'
+  description: 'Manage Events'
+  parent: perls_default_content.contents
+  menu_name: content-management
+  route_name: view.manage_events.page
+  weight: 4
+
+perls_default_content.manage_tip_cards:
+  title: 'Tips'
+  description: 'Manage Tips'
+  parent: perls_default_content.contents
+  menu_name: content-management
+  route_name: view.manage_content.page_1
+  route_parameters: { node_type: 'tip_card' }
+  weight: 5
+
+perls_default_content.manage_flash_cards:
+  title: 'Flashcards'
+  description: 'Manage Flashcards'
+  parent: perls_default_content.contents
+  menu_name: content-management
+  route_name: view.manage_content.page_1
+  route_parameters: { node_type: 'flash_card' }
+  weight: 6
+
+perls_default_content.manage_quiz:
+  title: 'Quizzes'
+  description: 'Manage Quizzes'
+  parent: perls_default_content.contents
+  menu_name: content-management
+  route_name: view.manage_content.page_1
+  route_parameters: { node_type: 'quiz' }
+  weight: 7
+
+perls_default_content.manage_podcasts:
+  title: 'Podcasts'
+  description: 'Manage Podcasts'
+  parent: perls_default_content.contents
+  menu_name: content-management
+  route_name: view.manage_podcasts.page_1
+  weight: 8
+
+perls_default_content.manage_tags:
+  title: 'Tags'
+  description: 'Manage Tags'
+  parent: perls_default_content.manage_collections
+  menu_name: content-management
+  route_name: view.manage_vocabularies.page_1
+  route_parameters: { taxonomy_vocabulary: 'tags' }
+  weight: 3
+
+perls_default_content.manage_users_and_groups:
+  title: 'Users and Groups'
+  description: 'Manage Users and Groups'
+  parent: content-management
+  menu_name: content-management
+  route_name: view.manage_users.page
+  weight: -99
+
+perls_default_content.communication:
+  title: 'Communication'
+  description: 'Communication with users'
+  parent: content-management
+  menu_name: content-management
+  weight: -98
+  route_name: page_manager.page_view_push_notification_list_push_notification_list-block_display-0
+
+perls_default_content.send_push_notifications:
+  title: 'Push Notifications'
+  description: 'Send Push Notifications to users or groups'
+  parent: perls_default_content.communication
+  menu_name: content-management
+  route_name: page_manager.page_view_push_notification_list_push_notification_list-block_display-0
+
+perls_default_content.manage_users:
+  title: 'Users'
+  description: 'Manage Users'
+  parent: perls_default_content.manage_users_and_groups
+  menu_name: content-management
+  route_name: view.manage_users.page
+  weight: 0
+
+bulk_user_upload.manage_users.bulk_upload:
+  title: 'Bulk import'
+  description: 'Manage Users'
+  parent: perls_default_content.manage_users
+  menu_name: content-management
+  route_name: bulk_user_upload.user_import
+  weight: 1
+
+perls_default_content.manage_groups:
+  title: 'Groups'
+  description: 'Manage Groups'
+  parent: perls_default_content.manage_users_and_groups
+  menu_name: content-management
+  route_name: view.manage_groups.manage_groups
+  weight: 1
+
+perls_default_content.analytics:
+  title: 'Analytics & User Data'
+  parent: content-management
+  menu_name: content-management
+  route_name: page_manager.page_view_analytics_analytics-block_display-0
+  weight: 3
+
+perls_default_content.analytics.summary_dashboard:
+  title: 'Summary Dashboards'
+  parent: perls_default_content.analytics
+  menu_name: content-management
+  description: 'See summarized analytics data.'
+  route_name: page_manager.page_view_analytics_analytics-block_display-0
+  weight: 0
+
+perls_default_content.analytics.veracity:
+  title: 'Veracity Analytics'
+  parent: perls_default_content.analytics
+  menu_name: content-management
+  description: 'External link to Veracity analytics page (requires login).'
+  class: 'Drupal\veracity_vql\Plugin\Menu\VeracityMenuLink'
+  weight: 10
+  options:
+    attributes:
+      target: _blank
+
+perls_default_content.analytics.learner_feedback:
+  title: 'Learner Feedback'
+  parent: perls_default_content.analytics
+  menu_name: content-management
+  description: 'Learner Feedback.'
+  route_name: entity.webform_submission.collection
+  route_parameters: { submission_view: '' }
+  weight: 30
+
+perls_default_content.feedback_rating:
+  title: 'Feedback Statistics'
+  description: 'Show feedback statistics.'
+  parent: perls_default_content.analytics
+  menu_name: content-management
+  route_name: view.content_feedback_rating.all_feedback_rating
+  weight: 40
+
+perls_default_content.manage_sys_info:
+  title: 'System Information'
+  description: 'Manage System Information'
+  parent: content-management
+  menu_name: content-management
+  route_name: perls_content.perls_config_form
+  weight: 3
+
+perls_default_content.manage_system_name:
+  title: 'Settings'
+  description: 'Edit basic system settings (such as the name)'
+  parent: perls_default_content.manage_sys_info
+  menu_name: content-management
+  route_name: perls_content.perls_config_form
+  weight: 1
+
+perls_default_content.email_approve_whitelist:
+  title: 'Email whitelist'
+  description: 'Allow to specify trusted email domains'
+  parent: perls_default_content.manage_sys_info
+  menu_name: content-management
+  route_name: perls_default_content.manager_config_form
+  weight: 2
+
+perls_default_content.theme_settings:
+  title: 'Customize Theming'
+  description: 'Edit system wide theme settings.'
+  parent: perls_default_content.manage_sys_info
+  menu_name: content-management
+  route_name: system.theme_settings_theme
+  route_parameters: { theme: 'perls' }
+  weight: 3
+
+perls_default_content.manage_target_lrs_endpoints:
+  title: 'LRS Configuration'
+  description: 'Manage LRS configuration.'
+  parent: perls_default_content.manage_sys_info
+  menu_name: content-management
+  route_name: xapi.admin_settings_form
+  weight: 4
+
+perls_default_content.manage_system_offline:
+  title: 'Maintenance Mode'
+  description: 'Take system offline for maintenance'
+  parent: perls_default_content.manage_sys_info
+  menu_name: content-management
+  route_name: system.site_maintenance_mode
+  weight: 7
+
+perls_default_content.manage_system_log:
+  title: 'Log Messages'
+  description: 'View system log'
+  parent: perls_default_content.manage_sys_info
+  menu_name: content-management
+  route_name: dblog.overview
+  weight: 8
+
+perls_default_content.manage_system_status:
+  title: 'Status Report'
+  description: 'View system status report'
+  parent: perls_default_content.manage_sys_info
+  menu_name: content-management
+  route_name: system.status
+  weight: 99
+
+perls_default_content.learner_profile:
+  title: 'Account Settings'
+  description: 'Profile page of the user'
+  parent: learner-user-menu
+  menu_name: learner-user-menu
+  route_name: user.page
+  weight: -50
+
+perls_default_content.learner_manage_content:
+  title: 'View as learner'
+  description: 'Dashboard for Learners'
+  parent: learner-user-menu
+  menu_name: learner-user-menu
+  route_name: view.dashboard.page_1
+  weight: 8
+
+perls_default_content.learner_groups:
+  title: 'Groups'
+  description: 'Menu link to groups'
+  parent: learner-user-menu
+  menu_name: learner-user-menu
+  route_name: perls_user.user.groups
+  weight: 0
+
+perls_default_content.learner_interests:
+  title: 'Interests'
+  description: 'Menu link to interests'
+  parent: learner-user-menu
+  menu_name: learner-user-menu
+  route_name: perls_user.user.interests
+  weight: 1
+
+perls_default_content.user_tasks:
+  title: 'Custom Goals'
+  description: 'Menu link to user defined goals'
+  parent: learner-user-menu
+  menu_name: learner-user-menu
+  route_name: user_task.my_list
+  class: Drupal\perls_user\Plugin\Menu\MyTaskMenuLink
+  weight: 2
+
+perls_default_content.learner_log_out:
+  title: 'Log Out'
+  description: 'Menu link to log out'
+  parent: learner-user-menu
+  menu_name: learner-user-menu
+  class: Drupal\user\Plugin\Menu\LoginLogoutMenuLink
+  weight: 50
+
+perls_default_content.acknowledgements:
+  title: 'Acknowledgements'
+  description: 'Acknowledgements'
+  parent: content-manager-user-menu
+  menu_name: content-manager-user-menu
+  url: 'internal:/acknowledgements'
+  weight: 3
+
+perls_default_content.learner_acknowledgements:
+  title: 'Acknowledgements'
+  description: 'Acknowledgements'
+  parent: learner-user-menu
+  menu_name: learner-user-menu
+  url: 'internal:/acknowledgements'
+  weight: 7
+
+perls_default_content.content_manager_profile:
+  title: 'Account Settings'
+  description: 'Profile page of the content manager'
+  parent: content-manager-user-menu
+  menu_name: content-manager-user-menu
+  route_name: user.page
+  weight: -50
+
+perls_default_content.content_manager_view_as_learner:
+  title: 'View as learner'
+  description: 'Allow a content manager to see what learners see'
+  parent: content-manager-user-menu
+  menu_name: content-manager-user-menu
+  route_name: view.recommended_content.learner_page
+  weight: 4
+
+perls_default_content.content_manager_log_out:
+  title: 'Log Out'
+  description: 'Menu link to log out'
+  parent: content-manager-user-menu
+  menu_name: content-manager-user-menu
+  class: Drupal\user\Plugin\Menu\LoginLogoutMenuLink
+  weight: 50
+
+perls_default_content.learner_terms_of_use:
+  title: 'Terms of use'
+  description: 'Terms of use'
+  parent: learner-user-menu
+  menu_name: learner-user-menu
+  url: 'internal:/terms-of-use'
+  weight: 6
+
+perls_default_content.terms_of_use:
+  title: 'Terms of use'
+  description: 'Terms of use'
+  parent: content-manager-user-menu
+  menu_name: content-manager-user-menu
+  url: 'internal:/terms-of-use'
+  weight: 2
+
+perls_default_content.learner_suggestions:
+  title: 'Feedback'
+  description: 'Send Feedback'
+  parent: learner-user-menu
+  menu_name: learner-user-menu
+  url: 'internal:/suggestions'
+  weight: 3
+
+perls_default_content.for_you:
+  title: 'For You'
+  description: 'View content personally recommended for you'
+  parent: perls_default_content.home
+  menu_name: perls_default_content.home
+  url: 'internal:/our_picks'
+  weight: -50
+
+perls_default_content.new:
+  title: 'New'
+  description: 'View recently added content'
+  parent: perls_default_content.home
+  menu_name: perls_default_content.home
+  url: 'internal:/recent'
+  weight: -49
+
+perls_default_content.trending:
+  title: 'Trending'
+  description: 'View content that is currently popular'
+  parent: perls_default_content.home
+  menu_name: perls_default_content.home
+  url: 'internal:/trending'
+  weight: -48
+
+perls_default_content.following:
+  title: 'Following'
+  description: 'Following'
+  parent: perls_default_content.home
+  menu_name: perls_default_content.home
+  url: 'internal:/following'
+  weight: -47
+
+perls_default_content.bookmarks:
+  title: 'Bookmarks'
+  description: 'My Bookmarks'
+  parent: perls_default_content.me
+  menu_name: perls_default_content.me
+  route_name: view.bookmarks.learner_page
+  weight: 0
+
+perls_default_content.badges:
+  title: 'Badges'
+  description: 'Badges'
+  parent: perls_default_content.me
+  menu_name: perls_default_content.me
+  route_name: badges.user_badges
+  weight: 1
+
+perls_default_content.certificates:
+  title: 'Certificates'
+  description: 'Certificates'
+  parent: perls_default_content.me
+  menu_name: perls_default_content.me
+  route_name: badges.user_certificates
+  weight: 2
+
+perls_default_content.history:
+  title: 'History'
+  description: 'My History'
+  parent: perls_default_content.me
+  menu_name: perls_default_content.me
+  route_name: view.history.learner_page
+  weight: 3
+
+perls_default_content.notes:
+  title: 'Notes'
+  description: 'Notes'
+  parent: perls_default_content.me
+  menu_name: perls_default_content.me
+  route_name: annotator_ui.list_annotations
+  weight: 4
+
+perls_default_content.create:
+  title: 'Create'
+  description: 'Create'
+  parent: perls_default_content.me
+  menu_name: perls_default_content.me
+  route_name: view.my_content.page_1
+  weight: 999

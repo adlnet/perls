@@ -1,0 +1,5 @@
+config_resource.settings:
+  title: 'Configuration API settings'
+  description: 'Configure the list of exposed configs.'
+  parent: system.admin_config_system
+  route_name: config_resource.settings

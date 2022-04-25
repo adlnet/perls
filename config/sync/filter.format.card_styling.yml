@@ -1,0 +1,23 @@
+uuid: 9fa762ca-ca6e-4a73-8e56-46af9f1f6b52
+langcode: en
+status: true
+dependencies: {  }
+name: 'Card styling'
+format: card_styling
+weight: 0
+filters:
+  filter_html:
+    id: filter_html
+    provider: filter
+    status: true
+    weight: -10
+    settings:
+      allowed_html: '<em> <strong> <cite> <code> <ul type> <ol start type> <li> <h2 id> <h3 id> <h4 id> <h5 id> <h6 id> <u> <s> <sup> <sub> <span class=""> <p>'
+      filter_html_help: false
+      filter_html_nofollow: false
+  filter_autop:
+    id: filter_autop
+    provider: filter
+    status: true
+    weight: 0
+    settings: {  }

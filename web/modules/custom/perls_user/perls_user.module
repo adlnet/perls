@@ -1,0 +1,705 @@
+<?php
+
+/**
+ * @file
+ * It has user related content like registration, account.
+ */
+
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Block\BlockPluginInterface;
+use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Element\PasswordConfirm;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\file\FileInterface;
+use Drupal\group\Entity\Group;
+use Drupal\group\Entity\GroupContent;
+use Drupal\perls_user\StatusReportPage;
+use Drupal\perls_user\UserGroupSync;
+use Drupal\simple_multistep\MultistepController;
+use Drupal\user\UserInterface;
+use Drupal\views\Plugin\views\query\QueryPluginBase;
+use Drupal\views\ViewExecutable;
+
+/**
+ * Implements hook_file_access().
+ */
+function perls_user_file_access(EntityInterface $entity, $operation, AccountInterface $account) {
+  $current_path = Drupal::service('path.current');
+  if ($operation === 'view' && $current_path->getPath() === '/user/register' && $account->id() === 0) {
+    return AccessResult::allowed();
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function perls_user_theme($existing, $type, $theme, $path) {
+  return [
+    'perls_user_isotope_list' => [
+      'render element' => 'elements',
+    ],
+  ];
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_access() for user.
+ */
+function perls_user_user_access(UserInterface $user, $operation, AccountInterface $account) {
+  if (!$account->hasPermission('access user profiles') || $operation !== 'view') {
+    return AccessResult::neutral();
+  }
+
+  return AccessResult::forbiddenIf(!$user->access('edit', $account));
+}
+
+/**
+ * Implements hook_field_widget_WIDGET_TYPE_form_alter().
+ */
+function perls_user_field_widget_filtered_with_isotope_widget_form_alter(&$element, FormStateInterface $form_state, $context) {
+  $checkboxes = &$element['wrapper']['checkboxes'];
+  foreach ($checkboxes['#options'] as $key => $option) {
+    if (isset($element[$key])) {
+      $checkboxes[$key] = $element[$key];
+      unset($element[$key]);
+    }
+    $checkboxes[$key]['#wrapper_attributes']['class'][] = 'iso-grid-item';
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function perls_user_form_user_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if ($form_id === 'user_register_form') {
+    $current_user = \Drupal::currentUser();
+    // Disable "autofill" for email address in case of administrators.
+    if ($current_user->hasPermission('disable email autofill from browser')) {
+      // https://www.scotsscripts.com/blog/html-css-trick-how-to-turn-off-auto-complete.html
+      $form['account']['mail']['#attributes']['autocomplete'] = 'nope';
+    }
+  }
+  if (isset($form['field_notification_time']) && isset($form['field_notification_days'])) {
+    $form['field_notification_time']['widget'][0]['value'] += [
+      '#states' => [
+        'required' => [
+          ':input[name^="field_notification_days"]' => ['checked' => TRUE],
+        ],
+      ],
+    ];
+
+    // Add custom validation where we validate the fields on the backend side
+    // as well.
+    if (isset($form['#validate'])) {
+      $form['#validate'][] = 'perls_user_form_user_form_validate';
+    }
+    else {
+      $form['#validate'] = ['perls_user_form_user_form_validate'];
+    }
+  }
+
+  // We don't allow to learner to modify the email address if the administrator
+  // needs to approve the registration.
+  /** @var \Drupal\user\Entity\User $account */
+  $account = $form_state->getFormObject()->getEntity();
+  $user_roles = $account->getRoles(TRUE);
+  $current_user = \Drupal::currentUser();
+  if ($current_user->isAuthenticated() &&
+    $current_user->id() === $account->id() &&
+    empty($user_roles) &&
+    \Drupal::config('user.settings')->get('register') === UserInterface::REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL &&
+    isset($form['account']['mail'])) {
+    $form['account']['mail']['#type'] = 'item';
+    $form['account']['mail']['#markup'] = $form['account']['mail']['#default_value'];
+    // We need to set the value because we cannot remove the required settings.
+    $form['account']['mail']['#value'] = $form['account']['mail']['#default_value'];
+    unset($form['account']['mail']['#default_value']);
+  }
+
+}
+
+/**
+ * Custom form validation for user form.
+ */
+function perls_user_form_user_form_validate(&$form, FormStateInterface $form_state) {
+  if (!$form_state->isValueEmpty('field_notification_days') && $form_state->getValue('field_notification_time')[0]['value'] === '') {
+    $form_state->setErrorByName('field_notification_time', t('Please set time for notification.'));
+  }
+  if ($form_state->getValue('field_notification_time')[0]['value'] !== '' && $form_state->isValueEmpty('field_notification_days')) {
+    $form_state->setErrorByName('field_notification_days', t('Please select days.'));
+  }
+}
+
+/**
+ * Implements hook_preprocess_block__user_login_block().
+ *
+ * Persists the "destination" parameter when creating an account.
+ */
+function perls_user_preprocess_block__user_login_block(&$variables) {
+  $variables['#cache']['contexts'][] = 'url.query_args:destination';
+
+  $destination = \Drupal::request()->query->get('destination');
+  if (empty($destination)) {
+    return;
+  }
+
+  // Check if anonymous users can create accounts.
+  if (!isset($variables['content']['user_links']['#items']['create_account']['#url'])) {
+    return;
+  }
+
+  // Persist the destination query when creating an account.
+  $url = $variables['content']['user_links']['#items']['create_account']['#url'];
+
+  $query_arguments = $url->getOption('query') ?: [];
+  $query_arguments['destination'] = $destination;
+  $url->setOption('query', $query_arguments);
+
+  // Persist the destination query if you forgot your password.
+  $url = $variables['content']['user_links']['#items']['request_password']['#url'];
+  $query_arguments = $url->getOption('query') ?: [];
+  $query_arguments['destination'] = \Drupal::request()->getRequestUri();
+  $url->setOption('query', $query_arguments);
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function perls_user_form_user_login_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if (isset($form['pass']) && isset($form['pass']['#attributes'])) {
+    $form['pass']['#attributes']['autocomplete'] = 'off';
+  }
+  elseif (isset($form['pass'])) {
+    $form['pass']['#attributes'] = [];
+    $form['pass']['#attributes'] = ['autocomplete' => 'off'];
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function perls_user_form_user_register_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $form['#attached']['library'][] = 'perls_user/prevent_multiple_submit';
+
+  // The form should be invalidated if any changes are made to groups.
+  $form['#cache']['tags'][] = 'group_list';
+
+  // Skip the group selection if there are no eligible groups.
+  // This removes group selection entirely from the multistep process.
+  if (isset($form['field_add_groups'])
+    && empty($form['field_add_groups']['widget']['wrapper']['checkboxes']['#options'])
+    && isset($form['#fieldgroups']['group_step_2_groups'])) {
+    $items = $form['#fieldgroups']['group_step_2_groups']->children;
+    foreach ($items as $item) {
+      $form[$item]['#access'] = FALSE;
+    }
+    unset($form['#fieldgroups']['group_step_2_groups']);
+  }
+
+  // Our module is loaded _before_ the simple_multistep module
+  // so we need to create the multistep controller.
+  /** @var \Drupal\simple_multistep\MultistepController $multiStep */
+  if ($multiStep = $form_state->get('multistep_controller')) {
+    $multiStep->updateStepInfo();
+  }
+  else {
+    $multiStep = new MultistepController($form, $form_state);
+  }
+
+  $form_state->set('multistep_controller', $multiStep);
+
+  if ($multiStep->getStepSettings()) {
+    // Add the step name to the top of the page.
+    $form['heading'] = [
+      '#type' => 'markup',
+      '#markup' => '<h2 class="step-info step-label">' . $multiStep->getStepSettings()->label . '</h2>',
+      '#weight' => -1,
+    ];
+
+    // Get the description from the first field on the step for the
+    // instructions.
+    $fields = $multiStep->getStepSettings()->children;
+    if (!empty($fields)) {
+      $widget = isset($form[$fields[0]]) ? $form[$fields[0]]['widget'] : [];
+      if (!empty($widget) && isset($widget['#description'])) {
+        $form['instructions'] = [
+          '#type' => 'markup',
+          '#markup' => '<h4 class="step-info step-instructions">' . $widget['#description'] . '</h4>',
+          '#weight' => 0,
+        ];
+      }
+    }
+  }
+
+  // Add my own process function because the confirm_password field hide the
+  // sub-fields.
+  if (isset($form['account']['pass']) && isset($form['account']['pass']['#process'])) {
+    $form['account']['pass']['#process'][] = 'perls_user_password_confirm_preprocess';
+  }
+  elseif (isset($form['account']['pass'])) {
+    $form['account']['pass']['#process'] = ['perls_user_password_confirm_preprocess'];
+  }
+
+  // Enable timezone field for anonymus as well, because we want to set default
+  // timezone for all new users. We will hide it with css.
+  if (isset($form['timezone'])) {
+    $form['timezone']['#access'] = TRUE;
+    if (isset($form['timezone']['#attributes']['class'])) {
+      $form['timezone']['#attributes']['class'][] = 'timezone-wrapper';
+    }
+    else {
+      $form['timezone']['#attributes']['class'] = ['timezone-wrapper'];
+    }
+
+  }
+
+  $form['actions']['submit']['#submit'][] = 'perls_user_user_register_submit';
+
+  if (!isset($form['mail']['#element_validate'])) {
+    $form['mail']['#element_validate'] = [];
+  }
+  $form['mail']['#element_validate'][] = 'perls_user_check_existing_email_address';
+}
+
+/**
+ * Check that an email address belongs to account just before registration end.
+ */
+function perls_user_check_existing_email_address(array &$element, FormStateInterface $form_state) {
+  if (!empty($form_state->getValue('mail')) && user_load_by_mail($form_state->getValue('mail')) != FALSE) {
+    $form_state->setError($element, t('The email address %value is already taken.', ['%value' => $form_state->getValue('mail')]));
+  }
+
+}
+
+/**
+ * Implements hook_email_registration_name().
+ *
+ * Sets default username to the registered email address.
+ * This is consistent with the default configuration of SSO
+ * to help link users up with their SSO account once it
+ * is configured.
+ */
+function perls_user_email_registration_name(UserInterface $account) {
+  return email_registration_cleanup_username($account->getEmail());
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function perls_user_form_user_interests_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if (isset($form['actions']['delete'])) {
+    unset($form['actions']['delete']);
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function perls_user_form_user_groups_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if (isset($form['actions']['delete'])) {
+    unset($form['actions']['delete']);
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function perls_user_form_importusers_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $form['help']['columns']['#rows'][] = [
+    'Groups',
+    t('The name of the group(s) for the user to join. The value must match the name of an existing group.<br><small>Multiple groups can be specified by separating them with a <code>|</code>.</small>'),
+  ];
+  $form['help']['columns']['#rows'][] = [
+    'Interests',
+    t('The topics(s) to set as interests for the user. The value must match the name of an existing topic.<br><small>Multiple interests can be specified by separating them with a <code>|</code>.</small>'),
+  ];
+}
+
+/**
+ * Disabled autocomplete on password confirm form.
+ */
+function perls_user_password_confirm_preprocess(&$element, FormStateInterface $form_state, &$complete_form) {
+  $element = PasswordConfirm::processPasswordConfirm($element, $form_state, $complete_form);
+  $element['pass1']['#attributes']['autocomplete'] = 'off';
+  $element['pass2']['#attributes']['autocomplete'] = 'off';
+
+  return $element;
+}
+
+/**
+ * Adds the user to the selected groups as a member on registration form.
+ */
+function perls_user_user_register_submit(&$form, &$form_state) {
+  $cache_invalidate = \Drupal::service('cache_tags.invalidator');
+  $groups = $form_state->getValue('field_add_groups');
+
+  if (isset($groups['wrapper']['checkboxes'])) {
+    $groups = $groups['wrapper']['checkboxes'];
+  }
+
+  if (!empty($groups)) {
+    $cache_tags = [];
+    foreach ($groups as $group) {
+      // $group_id gets 0 as value if it is not selected.
+      if (!empty($group['target_id'])) {
+        $cache_tags[] = 'group:' . $group['target_id'];
+      }
+    }
+  }
+
+  // Invalidate the cache tag for groups.
+  if (!empty($cache_tags)) {
+    $cache_invalidate->invalidateTags($cache_tags);
+  }
+}
+
+/**
+ * Implements hook_theme_registry_alter().
+ */
+function perls_user_theme_registry_alter(&$theme_registry) {
+  $theme_registry['status_report_general_info']['variables']['users_logged_in_past_two_weeks'] = [];
+  $theme_registry['status_report_general_info']['variables']['number_of_learners'] = [];
+  $theme_registry['status_report_general_info']['variables']['number_of_content_managers'] = [];
+  $theme_registry['status_report_general_info']['variables']['number_of_administrators'] = [];
+  $theme_registry['status_report_general_info']['variables']['number_of_all_users'] = [];
+}
+
+/**
+ * Implements hook_element_info_alter().
+ */
+function perls_user_element_info_alter(&$type) {
+  if (isset($type['status_report_page'])) {
+    $type['status_report_page']['#pre_render'][] = [
+      StatusReportPage::class,
+      'preRender',
+    ];
+  }
+}
+
+/**
+ * Implements hook_views_query_alter().
+ */
+function perls_user_views_query_alter(ViewExecutable $view, QueryPluginBase $query) {
+  switch ($view->id()) {
+    case 'user_statistics_completed_items':
+    case 'user_statistics_bookmarked_items':
+    case 'user_statistics_seen_items':
+      _perls_user_statistics_views_alter_query($view, $query);
+  }
+}
+
+/**
+ * Alters for user statistics views.
+ */
+function _perls_user_statistics_views_alter_query(ViewExecutable $view, QueryPluginBase $query) {
+  $today_midnight = strtotime('today midnight');
+  $tomorrow_midnight = strtotime('tomorrow midnight');
+  $monday_midnight = strtotime('monday this week');
+  $sunday_midnight = strtotime('sunday this week');
+  $first_day_of_month = strtotime('first day of this month');
+  $last_day_of_month = strtotime('last day of this month');
+
+  switch ($view->current_display) {
+    case 'number_of_items_completed_today':
+    case 'number_of_items_bookmarked_today':
+      _perls_user_add_where_clause_between_dates(
+        $query,
+        'flagging.created',
+        $today_midnight,
+        $tomorrow_midnight
+      );
+      break;
+
+    case 'number_of_items_completed_this_week':
+    case 'number_of_items_bookmarked_this_week':
+      _perls_user_add_where_clause_between_dates(
+        $query,
+        'flagging.created',
+        $monday_midnight,
+        $sunday_midnight
+      );
+      break;
+
+    case 'number_of_items_completed_this_month':
+    case 'number_of_items_bookmarked_this_month':
+      _perls_user_add_where_clause_between_dates(
+        $query,
+        'flagging.created',
+        $first_day_of_month,
+        $last_day_of_month
+      );
+      break;
+
+    case 'number_of_items_seen_today':
+      _perls_user_add_where_clause_between_dates(
+        $query,
+        'history.timestamp',
+        $today_midnight,
+        $tomorrow_midnight
+      );
+      break;
+
+    case 'number_of_items_seen_this_week':
+      _perls_user_add_where_clause_between_dates(
+        $query,
+        'history.timestamp',
+        $monday_midnight,
+        $sunday_midnight
+      );
+      break;
+
+    case 'number_of_items_seen_this_month':
+      _perls_user_add_where_clause_between_dates(
+        $query,
+        'history.timestamp',
+        $first_day_of_month,
+        $last_day_of_month
+      );
+      break;
+  }
+}
+
+/**
+ * Implements hook_field_widget_form_alter().
+ *
+ * Disables group options that the user is not allowed to leave.
+ */
+function perls_user_field_widget_form_alter(&$element, FormStateInterface $form_state, $context) {
+  if ($context['items']->getFieldDefinition()->getName() !== UserGroupSync::USER_ACCOUNT_GROUP_FIELD) {
+    return;
+  }
+
+  $options = $context['widget']->options;
+  $element['#element_validate'][] = [
+    '\Drupal\perls_user\UserGroupSync',
+    'validateSelectedGroups',
+  ];
+
+  if (empty($options)) {
+    $element['#suffix'] = t('There are no groups available for you to join.');
+    return;
+  }
+
+  $groups = Group::loadMultiple(array_keys($options));
+  $user = $form_state->getformObject()->getEntity();
+
+  $locked_groups = [];
+  foreach ($options as $gid => $option) {
+    $group = $groups[$gid];
+    if (!$group) {
+      $element[$gid]['#attributes']['disabled'] = 'disabled';
+      continue;
+    }
+
+    $membership = !$user->isNew() && $group->getMember($user);
+    if ($membership && !$group->access('leave group')) {
+      $locked_groups[] = $group->label();
+      $element[$gid]['#attributes']['disabled'] = 'disabled';
+    }
+    elseif (!$membership && !$group->access('join group')) {
+      $element[$gid]['#attributes']['disabled'] = 'disabled';
+    }
+  }
+
+  if ($locked_groups) {
+    $message = t('You must ask an administrator to leave @groups', [
+      '@groups' => implode(', ', $locked_groups),
+    ]);
+    $element['#suffix'] = '<div class="form-note">' . $message . '</div>';
+  }
+}
+
+/**
+ * Implements hook_entity_insert().
+ */
+function perls_user_entity_insert(EntityInterface $entity) {
+  if ($entity->getEntityTypeId() === 'user') {
+    UserGroupSync::userAccountInsert($entity);
+  }
+  elseif ($entity instanceof GroupContent && $entity->getGroupContentType()->getContentPluginId() == 'group_membership') {
+    UserGroupSync::addNewGroupMembership($entity);
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_presave().
+ */
+function perls_user_user_presave(EntityInterface $entity) {
+  /** @var \Drupal\perls_user\Services\AccountHelper $account_helper */
+  $account_helper = Drupal::service('perls_user.account_helper');
+  if ($account_helper->isUserNeedChangeUsername($entity)) {
+    $entity->setUsername($entity->getEmail());
+  }
+}
+
+/**
+ * Implements hook_entity_update().
+ */
+function perls_user_entity_update(EntityInterface $entity) {
+  if ($entity->getEntityTypeId() === 'user') {
+    UserGroupSync::userAccountUpdated($entity);
+  }
+}
+
+/**
+ * Implements hook_entity_delete().
+ */
+function perls_user_entity_delete(EntityInterface $entity) {
+  if ($entity instanceof GroupContent && $entity->getGroupContentType()->getContentPluginId() == 'group_membership') {
+    UserGroupSync::deleteGroupMembership($entity);
+  }
+}
+
+/**
+ * Adds a WHERE clause to given query to find values between two unixtimestamps.
+ */
+function _perls_user_add_where_clause_between_dates($query, $field, $start_date, $end_date) {
+  $query->addWhere(
+    0,
+    "{$field} BETWEEN {$start_date} AND {$end_date}",
+    [], 'formula'
+  );
+}
+
+/**
+ * Implements hook_block_view_BASE_BLOCK_ID_alter().
+ */
+function perls_user_block_view_system_menu_block_alter(array &$build, BlockPluginInterface $block) {
+  switch ($build["#plugin_id"]) {
+    case 'system_menu_block:learner-user-menu':
+    case 'system_menu_block:content-manager-user-menu':
+      $build['#cache']['contexts'][] = 'user';
+  }
+}
+
+/**
+ * Implements hook_file_validate().
+ */
+function perls_user_file_validate(FileInterface $file) {
+  $messages = \Drupal::service('messenger')->deleteAll();
+  // I try to remove the image resize message.
+  if (isset($messages['status'])) {
+    foreach ($messages['status'] as $message_id => $message) {
+      if (preg_match('#^The image was resized to fit within the maximum allowed dimensions of*#', $message, $matches)) {
+        unset($messages['status'][$message_id]);
+      }
+    }
+  }
+
+  if (!empty($messages)) {
+    foreach ($messages as $status => $message_list) {
+      foreach ($message_list as $message) {
+        \Drupal::service('messenger')->addMessage($message, $status);
+      }
+
+    }
+  }
+}
+
+/**
+ * Implements hook_entity_form_display_alter().
+ */
+function perls_user_entity_form_display_alter(EntityFormDisplayInterface &$form_display, array $context) {
+  /** @var \Drupal\Core\Session\AccountProxyInterface $current_user */
+  $current_user = Drupal::service('current_user');
+  if ($context['entity_type'] == 'user' &&
+    $context['form_mode'] == 'register' &&
+    $current_user->id() !== 0) {
+    $id = $context['entity_type'] . '.' . $context['bundle'] . '.new_user_registration';
+    $storage = \Drupal::entityTypeManager()->getStorage('entity_form_display');
+    $change_display = $storage->load($id);
+
+    // If form mode is activated, replace the given one with ours.
+    if ($change_display) {
+      $form_display = $change_display;
+    }
+  }
+}
+
+/**
+ * Implements hook_entity_type_build().
+ */
+function perls_user_entity_type_build(array &$entity_types) {
+  $user_type = $entity_types['user'];
+  $default_handler_class = $user_type->getHandlerClasses()['form']['default'];
+  $entity_types['user']->setFormClass('interests', $default_handler_class);
+  $entity_types['user']->setFormClass('groups', $default_handler_class);
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function perls_user_form_alter(&$form, &$form_state, $form_id) {
+  if ($form_id !== 'system_theme_settings') {
+    return;
+  }
+
+  $build_info = $form_state->getBuildInfo();
+  if (isset($build_info['args'][0]) && ($theme = $build_info['args'][0]) && color_get_info($theme) && function_exists('gd_info')) {
+    $user = \Drupal::currentUser();
+    if (!$user->hasPermission('administer themes')) {
+      $form['favicon']['#access'] = FALSE;
+      $form['theme_settings']['#access'] = FALSE;
+    }
+
+    $form['#submit'][] = 'perls_user_theme_settings_submit_handler';
+
+    $form['color']['palette']['primary']['#suffix'] = t('<div class="help-text">Affects major app elements, such as navigation.</div>');
+    $form['color']['palette']['secondary']['#suffix'] = t('<div class="help-text">Affects links, highlighted elements, and other interactive elements.</div>');
+    $form['color']['palette']['tertiary']['#suffix'] = t('<div class="help-text">Affects minor app elements.</div>');
+    $form['color']['palette']['base']['#suffix'] = t('<div class="help-text">Primary background color of the application.</div>');
+    $form['color']['palette']['text']['#suffix'] = t('<div class="help-text">Text color for articles.</div>');
+    $form['color']['palette']['quiz']['#suffix'] = t('<div class="help-text">Background color of quiz and test cards.</div>');
+    $form['color']['palette']['tip']['#suffix'] = t('<div class="help-text">Background color of tip cards.</div>');
+    $form['color']['palette']['flash']['#suffix'] = t('<div class="help-text">Background color of flashcards.</div>');
+    $form['color']['palette']['course']['#suffix'] = t('<div class="help-text">Background color of course cards.</div>');
+    $form['color']['palette']['podcast']['#suffix'] = t('<div class="help-text">Background color of podcast cards and podcast player.</div>');
+    $form['color']['palette']['menu']['#suffix'] = t('<div class="help-text">Background color of the navigation and profile menus.</div>');
+
+    $form['#attached']['library'][] = 'perls_user/color_form_override';
+  }
+}
+
+/**
+ * Submit handler to apply some changes after form submit.
+ */
+function perls_user_theme_settings_submit_handler(&$form, FormStateInterface $form_state) {
+  $config = \Drupal::configFactory()->getEditable('perls.settings');
+
+  foreach (\Drupal::service('theme_handler')->listInfo() as $theme => $info) {
+    if (!isset($info->base_theme) || $info->base_theme !== 'perls') {
+      continue;
+    }
+
+    $child_config = \Drupal::configFactory()->getEditable($theme . '.settings');
+
+    if ($config->get('logo')) {
+      $child_config->set('logo', $config->get('logo'));
+    }
+
+    if ($config->get('favicon')) {
+      $child_config->set('favicon', $config->get('favicon'));
+    }
+
+    $child_config->save();
+  }
+}
+
+/**
+ * Implements hook_mail_alter().
+ */
+function perls_user_mail_alter(&$message) {
+  // If the "From" header does not match what is configured as site email, move
+  // that email to the Reply-To header, set the From header to the site mail.
+  $siteEmail = \Drupal::config('system.site')->get('mail');
+  if (!strstr($siteEmail, $message['headers']['From'])) {
+    $message['headers']['Reply-to'] = $message['headers']['From'];
+    $message['headers']['From'] = $siteEmail;
+  }
+  // Do not send email if the Reply-To header matches the To header.
+  // This is to prevent receiving emails from yourself.
+  if (strstr($message['headers']['Reply-to'], $message['to'])) {
+    $message['send'] = FALSE;
+  }
+}

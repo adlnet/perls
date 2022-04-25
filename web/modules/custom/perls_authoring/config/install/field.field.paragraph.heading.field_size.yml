@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_size
+    - paragraphs.paragraphs_type.heading
+  module:
+    - options
+id: paragraph.heading.field_size
+field_name: field_size
+entity_type: paragraph
+bundle: heading
+label: Size
+description: ''
+required: true
+translatable: true
+default_value:
+  -
+    value: h2
+default_value_callback: ''
+settings: {  }
+field_type: list_string

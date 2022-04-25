@@ -1,0 +1,6 @@
+services:
+  annotator.annotations_voided_statement_subscriber:
+    class: Drupal\annotator\EventSubscriber\AnnotationVoidedStatementSubscriber
+    arguments: ['@xapi.xapi_statement_helper', '@entity_type.manager', '@current_user', '@lrs.request_generator']
+    tags:
+      - { name: event_subscriber }

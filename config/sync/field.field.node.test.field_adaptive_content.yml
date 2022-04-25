@@ -1,0 +1,23 @@
+uuid: c280d61b-5779-4c50-b7ea-3f266daf86b9
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_adaptive_content
+    - node.type.test
+  module:
+    - perls_adaptive_content
+id: node.test.field_adaptive_content
+field_name: field_adaptive_content
+entity_type: node
+bundle: test
+label: 'Adaptive Content'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: '0'
+default_value_callback: ''
+settings: {  }
+field_type: adaptive_content_field

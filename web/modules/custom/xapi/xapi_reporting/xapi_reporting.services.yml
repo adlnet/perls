@@ -1,0 +1,4 @@
+services:
+  xapi_reporting.xapi_statement_creator:
+    class: Drupal\xapi_reporting\XapiStatementCreator
+    arguments: ['@current_user', '@config.factory', '@plugin.manager.xapi_actor_ifi', '@xapi.activity_provider', '@module_handler']

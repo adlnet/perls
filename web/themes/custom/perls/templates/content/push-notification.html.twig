@@ -1,0 +1,67 @@
+{#
+/**
+ * @file
+ * Default theme implementation for push notifications.
+ *
+ * Available variables:
+ * - title: The title of the push notification.
+ * - body: The body of the push notification.
+ * - image: The image URL associated with the notification.
+ * - send_time: The time the notification was sent; formatted as a string.
+ * - sent: Whether the push notification has been sent.
+ * - status: The status of the notification. Possible values are:
+ *           queued, sent, cancelled
+ * - site_name: The site name.
+ * - data: Arbitrary data associated with the push notification.
+ * - content: Additional content associated with the push notification.
+ * - view_mode: The current view mode.
+ * - attributes: HTML attributes for the container.
+ * - title_attributes: HTML attributes for the message title.
+ *
+ * Additionally, the push notification entity is provided for context:
+ * - push_notification: The push notification object.
+ *
+ * @see template_preprocess_push_notification()
+ *
+ * @ingroup themeable
+ */
+#}
+
+<div{{ attributes.addClass('push-notification-wrapper') }}>
+  <div class="push-notification">
+    <div class="push-notification__header">
+      <div class="push-notification__sender">{{site_name}}</div>
+      <div class="push-notification__time">{{send_time}}</div>
+    </div>
+    <div class="push-notification__content">
+      <div class="push-notification__message">
+        <h3{{title_attributes}}>{{title}}</h3>
+        <p>{{body}}</p>
+      </div>
+      {% if image %}
+        <div class="push-notification__image">
+          <img src="{{image}}" alt={{'Notification image'|t}}>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  {% if content.related_item %}
+    <div class="push-notification__item">
+      <h4>{{'Related Content'|t}}</h4>
+      {{content.related_item}}
+    </div>
+  {% endif %}
+
+  {% if not teaser %}
+    <details>
+      <summary>{{'Info'|t}}</summary>
+      {{content | without('related_item')}}
+    </details>
+
+    <details>
+      <summary>JSON</summary>
+      <pre>{{json}}</pre>
+    </details>
+  {% endif %}
+</div>

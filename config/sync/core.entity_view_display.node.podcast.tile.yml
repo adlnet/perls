@@ -1,0 +1,74 @@
+uuid: 5cb3a811-741b-41ca-8817-9488b29b24e1
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.tile
+    - field.field.node.podcast.field_artwork
+    - field.field.node.podcast.field_content_description
+    - field.field.node.podcast.field_description
+    - field.field.node.podcast.field_episodes
+    - field.field.node.podcast.field_tags
+    - node.type.podcast
+  module:
+    - field_layout
+    - layout_builder
+    - user
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings:
+      label: ''
+  layout_builder:
+    enabled: false
+    allow_custom: false
+id: node.podcast.tile
+targetEntityType: node
+bundle: podcast
+mode: tile
+content:
+  field_artwork:
+    type: entity_reference_entity_view
+    label: above
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_tags:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  flag_bookmark:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  flag_recommendation:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  recommendation_reason:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  entitygroupfield: true
+  field_content_description: true
+  field_description: true
+  field_episodes: true
+  field_image: true
+  group_content: true
+  langcode: true
+  links: true
+  search_api_excerpt: true

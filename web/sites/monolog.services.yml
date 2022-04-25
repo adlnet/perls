@@ -1,0 +1,30 @@
+parameters:
+  monolog.channel_handlers:
+    default:
+      handlers: ['drupal.dblog', 'stream']
+      formatter: 'minimal_line'
+  monolog.processors: ['message_placeholder', 'current_user', 'request_uri', 'ip', 'referer']
+
+services:
+  # Monolog handlers.
+  monolog.handler.stream:
+    class: Monolog\Handler\StreamHandler
+    arguments: ['php://stdout']
+
+  # Monolog processors
+  monolog.processor.current_user:
+    class: Drupal\monolog\Logger\Processor\CurrentUserProcessor
+    arguments: ['@current_user']
+  monolog.processor.request_uri:
+    class: Drupal\monolog\Logger\Processor\RequestUriProcessor
+    arguments: ['@request_stack']
+  monolog.processor.referer:
+    class: Drupal\monolog\Logger\Processor\RefererProcessor
+    arguments: ['@request_stack']
+  monolog.processor.ip:
+    class: Drupal\monolog\Logger\Processor\IpProcessor
+    arguments: ['@request_stack']
+  monolog.processor.message_placeholder:
+    class: Drupal\monolog\Logger\Processor\MessagePlaceholderProcessor
+    arguments: ['@logger.log_message_parser']
+

@@ -1,0 +1,95 @@
+uuid: bab1a1fc-ac9f-4b34-8ff5-8cb5a8210e07
+langcode: en
+status: true
+dependencies:
+  module:
+    - search_api_autocomplete
+id: search_api_autocomplete_search--search_api_autocomplete_search
+disabled: true
+path: search_api_autocomplete_search/search_api_autocomplete_search
+resourceType: search_api_autocomplete_search--search_api_autocomplete_search
+resourceFields:
+  uuid:
+    disabled: false
+    fieldName: uuid
+    publicName: uuid
+    enhancer:
+      id: ''
+  langcode:
+    disabled: false
+    fieldName: langcode
+    publicName: langcode
+    enhancer:
+      id: ''
+  status:
+    disabled: false
+    fieldName: status
+    publicName: status
+    enhancer:
+      id: ''
+  dependencies:
+    disabled: false
+    fieldName: dependencies
+    publicName: dependencies
+    enhancer:
+      id: ''
+  third_party_settings:
+    disabled: false
+    fieldName: third_party_settings
+    publicName: third_party_settings
+    enhancer:
+      id: ''
+  _core:
+    disabled: false
+    fieldName: _core
+    publicName: _core
+    enhancer:
+      id: ''
+  id:
+    disabled: false
+    fieldName: id
+    publicName: id
+    enhancer:
+      id: ''
+  label:
+    disabled: false
+    fieldName: label
+    publicName: label
+    enhancer:
+      id: ''
+  index_id:
+    disabled: false
+    fieldName: index_id
+    publicName: index_id
+    enhancer:
+      id: ''
+  suggester_settings:
+    disabled: false
+    fieldName: suggester_settings
+    publicName: suggester_settings
+    enhancer:
+      id: ''
+  suggester_weights:
+    disabled: false
+    fieldName: suggester_weights
+    publicName: suggester_weights
+    enhancer:
+      id: ''
+  suggester_limits:
+    disabled: false
+    fieldName: suggester_limits
+    publicName: suggester_limits
+    enhancer:
+      id: ''
+  search_settings:
+    disabled: false
+    fieldName: search_settings
+    publicName: search_settings
+    enhancer:
+      id: ''
+  options:
+    disabled: false
+    fieldName: options
+    publicName: options
+    enhancer:
+      id: ''

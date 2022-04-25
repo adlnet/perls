@@ -1,0 +1,4 @@
+added:
+  manualActivationStatus: false
+removed:
+  manualActivationStatus: true

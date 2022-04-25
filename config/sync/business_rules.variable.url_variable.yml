@@ -1,0 +1,15 @@
+uuid: daedd35f-90f4-4a40-b1d6-f487b6867e20
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: iVlh9mKnn2q0c_OLD4pJW6v3yRALaRtPs7ZT5mW8aJY
+id: url_variable
+label: 'Url variable'
+type: url_variable
+description: 'Represents the current URL'
+target_entity_type: null
+target_bundle: null
+tags:
+  defaults: defaults
+settings: {  }

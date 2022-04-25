@@ -1,0 +1,17 @@
+uuid: ac9ed0e5-0289-4789-aad4-cf8eaf5a99ff
+langcode: en
+status: true
+dependencies:
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus: {  }
+    parent: ''
+name: 'Podcast Episode'
+type: podcast_episode
+description: 'An episode is a single session of a podcast. Learners see the most recent episode first when viewing a podcast.'
+help: ''
+new_revision: true
+preview_mode: 1
+display_submitted: true

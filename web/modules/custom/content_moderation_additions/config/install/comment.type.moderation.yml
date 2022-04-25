@@ -1,0 +1,7 @@
+langcode: en
+status: true
+dependencies: {  }
+id: moderation
+label: Moderation
+target_entity_type_id: node
+description: 'A set of comments dedicated to the moderation and review of content'

@@ -1,0 +1,23 @@
+uuid: 12f9491b-3d1d-411d-a1c0-fa87fde6d8fe
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_duration
+    - node.type.podcast_episode
+id: node.podcast_episode.field_duration
+field_name: field_duration
+entity_type: node
+bundle: podcast_episode
+label: Duration
+description: 'We''ll calculate the duration for you when you upload the mp3 file. If the duration is shorter or longer than you''d expect, double-check that the mp3 file being uploaded is not damaged or corrupt.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

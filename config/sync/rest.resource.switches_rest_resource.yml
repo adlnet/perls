@@ -1,0 +1,18 @@
+uuid: 98398e3a-4958-42d1-bdbb-1b8b1eac358f
+langcode: en
+status: true
+dependencies:
+  module:
+    - serialization
+    - simple_oauth
+    - switches_additions
+id: switches_rest_resource
+plugin_id: switches_rest_resource
+granularity: resource
+configuration:
+  methods:
+    - GET
+  formats:
+    - json
+  authentication:
+    - oauth2

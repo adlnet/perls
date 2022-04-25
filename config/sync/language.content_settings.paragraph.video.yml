@@ -1,0 +1,13 @@
+uuid: e27ccc7f-6d3c-4e92-bd52-9c021cbc968b
+langcode: en
+status: true
+dependencies:
+  config:
+    - paragraphs.paragraphs_type.video
+_core:
+  default_config_hash: 0KRTs8v_0nYPtXWJgGQ_qyADHWo2cSm-j7dUw9xA0Dg
+id: paragraph.video
+target_entity_type_id: paragraph
+target_bundle: video
+default_langcode: site_default
+language_alterable: false

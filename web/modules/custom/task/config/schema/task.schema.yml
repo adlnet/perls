@@ -1,0 +1,13 @@
+task.type.*:
+  type: config_entity
+  label: 'task config'
+  mapping:
+    type:
+      type: string
+      label: 'Type'
+    label:
+      type: label
+      label: 'Label'
+    description:
+      type: text
+      label: 'Description'

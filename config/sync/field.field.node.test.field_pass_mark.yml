@@ -1,0 +1,23 @@
+uuid: a94ef74b-7015-4267-a299-e2809e4be5c9
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_pass_mark
+    - node.type.test
+id: node.test.field_pass_mark
+field_name: field_pass_mark
+entity_type: node
+bundle: test
+label: 'Pass mark'
+description: 'The minimal percentage the user must pass to complete the test successfully.'
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: 0
+  max: 100
+  prefix: ''
+  suffix: '%'
+field_type: integer

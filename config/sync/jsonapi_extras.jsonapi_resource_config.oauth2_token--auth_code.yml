@@ -1,0 +1,77 @@
+uuid: daad2a74-574b-49ed-8d37-ec463ed6cca3
+langcode: en
+status: true
+dependencies:
+  config:
+    - simple_oauth.oauth2_token.bundle.auth_code
+id: oauth2_token--auth_code
+disabled: true
+path: oauth2_token/auth_code
+resourceType: oauth2_token--auth_code
+resourceFields:
+  id:
+    disabled: false
+    fieldName: id
+    publicName: id
+    enhancer:
+      id: ''
+  uuid:
+    disabled: false
+    fieldName: uuid
+    publicName: uuid
+    enhancer:
+      id: ''
+  bundle:
+    disabled: false
+    fieldName: bundle
+    publicName: bundle
+    enhancer:
+      id: ''
+  auth_user_id:
+    disabled: false
+    fieldName: auth_user_id
+    publicName: auth_user_id
+    enhancer:
+      id: ''
+  client:
+    disabled: false
+    fieldName: client
+    publicName: client
+    enhancer:
+      id: ''
+  scopes:
+    disabled: false
+    fieldName: scopes
+    publicName: scopes
+    enhancer:
+      id: ''
+  value:
+    disabled: false
+    fieldName: value
+    publicName: value
+    enhancer:
+      id: ''
+  created:
+    disabled: false
+    fieldName: created
+    publicName: created
+    enhancer:
+      id: ''
+  changed:
+    disabled: false
+    fieldName: changed
+    publicName: changed
+    enhancer:
+      id: ''
+  expire:
+    disabled: false
+    fieldName: expire
+    publicName: expire
+    enhancer:
+      id: ''
+  status:
+    disabled: false
+    fieldName: status
+    publicName: status
+    enhancer:
+      id: ''

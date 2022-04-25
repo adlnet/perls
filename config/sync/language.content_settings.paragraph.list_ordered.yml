@@ -1,0 +1,13 @@
+uuid: 6e3e8f3f-3f1a-463e-89b7-bd19bdeae32f
+langcode: en
+status: true
+dependencies:
+  config:
+    - paragraphs.paragraphs_type.list_ordered
+_core:
+  default_config_hash: 8nNBeaMhOKHpdQe9vlFAnZBPu5wP2Hazz2LlZNWRIOU
+id: paragraph.list_ordered
+target_entity_type_id: paragraph
+target_bundle: list_ordered
+default_langcode: site_default
+language_alterable: true

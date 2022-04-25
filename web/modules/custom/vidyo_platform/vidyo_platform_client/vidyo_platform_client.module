@@ -1,0 +1,55 @@
+<?php
+
+/**
+ * @file
+ * Contains vidyo_platform_client.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function vidyo_platform_client_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the vidyo_platform_client module.
+    case 'help.page.vidyo_platform_client':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Provides a Web-based client for connecting to Vidyo.') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function vidyo_platform_client_theme() {
+  return [
+    'vidyo_client' => [
+      'variables' => [
+        'attributes' => [
+          'class' => ['vidyo-client'],
+        ],
+        'image_path' => NULL,
+        'room_host' => NULL,
+        'room_key' => NULL,
+        'room_extension' => NULL,
+        'room_pin' => NULL,
+        'attendee_name' => NULL,
+      ],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_page_top().
+ */
+function vidyo_platform_client_page_top(array &$page_top) {
+  // Remove the admin toolbar from the vidyo page.
+  if (\Drupal::routeMatch()->getRouteName() === 'vidyo_platform_client.room' && isset($page_top['toolbar'])) {
+    unset($page_top['toolbar']);
+  }
+}

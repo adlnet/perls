@@ -1,0 +1,43 @@
+uuid: eb725a45-63a1-48b8-9700-5d9fba2eba69
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.references.field_url
+    - paragraphs.paragraphs_type.references
+  module:
+    - field_layout
+    - layout_builder
+    - layout_discovery
+    - link
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings: {  }
+  layout_builder:
+    enabled: false
+    allow_custom: false
+_core:
+  default_config_hash: '-1YphXjZGD3b4q4z8VfpcPEh7bfar2_DEnzR_rIYPR4'
+id: paragraph.references.default
+targetEntityType: paragraph
+bundle: references
+mode: default
+content:
+  field_url:
+    type: link
+    label: hidden
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  search_api_excerpt: true

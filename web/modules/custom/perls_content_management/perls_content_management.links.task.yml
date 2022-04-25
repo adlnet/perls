@@ -1,0 +1,73 @@
+user_flags:
+  title: State
+  route_name: view.administrate_user_flags.administer_user_flags_completed
+  base_route: entity.user.canonical
+  weight: 1
+user_flags_completed:
+  title: Completed
+  route_name: view.administrate_user_flags.administer_user_flags_completed
+  parent_id: user_flags
+user_flags_bookmarked:
+  title: Bookmarked
+  route_name: view.administrate_user_flags.administer_user_flags_bookmarked
+  parent_id: user_flags
+user_flags_recommended:
+  title: Recommendations
+  route_name: view.administrate_user_flags.administer_user_flags_recommended
+  parent_id: user_flags
+user_flags_started_courses:
+  title: Courses
+  route_name: view.administrate_user_flags.administer_user_flags_started_courses
+  parent_id: user_flags
+user_flags_test_results:
+  title: Tests
+  route_name: view.administrate_user_flags.administer_user_flags_test_results
+  parent_id: user_flags
+user_flags_event_attend:
+  title: Attended
+  route_name: view.administrate_user_flags.administer_user_flags_attend
+  parent_id: user_flags
+user_term_flags_followed:
+  title: Followed
+  route_name: view.administer_user_term_flags.followed_term
+  parent_id: user_flags
+course_stats:
+  title: Stats
+  route_name: view.course_stats.stat_course_started
+  base_route: entity.node.canonical
+  weight: 10
+course_stats.started:
+  title: Started
+  route_name: view.course_stats.stat_course_started
+  base_route: entity.node.canonical
+  parent_id: course_stats
+course_stats.completed:
+  title: Completed
+  route_name: view.course_stats.stat_course_completed
+  base_route: entity.node.canonical
+  parent_id: course_stats
+course_stats.feedback:
+  title: Learner feedback
+  route_name: view.webform_submissions.stat_course_feedback
+  base_route: entity.node.canonical
+  parent_id: course_stats
+course_stats.test_result:
+  title: Tests
+  route_name: view.course_stats.stat_course_tests
+  base_route: entity.node.canonical
+  parent_id: course_stats
+feedback.rating:
+  title: Content rating
+  route_name: view.content_feedback_rating.all_feedback_rating
+  base_route: entity.webform.collection
+perls_admin.analytics.view:
+  route_name: page_manager.page_view_analytics_analytics-block_display-0
+  title: View
+  base_route: page_manager.page_view_analytics_analytics-block_display-0
+perls_admin.analytics.edit:
+  route_name: perls_admin.analytics.edit
+  title: Edit Page
+  base_route: page_manager.page_view_analytics_analytics-block_display-0
+  options:
+    query:
+      destination: /analytics/overview

@@ -1,0 +1,4 @@
+services:
+  notifications_goals.goal_notification:
+    class: Drupal\notifications_goals\UserGoalNotificationHelper
+    arguments: ['@database', '@perls_goals.goals_calculate']

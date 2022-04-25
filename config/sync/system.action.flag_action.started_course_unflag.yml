@@ -1,0 +1,15 @@
+uuid: 021d8ed8-af8c-40c4-b564-b19b31ffbfa1
+langcode: en
+status: true
+dependencies:
+  config:
+    - flag.flag.started_course
+  module:
+    - flag
+id: flag_action.started_course_unflag
+label: 'Unflag this item'
+type: node
+plugin: 'flag_action:started_course_unflag'
+configuration:
+  flag_id: started_course
+  flag_action: unflag

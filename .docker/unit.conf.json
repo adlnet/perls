@@ -1,0 +1,148 @@
+{
+    "listeners": {
+        "*:80": {
+            "pass": "routes"
+        }
+    },
+
+    "routes": [
+        {
+            "match": {
+                "uri": [
+                    "!*/.well-known/*",
+                    "/vendor/*",
+                    "/core/profiles/demo_umami/modules/demo_umami_content/default_content/*",
+                    "*.engine",
+                    "*.inc",
+                    "*.install",
+                    "*.make",
+                    "*.module",
+                    "*.po",
+                    "*.profile",
+                    "*.sh",
+                    "*.theme",
+                    "*.tpl",
+                    "*.twig",
+                    "*.xtmpl",
+                    "*.yml",
+                    "*/.*",
+                    "*/Entries*",
+                    "*/Repository",
+                    "*/Root",
+                    "*/Tag",
+                    "*/Template",
+                    "*/composer.json",
+                    "*/composer.lock",
+                    "*/web.config",
+                    "*sql",
+                    "*.bak",
+                    "*.orig",
+                    "*.save",
+                    "*.swo",
+                    "*.swp",
+                    "*~"
+                ]
+            },
+
+            "action": {
+                "return": 404
+            }
+        },
+        {
+            "match": {
+                "uri": [
+                    "/core/authorize.php",
+                    "/core/core.api.php",
+                    "/core/globals.api.php",
+                    "/core/install.php",
+                    "/core/modules/statistics/statistics.php",
+                    "/core/modules/system/tests/http.php*",
+                    "/core/modules/system/tests/https.php*",
+                    "/core/rebuild.php",
+                    "/update.php"
+                ]
+            },
+
+            "action": {
+                "pass": "applications/drupal/direct"
+            }
+        },
+        {
+            "match": {
+                "uri": [
+                    "!/index.php*",
+                    "*.php"
+                ]
+            },
+
+            "action": {
+                "return": 404
+            }
+        },
+        {
+            "match": {
+                "uri": [
+                    "/simplesaml"
+                ]
+            },
+
+            "action": {
+                "pass": "applications/simplesaml"
+            }
+        },
+        {
+            "action": {
+                "share": "/app/web/",
+                "fallback": {
+                    "pass": "applications/drupal/index"
+                }
+            }
+        }
+    ],
+
+    "applications": {
+        "drupal": {
+            "type": "php",
+            "processes": {
+              "max": 10,
+              "spare": 5,
+              "idle_timeout": 20
+            },
+            "limits": {
+              "timeout": 30,
+              "requests": 1000
+            },
+            "options": {
+                "file": "/etc/php7/php.ini",
+                "admin": {
+                    "memory_limit": "512M",
+                    "variables_order": "EGPCS",
+                    "expose_php": "0"
+                },
+                "user": {
+                    "display_errors": "0"
+                }
+            },
+            "targets": {
+                "direct": {
+                    "root": "/app/web/"
+                },
+
+                "index": {
+                    "root": "/app/web/",
+                    "script": "index.php"
+                }
+            }
+        },
+
+        "simplesaml": {
+            "type": "php",
+            "root": "/app/simplesamlphp/www",
+            "script": "index.php",
+            "environment": {
+                "SIMPLESAMLPHP_CONFIG_DIR": "/app/simplesamlphp_config/config"
+            }
+        }
+    }
+}
+

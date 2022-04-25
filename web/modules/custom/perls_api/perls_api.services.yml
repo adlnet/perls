@@ -1,0 +1,101 @@
+services:
+  renderered_html.normalizer:
+    class: Drupal\perls_api\EntityNormalizer\RenderedHtmlNormalizer
+  entity_id.normalizer:
+    class: Drupal\perls_api\EntityNormalizer\EntityIdNormalizer
+  precentage_to_fraction.normalizer:
+    class: Drupal\perls_api\EntityNormalizer\PrecentageToFractionNormalizer
+  test_attempt.normalizer:
+    class: Drupal\perls_api\EntityNormalizer\TestAttemptNormalizer
+  datetime_to_iso8601.normalizer:
+    class: Drupal\perls_api\EntityNormalizer\DateTimeIso8601Normalizer
+  image_style.normalizer:
+    class: Drupal\perls_api\EntityNormalizer\ImageStyleNormalizer
+  node_reference_counter.normalizer:
+    class: Drupal\perls_api\EntityNormalizer\NodeReferenceCounterNormalizer
+  node_comment_status.normalizer:
+    class: Drupal\perls_api\EntityNormalizer\NodeCommentStatusNormalizer
+  media_image.normalizer:
+    arguments: ['@entity_type.manager']
+    class: Drupal\perls_api\EntityNormalizer\MediaImageNormalizer
+  perls_node_learn_package_url.normalizer:
+    class: Drupal\perls_api\EntityNormalizer\PerlsLearnPackageUrlNormalizer
+  paragraph_document_url.normalizer:
+    arguments: ['@entity_field.manager']
+    class: Drupal\perls_api\EntityNormalizer\DocumentUrlNormalizer
+  perls_paragraph_card_front.normalizer:
+    arguments: ['@entity_field.manager']
+    class: Drupal\perls_api\EntityNormalizer\CardFrontParagraphNormalizer
+  perls_paragraph_card_back.normalizer:
+    arguments: ['@entity_field.manager']
+    class: Drupal\perls_api\EntityNormalizer\CardBackParagraphNormalizer
+  file.normalizer:
+    class: Drupal\perls_api\EntityNormalizer\FileFieldUrlNormalizer
+  perls_api.field_value_prefix_suffix.normalizer:
+    class: Drupal\perls_api\EntityNormalizer\FieldValuePrefixSuffixNormalizer
+  perls_api.time_field.normalizer:
+    class: Drupal\perls_api\EntityNormalizer\TimeFieldNormalizer
+  perls_api.empty_field_list_item.normalizer:
+    class: Drupal\perls_api\EntityNormalizer\ReturnEmptyValueWithZeroFieldItem
+    arguments: ['@service_container']
+  group_visibility.normalizer:
+    class: Drupal\perls_api\EntityNormalizer\GroupVisibilityNormalizer
+  group_membership_status.normalizer:
+    class: Drupal\perls_api\EntityNormalizer\GroupMembershipStatusNormalizer
+  perls_api.request_formatter:
+    class: Drupal\perls_api\EventSubscriber\RequestFormatSubscriber
+    arguments: []
+    tags:
+      - { name: event_subscriber }
+  perls_api.request_inspector:
+    class: Drupal\perls_api\RequestInspector
+    arguments:
+      - '@request_stack'
+      - '@config.factory'
+  perls_api.theme.negotiatior:
+    class: Drupal\perls_api\Theme\ThemeNegotiator
+    arguments: ['@perls_api.request_inspector']
+    tags:
+      - { name: theme_negotiator, priority: 99 }
+  perls_api.node_package_url:
+    class: Drupal\perls_api\EntityNormalizer\NodePackagerUrlNormalizer
+    arguments: ["@entity_packager.storage"]
+  perls_api.user_statistics:
+    class: Drupal\perls_api\UserStatistics
+    arguments: ['@database', '@perls_api.perls_helper', '@perls_learner_state.flagged_user_statistics']
+  perls_api.perls_helper:
+    class: Drupal\perls_api\PerlsHelper
+  entity_normalization.manager:
+    class: Drupal\perls_api\PerlsEntityNormalizationManager
+    arguments: [ '@module_handler', '@cache.discovery' ]
+    tags:
+      - { name: plugin_manager_cache_clear }
+  entity_normalization.entity.normalizer:
+    class: Drupal\perls_api\Normalizer\PerlsEntityConfigNormalizer
+    arguments: [ '@service_container', '@entity_normalization.manager', '@entity_type.manager' ]
+    tags:
+      - { name: normalizer, priority: 15 }
+  learn_link_url.normalizer:
+    class: Drupal\perls_api\EntityNormalizer\WebLinkUrlNormalizer
+  perls_api.route_subscriber:
+    class: Drupal\perls_api\Routing\RouteSubscriber
+    tags:
+      - { name: event_subscriber }
+  entity_normalization.normalizer.node_learn_link:
+    class: Drupal\perls_api\Normalizer\LearnLinkEntityNormalizer
+    arguments: ['@entity_type.manager', '@entity_type.repository', '@entity_field.manager', '@request_stack', '@entity_reference.normalizer.group']
+    tags:
+      - { name: normalizer, priority: 16 }
+  entity_reference.normalizer.taxonomy_terms:
+    class: Drupal\perls_api\Normalizer\TermsNormalizer
+    tags:
+      - { name: normalizer, priority: 15 }
+    arguments: ['@entity_type.manager']
+  entity_reference.normalizer.group:
+    class: Drupal\perls_api\Normalizer\GroupNormalizer
+    arguments: [ '@service_container', '@entity_type.manager']
+  entity_reference.normalizer.image:
+    class: Drupal\perls_api\Normalizer\MediaImageDenormalizer
+    arguments: ['@entity_type.manager', '@module_handler', '@file_system', '@datetime.time']
+    tags:
+      - { name: normalizer, priority: 15 }

@@ -1,0 +1,22 @@
+uuid: 4a841ab7-e43f-4fe5-8806-1faac0ffab83
+langcode: en
+status: true
+dependencies:
+  config:
+    - business_rules.condition.not_system_cron_blocked_new
+id: moderation_state_changes
+label: 'Moderation State Changes'
+type: moderation_state_changes_condition
+reverse: false
+description: 'Checks if the entity''s moderation state was updated.'
+target_entity_type: null
+target_bundle: null
+success_items:
+  not_system_cron_blocked_new:
+    type: condition
+    id: not_system_cron_blocked_new
+    weight: -9
+fail_items: {  }
+tags: {  }
+settings:
+  moderation_state_changes: 1

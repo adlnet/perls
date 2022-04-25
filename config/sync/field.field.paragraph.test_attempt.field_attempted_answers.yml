@@ -1,0 +1,76 @@
+uuid: 6cc67329-ad46-4f38-b8c2-ff6384c7a60e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_attempted_answers
+    - paragraphs.paragraphs_type.test_attempt
+    - paragraphs.paragraphs_type.test_question_answer
+  module:
+    - entity_reference_revisions
+id: paragraph.test_attempt.field_attempted_answers
+field_name: field_attempted_answers
+entity_type: paragraph
+bundle: test_attempt
+label: 'Attempted Answers'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      test_question_answer: test_question_answer
+    negate: 0
+    target_bundles_drag_drop:
+      audio:
+        weight: 17
+        enabled: false
+      callout:
+        weight: 18
+        enabled: false
+      checklist:
+        weight: 19
+        enabled: false
+      document:
+        weight: 20
+        enabled: false
+      heading:
+        weight: 21
+        enabled: false
+      image:
+        weight: 22
+        enabled: false
+      layout_two_column:
+        weight: 23
+        enabled: false
+      list_ordered:
+        weight: 24
+        enabled: false
+      list_unordered:
+        weight: 25
+        enabled: false
+      quiz_option:
+        weight: 26
+        enabled: false
+      references:
+        weight: 27
+        enabled: false
+      table:
+        weight: 28
+        enabled: false
+      test_attempt:
+        weight: 29
+        enabled: false
+      test_question_answer:
+        weight: 30
+        enabled: true
+      text:
+        weight: 31
+        enabled: false
+      video:
+        weight: 32
+        enabled: false
+field_type: entity_reference_revisions

@@ -1,0 +1,28 @@
+uuid: 54e1dfc5-4808-4d36-b845-f634b9e70b8c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_quiz
+    - node.type.learn_link
+    - node.type.quiz
+id: node.learn_link.field_quiz
+field_name: field_quiz
+entity_type: node
+bundle: learn_link
+label: 'Related Quizzes'
+description: 'Add a quiz that is directly related to the content. The quiz should test the learner''s knowledge.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      quiz: quiz
+    sort:
+      field: _none
+    auto_create: true
+    auto_create_bundle: ''
+field_type: entity_reference

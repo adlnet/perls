@@ -1,0 +1,46 @@
+uuid: 2faf5df7-26ea-45e0-922d-8102337a49cd
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.list_unordered.field_list_content
+    - field.field.paragraph.list_unordered.field_list_items
+    - paragraphs.paragraphs_type.list_unordered
+  module:
+    - field_layout
+    - layout_builder
+    - layout_discovery
+    - text
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings: {  }
+  layout_builder:
+    enabled: false
+    allow_custom: false
+_core:
+  default_config_hash: nNwfvIYmOFG2LwND45zM62wOk0T8nb1UpwKBTurFbMk
+id: paragraph.list_unordered.default
+targetEntityType: paragraph
+bundle: list_unordered
+mode: default
+content:
+  field_list_content:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_list_items:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  search_api_excerpt: true

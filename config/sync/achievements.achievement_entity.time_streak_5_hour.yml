@@ -1,0 +1,22 @@
+uuid: 567837a3-c0fe-4d21-a241-55a09347baab
+langcode: en
+status: true
+dependencies:
+  module:
+    - badges
+third_party_settings:
+  badges:
+    plugin_id: time_based_badge_plugin
+    time_based_badge_plugin:
+      minutes: '300'
+    badge_type: 'Time Attack'
+id: time_streak_5_hour
+label: 'Time Streak 5 hour'
+description: 'Awarded to any user who uses the app for 5 hours.'
+secret: false
+invisible: false
+manual_only: null
+points: 1
+use_default_image: false
+locked_image_path: 'public://badges/lockedBadge.png'
+unlocked_image_path: 'public://badges/5hours.png'

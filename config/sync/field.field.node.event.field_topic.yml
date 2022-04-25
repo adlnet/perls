@@ -1,0 +1,29 @@
+uuid: adb2b4d0-0450-423e-b84d-c191398ed8d6
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_topic
+    - node.type.event
+    - taxonomy.vocabulary.category
+id: node.event.field_topic
+field_name: field_topic
+entity_type: node
+bundle: event
+label: Topic
+description: 'Select the topic that best represents the event’s content.'
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      category: category
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

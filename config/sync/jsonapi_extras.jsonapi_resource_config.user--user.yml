@@ -1,0 +1,203 @@
+uuid: 2d0fd9cd-6b71-41fc-9115-0ed734f82696
+langcode: en
+status: true
+dependencies:
+  module:
+    - user
+id: user--user
+disabled: true
+path: user/user
+resourceType: user--user
+resourceFields:
+  uid:
+    disabled: false
+    fieldName: uid
+    publicName: uid
+    enhancer:
+      id: ''
+  uuid:
+    disabled: false
+    fieldName: uuid
+    publicName: uuid
+    enhancer:
+      id: ''
+  langcode:
+    disabled: false
+    fieldName: langcode
+    publicName: langcode
+    enhancer:
+      id: ''
+  preferred_langcode:
+    disabled: false
+    fieldName: preferred_langcode
+    publicName: preferred_langcode
+    enhancer:
+      id: ''
+  preferred_admin_langcode:
+    disabled: false
+    fieldName: preferred_admin_langcode
+    publicName: preferred_admin_langcode
+    enhancer:
+      id: ''
+  name:
+    disabled: false
+    fieldName: name
+    publicName: name
+    enhancer:
+      id: ''
+  pass:
+    disabled: false
+    fieldName: pass
+    publicName: pass
+    enhancer:
+      id: ''
+  mail:
+    disabled: false
+    fieldName: mail
+    publicName: mail
+    enhancer:
+      id: ''
+  timezone:
+    disabled: false
+    fieldName: timezone
+    publicName: timezone
+    enhancer:
+      id: ''
+  status:
+    disabled: false
+    fieldName: status
+    publicName: status
+    enhancer:
+      id: ''
+  created:
+    disabled: false
+    fieldName: created
+    publicName: created
+    enhancer:
+      id: ''
+  changed:
+    disabled: false
+    fieldName: changed
+    publicName: changed
+    enhancer:
+      id: ''
+  access:
+    disabled: false
+    fieldName: access
+    publicName: access
+    enhancer:
+      id: ''
+  login:
+    disabled: false
+    fieldName: login
+    publicName: login
+    enhancer:
+      id: ''
+  init:
+    disabled: false
+    fieldName: init
+    publicName: init
+    enhancer:
+      id: ''
+  roles:
+    disabled: false
+    fieldName: roles
+    publicName: roles
+    enhancer:
+      id: ''
+  default_langcode:
+    disabled: false
+    fieldName: default_langcode
+    publicName: default_langcode
+    enhancer:
+      id: ''
+  entitygroupfield:
+    disabled: false
+    fieldName: entitygroupfield
+    publicName: entitygroupfield
+    enhancer:
+      id: ''
+  path:
+    disabled: false
+    fieldName: path
+    publicName: path
+    enhancer:
+      id: ''
+  field_add_groups:
+    disabled: false
+    fieldName: field_add_groups
+    publicName: field_add_groups
+    enhancer:
+      id: ''
+  field_goal_log:
+    disabled: false
+    fieldName: field_goal_log
+    publicName: field_goal_log
+    enhancer:
+      id: ''
+  field_goal_monthly_course_comp:
+    disabled: false
+    fieldName: field_goal_monthly_course_comp
+    publicName: field_goal_monthly_course_comp
+    enhancer:
+      id: ''
+  field_goal_weekly_completions:
+    disabled: false
+    fieldName: field_goal_weekly_completions
+    publicName: field_goal_weekly_completions
+    enhancer:
+      id: ''
+  field_goal_weekly_test_average:
+    disabled: false
+    fieldName: field_goal_weekly_test_average
+    publicName: field_goal_weekly_test_average
+    enhancer:
+      id: ''
+  field_goal_weekly_views:
+    disabled: false
+    fieldName: field_goal_weekly_views
+    publicName: field_goal_weekly_views
+    enhancer:
+      id: ''
+  field_interests:
+    disabled: false
+    fieldName: field_interests
+    publicName: field_interests
+    enhancer:
+      id: ''
+  field_name:
+    disabled: false
+    fieldName: field_name
+    publicName: field_name
+    enhancer:
+      id: ''
+  field_notification_days:
+    disabled: false
+    fieldName: field_notification_days
+    publicName: field_notification_days
+    enhancer:
+      id: ''
+  field_notification_time:
+    disabled: false
+    fieldName: field_notification_time
+    publicName: field_notification_time
+    enhancer:
+      id: ''
+  field_organization_homepage:
+    disabled: false
+    fieldName: field_organization_homepage
+    publicName: field_organization_homepage
+    enhancer:
+      id: ''
+  field_organization_identifier:
+    disabled: false
+    fieldName: field_organization_identifier
+    publicName: field_organization_identifier
+    enhancer:
+      id: ''
+  user_picture:
+    disabled: false
+    fieldName: user_picture
+    publicName: user_picture
+    enhancer:
+      id: ''

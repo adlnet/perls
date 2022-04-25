@@ -1,0 +1,107 @@
+uuid: 82e37c4c-eb80-4ef8-93c1-e207d72bcda3
+langcode: en
+status: true
+dependencies:
+  module:
+    - config_split
+id: config_split--config_split
+disabled: true
+path: config_split/config_split
+resourceType: config_split--config_split
+resourceFields:
+  uuid:
+    disabled: false
+    fieldName: uuid
+    publicName: uuid
+    enhancer:
+      id: ''
+  langcode:
+    disabled: false
+    fieldName: langcode
+    publicName: langcode
+    enhancer:
+      id: ''
+  status:
+    disabled: false
+    fieldName: status
+    publicName: status
+    enhancer:
+      id: ''
+  dependencies:
+    disabled: false
+    fieldName: dependencies
+    publicName: dependencies
+    enhancer:
+      id: ''
+  third_party_settings:
+    disabled: false
+    fieldName: third_party_settings
+    publicName: third_party_settings
+    enhancer:
+      id: ''
+  _core:
+    disabled: false
+    fieldName: _core
+    publicName: _core
+    enhancer:
+      id: ''
+  id:
+    disabled: false
+    fieldName: id
+    publicName: id
+    enhancer:
+      id: ''
+  label:
+    disabled: false
+    fieldName: label
+    publicName: label
+    enhancer:
+      id: ''
+  description:
+    disabled: false
+    fieldName: description
+    publicName: description
+    enhancer:
+      id: ''
+  weight:
+    disabled: false
+    fieldName: weight
+    publicName: weight
+    enhancer:
+      id: ''
+  storage:
+    disabled: false
+    fieldName: storage
+    publicName: storage
+    enhancer:
+      id: ''
+  folder:
+    disabled: false
+    fieldName: folder
+    publicName: folder
+    enhancer:
+      id: ''
+  module:
+    disabled: false
+    fieldName: module
+    publicName: module
+    enhancer:
+      id: ''
+  theme:
+    disabled: false
+    fieldName: theme
+    publicName: theme
+    enhancer:
+      id: ''
+  complete_list:
+    disabled: false
+    fieldName: complete_list
+    publicName: complete_list
+    enhancer:
+      id: ''
+  partial_list:
+    disabled: false
+    fieldName: partial_list
+    publicName: partial_list
+    enhancer:
+      id: ''

@@ -1,0 +1,23 @@
+uuid: 001b6b10-7c9e-4f27-b8d3-f0d990f9f154
+langcode: en
+status: true
+dependencies:
+  module:
+    - paragraphs
+_core:
+  default_config_hash: QAA0PQ73RoYKx1PMOAZprQvFpmraUQnrHH0Y0eDy0Xo
+id: paragraph.field_checklist_item
+field_name: field_checklist_item
+entity_type: paragraph
+type: string
+settings:
+  max_length: 255
+  case_sensitive: false
+  is_ascii: false
+module: core
+locked: false
+cardinality: -1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

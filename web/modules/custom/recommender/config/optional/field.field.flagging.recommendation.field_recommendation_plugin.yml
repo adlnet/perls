@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.flagging.field_recommendation_plugin
+    - flag.flag.recommendation
+id: flagging.recommendation.field_recommendation_plugin
+field_name: field_recommendation_plugin
+entity_type: flagging
+bundle: recommendation
+label: recommendation_plugin
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: manual
+default_value_callback: ''
+settings: {  }
+field_type: string

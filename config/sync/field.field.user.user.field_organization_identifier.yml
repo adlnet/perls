@@ -1,0 +1,20 @@
+uuid: b81ed11f-da77-422d-862d-032a8505809e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.user.field_organization_identifier
+  module:
+    - user
+id: user.user.field_organization_identifier
+field_name: field_organization_identifier
+entity_type: user
+bundle: user
+label: 'Organization Identifier'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

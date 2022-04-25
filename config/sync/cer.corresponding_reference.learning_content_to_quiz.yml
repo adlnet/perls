@@ -1,0 +1,16 @@
+uuid: 39bd5a5b-eff9-4068-bf37-63c398fb461d
+langcode: en
+status: true
+dependencies: {  }
+id: learning_content_to_quiz
+label: 'Learning Content to quiz'
+enabled: true
+first_field: field_quiz
+second_field: field_parent_content
+bundles:
+  node:
+    - learn_article
+    - learn_file
+    - learn_link
+    - learn_package
+    - quiz

@@ -1,0 +1,16 @@
+id: offline_support
+entity_type: switch
+label: Offline Support
+description: Switch for offline support
+status: true
+weight: 0
+langcode: en
+dependencies:
+  enforced:
+    module:
+      - switches
+activationMethod: manual
+manualActivationStatus: true
+defaultValue: null
+overrideable: null
+activationConditions: []

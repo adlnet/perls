@@ -1,0 +1,6 @@
+badges_xapi_reporting:
+  version: 1.x
+  js:
+    js/badges_xapi_reporting.js: {}
+  dependencies:
+    - xapi_reporting/xapi-reporting.lib-common

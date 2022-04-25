@@ -1,0 +1,9 @@
+react_comments:
+  css:
+    theme:
+      css/dist/react_comments.css: {}
+  js:
+    js/startsWithPolyfill.js: { attributes: { defer: true }}
+    js/dist/react_comments.js: { attributes: { defer: true }}
+  dependencies:
+    - core/drupal

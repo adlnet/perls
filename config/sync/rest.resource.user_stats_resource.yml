@@ -1,0 +1,18 @@
+uuid: 40d2daf3-318a-4602-b842-0dddbdabc5ba
+langcode: en
+status: true
+dependencies:
+  module:
+    - perls_api
+    - serialization
+    - simple_oauth
+id: user_stats_resource
+plugin_id: user_stats_resource
+granularity: resource
+configuration:
+  methods:
+    - GET
+  formats:
+    - json
+  authentication:
+    - oauth2

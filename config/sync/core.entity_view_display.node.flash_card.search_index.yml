@@ -1,0 +1,52 @@
+uuid: 60676195-82f4-4f12-96e1-369b4f481300
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.search_index
+    - field.field.node.flash_card.field_card_back
+    - field.field.node.flash_card.field_card_front
+    - field.field.node.flash_card.field_difficulty
+    - field.field.node.flash_card.field_parent_content
+    - field.field.node.flash_card.field_tags
+    - field.field.node.flash_card.field_topic
+    - field.field.node.flash_card.field_type_description
+    - node.type.flash_card
+  module:
+    - field_layout
+    - layout_builder
+    - layout_discovery
+    - user
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings:
+      label: ''
+  layout_builder:
+    enabled: false
+    allow_custom: false
+id: node.flash_card.search_index
+targetEntityType: node
+bundle: flash_card
+mode: search_index
+content: {  }
+hidden:
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  entitygroupfield: true
+  field_card_back: true
+  field_card_front: true
+  field_difficulty: true
+  field_parent_content: true
+  field_tags: true
+  field_topic: true
+  field_type_description: true
+  flag_bookmark: true
+  flag_completed: true
+  flag_recommendation: true
+  group_content: true
+  langcode: true
+  links: true
+  recommendation_reason: true
+  search_api_excerpt: true

@@ -1,0 +1,11 @@
+uuid: 3400febe-ffa5-43e0-a34b-bff6373785a3
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: QKNa2i5yRTGmGdkyuiHVSeQURQoSXDrLjw7k0oIXz50
+id: sysadmin
+label: Sysadmin
+weight: -5
+is_admin: true
+permissions: {  }

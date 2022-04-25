@@ -1,0 +1,12 @@
+manual-completed:
+  version: 1.x
+  js:
+    js/manual-completed-article.js: {}
+  dependencies:
+    - xapi_reporting/xapi-reporting.lib-common
+perls_learner.node_stats:
+  version: 1.x
+  js:
+    js/node-stats.js: {}
+  dependencies:
+    - core/drupal.ajax

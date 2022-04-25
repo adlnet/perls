@@ -1,0 +1,62 @@
+uuid: a6036b90-ec91-43b4-8b91-02fb75f99b04
+langcode: en
+status: true
+dependencies:
+  config:
+    - entity_browser.browser.image_browser
+    - field.field.paragraph.image.field_caption
+    - field.field.paragraph.image.field_media_image
+    - field.field.paragraph.image.field_title
+    - paragraphs.paragraphs_type.image
+  module:
+    - entity_browser
+    - field_layout
+    - layout_discovery
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings:
+      label: ''
+_core:
+  default_config_hash: R4LhT9b0R5L57at5um8-ZIpCksdREQuzYEvbeLusJR4
+id: paragraph.image.default
+targetEntityType: paragraph
+bundle: image
+mode: default
+content:
+  field_caption:
+    type: string_textfield
+    weight: 3
+    region: content
+    settings:
+      size: 60
+      placeholder: 'Add a caption to display below the image (optional)'
+    third_party_settings: {  }
+  field_media_image:
+    type: entity_browser_entity_reference
+    weight: 2
+    region: content
+    settings:
+      entity_browser: image_browser
+      field_widget_display: rendered_entity
+      field_widget_edit: true
+      field_widget_remove: true
+      field_widget_replace: false
+      open: true
+      field_widget_display_settings:
+        view_mode: media_library
+      selection_mode: selection_append
+    third_party_settings: {  }
+  field_title:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: 'Add a title for the image (optional)'
+    third_party_settings: {  }
+hidden:
+  created: true
+  moderation_state: true
+  status: true
+  uid: true

@@ -1,0 +1,23 @@
+uuid: 929f997e-933a-4203-b0d0-038f60e8fc80
+langcode: en
+status: true
+dependencies: {  }
+name: Table
+format: table
+weight: 0
+filters:
+  filter_html:
+    id: filter_html
+    provider: filter
+    status: true
+    weight: -10
+    settings:
+      allowed_html: '<a href hreflang> <em> <strong> <cite> <blockquote cite> <code> <ul type> <ol start type> <li> <dl> <dt> <dd> <h2 id> <h3 id> <h4 id> <h5 id> <h6 id> <sup> <sub> <table> <caption> <tbody> <thead> <tfoot> <th scope> <td colspan rowspan> <tr> <img src>'
+      filter_html_help: true
+      filter_html_nofollow: false
+  filter_autop:
+    id: filter_autop
+    provider: filter
+    status: true
+    weight: 0
+    settings: {  }

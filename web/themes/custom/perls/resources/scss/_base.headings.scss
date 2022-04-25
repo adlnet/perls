@@ -1,0 +1,89 @@
+/* ------------------------------------ *\
+    $HEADINGS
+\* ------------------------------------ */
+
+@mixin o-heading--xxl {
+  font-family: $ff-font--secondary;
+  font-size: var(--font-size-xxl, $font-size-xxl);
+  line-height: 1.2;
+  font-weight: bold;
+}
+
+h1,
+.o-heading--xxl {
+  @include o-heading--xxl;
+}
+
+@mixin o-heading--xl {
+  font-family: $ff-font--secondary;
+  font-size: var(--font-size-xl, $font-size-xl);
+  line-height: 1.2;
+  font-weight: bold;
+}
+
+h2,
+.o-heading--xl {
+  @include o-heading--xl;
+}
+
+@mixin o-heading--l {
+  font-family: $ff-font--secondary;
+  font-size: var(--font-size-l, $font-size-l);
+  line-height: 1.1;
+  font-weight: bold;
+}
+
+h3,
+.o-heading--l {
+  @include o-heading--l;
+}
+
+@mixin o-heading--m {
+  font-family: $ff-font--secondary;
+  font-size: var(--font-size-m, $font-size-m);
+  line-height: 1.2;
+}
+
+h4,
+.o-heading--m {
+  @include o-heading--m;
+}
+
+@mixin o-heading--m--alt {
+  // node--course--card title preset.
+  font-family: $ff-font--secondary;
+  font-size: var(--font-size-m, $font-size-m);
+  font-weight: normal;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.o-heading--m--alt {
+  @include o-heading--m--alt;
+}
+
+@mixin o-heading--s {
+  font-family: $ff-font;
+  font-size: var(--font-size-s, $font-size-s);
+  text-transform: uppercase;
+  font-weight: 900;
+  letter-spacing: 0.04rem;
+}
+
+h5,
+.o-heading--s {
+  @include o-heading--s;
+}
+
+@mixin o-heading--xs {
+  font-family: $ff-font;
+  font-size: var(--font-size-xs, $font-size-xs);
+  text-transform: uppercase;
+  font-weight: 900;
+  letter-spacing: 0.04rem;
+}
+
+h6,
+.o-heading--xs {
+  @include o-heading--xs;
+}

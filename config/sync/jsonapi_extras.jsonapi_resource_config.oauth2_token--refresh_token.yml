@@ -1,0 +1,77 @@
+uuid: 866bf60d-0ea3-467a-bc95-56eb9e5c7b47
+langcode: en
+status: true
+dependencies:
+  config:
+    - simple_oauth.oauth2_token.bundle.refresh_token
+id: oauth2_token--refresh_token
+disabled: true
+path: oauth2_token/refresh_token
+resourceType: oauth2_token--refresh_token
+resourceFields:
+  id:
+    disabled: false
+    fieldName: id
+    publicName: id
+    enhancer:
+      id: ''
+  uuid:
+    disabled: false
+    fieldName: uuid
+    publicName: uuid
+    enhancer:
+      id: ''
+  bundle:
+    disabled: false
+    fieldName: bundle
+    publicName: bundle
+    enhancer:
+      id: ''
+  auth_user_id:
+    disabled: false
+    fieldName: auth_user_id
+    publicName: auth_user_id
+    enhancer:
+      id: ''
+  client:
+    disabled: false
+    fieldName: client
+    publicName: client
+    enhancer:
+      id: ''
+  scopes:
+    disabled: false
+    fieldName: scopes
+    publicName: scopes
+    enhancer:
+      id: ''
+  value:
+    disabled: false
+    fieldName: value
+    publicName: value
+    enhancer:
+      id: ''
+  created:
+    disabled: false
+    fieldName: created
+    publicName: created
+    enhancer:
+      id: ''
+  changed:
+    disabled: false
+    fieldName: changed
+    publicName: changed
+    enhancer:
+      id: ''
+  expire:
+    disabled: false
+    fieldName: expire
+    publicName: expire
+    enhancer:
+      id: ''
+  status:
+    disabled: false
+    fieldName: status
+    publicName: status
+    enhancer:
+      id: ''

@@ -1,0 +1,30 @@
+uuid: b9df2e4e-85aa-44c2-8cda-c473265b9986
+langcode: en
+status: true
+dependencies:
+  module:
+    - perls_search
+    - user
+  theme:
+    - perls_learner
+id: search_block_learner
+theme: perls_learner
+region: header_top
+weight: -5
+provider: null
+plugin: perls_views_search_block
+settings:
+  id: perls_views_search_block
+  label: 'Search Block for Perls Dashboard'
+  label_display: '0'
+  provider: perls_search
+  views_id: search
+  views_display: search_page
+visibility:
+  user_role:
+    id: user_role
+    negate: false
+    context_mapping:
+      user: '@user.current_user_context:current_user'
+    roles:
+      authenticated: authenticated

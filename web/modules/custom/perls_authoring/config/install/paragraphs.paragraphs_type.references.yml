@@ -1,0 +1,8 @@
+langcode: en
+status: true
+dependencies: {  }
+id: references
+label: References
+icon_uuid: null
+description: 'Add links to external sites or other articles'
+behavior_plugins: {  }

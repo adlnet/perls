@@ -1,0 +1,27 @@
+{
+  "name": "perls",
+  "version": "1.0.0",
+  "description": "A custom Drupal 8 theme",
+  "scripts": {
+    "build": "npm install && gulp build-theme",
+    "build-theme": "gulp build-theme",
+    "gulp": "gulp"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "sass": "^1.49.0",
+    "gulp": "^4.0.2",
+    "gulp-autoprefixer": "^5.0.0",
+    "gulp-clean-css": "^3.0.8",
+    "gulp-exec": "^3.0.2",
+    "gulp-rename": "^1.4.0",
+    "gulp-sass": "^5.1.0",
+    "gulp-sass-glob": "^1.0.8",
+    "gulp-sourcemaps": "^1.12.1",
+    "gulp-stylelint": "^9.0.0",
+    "gulp-uglify": "^3.0.2",
+    "stylelint": "^10.1.0",
+    "stylelint-config-standard": "^18.3.0"
+  }
+}

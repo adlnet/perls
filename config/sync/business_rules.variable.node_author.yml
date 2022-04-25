@@ -1,0 +1,14 @@
+uuid: 03f8d06b-b0b4-49f7-9a07-9bda0b04cf3a
+langcode: en
+status: true
+dependencies: {  }
+id: node_author
+label: 'Node Author'
+type: entity_filed_variable
+description: 'The Node Author.'
+target_entity_type: node
+target_bundle: learn_article
+tags: {  }
+settings:
+  data: original_data
+  field: uid

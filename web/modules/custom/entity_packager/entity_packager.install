@@ -1,0 +1,91 @@
+<?php
+
+/**
+ * @file
+ * Implements install tasks.
+ */
+
+use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\Link;
+use Drupal\Core\Url;
+use Drupal\user\Entity\Role;
+use Drupal\user\Entity\User;
+
+/**
+ * Implements hook_install().
+ */
+function entity_packager_install() {
+  // Create a new user for offline page download.
+  /** @var \Drupal\user\Entity\User $user */
+  $user = User::create([
+    'name' => 'packager_user',
+    'status' => 1,
+    'mail' => 'pachager_user@test.com',
+  ]);
+
+  // Ensure a packager role exists. If not create a placeholder role
+  // this will be updated to correct config on config import.
+  if (!Role::load('packager')) {
+    $packager_role = Role::create(['id' => 'packager', 'label' => 'Packager']);
+    $packager_role->save();
+  }
+  $user->addRole('packager');
+  $user->save();
+  \Drupal::state()->set('wget_user', $user->id());
+
+  // Create a default folder to save zips.
+  $dirname = 'private://offline_pages';
+  Drupal::service('file_system')->prepareDirectory($dirname, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
+
+  // Create a queue for offline page save.
+  $queue = \Drupal::queue('node_package_generate_queue');
+  $queue->createQueue();
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function entity_packager_uninstall() {
+  $config = \Drupal::configFactory()->getEditable('entity_packager.page_settings');
+  $state = \Drupal::state();
+  $user = User::load($state->get('wget_user'));
+  $config->delete();
+  $user->delete();
+  $state->delete('wget_user');
+
+  // Delete the queue and all item in it.
+  $queue = \Drupal::queue('node_package_generate_queue');
+  $queue->deleteQueue();
+}
+
+/**
+ * Implements hook_requirements().
+ */
+function entity_packager_requirements($phase) {
+  $requirements = [];
+  if ($phase == 'runtime') {
+    if (empty(\Drupal::state()->get('wget_user'))) {
+      $module_link = Link::fromTextAndUrl(t('node packager'), Url::fromRoute('entity_packager.admin_settings_form'));
+      $requirements['entity_packager'] = [
+        'description' => t('Please, configure a uid on the admin page of %link module.', ['%link' => $module_link->toString()]),
+        'severity' => REQUIREMENT_ERROR,
+        'title' => t('Missing uid'),
+      ];
+    }
+    else {
+      $user = User::load(\Drupal::state()->get('wget_user'));
+      if (!$user->hasRole('packager')) {
+        $user_link = Link::fromTextAndUrl(t('Click here to edit user now'), Url::fromRoute('entity.user.edit_form', ['user' => $user->id()]));
+        $requirements['entity_packager'] = [
+          'description' => t('Please add the "packager" role to wget user. %link.', ['%link' => $user_link->toString()]),
+          'severity' => REQUIREMENT_ERROR,
+          'title' => t('Node Packager - Missing role on Wget user'),
+        ];
+      }
+
+    }
+
+  }
+
+  return $requirements;
+}

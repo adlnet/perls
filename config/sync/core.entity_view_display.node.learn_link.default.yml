@@ -1,0 +1,125 @@
+uuid: 94548a20-b3fb-4b09-906a-cfad8c35b135
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.learn_link.field_content_link
+    - field.field.node.learn_link.field_course
+    - field.field.node.learn_link.field_custom_uri
+    - field.field.node.learn_link.field_description
+    - field.field.node.learn_link.field_difficulty
+    - field.field.node.learn_link.field_flash_card
+    - field.field.node.learn_link.field_link_type
+    - field.field.node.learn_link.field_media_image
+    - field.field.node.learn_link.field_quiz
+    - field.field.node.learn_link.field_tags
+    - field.field.node.learn_link.field_tip_card
+    - field.field.node.learn_link.field_topic
+    - field.field.node.learn_link.field_type_description
+    - node.type.learn_link
+  module:
+    - field_layout
+    - layout_builder
+    - link
+    - media
+    - options
+    - text
+    - user
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings:
+      label: ''
+  layout_builder:
+    enabled: false
+    allow_custom: false
+id: node.learn_link.default
+targetEntityType: node
+bundle: learn_link
+mode: default
+content:
+  field_content_link:
+    type: link
+    label: hidden
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    weight: 6
+    region: content
+  field_custom_uri:
+    type: basic_string
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 7
+    region: content
+  field_description:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_difficulty:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 8
+    region: content
+  field_link_type:
+    type: list_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 5
+    region: content
+  field_media_image:
+    type: media_thumbnail
+    label: hidden
+    settings:
+      image_link: ''
+      image_style: ''
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_tags:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  flag_bookmark:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  flag_completed:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+hidden:
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  entitygroupfield: true
+  field_course: true
+  field_flash_card: true
+  field_quiz: true
+  field_tip_card: true
+  field_topic: true
+  field_type_description: true
+  flag_recommendation: true
+  group_content: true
+  langcode: true
+  links: true
+  recommendation_reason: true
+  search_api_excerpt: true

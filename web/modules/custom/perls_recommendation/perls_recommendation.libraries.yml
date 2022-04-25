@@ -1,0 +1,4 @@
+recommendation-tip-box:
+  version: 1.x
+  js:
+    js/recommendation-tip.js: {}

@@ -1,0 +1,13 @@
+uuid: c1d0a98b-e66a-4351-b518-d36bb549519f
+langcode: en
+status: true
+dependencies:
+  config:
+    - paragraphs.paragraphs_type.layout_two_column
+_core:
+  default_config_hash: 7w0fgzZfTWnwkhefUCy0pAxAJyeGaJr2RQG4tApbBaM
+id: paragraph.layout_two_column
+target_entity_type_id: paragraph
+target_bundle: layout_two_column
+default_langcode: site_default
+language_alterable: false

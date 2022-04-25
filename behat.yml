@@ -1,0 +1,63 @@
+default:
+  suites:
+    default:
+      contexts:
+        - '\FeatureContext'
+        - '\IntegratedExperts\BehatScreenshotExtension\Context\ScreenshotContext'
+        - '\Drupal\DrupalExtension\Context\MinkContext'
+        - '\Drupal\DrupalExtension\Context\MessageContext'
+        - '\NuvoleWeb\Drupal\DrupalExtension\Context\DrupalContext'
+        - '\NuvoleWeb\Drupal\DrupalExtension\Context\VisibilityContext'
+        - '\PerlsDrupalContentContext'
+        - '\PerlsDrupalContext'
+  gherkin:
+    cache: ~
+  extensions:
+    DMore\ChromeExtension\Behat\ServiceContainer\ChromeExtension: ~
+    Drupal\MinkExtension:
+      goutte: ~
+      base_url: "http://localhost"
+      default_session: "goutte"
+      browser_name: "chrome"
+      javascript_session: "browserChrome"
+      files_path: "%paths.base%"
+      sessions:
+        javascript:
+          chrome:
+#            api_url: "http://PERLS_chrome:9222"
+            socket_timeout: 60000
+        default:
+          goutte: ~
+        browserChrome:
+          chrome:
+#            api_url: "http://PERLS_chrome:9222"
+            socket_timeout: 60000
+    NuvoleWeb\Drupal\DrupalExtension:
+      drupal:
+        drupal_root: "%paths.base%/web/"
+      api_driver: "drupal"
+      blackbox: ~
+      region_map:
+        header: ".content-header"
+        content: ".region-content"
+      text:
+        log_in: "Sign in"
+        log_out: "Log out"
+        username_field: "Email"
+    IntegratedExperts\BehatScreenshotExtension:
+      dir: "%paths.base%/artifacts/screenshots"
+      fail: true
+      purge: true
+tugboat:
+  extensions:
+    Drupal\MinkExtension:
+      base_url: "http://localhost"
+      sessions:
+        javascript:
+          chrome:
+            api_url: "http://localhost:9222"
+        browserChrome:
+          chrome:
+            api_url: "http://localhost:9222"
+    IntegratedExperts\BehatScreenshotExtension:
+      dir: "%paths.base%/web/artifacts/screenshots"

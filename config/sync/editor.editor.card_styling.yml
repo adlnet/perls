@@ -1,0 +1,47 @@
+uuid: b1f71f6f-e947-4cfd-89eb-a9ba154b57d9
+langcode: en
+status: true
+dependencies:
+  config:
+    - filter.format.card_styling
+  module:
+    - ckeditor
+format: card_styling
+editor: ckeditor
+settings:
+  toolbar:
+    rows:
+      -
+        -
+          name: Formatting
+          items:
+            - Format
+            - Bold
+            - Italic
+            - Underline
+            - Strike
+            - Superscript
+            - Subscript
+            - RemoveFormat
+        -
+          name: Lists
+          items:
+            - BulletedList
+            - NumberedList
+        -
+          name: Tools
+          items:
+            - SpecialChar
+  plugins:
+    stylescombo:
+      styles: ''
+    language:
+      language_list: un
+image_upload:
+  status: false
+  scheme: public
+  directory: inline-images
+  max_size: ''
+  max_dimensions:
+    width: null
+    height: null

@@ -1,0 +1,5 @@
+badges_administer:
+  title: User Badges
+  route_name: achievements.achievements_controller_userAchievements
+  base_route: entity.user.canonical
+  weight: 10

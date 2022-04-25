@@ -1,0 +1,527 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Used by bash scripts for managing PERLS tenants.
+Parameters:
+  TENANT:
+    Description: The name of the TENANT
+    Type: String
+  DBPASSWORD:
+    Description: Password for MySQL
+    Type: String
+  SMTPPASSWORD:
+    Description: Password for Email account
+    Type: String
+  PRIORITY:
+    Description: Where to put the listener rule in the LB config
+    Type: Number
+  LRSHOST:
+    Description: Endpoint for TENANT's xapi statements to be sent
+    Type: String
+  LRSUSERNAME:
+    Description: Username for the LRS
+    Type: String
+  LRSPASSWORD:
+    Description: Password for the LRS
+    Type: String
+  REDISTASKDEFVER:
+    Description: Which Task definition to use for Redis
+    Type: Number
+    Default: 1
+  SMTPUSERNAME:
+    Description: User for Email account
+    Type: String
+  SMTPHOST:
+    Description: Host for SMTP Connection
+    Type: String
+  SMTPFROM:
+    Description: Email to send from
+    Type: String
+  SMTPPORT:
+    Description: Port for SMTP connection
+    Type: String
+  SMTPPROTOCOL:
+    Description: Protocol for SMTP connections(SSL or TLS)
+    Type: String
+    Default: tls
+  VERSION:
+    Description: Version of the Container
+    Type: String
+  TASKDEFVER:
+    Description: Which Task definition to use
+    Type: Number
+    Default: 1
+  SOLRTASKDEFVER:
+    Description: Which Task definition to use for SOLR
+    Type: Number
+    Default: 1
+  SIMPLESAMLAUTHSOURCE:
+    Description: SAML auth source
+    Type: String
+    Default: perls
+  SIMPLESAMLCONFIGDIR:
+    Description: Directory location of SAML config
+    Type: String
+    Default: "/var/www/html/private/saml_config"
+  ALTHost:
+    Description: Additional hostname to add to trusted hosts in settings.php
+    Type: String
+    Default: ''
+  SIMPLESAMLHOST:
+    Description: Base address of the CMS.  Only used in conjunction with ALTHost
+    Type: String
+    Default: ''
+  StackName:
+    Description: Name of the initial environment stack.
+    Type: String
+    Default: PERLS
+
+Resources:
+  TaskDefinitionPHP:
+    DependsOn: [EFSPublicAP, EFSPrivateAP, CloudWatchLogGroup]
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      ContainerDefinitions:
+        - Name: PERLS-php
+          Environment:
+            - Name: DB_DRIVER
+              Value: mysql
+            - Name: DB_HOST
+              Value:
+                Fn::ImportValue:
+                  !Sub "PERLS-RDS"
+            - Name: DB_NAME
+              Value: !Sub ${TENANT}_PERLS
+            - Name: DB_PORT
+              Value: 3306
+            - Name: DB_USER
+              Value: perls_user
+            - Name: DRUPAL_SOLR_HOST
+              Value: !Sub ${TENANT}.solr.perls.net
+            - Name: SMTP_USERNAME
+              Value: !Sub ${SMTPUSERNAME}
+            - Name: DB_PASSWORD
+              Value: !Sub ${DBPASSWORD}
+            - Name: SMTP_PASSWORD
+              Value: !Sub ${SMTPPASSWORD}
+            - Name: LRS_HOST
+              Value: !Sub ${LRSHOST}
+            - Name: LRS_USERNAME
+              Value: !Sub ${LRSUSERNAME}
+            - Name: LRS_PASSWORD
+              Value: !Sub ${LRSPASSWORD}
+            - Name: SMTP_FROM
+              Value: !Sub ${SMTPFROM}
+            - Name: SMTP_HOST
+              Value: !Sub ${SMTPHOST}
+            - Name: SMTP_PORT
+              Value: !Sub ${SMTPPORT}
+            - Name: SMTP_PROTOCOL
+              Value: !Sub ${SMTPPROTOCOL}
+            - Name: BRAND
+              Value: PERLS
+            - Name: SIMPLESAML_AUTH_SOURCE
+              Value: !Sub ${SIMPLESAMLAUTHSOURCE}
+            - Name: SIMPLESAML_CONFIG_DIR
+              Value: !Sub ${SIMPLESAMLCONFIGDIR}
+            - Name: REDIS_HOST
+              Value: !Sub ${TENANT}-redis.internalservice
+            - Name: ADDITIONAL_TRUSTED_HOST
+              Value: !Sub ${ALTHost}
+          MountPoints:
+            - SourceVolume: public
+              ContainerPath: /var/www/html/web/sites/default/files
+            - SourceVolume: private
+              ContainerPath: /var/www/html/private
+          Image:
+            Fn::Join:
+              - ''
+              - - !Sub ${AWS::AccountId}
+                - '.dkr.ecr.us-east-1.amazonaws.com/perls:'
+                - !Sub ${VERSION}
+          PortMappings:
+            - containerPort: 80
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-region: us-east-1
+              awslogs-group: !Sub ${TENANT}
+              awslogs-stream-prefix: php
+      Cpu: 512
+      ExecutionRoleArn:
+        Fn::ImportValue: PERLS-ECSTaskExecutionRole
+      Family: !Sub ${TENANT}-php-task
+      Memory: 1024
+      NetworkMode: awsvpc
+      RequiresCompatibilities:
+        - FARGATE
+      Volumes:
+        -
+          EFSVolumeConfiguration:
+              AuthorizationConfig:
+                AccessPointId: !Ref EFSPublicAP
+                IAM: DISABLED
+              FilesystemId:
+                Fn::ImportValue: "PERLS-EFS"
+              TransitEncryption: ENABLED
+          Name: public
+        -
+          EFSVolumeConfiguration:
+              AuthorizationConfig:
+                AccessPointId: !Ref EFSPrivateAP
+                IAM: DISABLED
+              FilesystemId:
+                Fn::ImportValue: PERLS-EFS
+              TransitEncryption: ENABLED
+          Name: private
+
+  TaskDefinitionSOLR:
+    DependsOn: [EFSSolrAP, CloudWatchLogGroup]
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      RequiresCompatibilities:
+        - FARGATE
+      Cpu: 256
+      Memory: 512
+      ExecutionRoleArn:
+        Fn::ImportValue: PERLS-ECSTaskExecutionRole
+      NetworkMode: awsvpc
+      ContainerDefinitions:
+        - Name: PERLS-solr
+          MountPoints:
+            - SourceVolume: solr
+              ContainerPath: /var/solr/data
+          Image: solr:8
+          PortMappings:
+            - containerPort: 8983
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-region: us-east-1
+              awslogs-group: !Sub ${TENANT}
+              awslogs-stream-prefix: solr
+      Volumes:
+        -
+          EFSVolumeConfiguration:
+              AuthorizationConfig:
+                AccessPointId: !Ref EFSSolrAP
+                IAM: DISABLED
+              FilesystemId:
+                Fn::ImportValue: PERLS-EFS
+              TransitEncryption: ENABLED
+          Name: solr
+      Family: !Sub ${TENANT}-solr-task
+
+  TaskDefinitionRedis:
+    DependsOn: [EFSSolrAP, CloudWatchRedisLogGroup]
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      RequiresCompatibilities:
+        - FARGATE
+      Cpu: 256
+      Memory: 512
+      ExecutionRoleArn:
+        Fn::ImportValue: PERLS-ECSTaskExecutionRole
+      NetworkMode: awsvpc
+      ContainerDefinitions:
+        - Name: !Sub ${TENANT}-redis
+          Image: redis:6
+          PortMappings:
+            - containerPort: 6379
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-region: us-east-1
+              awslogs-stream-prefix: redis
+              awslogs-group: !Sub ${TENANT}-redis
+      Family: !Sub ${TENANT}-redis-task
+
+  ServicePHP:
+    DependsOn: [ListenerRulePHP, TaskDefinitionPHP]
+    Type: AWS::ECS::Service
+    Properties:
+      PlatformVersion: 1.4.0
+      ServiceName: !Sub ${TENANT}-php-svc
+      Cluster:
+        Fn::ImportValue: PERLS-ECSCluster
+      TaskDefinition: !Sub ${TENANT}-php-task:${TASKDEFVER}
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+            AssignPublicIp: ENABLED
+            SecurityGroups:
+              - Fn::ImportValue: PERLS-SGECS
+            Subnets:
+              - Fn::ImportValue: PERLS-PrivateSubnet1
+              - Fn::ImportValue: PERLS-PrivateSubnet2
+              - Fn::ImportValue: PERLS-PrivateSubnet3
+              - Fn::ImportValue: PERLS-PrivateSubnet4
+              - Fn::ImportValue: PERLS-PrivateSubnet5
+              - Fn::ImportValue: PERLS-PrivateSubnet6
+
+      DeploymentConfiguration:
+        MaximumPercent: 200
+        MinimumHealthyPercent: 50
+      SchedulingStrategy: REPLICA
+      DesiredCount: 1
+      LaunchType: FARGATE
+      EnableECSManagedTags: true
+      HealthCheckGracePeriodSeconds: 30
+      LoadBalancers:
+        - ContainerName: PERLS-php
+          ContainerPort: 80
+          TargetGroupArn: !Ref TargetGroupPHP
+      Tags:
+        - Key: TENANT
+          Value: !Sub ${TENANT}
+
+  ServiceSOLR:
+    DependsOn: [ListenerRuleSOLR, TaskDefinitionSOLR]
+    Type: AWS::ECS::Service
+    Properties:
+      PlatformVersion: 1.4.0
+      ServiceName: !Sub ${TENANT}-solr-svc
+      Cluster:
+        Fn::ImportValue: PERLS-ECSCluster
+      TaskDefinition: !Sub ${TENANT}-solr-task:${SOLRTASKDEFVER}
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+            AssignPublicIp: ENABLED
+            SecurityGroups:
+              - Fn::ImportValue: PERLS-SGSolr
+            Subnets:
+              - Fn::ImportValue: PERLS-PrivateSubnet1
+              - Fn::ImportValue: PERLS-PrivateSubnet2
+              - Fn::ImportValue: PERLS-PrivateSubnet3
+              - Fn::ImportValue: PERLS-PrivateSubnet4
+              - Fn::ImportValue: PERLS-PrivateSubnet5
+              - Fn::ImportValue: PERLS-PrivateSubnet6
+      DeploymentConfiguration:
+        MaximumPercent: 200
+        MinimumHealthyPercent: 50
+      SchedulingStrategy: REPLICA
+      DesiredCount: 1
+      LaunchType: FARGATE
+      EnableECSManagedTags: true
+      HealthCheckGracePeriodSeconds: 30
+      LoadBalancers:
+        - ContainerName: PERLS-solr
+          ContainerPort: 8983
+          TargetGroupArn: !Ref TargetGroupSOLR
+      Tags:
+        - Key: TENANT
+          Value: !Sub ${TENANT}
+
+  RedisDiscoveryService:
+    Type: AWS::ServiceDiscovery::Service
+    Properties:
+      Description: Discovery Service for Redis
+      DnsConfig:
+        RoutingPolicy: MULTIVALUE
+        DnsRecords:
+          - TTL: 60
+            Type: A
+      HealthCheckCustomConfig:
+        FailureThreshold: 1
+      Name: !Sub ${TENANT}-redis
+      NamespaceId:
+        Fn::ImportValue: PERLS-ServiceDiscovery
+
+  ServiceRedis:
+    DependsOn: [ TaskDefinitionRedis, RedisDiscoveryService ]
+    Type: AWS::ECS::Service
+    Properties:
+      PlatformVersion: 1.4.0
+      ServiceName: !Sub ${TENANT}-redis-svc
+      Cluster:
+        Fn::ImportValue: PERLS-ECSCluster
+      TaskDefinition: !Sub ${TENANT}-redis-task:${REDISTASKDEFVER}
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+            AssignPublicIp: ENABLED
+            SecurityGroups:
+              - Fn::ImportValue: PERLS-SGRedis
+            Subnets:
+                - Fn::ImportValue: PERLS-PrivateSubnet1
+                - Fn::ImportValue: PERLS-PrivateSubnet2
+                - Fn::ImportValue: PERLS-PrivateSubnet3
+                - Fn::ImportValue: PERLS-PrivateSubnet4
+                - Fn::ImportValue: PERLS-PrivateSubnet5
+                - Fn::ImportValue: PERLS-PrivateSubnet6
+      DeploymentConfiguration:
+        MaximumPercent: 200
+        MinimumHealthyPercent: 50
+      SchedulingStrategy: REPLICA
+      DesiredCount: 1
+      LaunchType: FARGATE
+      EnableECSManagedTags: true
+      ServiceRegistries:
+        - RegistryArn: !GetAtt RedisDiscoveryService.Arn
+      Tags:
+        - Key: TENANT
+          Value: !Sub ${TENANT}
+
+  ListenerRulePHP:
+    DependsOn: TargetGroupPHP
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    Properties:
+      Actions:
+        - Type: forward
+          TargetGroupArn: !Ref TargetGroupPHP
+      Conditions:
+        - Field: host-header
+          HostHeaderConfig:
+            Values:
+              - !Sub ${TENANT}.perls.usalearning.net
+      ListenerArn:
+        Fn::ImportValue: PERLS-AppLBListener
+      Priority: !Sub ${PRIORITY}
+
+  ListenerRuleSOLR:
+    DependsOn: TargetGroupSOLR
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    Properties:
+      Actions:
+        - Type: forward
+          TargetGroupArn: !Ref TargetGroupSOLR
+      Conditions:
+        - Field: host-header
+          HostHeaderConfig:
+            Values:
+              - !Sub ${TENANT}.solr.perls.net
+      ListenerArn:
+        Fn::ImportValue: PERLS-SolrLBListener
+      Priority: !Sub ${PRIORITY}
+
+
+  TargetGroupPHP:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      HealthCheckEnabled: true
+      HealthCheckIntervalSeconds: 45
+      HealthCheckPath: /ping
+      HealthCheckProtocol: HTTP
+      HealthCheckTimeoutSeconds: 30
+      HealthyThresholdCount: 2
+      Name: !Sub ${TENANT}-php-tg
+      Port: 80
+      Protocol: HTTP
+      TargetType: ip
+      TargetGroupAttributes:
+        - Key: stickiness.enabled
+          Value: true
+        - Key: stickiness.lb_cookie.duration_seconds
+          Value: 3600
+        - Key: deregistration_delay.timeout_seconds
+          Value: 30
+      UnhealthyThresholdCount: 2
+      VpcId:
+        Fn::ImportValue: PERLS-VPCID
+
+  TargetGroupSOLR:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      HealthCheckEnabled: true
+      HealthCheckIntervalSeconds: 45
+      HealthCheckPath: /solr/#/
+      HealthCheckProtocol: HTTP
+      HealthCheckTimeoutSeconds: 30
+      HealthyThresholdCount: 2
+      Name: !Sub ${TENANT}-internal-solr-tg
+      Port: 8983
+      Protocol: HTTP
+      TargetType: ip
+      UnhealthyThresholdCount: 2
+      VpcId:
+        Fn::ImportValue: PERLS-VPCID
+
+  EFSPublicAP:
+      Type: 'AWS::EFS::AccessPoint'
+      Properties:
+        FileSystemId:
+          Fn::ImportValue: PERLS-EFS
+        PosixUser:
+          Uid: "1000"
+          Gid: "1000"
+        RootDirectory:
+          CreationInfo:
+            OwnerGid: "1000"
+            OwnerUid: "1000"
+            Permissions: "0755"
+          Path: !Sub "/${TENANT}/public"
+
+  EFSPrivateAP:
+      Type: 'AWS::EFS::AccessPoint'
+      Properties:
+        FileSystemId:
+          Fn::ImportValue: PERLS-EFS
+        PosixUser:
+          Uid: "1000"
+          Gid: "1000"
+        RootDirectory:
+          CreationInfo:
+            OwnerGid: "1000"
+            OwnerUid: "1000"
+            Permissions: "0755"
+          Path: !Sub "/${TENANT}/private"
+
+  EFSSolrAP:
+      Type: 'AWS::EFS::AccessPoint'
+      Properties:
+        FileSystemId:
+          Fn::ImportValue: PERLS-EFS
+        RootDirectory:
+          Path: !Sub "/${TENANT}/solr"
+
+  ScalableTarget:
+    DependsOn: ServicePHP
+    Type: AWS::ApplicationAutoScaling::ScalableTarget
+    Properties:
+      MaxCapacity: 20
+      MinCapacity: 1
+      RoleARN:
+        Fn::ImportValue: PERLS-AppAutoScalingRole
+      ServiceNamespace: ecs
+      ScalableDimension: ecs:service:DesiredCount
+      ResourceId: !Sub service/PERLSECSCluster/${TENANT}-php-svc
+
+  ECSCPUAutoscaling:
+    DependsOn: [ServicePHP, ScalableTarget]
+    Type: AWS::ApplicationAutoScaling::ScalingPolicy
+    Properties:
+      PolicyName: !Sub ${TENANT}-CPU-AutoScaling
+      PolicyType: TargetTrackingScaling
+      ResourceId: !Sub service/PERLSECSCluster/${TENANT}-php-svc
+      ScalableDimension: ecs:service:DesiredCount
+      ServiceNamespace: ecs
+      TargetTrackingScalingPolicyConfiguration:
+        ScaleInCooldown: 300
+        ScaleOutCooldown: 120
+        TargetValue: 50
+        PredefinedMetricSpecification:
+          PredefinedMetricType: ECSServiceAverageCPUUtilization
+
+  ECSMEMAutoscaling:
+    DependsOn: [ServicePHP, ScalableTarget]
+    Type: AWS::ApplicationAutoScaling::ScalingPolicy
+    Properties:
+      PolicyName: !Sub ${TENANT}-MEM-AutoScaling
+      PolicyType: TargetTrackingScaling
+      ResourceId: !Sub service/PERLSECSCluster/${TENANT}-php-svc
+      ScalableDimension: ecs:service:DesiredCount
+      ServiceNamespace: ecs
+      TargetTrackingScalingPolicyConfiguration:
+        ScaleInCooldown: 300
+        ScaleOutCooldown: 120
+        TargetValue: 50
+        PredefinedMetricSpecification:
+          PredefinedMetricType: ECSServiceAverageMemoryUtilization
+
+  CloudWatchLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub ${TENANT}-php
+      RetentionInDays: 365
+
+  CloudWatchRedisLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub ${TENANT}-redis
+      RetentionInDays: 365

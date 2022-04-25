@@ -1,0 +1,26 @@
+uuid: 7c1ae77e-0fbd-429c-8530-d548294f5fd0
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.user.field_goal_weekly_views
+  module:
+    - user
+id: user.user.field_goal_weekly_views
+field_name: field_goal_weekly_views
+entity_type: user
+bundle: user
+label: 'Items Viewed Per Week'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 10
+default_value_callback: ''
+settings:
+  min: 0
+  max: 100
+  prefix: ''
+  suffix: Items
+field_type: integer

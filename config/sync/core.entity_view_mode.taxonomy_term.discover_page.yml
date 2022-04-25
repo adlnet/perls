@@ -1,0 +1,10 @@
+uuid: 58b633c0-3670-483f-b8f5-87feca2f78f0
+langcode: en
+status: true
+dependencies:
+  module:
+    - taxonomy
+id: taxonomy_term.discover_page
+label: 'Discover page'
+targetEntityType: taxonomy_term
+cache: true

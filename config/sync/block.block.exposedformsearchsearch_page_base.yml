@@ -1,0 +1,29 @@
+uuid: 13138264-f4ef-4db6-9a87-f149066b23c6
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.search
+  module:
+    - system
+    - views
+  theme:
+    - perls
+id: exposedformsearchsearch_page_base
+theme: perls
+region: content
+weight: -3
+provider: null
+plugin: 'views_exposed_filter_block:search-search_page'
+settings:
+  id: 'views_exposed_filter_block:search-search_page'
+  label: ''
+  label_display: '0'
+  provider: views
+  views_label: ''
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    context_mapping: {  }
+    pages: /search

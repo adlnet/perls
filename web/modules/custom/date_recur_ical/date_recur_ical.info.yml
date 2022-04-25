@@ -1,0 +1,6 @@
+name: 'iCal formatter for Recurring Dates Field'
+type: module
+description: 'Provides a field formatter which adds an "Add to Calendar" button for dates.'
+core: 8.x
+core_version_requirement: ^8 || ^9
+package: 'Custom'

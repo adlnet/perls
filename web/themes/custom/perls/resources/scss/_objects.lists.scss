@@ -1,0 +1,73 @@
+/* ------------------------------------ *\
+    $LIST TYPES
+\* ------------------------------------ */
+
+/**
+ * Tabs
+ */
+.c-tabs {
+  position: absolute;
+  bottom: 0;
+  left: $space;
+
+  @include media(">medium") {
+    left: $space-double;
+  }
+
+
+  ul {
+    display: flex;
+    align-items: flex-end;
+    border: 0;
+    margin: 0;
+    padding: 0;
+
+    li {
+      margin-right: 2px;
+
+      &.is-active a {
+        background-color: $c-admin--background;
+        color: $c-admin--foreground;
+      }
+
+      a {
+        background-color: darken($c-gray--light, 5%);
+        color: $c-secondary;
+        border-top-left-radius: $border-radius;
+        border-top-right-radius: $border-radius;
+
+        &:hover {
+          background-color: $c-white;
+        }
+      }
+    }
+  }
+}
+
+.c-section-content {
+  .c-tabs {
+    margin-bottom: 25px;
+    position: static;
+
+    ul {
+      li a {
+        border-radius: 5px;
+      }
+    }
+  }
+}
+
+/**
+ Item lists
+ */
+.item-list ul {
+  list-style: disc;
+  margin: 1em 0;
+}
+
+/**
+ Entity browser modal tabs
+ */
+.eb-tabs ul li.active {
+  border-bottom-color: $c-content--foreground;
+}

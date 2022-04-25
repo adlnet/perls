@@ -1,0 +1,744 @@
+<?php
+
+/**
+ * @file
+ * Content management related codes.
+ */
+
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Access\AccessResultAllowed;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityForm;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Url;
+use Drupal\node\NodeInterface;
+use Drupal\views\Plugin\views\cache\CachePluginBase;
+use Drupal\views\Plugin\views\query\QueryPluginBase;
+use Drupal\views\ViewExecutable;
+
+/**
+ * Implements hook_form_alter().
+ */
+function perls_content_management_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if ($form_id === 'user_register_form' || $form_id === 'user_form') {
+    $form['account']['mail']['#required'] = TRUE;
+  }
+
+  foreach (['publish_state', 'unpublish_state'] as $publish_field) {
+    if (isset($form[$publish_field])) {
+      // Get any remaining option key pairs besides the default "_none".
+      $options = array_diff_key($form[$publish_field]['widget'][0]['#options'], array_flip(['_none']));
+      // If there is only 1 option remaining set the default value or update it
+      // in the event an older moderation state is saved which has been removed.
+      if (count($options) === 1) {
+        // Publish State is required but the user only has 1 option so we set
+        // the publish state to the derived value and hide the field.
+        if ($derived_publish_state = array_key_first($options)) {
+          $form[$publish_field]['widget'][0]["#default_value"][0] = $derived_publish_state;
+          $form[$publish_field]['widget'][0]['#access'] = FALSE;
+        }
+      }
+      if ($publish_field == 'publish_state') {
+        // Help text adapted from knowledge base to make user aware of workflow.
+        $form['publish_on']['widget'][0]['#suffix'] = t('Set a date and time when this content should be automatically published, regardless of current approval status. This can be changed later.');
+      }
+    }
+  }
+
+  if (isset($form['header']['node_bulk_form'])) {
+    // Avoids setting "Delete" as the default action on node bulk forms.
+    // This makes the built-in node bulk form more consistent with VBO.
+    array_unshift($form['header']['node_bulk_form']['action']['#options'], t('-- Select action --'));
+    array_unshift($form['#validate'], 'perls_content_management_bulk_action_validate');
+
+    // Hides promotion actions for users without the proper permissions.
+    if (!\Drupal::currentUser()->hasPermission('promote content')) {
+      unset($form['header']['node_bulk_form']['action']['#options']['node_promote_action']);
+      unset($form['header']['node_bulk_form']['action']['#options']['node_unpromote_action']);
+      unset($form['header']['node_bulk_form']['action']['#options']['node_make_sticky_action']);
+      unset($form['header']['node_bulk_form']['action']['#options']['node_make_unsticky_action']);
+    }
+  }
+
+  // Modify a little the pop up message of autosave_form where it's settings is
+  // available.
+  if (isset($form['#attached']['drupalSettings']['autosaveForm']) && isset($form['#attached']['drupalSettings']['autosaveForm']['message'])) {
+    $message = $form['#attached']['drupalSettings']['autosaveForm']['message'];
+    $form['#attached']['drupalSettings']['autosaveForm']['message'] = '<div class="c-draft"><h4>' . t('Unsaved Draft') . '</h4><p>' . $message . '</p></div>';
+  }
+
+  // Hide file label for document content type.
+  if ($form_id == 'node_learn_file_form' || $form_id == 'node_learn_file_edit_form') {
+    $form['field_file']['widget'][0]['#title_display'] = 'invisible';
+  }
+
+  // Updating the values of the Virtual meeting room field's dropdown.
+  if ($form_id == 'node_event_form' || $form_id == 'node_event_edit_form') {
+    // Hide vidyo Room appearance for content manager or tenant owner.
+    $form['field_virtual_meeting_room']['widget'][0]['settings']['renderer']['#access'] = \Drupal::currentUser()->hasPermission('administer site configuration');
+
+    if (!empty($form['field_virtual_meeting_room']['widget'][0]['plugin_id'])) {
+      // Updating the values of the Virtual meeting room field's dropdown.
+      $form['field_virtual_meeting_room']['widget'][0]['plugin_id']['#options']['vidyo_room_block'] = $form['field_virtual_meeting_room']['widget'][0]['plugin_id']['#options']['VidyoPlatform']['vidyo_room_block'];
+      unset($form['field_virtual_meeting_room']['widget'][0]['plugin_id']['#options']['VidyoPlatform']);
+      $form['field_virtual_meeting_room']['widget'][0]['plugin_id']['#options']['vidyo_room_block'] = t('Enabled');
+      $form['field_virtual_meeting_room']['widget'][0]['plugin_id']['#empty_option'] = t('Disabled');
+      $form['field_virtual_meeting_room']['widget'][0]['settings']['label']['#title'] = t('Room Name');
+      $form['field_virtual_meeting_room']['widget'][0]['settings']['label_display']['#title'] = t('Display room name');
+      // Scheduling widget adjustments.
+      $form['field_schedule']['widget'][0]['start']['#title'] = t('Start Date');
+      $form['field_schedule']['widget'][0]['end']['#title'] = t('End Date');
+      $form['field_schedule']['widget'][0]['daily_count']['#attributes']['class'] = ['daily-count'];
+      // Modify occurrence modifier titles for monthly/weekly etc.
+      $form['field_schedule']['widget'][0]['ends_mode']['#title'] = t('Reoccurs');
+      $form['field_schedule']['widget'][0]['ends_mode']['#options']['infinite'] = t('Always');
+      $form['field_schedule']['widget'][0]['ends_mode']['#options']['count'] = t('For a number of occurrences');
+      $form['field_schedule']['widget'][0]['ends_mode']['#options']['date'] = t('Until date');
+      // Help displayed only when the weekdays occurrence widget is visible.
+      $form['field_schedule']['widget'][0]['weekdays_help'] = [
+        '#type' => 'item',
+        '#markup' => t('Reoccurring events use the provided information to schedule all occurrences of an event. The <strong>Start Date</strong> and <strong>End Date</strong> provided specify the duration of an event. All occurrences of the event will then be scheduled according to the <strong>Reoccurs</strong> selection starting on the nearest selected weekday to the <strong>Start Date</strong>.'),
+        '#states' => $form['field_schedule']['widget'][0]['weekdays']['#states'],
+      ];
+
+      // Get node id.
+      $nodeId = $form_state->getFormObject()->getEntity()->id();
+
+      // If user clicks the virtual meeting Enabled/Disabled toggle.
+      if (empty($nodeId) || ($form_state->getUserInput() && $form_state->getUserInput()['field_virtual_meeting_room'])) {
+        // Set the default renderer value to new_window.
+        $form['field_virtual_meeting_room']['widget'][0]['settings']['renderer']['#default_value'] = 'new_window';
+      }
+
+      // Vidyo Configs.
+      $vidyoRoomManager = \Drupal::service('vidyo_platform.rooms');
+      $isConfigured = $vidyoRoomManager->isConfigured();
+
+      // Hide Virtual meeting from Event node for new Event.
+      if (($isConfigured == FALSE) && ($nodeId == NULL)) {
+        $form['field_virtual_meeting_room']['#access'] = FALSE;
+      }
+
+      // Validate the event node form.
+      array_unshift($form['#validate'], '_perls_content_management_event_validate');
+    }
+  }
+
+  if (isset($form['promote']['widget']['value'])) {
+    $form['promote']['widget']['value']['#title'] = t('Promoted');
+    $form['promote']['widget']['value']['#description'] = t("Promoted content appears in all users' <strong>For You</strong> tab until they have completed it or the promotion is removed.");
+    $form['promote']['#access'] = \Drupal::currentUser()->hasPermission('promote content');
+  }
+
+  if (isset($form['sticky']['widget']['value'])) {
+    $form['sticky']['widget']['value']['#title'] = t('Sticky');
+    $form['sticky']['widget']['value']['#description'] = t('Sticky content appears in the <strong>Trending</strong> tab and at the top of the list when viewing a tag.');
+    $form['sticky']['#access'] = \Drupal::currentUser()->hasPermission('promote content');
+  }
+
+  if ($form_id == 'node_learn_link_form' || $form_id == 'node_learn_link_edit_form') {
+    $form['field_content_link']['#states'] = [
+      'visible' => [
+        ':radio[name="field_link_type"]' => ['value' => 'web'],
+      ],
+    ];
+    $form['field_custom_uri']['#states'] = [
+      'visible' => [
+        ':radio[name="field_link_type"]' => ['value' => 'custom'],
+      ],
+    ];
+
+    // After build method to hide the format.
+    $form['#after_build'][] = '_perls_content_management_node_form_after_build';
+
+    // Validate the event node form.
+    array_unshift($form['#validate'], '_perls_content_management_weblink_validate');
+  }
+}
+
+/**
+ * After build method to hide the format.
+ *
+ * @param mixed $form
+ *   Form.
+ *
+ * @return mixed
+ *   Form.
+ */
+function _perls_content_management_node_form_after_build($form) {
+  unset($form['field_custom_uri']['widget'][0]['format']);
+  return $form;
+}
+
+/**
+ * Helper method to validate the Weblink url field.
+ */
+function _perls_content_management_weblink_validate($form, FormStateInterface $formState) {
+  // User input.
+  $values = $formState->getUserInput();
+  if (!empty($values)) {
+    if (!empty($values['field_link_type'])) {
+      if ($values['field_link_type'] !== 'custom' && empty($values['field_content_link'][0]['uri'])) {
+        $formState->setError($form['field_content_link'], t("The content link is required."));
+      }
+      elseif ($values['field_link_type'] == 'custom' && empty($values['field_custom_uri'][0]['value'])) {
+        $formState->setError($form['field_custom_uri'], t("The custom uri is required."));
+      }
+    }
+  }
+}
+
+/**
+ * Helper method to validate the Event node form.
+ */
+function _perls_content_management_event_validate($form, FormStateInterface $formState) {
+  // User input.
+  $values = $formState->getUserInput();
+  if (!empty($values)) {
+    if (!empty($values['field_schedule']) &&
+      !empty($values['field_schedule'][0]['start']['date']) &&
+      !empty($values['field_schedule'][0]['end']['date'])) {
+      // Start date.
+      $sDate = $values['field_schedule'][0]['start'];
+      $sDateTimestamp = strtotime($sDate['date'] . ' ' . $sDate['time']);
+
+      // End date.
+      $eDate = $values['field_schedule'][0]['end'];
+      $eDateTimestamp = strtotime($eDate['date'] . ' ' . $eDate['time']);
+
+      // If Start date is greater than end date.
+      if ($sDateTimestamp > $eDateTimestamp) {
+        $formState->setError($form['field_schedule'], t("The end date must be later than the start date."));
+      }
+    }
+    else {
+      $formState->setError($form['field_schedule'], t("The schedule must be set."));
+    }
+  }
+}
+
+/**
+ * Validates user selection for bulk node action.
+ *
+ * An "empty" action is added via the form alter and this
+ * validates that the user does not choose the empty action.
+ */
+function perls_content_management_bulk_action_validate(&$form, FormStateInterface $form_state) {
+  if (empty($form_state->getValue('action'))) {
+    $form_state->setErrorByName('action', t('Please select an action to perform.'));
+    return FALSE;
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for views_exposed_form.
+ *
+ * Changes "True" and "False" on the Flagged exposed filter to "Yes" and "No".
+ */
+function perls_content_management_form_views_exposed_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if (isset($form['flagged']) && isset($form['flagged']['#options'])) {
+    $form['flagged']['#options'][1] = t('Yes');
+    $form['flagged']['#options'][0] = t('No');
+  }
+}
+
+/**
+ * Implments hook_webform_submission_form_alter().
+ */
+function perls_content_management_webform_submission_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if ($form['#webform_id'] == 'content_specific_webform') {
+    // Disable submit button until "Was this relevant to you?" radio has input.
+    $form['actions']['submit']['#attributes']['disabled'] = 'disabled';
+    $form['actions']['submit']['#states'] = [
+      'enabled' => [
+        'input[name="content_relevant"]' => ['checked' => TRUE],
+      ],
+    ];
+  }
+}
+
+/**
+ * Implements hook_entity_operation_alter().
+ *
+ * Adds operations for editing the learner's state.
+ */
+function perls_content_management_entity_operation_alter(array &$operations, EntityInterface $entity) {
+
+  if ($entity->getEntityTypeId() !== 'user') {
+    return;
+  }
+
+  $learnerStateOperations = [
+    'view.administrate_user_flags.administer_user_flags_completed' => t('Edit completions'),
+    'view.administrate_user_flags.administer_user_flags_bookmarked' => t('Edit bookmarks'),
+    'view.administrate_user_flags.administer_user_flags_recommended' => t('Edit recommendations'),
+    'view.notifications.recent' => t('View notifications'),
+    'achievements.achievements_controller_userAchievements' => t('Edit achievements'),
+  ];
+
+  foreach ($learnerStateOperations as $route => $label) {
+    $url = Url::fromRoute($route, ['user' => $entity->id()]);
+    if (!$url->access()) {
+      continue;
+    }
+
+    $operations[$route] = [
+      'title' => $label,
+      'url' => $url,
+      // The default weight of 'Edit' is 10.
+      'weight' => 11,
+    ];
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_view() for node entities.
+ */
+function perls_content_management_node_view(array &$build, EntityInterface $node, EntityViewDisplayInterface $display, $view_mode) {
+  // Collect statistics for card view mode.
+  if (!$node->isNew() && $view_mode == 'card' && node_is_page($node) && empty($node->in_preview)) {
+    $build['#attached']['library'][] = 'statistics/drupal.statistics';
+    $settings = [
+      'data' => ['nid' => $node->id()],
+      'url' => \Drupal::request()->getBasePath() . '/' . drupal_get_path('module', 'statistics') . '/statistics.php',
+    ];
+    $build['#attached']['drupalSettings']['statistics'] = $settings;
+  }
+}
+
+/**
+ * Implements hook_views_post_render().
+ */
+function perls_content_management_views_post_render(ViewExecutable $view, &$output, CachePluginBase $cache) {
+  if ($view->id() === 'manage_content' && isset($view->args[0])) {
+    switch ($view->args[0]) {
+      case 'quiz':
+        $view->setTitle(t('Quizzes'));
+        break;
+
+      case 'glossary':
+        $view->setTitle(t('Glossaries'));
+        break;
+    }
+  }
+  // Should be removed after drupal core is updated for plural bundle support.
+  // @see https://www.drupal.org/project/drupal/issues/2765065 to track issue.
+  if ($view->id() === 'most_recent_vocabulary' && isset($view->args[0])) {
+    if ($view->args[0] === 'tags') {
+      $view->setTitle(t('Most Recent Tags'));
+    }
+
+    if ($view->args[0] === 'category' && isset($view->build_info['substitutions'])) {
+      if ($view->build_info['substitutions']['{{ arguments.vid }}'] === 'Topic') {
+        $view->setTitle(t('Most Recent Topics'));
+      }
+    }
+  }
+
+  if ($view->id() === 'manage_vocabularies' && isset($view->args[0])) {
+    if ($view->args[0] === 'tags') {
+      $view->setTitle(t('Tags'));
+    }
+
+    if ($view->args[0] === 'category' && isset($view->build_info['substitutions'])) {
+      if ($view->build_info['substitutions']['{{ arguments.vid }}'] === 'Topic') {
+        $view->setTitle(t('Topics'));
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_field_widget_WIDGET_TYPE_form_alter() for paragraph widgets.
+ *
+ * Limits the allowed text format on flash cards and tip cards.
+ */
+function perls_content_management_field_widget_entity_reference_paragraphs_form_alter(&$element, &$form_state, $context) {
+  if (!($form_state->getFormObject() instanceof EntityForm)) {
+    return;
+  }
+
+  $entity = $form_state->getFormObject()->getEntity();
+
+  if ($entity instanceof NodeInterface &&
+  in_array($entity->getType(), ['flash_card', 'tip_card'])) {
+    if ($element['#paragraph_type'] === 'text') {
+      $element['subform']['field_paragraph_body']['widget'][0]['#allowed_formats'] = ['card_styling'];
+    }
+  }
+}
+
+/**
+ * Implements hook_field_widget_WIDGET_TYPE_form_alter() for paragraph widgets.
+ *
+ * Limits the allowed text format on flash cards and tip cards.
+ */
+function perls_content_management_field_widget_paragraphs_form_alter(&$element, &$form_state, $context) {
+  if (!($form_state->getFormObject() instanceof EntityForm)) {
+    return;
+  }
+
+  $entity = $form_state->getFormObject()->getEntity();
+
+  if ($entity instanceof NodeInterface &&
+  in_array($entity->getType(), ['flash_card', 'tip_card'])) {
+    if ($element['#paragraph_type'] === 'text') {
+      $element['subform']['field_paragraph_body']['widget'][0]['#allowed_formats'] = ['card_styling'];
+    }
+  }
+}
+
+/**
+ * Implements hook_node_access().
+ */
+function perls_content_management_node_access(NodeInterface $node, $op, AccountInterface $account) {
+  /** @var \Drupal\node\Entity\Node $current_path_node */
+  if ($node->bundle() === 'test') {
+    // You can't clone a test (unless you're a sysadmin)!
+    if ($op === 'clone') {
+      return AccessResult::forbidden();
+    }
+
+    /** @var \Drupal\node\Entity\Node $parent_node */
+    $parent_node = \Drupal::service('perls_content_management.entity_reference_helper')->getTestParentCourse($node);
+    if ($parent_node) {
+      $parent_access = $parent_node->access($op, $account, TRUE);
+      if (!$parent_access instanceof AccessResultAllowed) {
+        return AccessResult::forbidden('The parent course is not available');
+      }
+    }
+
+    // Prevent access to nodes where none of questions are available.
+    if ($node->hasField('field_quiz')) {
+      $questions = array_filter($node->get('field_quiz')->referencedEntities(), function ($quiz) use ($account) {
+        return $quiz->access('view', $account);
+      });
+
+      if (empty($questions)) {
+        return AccessResult::forbidden('There are no available questions.');
+      }
+    }
+    return AccessResult::neutral();
+  }
+}
+
+/**
+ * Implements hook_validation_constraint_alter().
+ */
+function perls_content_management_validation_constraint_alter(array &$definitions) {
+  $definitions['ValidReference']['class'] = '\Drupal\perls_content_management\Plugin\Validation\Constraint\OverrideValidReferenceConstraint';
+}
+
+/**
+ * Implements hook_entity_bundle_field_info_alter().
+ */
+function perls_content_management_entity_bundle_field_info_alter(&$fields, EntityTypeInterface $entity_type, $bundle) {
+  if ($entity_type->id() === 'node' && $bundle === 'course') {
+    if (isset($fields['field_learning_content'])) {
+      $fields['field_learning_content']->addConstraint('UniqueTestReference', []);
+      $fields['field_learning_content']->addConstraint('ReferenceLoOnce', []);
+    }
+  }
+}
+
+/**
+ * Implements hook_entity_base_field_info_alter().
+ */
+function perls_content_management_entity_base_field_info_alter(&$fields, EntityTypeInterface $entity_type) {
+  if ($entity_type->id() === 'node' && isset($fields['publish_on'])) {
+    // Add validation for Scheduler Publish on field.
+    $fields['publish_on']->addConstraint('SchedulerPublishAfter');
+    $fields['publish_on']->setDescription(t('Scheduled "Publish on" time should be at least 30 minutes in the future.'));
+  }
+  if ($entity_type->id() === 'node' && isset($fields['unpublish_on'])) {
+    // Add validation for Scheduler Publish on field.
+    $fields['unpublish_on']->addConstraint('SchedulerUnPublishAfter');
+    $fields['unpublish_on']->setDescription(t('Scheduled "Unpublish on" time should be at least 30 minutes in the future.'));
+  }
+}
+
+/**
+ * Implements hook_views_data_alter().
+ */
+function perls_content_management_views_data_alter(array &$data) {
+  $data['node_access']['nid'] = [
+    'title' => t('Account from url'),
+    'help' => t('Filter by access.'),
+    'filter' => [
+      'id' => 'node_access_url',
+      'help' => t('Filter for content by view access. This filter use account if it is available in url.'),
+    ],
+  ];
+
+  $data['flagging']['date_diff']['group'] = t('Flagging');
+  $data['flagging']['date_diff'] = [
+    'title' => t('Time diff between two field'),
+    'help' => t('This field will show you time diff between this field and another date field'),
+    'real field' => 'created',
+    'field' => [
+      'id' => 'flagging_date_diff',
+    ],
+  ];
+  // Provides a select user name filter keyed by name instead of username.
+  $data['users_field_data']['display_name'] = [
+    'title' => t('User Display Name'),
+    'help' => t('Autocomplete element for user display name'),
+    'real field' => 'uid',
+    'filter' => [
+      'id' => 'display_name',
+    ],
+  ];
+  // Get all courses and provide as options
+  // Query to see if the node id exists in list of course content nodes.
+  $data['node_field_data']['learning_content'] = [
+    'title' => t('Related Learning Content'),
+    'help' => t('Get learning content that belongs to a given course'),
+    'real field' => 'nid',
+    'filter' => [
+      'id' => 'related_learning_content',
+    ],
+  ];
+}
+
+/**
+ * Implements hook_preprocess_block().
+ */
+function perls_content_management_preprocess_block(&$variables) {
+  if (isset($variables['elements']['content']['#title'])) {
+    $route_name = \Drupal::routeMatch()->getRouteName();
+    switch ($route_name) {
+      case 'entity.webform_submission.collection':
+        $variables['elements']['content']['#title'] = t('Learner Feedback');
+        break;
+
+      default:
+        break;
+    }
+  }
+}
+
+/**
+ * Implements hook_local_tasks_alter().
+ */
+function perls_content_management_local_tasks_alter(&$local_tasks) {
+  $alter_task = [
+    'entity.webform_submission.collection' => t('Learner Feedback'),
+  ];
+
+  foreach ($alter_task as $task => $alteration) {
+    if (!empty($local_tasks[$task])) {
+      $local_tasks[$task]['title'] = $alteration;
+    }
+  }
+}
+
+/**
+ * Implements hook_entity_operation().
+ */
+function perls_content_management_entity_operation(EntityInterface $entity) {
+  $operations = [];
+  if ($entity->getEntityTypeId() === 'node' && $entity->bundle() === 'course') {
+    $operations['stats'] = [
+      'title' => t('Stats'),
+      'url' => Url::fromRoute('view.course_stats.stat_course_started', ['node' => $entity->id()]),
+      'weight' => 50,
+    ];
+  }
+  return $operations;
+}
+
+/**
+ * Implements hook_views_query_alter().
+ */
+function perls_content_management_views_query_alter(ViewExecutable $view, QueryPluginBase $query) {
+  if ($view->id() === 'course_stats' && $view->getDisplay()->display['id'] === 'stat_course_completed') {
+    $query->addWhereExpression('', 'flagging_node_field_data.uid = flagging_node_field_data_1.uid');
+  }
+
+  if ($view->id() === 'manage_content' && $view->getDisplay()->display['id'] === 'manage_tests') {
+    // When Views is joining the test attempts, it joins _all_ test attempts.
+    // But when counting number of attempts and average score, we only want
+    // to take into account _completed_ test attempts.
+    // Since the test attempt and the completion status are stored in separate
+    // tables, we must adjust the join so that it uses a subquery instead of
+    // the paragraph tables directly.
+    $attempt_query = \Drupal::database()
+      ->select('paragraphs_item_field_data', 'pifd')
+      ->fields('pifd', ['id', 'revision_id']);
+    $attempt_query->join('paragraph__field_test_complete', 'pftc', 'pftc.revision_id = pifd.revision_id');
+    $attempt_query->condition('pftc.field_test_complete_value', TRUE);
+
+    $table = $query->getTableInfo('paragraphs_item_field_data_flagging__field_test_attempts');
+    $table['join']->table = $attempt_query;
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_insert().
+ */
+function perls_content_management_flagging_insert(EntityInterface $entity) {
+  /** @var \Drupal\flag\Entity\Flagging $entity */
+  $flagged_entity = $entity->getFlaggable();
+  if ($entity->getFlagId() === 'completed' &&
+    $flagged_entity->getEntityTypeId() === 'node' &&
+    $flagged_entity->bundle() === 'course') {
+    /** @var \Drupal\flag\FlagService $flag_service */
+    $flag_service = Drupal::service('flag');
+    $started_course_flag = $flag_service->getFlagById('started_course');
+    $started_flag = $flag_service->getFlagging($started_course_flag, $flagged_entity, $entity->getOwner());
+    // Create a started_course if this user doesn't have it for this course.
+    if (empty($started_flag)) {
+      $flagging = $flag_service->flag($started_course_flag, $flagged_entity, $entity->getOwner());
+      $flagging->set('created', $entity->get('created'));
+    }
+  }
+}
+
+/**
+ * Implements hook_node_access_records().
+ *
+ * This is a solution for bug
+ * https://www.drupal.org/project/drupal/issues/2971902. The node grants doesn't
+ * exits for unpublished content. We can remove when the issue is solved.
+ */
+function perls_content_management_node_access_records($node) {
+  $grants = [];
+  if (!$node->isPublished()) {
+    // For unpublished nodes, create two grants. One which can be unlocked
+    // if the user has permission to bypass or view any unpublished nodes,
+    // and the other which can be unlocked if the user has permission to
+    // view only unpublished nodes they authored.
+    $grants[] = [
+      'realm' => 'unpublished_all',
+      'gid' => 1,
+      'grant_view' => 1,
+      'grant_update' => 0,
+      'grant_delete' => 0,
+    ];
+    $grants[] = [
+      'realm' => 'unpublished_own',
+      'gid' => $node->getOwnerId(),
+      'grant_view' => 1,
+      'grant_update' => 0,
+      'grant_delete' => 0,
+    ];
+  }
+
+  return $grants;
+}
+
+/**
+ * Implements hook_node_grants().
+ *
+ * This is a solution for bug
+ * https://www.drupal.org/project/drupal/issues/2971902. The node grants doesn't
+ * exits for unpublished content. We can remove when the issue is solved.
+ */
+function perls_content_management_node_grants($account, $op) {
+  $grants = [];
+  if ($op === 'view') {
+    // Assign grants for nodes that are unpublished. Drupal has three
+    // permissions related to viewing unpublished content.
+    // The "view any unpublished content" permissions is actually part of the
+    // content moderation module, but there
+    // is an effort to migrate it to core: https://drupal.org/i/273595
+    if ($account->hasPermission('view any unpublished content') || $account->hasPermission('bypass node access')) {
+      $grants['unpublished_all'] = [1];
+    }
+    if ($account->hasPermission('view own unpublished content')) {
+      $grants['unpublished_own'] = [$account->id()];
+    }
+  }
+
+  return $grants;
+}
+
+/**
+ * Implements hook_entity_type_alter().
+ *
+ * Provides a custom delete form handler for taxonomy terms.
+ */
+function perls_content_management_entity_type_alter(array &$entity_types) {
+  if (empty($entity_types['taxonomy_term'])) {
+    return;
+  }
+  $taxonomy_term = $entity_types['taxonomy_term'];
+  $handlers = $taxonomy_term->getHandlerClasses();
+  if (empty($handlers['form'])) {
+    return;
+  }
+  $handlers['form']['delete'] = 'Drupal\perls_content_management\Form\TermDeleteForm';
+  $taxonomy_term->setHandlerClass('form', $handlers['form']);
+
+  $entity_types['taxonomy_term']->addConstraint('TermNameWithBracket', []);
+}
+
+/**
+ * Implements hook_inline_entity_form_entity_form_alter().
+ */
+function perls_content_management_inline_entity_form_entity_form_alter(array &$entity_form, FormStateInterface &$form_state) {
+  if ($entity_form['#type'] === 'inline_entity_form' &&
+    $entity_form['#entity_type'] === 'node' &&
+    isset($entity_form['field_comments'])) {
+    $entity_form['options'] = [
+      '#type' => 'vertical_tabs',
+      '#weight' => 100,
+      '#attributes' => [
+        'class' => ['inline-form-options'],
+      ],
+    ];
+
+    $entity_form['comments'] = [
+      '#type' => 'details',
+      '#title' => t('Comment settings'),
+      '#group' => 'options',
+    ];
+
+    $entity_form['field_comments']['#group'] = 'comments';
+  }
+}
+
+/**
+ * Implements hook_options_list_alter().
+ */
+function perls_content_management_options_list_alter(array &$options, array $context) {
+  if (isset($context['entity']) && $context['entity']->isNew()) {
+    return;
+  }
+
+  if ($context['fieldDefinition']->getName() === 'field_topic' &&
+  isset($context['entity']) &&
+  $context['entity']->hasField('field_topic') &&
+  empty($context['entity']->get('field_topic')->referencedEntities())) {
+    $temp = $options;
+    $options = ['_none' => t('- Select a value -')];
+    $options += $temp;
+  }
+}
+
+/**
+ * Implements hook_link_alter().
+ */
+function perls_content_management_link_alter(&$variables) {
+  /** @var \Drupal\perls_dashboard\Services\NewDashboardHelper $dashboard_helper */
+  $dashboard_helper = \Drupal::service('perls_dashboard.helper');
+  // Set the "View as learner" link.
+  if (isset($variables['url']) &&
+    $variables['url']->isRouted() &&
+    $dashboard_helper->isNewDashboardActive() &&
+    $variables['url']->getRouteName() === 'view.recommended_content.learner_page') {
+    $variables['url'] = Url::fromUserInput('/start');
+  }
+}
+
+/**
+ * Implements hook_field_widget_info_alter().
+ */
+function perls_content_management_field_widget_info_alter(&$info) {
+  if (isset($info['text_textfield'])) {
+    $info['text_textfield']['field_types'][] = 'string_long';
+  }
+}

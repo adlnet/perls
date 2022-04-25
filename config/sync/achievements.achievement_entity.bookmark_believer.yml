@@ -1,0 +1,33 @@
+uuid: 5b9a69c0-28eb-4430-acfa-96aec6704f9f
+langcode: en
+status: true
+dependencies:
+  module:
+    - badges
+third_party_settings:
+  badges:
+    bundle: badge
+    plugin_id: 'flag_count_badge_plugin:bookmark'
+    'flag_count_badge_plugin:bookmark':
+      required_count: '1'
+      selected_bundles:
+        course: course
+        flash_card: flash_card
+        learn_article: learn_article
+        learn_file: learn_file
+        learn_link: learn_link
+        learn_package: learn_package
+        podcast: podcast
+        podcast_episode: podcast_episode
+        tip_card: tip_card
+    badge_type: 'Bookmark Count Badge'
+id: bookmark_believer
+label: 'Bookmark Believer'
+description: 'Awarded to any user who bookmarks a piece of content.'
+secret: false
+invisible: false
+manual_only: null
+points: 1
+use_default_image: false
+locked_image_path: 'public://badges/lockedBadge.png'
+unlocked_image_path: 'public://badges/bookmarkBeliever.png'

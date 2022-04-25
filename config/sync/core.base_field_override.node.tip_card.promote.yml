@@ -1,0 +1,22 @@
+uuid: d4212e1c-0a27-4efd-99a5-3745f0e1d48a
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.tip_card
+id: node.tip_card.promote
+field_name: promote
+entity_type: node
+bundle: tip_card
+label: 'Promoted to front page'
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

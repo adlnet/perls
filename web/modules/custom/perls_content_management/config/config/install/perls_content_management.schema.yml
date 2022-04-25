@@ -1,0 +1,6 @@
+action.configuration.perls_unpublish_archive_action:
+  type: perls_unpublish_archive_action
+  label: 'Unpublish/Archive'
+action.configuration.perls_publish_action:
+  type: perls_publish_action
+  label: 'Publish'

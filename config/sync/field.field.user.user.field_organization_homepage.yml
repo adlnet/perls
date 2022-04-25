@@ -1,0 +1,20 @@
+uuid: fdcafed4-8594-40d4-8680-0dc32095d5c1
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.user.field_organization_homepage
+  module:
+    - user
+id: user.user.field_organization_homepage
+field_name: field_organization_homepage
+entity_type: user
+bundle: user
+label: 'Organization Homepage'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

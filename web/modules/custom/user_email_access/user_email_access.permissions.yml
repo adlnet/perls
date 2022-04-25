@@ -1,0 +1,7 @@
+view all email addresses:
+  title: 'view all email addresses'
+  description: 'View all email addresses'
+  restrict access: TRUE
+view own email address:
+  title: 'view own email address'
+  description: 'View own email address'

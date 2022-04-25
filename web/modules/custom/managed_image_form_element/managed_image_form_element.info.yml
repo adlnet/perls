@@ -1,0 +1,5 @@
+name: 'Managed Image Form Element'
+type: module
+description: 'Provides a custom form element extending managed file to allow for validation, styling, and previewing of images (from https://drupal.stackexchange.com/a/245496).'
+core: 8.x
+package: 'Custom'

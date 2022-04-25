@@ -1,0 +1,27 @@
+uuid: eff16c8f-ff94-4dcf-8ce8-b3836ece78d8
+langcode: en
+status: false
+dependencies: {  }
+id: development_config
+label: 'Development config'
+description: ''
+weight: 0
+stackable: false
+storage: folder
+folder: ../config/dev
+module:
+  devel: 0
+  devel_generate: 0
+  field_ui: 0
+  queue_ui: 0
+  stage_file_proxy: 0
+  tour: 0
+  twig_vardumper: 0
+  update: 0
+  views_ui: 0
+  webform_devel: 0
+  webform_ui: 0
+theme: {  }
+complete_list: {  }
+partial_list:
+  - system.logging

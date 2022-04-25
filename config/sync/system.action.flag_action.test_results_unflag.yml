@@ -1,0 +1,15 @@
+uuid: 6173dff0-547b-488b-83a6-c506d7d58b64
+langcode: en
+status: true
+dependencies:
+  config:
+    - flag.flag.test_results
+  module:
+    - flag
+id: flag_action.test_results_unflag
+label: 'Unflag this item'
+type: node
+plugin: 'flag_action:test_results_unflag'
+configuration:
+  flag_id: test_results
+  flag_action: unflag

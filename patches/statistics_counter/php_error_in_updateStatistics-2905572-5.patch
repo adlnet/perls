@@ -1,0 +1,21 @@
+diff --git a/src/EventSubscriber/StatisticsCounterSubscriber.php b/src/EventSubscriber/StatisticsCounterSubscriber.php
+index 9b1c8b4..4fa86d4 100644
+--- a/src/EventSubscriber/StatisticsCounterSubscriber.php
++++ b/src/EventSubscriber/StatisticsCounterSubscriber.php
+@@ -7,6 +7,7 @@ use Symfony\Component\EventDispatcher\Event;
+ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+ use Symfony\Component\HttpKernel\KernelEvents;
+ use Drupal\Core\Database\Database;
++use Drupal\node\NodeInterface;
+ 
+ /**
+  * Subscribe to KernelEvents::TERMINATE events to recalculate nodes statistics.
+@@ -30,7 +31,7 @@ class StatisticsCounterSubscriber implements EventSubscriberInterface {
+     $node = \Drupal::request()->attributes->get('node');
+     $views = \Drupal::config('statistics.settings')->get('count_content_views');
+ 
+-    if ($node && ($event->getResponse() instanceof HtmlResponse) && $views) {
++    if (($node instanceof NodeInterface) && ($event->getResponse() instanceof HtmlResponse) && $views) {
+       // Support statistics filter.
+       if (\Drupal::moduleHandler()->moduleExists('statistics_filter') && statistics_filter_do_filter()) {
+         return;

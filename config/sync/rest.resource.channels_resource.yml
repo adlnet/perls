@@ -1,0 +1,18 @@
+uuid: e4fab346-790b-4485-baf9-f4896bcd9bfa
+langcode: en
+status: true
+dependencies:
+  module:
+    - perls_learner_browse
+    - serialization
+    - simple_oauth
+id: channels_resource
+plugin_id: channels_resource
+granularity: resource
+configuration:
+  methods:
+    - GET
+  formats:
+    - json
+  authentication:
+    - oauth2

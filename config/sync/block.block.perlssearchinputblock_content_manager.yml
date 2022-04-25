@@ -1,0 +1,26 @@
+uuid: 963c9ce7-6d39-4153-afec-d615df8acef9
+langcode: en
+status: true
+dependencies:
+  module:
+    - perls_search
+    - system
+  theme:
+    - perls_content_manager
+id: perlssearchinputblock_content_manager
+theme: perls_content_manager
+region: content
+weight: -6
+provider: null
+plugin: perls_search_input_block
+settings:
+  id: perls_search_input_block
+  label: 'Perls Search Input Block'
+  label_display: '0'
+  provider: perls_search
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    context_mapping: {  }
+    pages: /search

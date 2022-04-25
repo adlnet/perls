@@ -1,0 +1,3 @@
+Email,Name,Password,Role,Groups,Interests
+user@example.com,Test User,password,Learner,Group 1|Group 2,Interest 1|Interest 2|Interest 3
+user2@example.com,Test User 2,password,Content Manager,Group 1|Group 2,Interest 1|Interest 2|Interest 3

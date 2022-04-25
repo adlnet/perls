@@ -1,0 +1,79 @@
+uuid: e65716c7-e5b3-47e6-9460-16849f0f35ac
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.user.field_goal_log
+    - paragraphs.paragraphs_type.goal_log
+  module:
+    - entity_reference_revisions
+    - user
+id: user.user.field_goal_log
+field_name: field_goal_log
+entity_type: user
+bundle: user
+label: 'Goal log'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      goal_log: goal_log
+    negate: 0
+    target_bundles_drag_drop:
+      audio:
+        weight: 18
+        enabled: false
+      callout:
+        weight: 19
+        enabled: false
+      checklist:
+        weight: 20
+        enabled: false
+      document:
+        weight: 21
+        enabled: false
+      goal_log:
+        weight: 22
+        enabled: true
+      heading:
+        weight: 23
+        enabled: false
+      image:
+        weight: 24
+        enabled: false
+      layout_two_column:
+        weight: 25
+        enabled: false
+      list_ordered:
+        weight: 26
+        enabled: false
+      list_unordered:
+        weight: 27
+        enabled: false
+      quiz_option:
+        weight: 28
+        enabled: false
+      references:
+        weight: 29
+        enabled: false
+      table:
+        weight: 30
+        enabled: false
+      test_attempt:
+        weight: 31
+        enabled: false
+      test_question_answer:
+        weight: 32
+        enabled: false
+      text:
+        weight: 33
+        enabled: false
+      video:
+        weight: 34
+        enabled: false
+field_type: entity_reference_revisions

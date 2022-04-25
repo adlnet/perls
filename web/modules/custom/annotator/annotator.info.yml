@@ -1,0 +1,8 @@
+name: Annotation
+description: 'Attaches AnnotationJS to LO and an XAPIStateStore to persist the annotations.'
+type: module
+core: 8.x
+core_version_requirement: ^8 || ^9
+dependencies:
+  - xapi_reporting
+  - xapi

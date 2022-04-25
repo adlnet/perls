@@ -1,0 +1,117 @@
+.c-node--discussion {
+  .c-node__title {
+    font-size: var(--font-size-l);
+    padding-top: $space;
+  }
+}
+
+.comments-app-container {
+  button {
+    color: $c-button;
+  }
+
+  .rc_comment-box-container {
+    .rc_comment-box-avatar__image-wrapper {
+      @include avatar;
+    }
+
+    .rc_input-outer-wrapper {
+      min-width: 100px;
+    }
+
+    .rc_input-wrapper {
+      background: $c-gray--light;
+      border: $border--light;
+      min-height: initial;
+
+      &,
+      .public-DraftEditorPlaceholder-root {
+        font-size: var(--font-size-s);
+      }
+
+      .quill {
+        min-height: $space-triple;
+        overflow: hidden;
+      }
+
+      .ql-editor {
+        line-height: 1;
+        font-size: 16px;
+      }
+
+      .ql-container.ql-snow {
+        border: none;
+      }
+
+      .ql-container:focus-within .ql-blank::before {
+        display: none;
+      }
+    }
+
+    .rc_input-actions {
+      background: none;
+      border: none;
+
+      button {
+        background: transparent;
+      }
+    }
+  }
+
+  .rc_comment {
+    .rc_comment-container {
+      border: $border--light;
+      border-color: $c-gray-2;
+      border-radius: $border-radius;
+      padding: $space-half;
+
+      @media (hover: none) {
+        .rc_comment-menu-toggle {
+          display: block;
+        }
+      }
+    }
+
+    .rc_avatar__image-wrapper {
+      @include avatar;
+
+      flex-grow: 0;
+      flex-shrink: 0;
+    }
+
+    .rc_body {
+      font-size: var(--font-size-s);
+
+      & > * {
+        margin: $space-quarter 0;
+      }
+
+      .rc_comment-details {
+        .rc_username {
+          font-size: var(--font-size-s);
+          font-weight: 600;
+        }
+
+        svg {
+          display: inline-block;
+        }
+      }
+
+      .rc_comment-footer {
+        font-size: var(--font-size-xs);
+
+        > * {
+          display: inline-block;
+        }
+
+        .rc_time-ago {
+          color: $c-gray;
+        }
+
+        .rc_actions-wrapper {
+          margin: 0 $space-half;
+        }
+      }
+    }
+  }
+}

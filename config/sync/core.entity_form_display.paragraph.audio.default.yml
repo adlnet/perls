@@ -1,0 +1,35 @@
+uuid: cf1d32da-beac-4047-bee0-029de1e1a516
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.audio.field_audio
+    - paragraphs.paragraphs_type.audio
+  module:
+    - field_layout
+    - file
+    - layout_discovery
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings:
+      label: ''
+_core:
+  default_config_hash: TMieW9Awfq33Zc14Ux0gW7vI4b4XSQpJ77KmgyIDKPY
+id: paragraph.audio.default
+targetEntityType: paragraph
+bundle: audio
+mode: default
+content:
+  field_audio:
+    type: file_generic
+    weight: 0
+    region: content
+    settings:
+      progress_indicator: throbber
+    third_party_settings: {  }
+hidden:
+  created: true
+  moderation_state: true
+  status: true
+  uid: true

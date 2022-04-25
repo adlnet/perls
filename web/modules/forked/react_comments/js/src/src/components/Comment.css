@@ -1,0 +1,146 @@
+.rc_avatar {
+    margin-right: 10px;
+}
+
+.rc_comment {
+    position: relative;
+}
+
+.rc_comment .rc_avatar img {
+    width: 36px;
+    height: 36px;
+}
+
+.rc_comment-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-content: flex-start;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.rc_comment-container--unpublished {
+    padding: 10px;
+    border-radius: 4px;
+    color: #D8000C;
+    border: 1px solid rgba(216, 0, 12, 0.23);
+    background-color: #FFBABA;
+}
+
+.rc_comment-details > * {
+    margin-right: 10px;
+    font-size: 12px;
+}
+
+.rc_reply-to svg {
+    height: 10px;
+    width: 14px;
+    padding-left: 3px;
+    transform: scaleX(-1);
+}
+
+.rc_vote svg {
+    height: 11px;
+    width: 14px;
+    padding-left: 3px;
+    transform: scaleX(-1);
+}
+
+.rc_vote--down svg {
+    transform: rotate(180deg);
+}
+
+.rc_comment-menu-wrapper {
+    float: right;
+}
+
+.rc_comment-menu-toggle {
+    cursor: pointer;
+    display: none;
+}
+
+.rc_comment-container:hover .rc_comment-menu-toggle {
+    display: block;
+}
+
+.rc_comment--edit-active:hover .rc_comment-menu-toggle {
+    display: none;
+}
+
+.rc_comment-menu-toggle svg {
+    height: 11px;
+    width: 14px;
+}
+
+.rc_comment-menu {
+    display: none;
+    position: absolute;
+    background: white;
+    list-style: none;
+    border: 2px solid #dbdfe4;
+    top: 0;
+    right: 0;
+    padding: 0;
+    z-index: 2;
+    border-radius: 4px;
+}
+
+.rc_comment-menu--active {
+    display: block;
+}
+
+.rc_comment-menu li {
+    padding: 10px 15px;
+    cursor: pointer;
+}
+
+.rc_comment-menu li:hover {
+    background: #eee;
+}
+
+.rc_body {
+    width: 100%;
+}
+
+.rc_comment-text {
+    margin-bottom: 1px;
+}
+
+.rc_username {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.rc_replies {
+    margin-left: 46px;
+}
+
+.rc_reply--max-level {
+    margin-left: 0;
+}
+
+.rc_actions-wrapper ul {
+    padding-left: 0;
+    margin: 0;
+    list-style: none;
+    display: flex;
+    font-size: 12px;
+}
+
+.rc_actions-wrapper li {
+    margin-right: 15px;
+}
+
+.rc_actions-wrapper button {
+    padding: 0;
+    border: none;
+    background: transparent;
+    outline: none;
+    cursor: pointer;
+}
+
+.rc_reply--active,
+.rc_edit--active {
+    color: #2e9fff;
+}

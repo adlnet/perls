@@ -1,0 +1,24 @@
+services:
+  recommender.recommendation_service:
+    class: Drupal\recommender\RecommendationService
+    arguments:
+      - '@current_user'
+      - '@config.factory'
+      - '@queue'
+      - '@plugin.manager.recommender_engine'
+      - '@plugin.manager.recommender_score_combine'
+      - '@flag'
+      - '@entity_type.manager'
+      - '@datetime.time'
+      - '@account_switcher'
+      - '@logger.channel.recommendation_engine'
+      - '@database'
+  plugin.manager.recommender_engine:
+    class: Drupal\recommender\RecommendationEnginePluginManager
+    parent: default_plugin_manager
+  plugin.manager.recommender_score_combine:
+    class: Drupal\recommender\RecommendationScoreCombinePluginManager
+    parent: default_plugin_manager
+  logger.channel.recommendation_engine:
+    parent: logger.channel_base
+    arguments: ['Recommender']

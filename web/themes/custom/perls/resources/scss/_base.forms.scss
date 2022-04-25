@@ -1,0 +1,371 @@
+/* ------------------------------------ *\
+    $FORMS
+\* ------------------------------------ */
+
+form ol,
+form ul {
+  list-style: none;
+  margin-left: 0;
+}
+
+input,
+select,
+textarea {
+  @include p;
+
+  width: 100%;
+  border: none;
+  outline: 0;
+  appearance: none;
+  color: $c-input--text;
+}
+
+::placeholder {
+  color: $c-input--placeholder;
+}
+
+label,
+.label,
+.fieldset-legend {
+  @include o-heading--xs;
+
+  letter-spacing: 1px;
+  margin-bottom: $space-quarter;
+  display: block;
+  font-style: normal;
+}
+
+legend {
+  margin-bottom: $space-half;
+  font-weight: bold;
+}
+
+fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+
+%input-default-styles {
+  background-color: $c-input--background;
+  display: block;
+  transition: $transition;
+  box-shadow: none;
+  border: $border--standard;
+  border-radius: $border-radius;
+  padding: $space-half $space;
+
+  &:focus {
+    border-color: $c-secondary;
+    color: $c-black;
+  }
+}
+
+input[type=email],
+input[type=number],
+input[type=search],
+input[type=tel],
+input[type=text],
+input[type=url],
+input[type=password],
+input[type=date],
+input[type=time],
+textarea,
+select {
+  @extend %input-default-styles;
+}
+
+input[type=file] {
+  line-height: 1;
+}
+
+select,
+.select2 .select2-selection {
+  border: $border--light;
+  box-shadow: 0 0 3px $c-shadow;
+  width: auto;
+  max-width: 100%;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  appearance: none;
+  cursor: pointer;
+  text-indent: 0.01px;
+  text-overflow: ellipsis;
+  background: $c-input--background url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 116.09 177.37'%3E%3Ctitle%3Eselect%3C/title%3E%3Cpath d='M114.9,116.47a4.1,4.1,0,0,0-5.8,0l-51,51.1L7,116.47a4.1,4.1,0,0,0-5.8,5.8l53.9,53.9a4,4,0,0,0,2.9,1.2,4.18,4.18,0,0,0,2.9-1.2l53.9-53.9A4,4,0,0,0,114.9,116.47ZM1.19,60.9a4.1,4.1,0,0,0,5.8,0L58,9.8l51.1,51.1a4.1,4.1,0,1,0,5.8-5.8L61,1.2A4,4,0,0,0,58.09,0a4.18,4.18,0,0,0-2.9,1.2L1.29,55.1A4,4,0,0,0,1.19,60.9Z' fill='%23606060'/%3E%3C/svg%3E") center right $space-half no-repeat;
+  background-size: 20px 20px;
+  padding-right: $space-double;
+
+  &::-ms-expand {
+    display: none;
+  }
+}
+// Local var workaround forcing CSS Max function with all caps, because
+// SASS cannot handle browser calculated unit type mixing.
+$max-width-select: MAX(230px, 15vw);
+
+select {
+  overflow: hidden;
+
+  .views-exposed-form & {
+    width: 100%;
+  }
+
+  @include media("<large") {
+    max-width: 100%;
+    width: 100%;
+  }
+}
+
+@include media(">large") {
+  // Only need to override default select for inline forms.
+  .form-inline select {
+    max-width: $max-width-select;
+  }
+}
+
+// Select 2 styles.
+.select2.select2-container {
+  // Normalize styles with traditional select element.
+
+  .selection {
+    border: $border--light;
+    border-radius: $border-radius;
+    box-shadow: 0 0 3px $c-shadow;
+    display: block;
+  }
+
+  .select2-selection:not(.select2-selection--multiple) .select2-search__field {
+    border: $border--light;
+    box-shadow: 0 0 3px $c-shadow;
+  }
+
+  .select2-selection {
+    padding-left: 20px;
+    padding: $space-quarter $space-double $space-quarter $space;
+    height: auto;
+  }
+
+  .select2-selection--multiple {
+    @include media(">large") {
+      // Give it a resonable width compared to a small device screen.
+      max-width: $max-width-select;
+    }
+
+    .select2-selection__rendered {
+      display: flex;
+      flex-wrap: wrap;
+      flex-direction: row;
+    }
+
+    .select2-selection__choice + .select2-search__field {
+      border: none;
+      height: 0;
+    }
+
+    &[aria-expanded="true"] {
+      .select2-selection__choice + .select2-search__field {
+        height: auto;
+      }
+    }
+  }
+
+  &.select2-container--open .select2-selection--multiple,
+  &.select2-container--open .selection {
+    border-color: $c-secondary;
+    color: $c-black;
+  }
+
+  &.select2-container--open.select2-container--below .selection {
+    border-radius: $border-radius $border-radius 0 0;
+  }
+
+  .select2-selection__arrow {
+    display: none;
+  }
+
+  .select2-selection {
+    border: none;
+    box-shadow: none;
+  }
+
+  .select2-selection__rendered {
+    padding: 0;
+    vertical-align: middle;
+    margin: 3px 0;
+  }
+
+  .select2-selection__placeholder {
+    color: $c-input--text;
+  }
+
+  .select2-selection__clear {
+    margin: 0 $space-quarter;
+  }
+
+  .form-item & {
+    .select2-selection__choice {
+      float: none;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+}
+
+.select2-container {
+  .select2-dropdown {
+    border-color: $c-secondary;
+    color: $c-black;
+  }
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+  outline: none;
+  margin: 0;
+  padding: 0;
+  height: 25px;
+  width: 25px;
+  line-height: 1;
+  cursor: pointer;
+  display: block;
+  float: left;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-appearance: none;
+  background-color: transparent;
+  background-size: 25px 25px;
+  background-repeat: no-repeat;
+  border-radius: 3px;
+  border: $border--standard;
+}
+
+input[type="checkbox"]:disabled,
+input[type="radio"]:disabled,
+input[type="checkbox"]:disabled:checked,
+input[type="radio"]:disabled:checked {
+  background-color: $c-disabled;
+}
+
+input[type="checkbox"] + label,
+input[type="radio"] + label {
+  display: inline-block;
+  cursor: pointer;
+  position: relative;
+  width: calc(100% - 25px);
+  margin: 0;
+  padding: 0;
+  padding-left: $space-half;
+  text-transform: none;
+  letter-spacing: normal;
+
+  @include p;
+}
+
+input[type="checkbox"]:disabled + label,
+input[type="radio"]:disabled + label {
+  color: $c-disabled;
+}
+
+input[type="checkbox"]:checked {
+  background: $c-secondary url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z' fill='%23ffffff'/%3E%3C/svg%3E") center center no-repeat;
+  background-size: 14px 14px;
+}
+
+input[type="radio"]:checked {
+  background: $c-secondary url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 11 11'%3E%3Cpath d='M5.5,11A5.5,5.5,0,1,1,11,5.5,5.51,5.51,0,0,1,5.5,11Zm0-11A5.5,5.5,0,1,1,0,5.5,5.51,5.51,0,0,1,5.5,0Z' fill='%23ffffff'/%3E%3C/svg%3E") center center no-repeat;
+  background-size: 11px 11px;
+}
+
+input[type="radio"] {
+  border-radius: $border-radius--button;
+}
+
+/* clears the 'X' from Internet Explorer */
+input[type="search"]::-ms-clear {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+input[type="search"]::-ms-reveal {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+/* clears the 'X' from Chrome */
+input[type="search"]::-webkit-search-decoration,
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-results-button,
+input[type="search"]::-webkit-search-results-decoration {
+  display: none;
+}
+
+/* removes the blue background on Chrome's autocomplete */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px white inset;
+}
+
+.form-item__label,
+.form-item__content {
+  width: 100%;
+}
+
+// Register form back button alteration.
+.l-page--user-register .o-input__submit.edit-back-button {
+  display: none;
+}
+
+.form-type-date {
+  input {
+    max-width: 200px; // Deemed to be a safe width to display a date or time.
+    border: $border--standard;
+    border-radius: $border-radius;
+    display: inline-block;
+    padding: $space-half $space;
+    margin-bottom: $space;
+  }
+}
+
+/* There is an extra margin above "release date" field (podcast episode node) which needs to be removed. @todo: find a better solution */
+#edit-field-release-date-0-value,
+#edit-inline-entity-form-field-release-date-0-value {
+  margin-top: 0;
+}
+
+.node-form {
+  .media-library-item__preview {
+    margin-top: 20px;
+  }
+
+  .field--name-field-artwork {
+    .details-wrapper {
+      p {
+        display: none;
+      }
+
+      .rendered-entity {
+        margin: 0;
+      }
+    }
+
+    .edit-button {
+      display: none;
+    }
+  }
+
+  #edit-field-artwork {
+    p {
+      display: none;
+    }
+  }
+}

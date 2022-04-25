@@ -1,0 +1,8 @@
+
+vidyo_platform_client.room:
+  path: '/vidyo-room/{room_key}'
+  defaults:
+    _controller: '\Drupal\vidyo_platform_client\Controller\RoomController::view'
+    _title: 'Vidyo'
+  requirements:
+    _permission: 'access vidyo rooms'

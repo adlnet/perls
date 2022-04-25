@@ -1,0 +1,10 @@
+uuid: 90e8a566-63b8-4205-9a7c-c87ba12489bb
+langcode: en
+status: true
+dependencies: {  }
+id: events
+label: Events
+description: 'Adds support for scheduled events.'
+activationConditions: {  }
+activationMethod: manual
+manualActivationStatus: false

@@ -1,0 +1,10 @@
+uuid: 20ffca23-258e-4860-b6a1-7c3de3d5831b
+langcode: en
+status: true
+dependencies:
+  module:
+    - group
+id: group.info_card
+label: 'Info Card'
+targetEntityType: group
+cache: true

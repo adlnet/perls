@@ -1,0 +1,39 @@
+uuid: 2242fc85-af3f-47f4-aa36-e6dfc90b7df1
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+    - user
+  theme:
+    - perls_learner
+_core:
+  default_config_hash: CyX_aDKAka2_eihevNLscCHDYrzDgIqwWzFVEFRKIww
+id: perls_learner_primary_local_tasks
+theme: perls_learner
+region: content
+weight: -7
+provider: null
+plugin: local_tasks_block
+settings:
+  id: local_tasks_block
+  label: 'Primary tabs'
+  label_display: '0'
+  provider: core
+  primary: true
+  secondary: false
+visibility:
+  user_role:
+    id: user_role
+    negate: false
+    context_mapping:
+      user: '@user.current_user_context:current_user'
+    roles:
+      authenticated: authenticated
+      content_manager: content_manager
+      perls_system_admin: perls_system_admin
+      sysadmin: sysadmin
+  request_path:
+    id: request_path
+    negate: true
+    pages: '/user/*/*'

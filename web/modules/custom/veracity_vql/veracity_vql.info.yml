@@ -1,0 +1,6 @@
+name: 'Veracity Integration'
+type: module
+description: 'Integrates with Veracity API for displaying charts'
+core: 8.x
+dependencies:
+  - xapi

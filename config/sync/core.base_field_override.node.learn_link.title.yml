@@ -1,0 +1,18 @@
+uuid: 1b879bba-13e7-4225-a5b7-35c4d8745b14
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.learn_link
+id: node.learn_link.title
+field_name: title
+entity_type: node
+bundle: learn_link
+label: Title
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

@@ -1,0 +1,9 @@
+messages:
+  completed_count_course_month: 'You are only @count courses away from completing your monthly goal to complete @goal courses. Here are a few recommendations to help you reach your goal!'
+  completed_count_week: 'Don''t forget your weekly article completion goal. You only have @count left. Keep going with these custom recommendations.'
+  seen_count_lo_week: 'Don''t forget to check out @goal articles this week. You only have @count left. Keep going with these custom recommendations.'
+  result_avg_test_week: 'Your average test score this week is @score. Reach your goal of @goal by retaking tests to improve your score. '
+  all: 'You''ve met your goals--great work! Why not start something new and check out your latest recommendations?'
+  none: 'We see you haven''t set your personal goals yet—let''s get them set up!'
+_core:
+  default_config_hash: pV4SQFLddifR7DkUpprXlZsjhMO50MlJtzG_wQxl7ww

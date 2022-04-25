@@ -1,0 +1,25 @@
+uuid: ec0d92a9-0076-42a8-bd0c-aa66fb465593
+langcode: en
+status: true
+dependencies:
+  config:
+    - system.menu.content-manager-user-menu
+  module:
+    - system
+  theme:
+    - perls_content_manager
+id: content_manager_user_menu
+theme: perls_content_manager
+region: inactive
+weight: -4
+provider: null
+plugin: 'system_menu_block:content-manager-user-menu'
+settings:
+  id: 'system_menu_block:content-manager-user-menu'
+  label: 'Content Manager User menu'
+  label_display: visible
+  provider: system
+  level: 1
+  depth: 0
+  expand_all_items: false
+visibility: {  }

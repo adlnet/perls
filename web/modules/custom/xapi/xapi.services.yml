@@ -1,0 +1,27 @@
+services:
+  lrs.request:
+    class: Drupal\xapi\LRSServer
+    arguments: ['@config.factory', '@http_client']
+  lrs.request_generator:
+    class: Drupal\xapi\LRSRequestGenerator
+    arguments: ['@request_stack', '@controller_resolver', '@http_kernel.controller.argument_resolver', '@router', '@account_switcher', '@entity_type.manager']
+  plugin.manager.xapi_actor_ifi:
+    class: Drupal\xapi\XapiActorIFIManager
+    arguments: ['@config.factory']
+    parent: default_plugin_manager
+  xapi.check_statement:
+    class: Drupal\xapi\EventSubscriber\LRSRequestModifier
+    arguments: ['@config.factory', '@logger.factory', '@plugin.manager.xapi_actor_ifi', '@xapi.xapi_statement_helper']
+    tags:
+      - { name: event_subscriber }
+  xapi.xapi_statement_helper:
+    class: Drupal\xapi\XapiStatementHelper
+    arguments:
+      - '@logger.factory'
+      - '@plugin.manager.xapi_actor_ifi'
+      - '@xapi.activity_provider'
+      - '@entity_type.manager'
+      - '@module_handler'
+  xapi.activity_provider:
+    class: Drupal\xapi\XapiActivityProvider
+    arguments: ['@entity_type.manager']

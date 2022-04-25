@@ -1,0 +1,11 @@
+name: 'Entity Moderation'
+type: module
+description: 'Extends content moderation functionality and improves the UX for moving content between workflow states.'
+core: 8.x
+core_version_requirement: ^8 || ^9
+dependencies:
+  - comment
+  - content_moderation
+  - node
+  - user
+  - drupal:save_edit

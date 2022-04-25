@@ -1,0 +1,37 @@
+uuid: aefeb91b-1af2-466f-b57d-bdbbfcfb5b89
+langcode: en
+status: true
+dependencies:
+  config:
+    - page_manager.page.acknowledgements
+  content:
+    - 'block_content:text_block:f061882c-6858-42b9-9a28-75ad42266a22'
+  module:
+    - block_content
+id: acknowledgements-block_display-0
+label: 'Block page'
+weight: 0
+variant: block_display
+variant_settings:
+  id: block_display
+  label: null
+  weight: 0
+  uuid: d137808a-3ed9-4cd7-a27d-f4fcbf7abde6
+  blocks:
+    bf55252b-9729-4b2a-94b8-911d6d516711:
+      id: 'block_content:f061882c-6858-42b9-9a28-75ad42266a22'
+      label: Acknowledgements
+      label_display: '0'
+      provider: block_content
+      status: true
+      info: ''
+      view_mode: full
+      context_mapping: {  }
+      region: top
+      weight: 0
+      uuid: bf55252b-9729-4b2a-94b8-911d6d516711
+  page_title: Acknowledgements
+page: acknowledgements
+selection_criteria: {  }
+selection_logic: and
+static_context: {  }

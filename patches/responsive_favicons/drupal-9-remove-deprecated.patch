@@ -1,0 +1,288 @@
+diff --git a/responsive_favicons.install b/responsive_favicons.install
+index 6b970c9..14ff05f 100644
+--- a/responsive_favicons.install
++++ b/responsive_favicons.install
+@@ -54,7 +54,7 @@ function responsive_favicons_uninstall() {
+   // Remove favicon files
+   $config = \Drupal::config('responsive_favicons.settings');
+   if (!empty($config->get('path'))) {
+-    file_unmanaged_delete_recursive('public://' . $config->get('path'));
++    \Drupal::service('file_system')->deleteRecursive('public://' . $config->get('path'));
+   }
+ }
+
+diff --git a/src/Form/ResponsiveFaviconsAdmin.php b/src/Form/ResponsiveFaviconsAdmin.php
+index d1c3e76..2e5d5bd 100644
+--- a/src/Form/ResponsiveFaviconsAdmin.php
++++ b/src/Form/ResponsiveFaviconsAdmin.php
+@@ -2,9 +2,15 @@
+
+ namespace Drupal\responsive_favicons\Form;
+
++use Drupal\Core\File\Exception\FileException;
++use Drupal\Core\File\Exception\FileWriteException;
+ use Drupal\Core\Form\ConfigFormBase;
+ use Drupal\Core\Form\FormStateInterface;
++use Drupal\Core\Messenger\MessengerTrait;
+ use Drupal\Core\Site\Settings;
++use Drupal\Core\File\FileSystemInterface;
++use Drupal\Core\StringTranslation\StringTranslationTrait;
++use Symfony\Component\DependencyInjection\ContainerInterface;
+
+ /**
+  * Class ResponsiveFaviconsAdmin.
+@@ -13,6 +19,25 @@ use Drupal\Core\Site\Settings;
+  */
+ class ResponsiveFaviconsAdmin extends ConfigFormBase {
+
++  use MessengerTrait;
++  use StringTranslationTrait;
++
++  /**
++   * The file system service.
++   *
++   * @var \Drupal\Core\File\FileSystemInterface
++   */
++  protected $fileSystem;
++
++  /**
++   * {@inheritdoc}
++   */
++  public static function create(ContainerInterface $container) {
++    $instance = parent::create($container);
++    $instance->fileSystem = $container->get('file_system');
++    return $instance;
++  }
++
+   /**
+    * {@inheritdoc}
+    */
+@@ -64,13 +89,6 @@ class ResponsiveFaviconsAdmin extends ConfigFormBase {
+   }
+
+   /**
+-    * {@inheritdoc}
+-    */
+-  public function validateForm(array &$form, FormStateInterface $form_state) {
+-    parent::validateForm($form, $form_state);
+-  }
+-
+-  /**
+    * {@inheritdoc}
+    */
+   public function submitForm(array &$form, FormStateInterface $form_state) {
+@@ -85,7 +103,7 @@ class ResponsiveFaviconsAdmin extends ConfigFormBase {
+     // Remove trailing slash on responsive_favicons_path.
+     $config->set('path', rtrim($form_state->getValue('path')));
+
+-    // Checkbox
++    // Checkbox.
+     $config->set('remove_default', $form_state->getValue('remove_default'));
+
+     // Attempt the upload and extraction of the zip file. This code is largely
+@@ -94,11 +112,10 @@ class ResponsiveFaviconsAdmin extends ConfigFormBase {
+     // @see UpdateManagerInstall->submitForm().
+     $local_cache = NULL;
+     if (!empty($_FILES['files']['name']['upload'])) {
+-      $validators = array('file_validate_extensions' => array(archiver_get_extensions()));
+-      $field = 'upload';
+-      if (!($finfo = file_save_upload('upload', $validators, NULL, 0, FILE_EXISTS_REPLACE))) {
++      $validators = ['file_validate_extensions' => ['zip']];
++      if (!($finfo = file_save_upload('upload', $validators, NULL, 0, FileSystemInterface::EXISTS_REPLACE))) {
+         // Failed to upload the file. file_save_upload() calls
+-        // drupal_set_message() on failure.
++        // \Drupal\Core\Messenger\MessengerInterface::addError() on failure.
+         return;
+       }
+       $local_cache = $finfo->getFileUri();
+@@ -111,56 +128,71 @@ class ResponsiveFaviconsAdmin extends ConfigFormBase {
+         $archive = $this->archiveExtract($local_cache, $directory);
+       }
+       catch (\Exception $e) {
+-        \Drupal::messenger()->addStatus($e->getMessage(), 'error');
++        $this->messenger()->addStatus($e->getMessage(), 'error');
+         return;
+       }
+
+       $files = $archive->listContents();
+       if (!$files) {
+-        $form_state->setError($field, t('Provided archive contains no files.'));
++        $form_state->setError($field, $this->t('Provided archive contains no files.'));
+         return;
+       }
+
+       $destination = 'public://' . $config->get('path');
+-      file_prepare_directory($destination, FILE_CREATE_DIRECTORY);
++      $this->fileSystem->prepareDirectory($destination, FileSystemInterface::CREATE_DIRECTORY);
+
+       // Copy the files to the correct location.
+       $success_count = 0;
+       foreach ($files as $file) {
+-        $success = file_unmanaged_copy($directory . '/' . $file, $destination, FILE_EXISTS_REPLACE);
++        // Handle exceptions when copy does not happen correctly.
++        try {
++          $success = $this->fileSystem->copy($directory . '/' . $file, $destination, FileSystemInterface::EXISTS_REPLACE);
++        }
++        catch (FileException $e) {
++          $success = FALSE;
++        }
+         $uri = $destination . '/' . $file;
+         if ($success) {
+           $success_count++;
+-
+-          // Rewrite the paths of the JSON files.
+-          if (preg_match('/\.json$/', $file)) {
+-            $file_contents = file_get_contents(\Drupal::service('file_system')->realpath($uri));
+-            $find = preg_quote('"\/android-chrome', '/');
+-            $replace = '"' . str_replace('/', '\/', _responsive_favicons_normalise_path('/android-chrome'));
+-            $file_contents = preg_replace('/' . $find . '/', $replace, $file_contents);
+-            file_unmanaged_save_data($file_contents, $uri, FILE_EXISTS_REPLACE);
++          // Handle exceptions when file contents are not saved correctly into
++          // destination.
++          try {
++            // Rewrite the paths of the JSON files.
++            if (preg_match('/\.json$/', $file)) {
++              $file_contents = file_get_contents($this->fileSystem->realpath($uri));
++              $find = preg_quote('"\/android-chrome', '/');
++              $replace = '"' . str_replace('/', '\/', _responsive_favicons_normalise_path('/android-chrome'));
++              $file_contents = preg_replace('/' . $find . '/', $replace, $file_contents);
++              $this->fileSystem->saveData($file_contents, $uri, FileSystemInterface::EXISTS_REPLACE);
++            }
++            // Rewrite the paths of the XML files.
++            elseif (preg_match('/\.xml$/', $file)) {
++              $file_contents = file_get_contents($this->fileSystem->realpath($uri));
++              $find = preg_quote('"/mstile', '/');
++              $replace = '"' . _responsive_favicons_normalise_path('/mstile');
++              $file_contents = preg_replace('/' . $find . '/', $replace, $file_contents);
++              $this->fileSystem->saveData($file_contents, $uri, FileSystemInterface::EXISTS_REPLACE);
++            }
++            // Rewrite the paths of the WEBMANIFEST files.
++            elseif (preg_match('/\.webmanifest$/', $file)) {
++              $file_contents = file_get_contents($this->fileSystem->realpath($uri));
++              $find = preg_quote('"/android-chrome', '/');
++              $replace = '"' . _responsive_favicons_normalise_path('/android-chrome');
++              $file_contents = preg_replace('/' . $find . '/', $replace, $file_contents);
++              $this->fileSystem->saveData($file_contents, $uri, FileSystemInterface::EXISTS_REPLACE);
++            }
+           }
+-          // Rewrite the paths of the XML files.
+-          else if (preg_match('/\.xml$/', $file)) {
+-            $file_contents = file_get_contents(\Drupal::service('file_system')->realpath($uri));
+-            $find = preg_quote('"/mstile', '/');
+-            $replace = '"' . _responsive_favicons_normalise_path('/mstile');
+-            $file_contents = preg_replace('/' . $find . '/', $replace, $file_contents);
+-            file_unmanaged_save_data($file_contents, $uri, FILE_EXISTS_REPLACE);
++          catch (FileWriteException $e) {
++            $this->messenger()->addError($this->t('The file could not be created.'));
+           }
+-          // Rewrite the paths of the WEBMANIFEST files.
+-          else if (preg_match('/\.webmanifest$/', $file)) {
+-            $file_contents = file_get_contents(\Drupal::service('file_system')->realpath($uri));
+-            $find = preg_quote('"/android-chrome', '/');
+-            $replace = '"' . _responsive_favicons_normalise_path('/android-chrome');
+-            $file_contents = preg_replace('/' . $find . '/', $replace, $file_contents);
+-            file_unmanaged_save_data($file_contents, $uri, FILE_EXISTS_REPLACE);
++          catch (FileException $e) {
++            $this->messenger()->addError($e->getMessage());
+           }
+         }
+       }
+
+       if ($success_count > 0) {
+-        \Drupal::messenger()->addStatus(\Drupal::translation()->formatPlural($success_count, 'Uploaded 1 favicon file successfully.', 'Uploaded @count favicon files successfully.'));
++        $this->messenger()->addStatus($this->formatPlural($success_count, 'Uploaded 1 favicon file successfully.', 'Uploaded @count favicon files successfully.'));
+       }
+     }
+
+@@ -173,7 +205,7 @@ class ResponsiveFaviconsAdmin extends ConfigFormBase {
+   /**
+    * Returns a short unique identifier for this Drupal installation.
+    *
+-   * @return
++   * @return string
+    *   An eight character string uniquely identifying this Drupal installation.
+    */
+   private function uniqueIdentifier() {
+@@ -185,14 +217,13 @@ class ResponsiveFaviconsAdmin extends ConfigFormBase {
+   }
+
+   /**
+-   * Returns the directory where responsive favicons archive files should be
+-   * extracted.
++   * Gets the directory where responsive favicons zip files should be extracted.
+    *
+-   * @param $create
++   * @param bool $create
+    *   (optional) Whether to attempt to create the directory if it does not
+    *   already exist. Defaults to TRUE.
+    *
+-   * @return
++   * @return string
+    *   The full path to the temporary directory where responsive favicons fil
+    *   archives should be extracted.
+    */
+@@ -215,22 +246,23 @@ class ResponsiveFaviconsAdmin extends ConfigFormBase {
+    * @param string $directory
+    *   The directory you wish to extract the archive into.
+    *
+-   * @return Archiver
++   * @return \Drupal\Core\Archiver\ArchiverInterface
+    *   The Archiver object used to extract the archive.
+    *
+    * @throws \Exception
+    */
+   private function archiveExtract($file, $directory) {
+-    $archiver = archiver_get_archiver($file);
++    $archiver = \Drupal::service('plugin.manager.archiver')->getInstance(['filepath' => $file]);
+     if (!$archiver) {
+-      throw new \Exception(t('Cannot extract %file, not a valid archive.', array('%file' => $file)));
++      throw new \Exception($this->t('Cannot extract %file, not a valid archive.', ['%file' => $file]));
+     }
+
+     if (file_exists($directory)) {
+-      file_unmanaged_delete_recursive($directory);
++      $this->fileSystem->deleteRecursive($directory);
+     }
+
+     $archiver->extract($directory);
+     return $archiver;
+   }
++
+ }
+diff --git a/src/Routing/DefaultFavicons.php b/src/Routing/DefaultFavicons.php
+index f77a459..5c848e9 100644
+--- a/src/Routing/DefaultFavicons.php
++++ b/src/Routing/DefaultFavicons.php
+@@ -29,11 +29,11 @@ class DefaultFavicons {
+     // List of icons to redirect.
+     // Note, in order for these to work alter the fast404 pattern to allow these
+     // requests to hit Drupal. Please see the README for more information.
+-    $icons = array(
++    $icons = [
+       '/apple-touch-icon.png',
+       '/apple-touch-icon-precomposed.png',
+       '/browserconfig.xml',
+-    );
++    ];
+     // Try to avoid clashing with the favicon module.
+     if (!$moduleHandler->moduleExists('favicon')) {
+       $icons[] = '/favicon.ico';
+@@ -43,14 +43,14 @@ class DefaultFavicons {
+         // Path to attach this route to:
+         $icon,
+         // Route defaults:
+-        array(
++        [
+           '_controller' => '\Drupal\responsive_favicons\Controller\GetFile::deliver',
+           '_title' => ''
+-        ),
++        ],
+         // Route requirements:
+-        array(
++        [
+           '_access' => 'TRUE',
+-        )
++        ]
+       );
+       // Add the route under a unique key.
+       $key = preg_replace("/[^A-Za-z]/", '', $icon);

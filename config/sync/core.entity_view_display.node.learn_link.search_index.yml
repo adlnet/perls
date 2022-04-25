@@ -1,0 +1,64 @@
+uuid: c7b01af7-ccaf-455f-8b83-35af5b42c717
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.search_index
+    - field.field.node.learn_link.field_content_link
+    - field.field.node.learn_link.field_course
+    - field.field.node.learn_link.field_custom_uri
+    - field.field.node.learn_link.field_description
+    - field.field.node.learn_link.field_difficulty
+    - field.field.node.learn_link.field_flash_card
+    - field.field.node.learn_link.field_link_type
+    - field.field.node.learn_link.field_media_image
+    - field.field.node.learn_link.field_quiz
+    - field.field.node.learn_link.field_tags
+    - field.field.node.learn_link.field_tip_card
+    - field.field.node.learn_link.field_topic
+    - field.field.node.learn_link.field_type_description
+    - node.type.learn_link
+  module:
+    - field_layout
+    - layout_builder
+    - user
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings:
+      label: ''
+  layout_builder:
+    enabled: false
+    allow_custom: false
+id: node.learn_link.search_index
+targetEntityType: node
+bundle: learn_link
+mode: search_index
+content: {  }
+hidden:
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  entitygroupfield: true
+  field_content_link: true
+  field_course: true
+  field_custom_uri: true
+  field_description: true
+  field_difficulty: true
+  field_flash_card: true
+  field_image: true
+  field_link_type: true
+  field_media_image: true
+  field_quiz: true
+  field_tags: true
+  field_tip_card: true
+  field_topic: true
+  field_type_description: true
+  flag_bookmark: true
+  flag_completed: true
+  flag_recommendation: true
+  group_content: true
+  langcode: true
+  links: true
+  recommendation_reason: true
+  search_api_excerpt: true

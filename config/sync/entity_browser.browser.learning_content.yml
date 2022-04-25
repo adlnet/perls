@@ -1,0 +1,82 @@
+uuid: 046e3e5b-2ed5-49e4-b8ac-d4289a5250f1
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.entity_browser_lists
+  module:
+    - entity_browser_entity_form
+    - views
+name: learning_content
+label: 'Add Learning Object'
+display: modal
+display_configuration:
+  width: ''
+  height: ''
+  link_text: 'Add Learning Object'
+  auto_open: false
+selection_display: no_display
+selection_display_configuration: {  }
+widget_selector: tabs
+widget_selector_configuration: {  }
+widgets:
+  57b7eb39-a951-4f99-abd4-148cb6a3a9c5:
+    id: entity_form
+    uuid: 57b7eb39-a951-4f99-abd4-148cb6a3a9c5
+    label: 'Create Article'
+    weight: -9
+    settings:
+      submit_text: 'Create article'
+      entity_type: node
+      bundle: learn_article
+      form_mode: default
+  385d246e-4c21-4985-a490-487ea83460cb:
+    id: entity_form
+    uuid: 385d246e-4c21-4985-a490-487ea83460cb
+    label: 'Add Web Link'
+    weight: -8
+    settings:
+      submit_text: 'Add web link'
+      entity_type: node
+      bundle: learn_link
+      form_mode: default
+  95a99ee3-a39a-43aa-bca9-f2218fbe9c0f:
+    id: entity_form
+    uuid: 95a99ee3-a39a-43aa-bca9-f2218fbe9c0f
+    label: 'Upload eLearning Package'
+    weight: -7
+    settings:
+      submit_text: 'Upload eLearning package'
+      entity_type: node
+      bundle: learn_package
+      form_mode: default
+  224d3d89-1ac9-439c-8aef-22c5586033e1:
+    id: entity_form
+    uuid: 224d3d89-1ac9-439c-8aef-22c5586033e1
+    label: 'Create Test'
+    weight: -5
+    settings:
+      submit_text: 'Create test'
+      entity_type: node
+      bundle: test
+      form_mode: default
+  7efdc437-52bf-4bf3-9004-182a5402bb71:
+    id: view_exclude_selection
+    uuid: 7efdc437-52bf-4bf3-9004-182a5402bb71
+    label: 'Choose Existing Content'
+    weight: -10
+    settings:
+      view: entity_browser_lists
+      view_display: entity_browser_learning_content_list
+      submit_text: 'Add learning content'
+      auto_select: 0
+  526ff015-b9f8-4818-833d-a0b456d41cc2:
+    id: entity_form
+    uuid: 526ff015-b9f8-4818-833d-a0b456d41cc2
+    label: 'Upload Document'
+    weight: -6
+    settings:
+      submit_text: 'Upload document'
+      entity_type: node
+      bundle: learn_file
+      form_mode: default

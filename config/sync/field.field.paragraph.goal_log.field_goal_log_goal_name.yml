@@ -1,0 +1,19 @@
+uuid: c46523f0-2c73-4ded-8d9b-01df17ee10e7
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_goal_log_goal_name
+    - paragraphs.paragraphs_type.goal_log
+id: paragraph.goal_log.field_goal_log_goal_name
+field_name: field_goal_log_goal_name
+entity_type: paragraph
+bundle: goal_log
+label: 'Goal name'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

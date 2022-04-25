@@ -1,0 +1,13 @@
+uuid: f511ca78-2ba7-4329-83f9-dcdaf0a9927e
+langcode: en
+status: true
+dependencies:
+  module:
+    - flag
+id: flag_action.completed_flag
+label: Complete
+type: node
+plugin: 'flag_action:completed_flag'
+configuration:
+  flag_id: completed
+  flag_action: flag

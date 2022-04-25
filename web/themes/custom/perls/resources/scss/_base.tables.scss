@@ -1,0 +1,116 @@
+/* ------------------------------------ *\
+    $TABLES
+\* ------------------------------------ */
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  border: 0;
+  width: 100%;
+  position: relative;
+}
+
+.table-caption,
+caption {
+  // removed caption tag by twig because of Safari bug - not able calculate position properly.
+  // templates/views/views-view-table.html.twig
+  position: relative;
+  display: inline-block;
+  border-bottom: 4px solid $c-secondary;
+  color: $c-secondary;
+  text-align: left;
+  padding-bottom: $space-half;
+  font-weight: bold;
+}
+
+th,
+td {
+  padding: $space-half;
+  text-align: left;
+  max-width: 100%;
+}
+
+th {
+  @include o-heading--s;
+
+  color: $c-gray--dark;
+  background-color: $table-row--background--even;
+  border: $border--light;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  a {
+    color: $c-gray--dark;
+    display: flex;
+    align-items: center;
+
+    &:hover,
+    &:focus {
+      text-decoration: none;
+    }
+  }
+}
+
+tr {
+  &:nth-child(even) {
+    background: $table-row--background--even;
+  }
+
+  &:nth-child(odd) {
+    background: $table-row--background--odd;
+  }
+}
+
+td {
+  border: 1px solid transparent;
+  border-bottom: $border--light;
+  vertical-align: middle;
+  word-break: break-word;
+
+  &:first-child {
+    border-left: $border--light;
+    width: auto;
+  }
+
+  &:last-child {
+    border-right: $border--light;
+  }
+}
+
+tr.selected td {
+  background-color: transparent;
+}
+
+// Table dropdown button.
+.js td .dropbutton-multiple {
+  margin-right: 0;
+  padding-right: 100px;
+}
+
+.field--name-field-table,
+.table-overflow,
+.c-field--name-field-table {
+  // Sass does not have handling for the new-er min/max/clamp functions but
+  // you can force the css function to be used with all caps via variable.
+  $max-table-scroll-width: MAX(100%, 800px);
+  width: $max-table-scroll-width;
+  margin: auto;
+  // Everywhere except the content edit page
+  .l-page--path--node .node-form [data-drupal-selector="edit-content"] & {
+    width: auto;
+  }
+  // Many form elements use tables. Dropbuttons and overflow do not work well.
+  .form-item > & {
+    overflow: inherit;
+  }
+}
+
+.paragraph--type--table,
+.views-view-table--wrapper,
+.table-wrapper {
+  overflow-x: auto;
+
+  .l-page--path--node .node-form [data-drupal-selector="edit-content"] & {
+    overflow-x: inherit;
+  }
+}

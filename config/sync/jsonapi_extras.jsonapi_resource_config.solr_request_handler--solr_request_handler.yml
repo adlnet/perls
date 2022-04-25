@@ -1,0 +1,89 @@
+uuid: 1fb88f6c-02bb-4640-8973-3bd0dde3c467
+langcode: en
+status: true
+dependencies:
+  module:
+    - search_api_solr
+id: solr_request_handler--solr_request_handler
+disabled: true
+path: solr_request_handler/solr_request_handler
+resourceType: solr_request_handler--solr_request_handler
+resourceFields:
+  uuid:
+    disabled: false
+    fieldName: uuid
+    publicName: uuid
+    enhancer:
+      id: ''
+  langcode:
+    disabled: false
+    fieldName: langcode
+    publicName: langcode
+    enhancer:
+      id: ''
+  status:
+    disabled: false
+    fieldName: status
+    publicName: status
+    enhancer:
+      id: ''
+  dependencies:
+    disabled: false
+    fieldName: dependencies
+    publicName: dependencies
+    enhancer:
+      id: ''
+  third_party_settings:
+    disabled: false
+    fieldName: third_party_settings
+    publicName: third_party_settings
+    enhancer:
+      id: ''
+  _core:
+    disabled: false
+    fieldName: _core
+    publicName: _core
+    enhancer:
+      id: ''
+  id:
+    disabled: false
+    fieldName: id
+    publicName: id
+    enhancer:
+      id: ''
+  label:
+    disabled: false
+    fieldName: label
+    publicName: label
+    enhancer:
+      id: ''
+  minimum_solr_version:
+    disabled: false
+    fieldName: minimum_solr_version
+    publicName: minimum_solr_version
+    enhancer:
+      id: ''
+  environments:
+    disabled: false
+    fieldName: environments
+    publicName: environments
+    enhancer:
+      id: ''
+  recommended:
+    disabled: false
+    fieldName: recommended
+    publicName: recommended
+    enhancer:
+      id: ''
+  request_handler:
+    disabled: false
+    fieldName: request_handler
+    publicName: request_handler
+    enhancer:
+      id: ''
+  solr_configs:
+    disabled: false
+    fieldName: solr_configs
+    publicName: solr_configs
+    enhancer:
+      id: ''

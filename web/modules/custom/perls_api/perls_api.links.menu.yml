@@ -1,0 +1,6 @@
+perls_api.settings_form:
+  title: 'Perls API'
+  route_name: perls_api.settings
+  description: 'Configure Perls API'
+  parent: system.admin_config_services
+  weight: 99

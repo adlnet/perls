@@ -1,0 +1,159 @@
+uuid: 3c8043a2-b2b4-4aa1-aeb1-428df5867b16
+langcode: en
+status: false
+dependencies:
+  config:
+    - core.entity_view_mode.user.full
+    - field.field.user.user.field_add_groups
+    - field.field.user.user.field_goal_log
+    - field.field.user.user.field_goal_monthly_course_comp
+    - field.field.user.user.field_goal_weekly_completions
+    - field.field.user.user.field_goal_weekly_test_average
+    - field.field.user.user.field_goal_weekly_views
+    - field.field.user.user.field_interests
+    - field.field.user.user.field_name
+    - field.field.user.user.field_notification_days
+    - field.field.user.user.field_notification_time
+    - field.field.user.user.field_organization_homepage
+    - field.field.user.user.field_organization_identifier
+    - field.field.user.user.user_picture
+    - image.style.user_profile_circle
+  module:
+    - field_layout
+    - image
+    - layout_builder
+    - layout_discovery
+    - user
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings:
+      label: ''
+  layout_builder:
+    enabled: true
+    sections:
+      -
+        layout_id: layout_onecol
+        layout_settings:
+          label: ''
+          context_mapping: {  }
+        components:
+          15549db0-751b-4493-a0a7-f92e2d0b4fd4:
+            uuid: 15549db0-751b-4493-a0a7-f92e2d0b4fd4
+            region: content
+            configuration:
+              id: 'field_block:user:user:user_picture'
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              formatter:
+                type: image
+                label: hidden
+                settings:
+                  image_link: content
+                  image_style: user_profile_circle
+                third_party_settings: {  }
+            weight: 0
+            additional: {  }
+            third_party_settings: {  }
+          68b4e5ba-0da9-4cef-b72b-ecac9f335568:
+            uuid: 68b4e5ba-0da9-4cef-b72b-ecac9f335568
+            region: content
+            configuration:
+              id: 'extra_field_block:user:user:member_for'
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+            weight: 1
+            additional: {  }
+            third_party_settings: {  }
+          cc10dc19-d4d9-4702-9722-054bb92cd682:
+            uuid: cc10dc19-d4d9-4702-9722-054bb92cd682
+            region: content
+            configuration:
+              id: 'field_block:user:user:field_name'
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              formatter:
+                type: string
+                label: above
+                settings:
+                  link_to_entity: false
+                third_party_settings: {  }
+            weight: 2
+            additional: {  }
+            third_party_settings: {  }
+          28640b1d-7772-4390-b971-b8fffd57fb4d:
+            uuid: 28640b1d-7772-4390-b971-b8fffd57fb4d
+            region: content
+            configuration:
+              id: 'field_block:user:user:field_interests'
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              formatter:
+                type: entity_reference_label
+                label: above
+                settings:
+                  link: true
+                third_party_settings: {  }
+            weight: 3
+            additional: {  }
+            third_party_settings: {  }
+        third_party_settings: {  }
+_core:
+  default_config_hash: K-E3NJy6JQWSRtBiiWc6Sq-do_zomm-3Eyp428tsupo
+id: user.user.full
+targetEntityType: user
+bundle: user
+mode: full
+content:
+  field_interests:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 7
+    region: content
+  field_name:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 6
+    region: content
+  member_for:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 5
+    region: content
+  user_picture:
+    type: image
+    label: hidden
+    settings:
+      image_link: content
+      image_style: user_profile_circle
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  entitygroupfield: true
+  field_add_groups: true
+  field_goal_log: true
+  field_goal_monthly_course_comp: true
+  field_goal_weekly_completions: true
+  field_goal_weekly_test_average: true
+  field_goal_weekly_views: true
+  field_notification_days: true
+  field_notification_time: true
+  field_organization_homepage: true
+  field_organization_identifier: true
+  group_content: true
+  langcode: true
+  search_api_excerpt: true

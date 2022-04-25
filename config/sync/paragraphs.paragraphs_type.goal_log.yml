@@ -1,0 +1,10 @@
+uuid: dd44a022-17fa-4a5e-baf2-fce900059b53
+langcode: en
+status: true
+dependencies: {  }
+id: goal_log
+label: 'Goal Log'
+icon_uuid: null
+icon_default: null
+description: 'Store information about achieved goals.'
+behavior_plugins: {  }

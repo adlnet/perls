@@ -1,0 +1,20 @@
+uuid: bacb668b-6950-4751-a0d9-b3c31c20685a
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - serialization
+    - simple_oauth
+id: entity.node
+plugin_id: 'entity:node'
+granularity: resource
+configuration:
+  methods:
+    - GET
+    - POST
+    - PATCH
+  formats:
+    - json
+  authentication:
+    - oauth2

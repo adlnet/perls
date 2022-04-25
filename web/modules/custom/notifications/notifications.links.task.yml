@@ -1,0 +1,33 @@
+entity.push_notification_token.canonical:
+  route_name: entity.push_notification_token.canonical
+  base_route: entity.push_notification_token.canonical
+  title: 'View'
+
+entity.push_notification_token.delete_form:
+  route_name: entity.push_notification_token.delete_form
+  base_route: entity.push_notification_token.canonical
+  title: Delete
+  weight: 10
+
+entity.push_notification.canonical:
+  route_name: entity.push_notification.canonical
+  base_route: entity.push_notification.canonical
+  title: 'View'
+
+entity.push_notification.edit_form:
+  route_name: entity.push_notification.edit_form
+  base_route: entity.push_notification.canonical
+  title: Edit
+  weight: 5
+
+entity.push_notification.delete_form:
+  route_name: entity.push_notification.delete_form
+  base_route: entity.push_notification.canonical
+  title: Delete
+  weight: 10
+
+notifications.list_sent:
+  route_name: page_manager.page_view_push_notification_list_push_notification_list-block_display-0
+  base_route: page_manager.page_view_push_notification_list_push_notification_list-block_display-0
+  title: 'Manage Push Notifications'
+  weight: 3

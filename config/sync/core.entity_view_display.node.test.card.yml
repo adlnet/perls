@@ -1,0 +1,59 @@
+uuid: e2617ee9-9c6b-4b42-b98b-2ed6df6e6ec4
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.card
+    - field.field.node.test.field_adaptive_content
+    - field.field.node.test.field_pass_mark
+    - field.field.node.test.field_quiz
+    - field.field.node.test.field_tags
+    - field.field.node.test.field_test_course
+    - field.field.node.test.field_type_description
+    - node.type.test
+  module:
+    - field_layout
+    - layout_builder
+    - user
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings:
+      label: ''
+  layout_builder:
+    enabled: false
+    allow_custom: false
+id: node.test.card
+targetEntityType: node
+bundle: test
+mode: card
+content:
+  field_quiz:
+    type: entity_reference_entity_view
+    label: hidden
+    settings:
+      view_mode: card
+      link: false
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  flag_completed:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  entitygroupfield: true
+  field_adaptive_content: true
+  field_pass_mark: true
+  field_tags: true
+  field_test_course: true
+  field_type_description: true
+  group_content: true
+  langcode: true
+  links: true
+  recommendation_reason: true
+  search_api_excerpt: true

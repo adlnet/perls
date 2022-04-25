@@ -1,0 +1,70 @@
+uuid: f57eb5dd-eab8-44d2-89f4-1fe52265d341
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.tile
+    - field.field.node.flash_card.field_card_back
+    - field.field.node.flash_card.field_card_front
+    - field.field.node.flash_card.field_difficulty
+    - field.field.node.flash_card.field_parent_content
+    - field.field.node.flash_card.field_tags
+    - field.field.node.flash_card.field_topic
+    - field.field.node.flash_card.field_type_description
+    - node.type.flash_card
+  module:
+    - field_layout
+    - layout_builder
+    - user
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings:
+      label: ''
+  layout_builder:
+    enabled: false
+    allow_custom: false
+id: node.flash_card.tile
+targetEntityType: node
+bundle: flash_card
+mode: tile
+content:
+  field_tags:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  flag_bookmark:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  flag_completed:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  recommendation_reason:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  entitygroupfield: true
+  field_card_back: true
+  field_card_front: true
+  field_difficulty: true
+  field_parent_content: true
+  field_topic: true
+  field_type_description: true
+  flag_recommendation: true
+  group_content: true
+  langcode: true
+  links: true
+  search_api_excerpt: true

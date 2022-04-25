@@ -1,0 +1,10 @@
+administer vidyo rooms:
+  title: 'Administer rooms'
+  description: 'Allows for the creation, deletion, or moderation of all Vidyo rooms.'
+  restrict access: true
+access vidyo rooms:
+  title: 'Access rooms'
+  description: 'Allows access to Vidyo rooms.'
+moderate any vidyo room:
+  title: 'Moderate any room'
+  description: 'Allows the user to access the moderation controls for any Vidyo room'

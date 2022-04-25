@@ -1,0 +1,23 @@
+uuid: 9b4529c6-3084-4760-9cff-cd59d8a1c6e9
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_completion_strategy
+    - node.type.learn_article
+  module:
+    - options
+id: node.learn_article.field_completion_strategy
+field_name: field_completion_strategy
+entity_type: node
+bundle: learn_article
+label: 'Completion strategy'
+description: 'Indicate how you want the article to be marked as complete.'
+required: true
+translatable: false
+default_value:
+  -
+    value: automatic
+default_value_callback: ''
+settings: {  }
+field_type: list_string

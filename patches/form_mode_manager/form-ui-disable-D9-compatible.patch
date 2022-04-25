@@ -1,0 +1,26 @@
+diff --git a/src/FormModeManagerPermissions.php b/src/FormModeManagerPermissions.php
+index 0a2ccdc..e67a99b 100644
+--- a/src/FormModeManagerPermissions.php
++++ b/src/FormModeManagerPermissions.php
+@@ -115,12 +115,19 @@ class FormModeManagerPermissions implements ContainerInjectionInterface {
+       if ($form_mode_loaded instanceof EntityFormMode) {
+         $placeholders = array_merge($entity_placeholder, [
+           '%form_mode_label' => $form_mode_loaded->label(),
+-          ':url' => $form_mode_loaded->toUrl()->toString(),
+         ]);
+
++        if (\Drupal::service('module_handler')->moduleExists('field_ui')) {
++          $title = 'Use <a href=":url">%form_mode_label</a> form mode with <b>%type_id</b> entity';
++          $placeholders[':url'] = $form_mode_loaded->toUrl()->toString();
++        }
++        else {
++          $title = 'Use %form_mode_label form mode with <b>%type_id</b> entity';
++        }
++
+         $perms_per_mode += [
+           "use {$form_mode_loaded->id()} form mode" => [
+-            'title' => $this->t('Use <a href=":url">%form_mode_label</a> form mode with <b>%type_id</b> entity', $placeholders),
++            'title' => $this->t($title, $placeholders),
+             'description' => [
+               '#prefix' => '<em>',
+               '#markup' => $this->t('This permission control access of <b>%type_id</b> entity with %form_mode_label form mode.', $placeholders),

@@ -1,0 +1,20 @@
+uuid: 2a5cf23e-ffa9-4b5d-b526-2e4e28d27fe5
+langcode: en
+status: true
+dependencies:
+  theme:
+    - perls_content_manager
+_core:
+  default_config_hash: Z3nlZUh2mSJP3apMrJWt-duS-aLyP79rcfu_0wpPmDs
+id: perls_content_manager_page_title
+theme: perls_content_manager
+region: header
+weight: -9
+provider: null
+plugin: page_title_block
+settings:
+  id: page_title_block
+  label: 'Page title'
+  label_display: '0'
+  provider: core
+visibility: {  }

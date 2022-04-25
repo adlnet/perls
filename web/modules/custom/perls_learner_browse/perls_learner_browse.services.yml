@@ -1,0 +1,8 @@
+services:
+  perls_learner_browse.content_suggestor:
+    class: Drupal\perls_learner_browse\ContentSuggestor
+  perls_learner_browser.view_topics_check:
+    class: Drupal\perls_learner_browse\ViewOurPicks
+    arguments: ['@database', '@current_user']
+  perls_learner_browse.followed_content:
+    class: Drupal\perls_learner_browse\FollowedContent

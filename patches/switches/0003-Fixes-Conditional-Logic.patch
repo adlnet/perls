@@ -1,0 +1,239 @@
+diff --git a/src/Entity/SwitchEntity.php b/src/Entity/SwitchEntity.php
+index b8775d7..29127ee 100644
+--- a/src/Entity/SwitchEntity.php
++++ b/src/Entity/SwitchEntity.php
+@@ -6,6 +6,9 @@ use Drupal\Core\Condition\ConditionPluginCollection;
+ use Drupal\Core\Config\ConfigValueException;
+ use Drupal\Core\Config\Entity\ConfigEntityBase;
+ use Drupal\Core\Entity\EntityWithPluginCollectionInterface;
++use Drupal\Core\Plugin\ContextAwarePluginInterface;
++use Drupal\Core\Plugin\Context\ContextHandlerInterface;
++use Drupal\Core\Plugin\Context\ContextRepositoryInterface;
+ 
+ /**
+  * Defines the Switch entity.
+@@ -117,6 +120,30 @@ class SwitchEntity extends ConfigEntityBase implements SwitchInterface, EntityWi
+    */
+   protected $conditionPluginManager;
+ 
++  /**
++   * The context repository service.
++   *
++   * @var \Drupal\Core\Plugin\Context\ContextRepositoryInterface
++   */
++  protected $contextRepository;
++
++  /**
++   * The context repository service.
++   *
++   * @var \Drupal\Core\Plugin\Context\ContextHandlerInterface;
++   */
++  protected $contextHandler;
++
++  /**
++   * {@inheritdoc}
++   */
++  public function __construct(array $values, $entity_type) {
++    parent::__construct($values, $entity_type);
++    $this->conditionPluginManager = \Drupal::service('plugin.manager.condition');
++    $this->contextRepository = \Drupal::service('context.repository');
++    $this->contextHandler = \Drupal::service('context.handler');
++  }
++
+   /**
+    * {@inheritdoc}
+    */
+@@ -157,12 +184,17 @@ class SwitchEntity extends ConfigEntityBase implements SwitchInterface, EntityWi
+    * @todo Allow configuration of and/or logic.
+    */
+   public function getConditionActivationStatus() {
+-    // Evaluate all configured activation conditions.
+-    foreach ($this->getActivationConditions() as $condition_plugin) {
+-      $condition_value = $condition_plugin->evaluate();
+-
+-      // Since we're using AND logic we can stop when we encounter any condition
+-      // evaluating as FALSE.
++    foreach ($this->getActivationConditions() as $condition_id => $condition) {
++      if ($condition instanceof ContextAwarePluginInterface) {
++        try {
++          $contexts = $this->contextRepository->getRuntimeContexts(array_values($condition->getContextMapping()));
++          $this->contextHandler->applyContextMapping($condition, $contexts);
++        }
++        catch (\Exception $e) {
++          continue;
++        }
++      }
++      $condition_value = $condition->evaluate();
+       if (!$condition_value) {
+         return FALSE;
+       }
+@@ -207,7 +239,7 @@ class SwitchEntity extends ConfigEntityBase implements SwitchInterface, EntityWi
+   public function getActivationConditions() {
+     if (!isset($this->activationConditionsCollection)) {
+       $this->activationConditionsCollection = new ConditionPluginCollection($this
+-        ->conditionPluginManager(), $this->get('activationConditions'));
++        ->conditionPluginManager, $this->get('activationConditions'));
+     }
+ 
+     return $this->activationConditionsCollection;
+@@ -249,19 +281,4 @@ class SwitchEntity extends ConfigEntityBase implements SwitchInterface, EntityWi
+     }
+   }
+ 
+-  /**
+-   * Gets the condition plugin manager.
+-   *
+-   * @return \Drupal\Core\Executable\ExecutableManagerInterface
+-   *   The condition plugin manager.
+-   *
+-   * @todo Figure out how to load this through DI.
+-   */
+-  protected function conditionPluginManager() {
+-    if (!isset($this->conditionPluginManager)) {
+-      $this->conditionPluginManager = \Drupal::service('plugin.manager.condition');
+-    }
+-    return $this->conditionPluginManager;
+-  }
+-
+ }
+diff --git a/src/Form/SwitchForm.php b/src/Form/SwitchForm.php
+index fe221bd..168cfc1 100644
+--- a/src/Form/SwitchForm.php
++++ b/src/Form/SwitchForm.php
+@@ -9,45 +9,55 @@ use Drupal\Core\Form\SubformState;
+ use Drupal\Core\Plugin\Context\ContextRepositoryInterface;
+ use Drupal\Core\Plugin\ContextAwarePluginInterface;
+ use Symfony\Component\DependencyInjection\ContainerInterface;
++use Drupal\Core\Language\LanguageManagerInterface;
++use Drupal\Core\Executable\ExecutableManagerInterface;
+ 
+ /**
+  * Class SwitchForm.
+  */
+ class SwitchForm extends EntityForm {
+ 
+-  /**
+-   * The entity being used by this form.
++    /**
++   * The switch entity.
+    *
+-   * @var \Drupal\switches\Entity\SwitchEntity
++   * @var \Drupal\switch\SwitchInterface
+    */
+   protected $entity;
+ 
+   /**
+-   * The Condition plugin manager service.
++   * The condition plugin manager.
+    *
+    * @var \Drupal\Core\Condition\ConditionManager
+    */
+   protected $conditionManager;
+ 
+   /**
+-   * The Context Repository service.
++   * The context repository service.
+    *
+    * @var \Drupal\Core\Plugin\Context\ContextRepositoryInterface
+    */
+   protected $contextRepository;
+ 
+   /**
+-   * SwitchForm constructor.
++   * The language manager service.
+    *
+-   * @param \Drupal\Core\Condition\ConditionManager $condition_manager
+-   *   The Condition plugin manager service.
++   * @var \Drupal\Core\Language\LanguageManagerInterface
++   */
++  protected $language;
++
++  /**
++   * Constructs a SwitchForm object.
++   * @param \Drupal\Core\Executable\ExecutableManagerInterface $manager
++   *   The ConditionManager for building the visibility UI.
+    * @param \Drupal\Core\Plugin\Context\ContextRepositoryInterface $context_repository
+-   *   The Context Repository service.
++   *   The lazy context repository service.
++   * @param \Drupal\Core\Language\LanguageManagerInterface $language
++   *   The language manager.
+    */
+-  public function __construct(ConditionManager $condition_manager,
+-                              ContextRepositoryInterface $context_repository) {
+-    $this->conditionManager = $condition_manager;
++  public function __construct(ExecutableManagerInterface $manager, ContextRepositoryInterface $context_repository, LanguageManagerInterface $language) {
++    $this->conditionManager = $manager;
+     $this->contextRepository = $context_repository;
++    $this->language = $language;
+   }
+ 
+   /**
+@@ -56,7 +66,8 @@ class SwitchForm extends EntityForm {
+   public static function create(ContainerInterface $container) {
+     return new static(
+       $container->get('plugin.manager.condition'),
+-      $container->get('context.repository')
++      $container->get('context.repository'),
++      $container->get('language_manager')
+     );
+   }
+ 
+@@ -266,6 +277,14 @@ class SwitchForm extends EntityForm {
+ 
+     // Build and embed the plugin form for each condition plugin.
+     foreach ($available_conditions as $condition_id => $definition) {
++      // Don't display the current theme condition.
++      if ($condition_id == 'current_theme') {
++        continue;
++      }
++      // Don't display the language condition until we have multiple languages.
++      if ($condition_id == 'language' && !$this->language->isMultilingual()) {
++        continue;
++      }
+       /** @var \Drupal\Core\Condition\ConditionInterface $condition */
+       $instance_config = isset($condition_config[$condition_id]) ? $condition_config[$condition_id] : [];
+       $condition = $this->conditionManager->createInstance($condition_id, $instance_config);
+@@ -274,8 +293,7 @@ class SwitchForm extends EntityForm {
+       // Build the form section for this condition.
+       $condition_form = $condition->buildConfigurationForm([], $form_state);
+       $condition_form['#type'] = 'details';
+-      $condition_form['#title'] = $condition
+-        ->getPluginDefinition()['label'];
++      $condition_form['#title'] = $condition->getPluginDefinition()['label'];
+       $condition_form['#group'] = 'activation_condition_tabs';
+       $form[$condition_id] = $condition_form;
+ 
+@@ -288,6 +306,30 @@ class SwitchForm extends EntityForm {
+       ];
+     }
+ 
++    if (isset($form['node_type'])) {
++      $form['node_type']['negate']['#type'] = 'value';
++      $form['node_type']['negate']['#title_display'] = 'invisible';
++      $form['node_type']['negate']['#value'] = $form['node_type']['negate']['#default_value'];
++    }
++    if (isset($form['user_role'])) {
++      unset($form['user_role']['roles']['#description']);
++      $form['user_role']['negate']['#type'] = 'value';
++      $form['user_role']['negate']['#value'] = $form['user_role']['negate']['#default_value'];
++    }
++    if (isset($form['request_path'])) {
++      $form['request_path']['negate']['#type'] = 'radios';
++      $form['request_path']['negate']['#default_value'] = (int) $form['request_path']['negate']['#default_value'];
++      $form['request_path']['negate']['#title_display'] = 'invisible';
++      $form['request_path']['negate']['#options'] = [
++        $this->t('Show for the listed pages'),
++        $this->t('Hide for the listed pages'),
++      ];
++    }
++    if (isset($form['language'])) {
++      $form['language']['negate']['#type'] = 'value';
++      $form['language']['negate']['#value'] = $form['language']['negate']['#default_value'];
++    }
++
+     return $form;
+   }
+ 
+-- 
+2.26.2
+

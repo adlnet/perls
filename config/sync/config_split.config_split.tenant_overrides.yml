@@ -1,0 +1,14 @@
+uuid: 9cb34c42-184e-45b2-b313-841113aaa94c
+langcode: en
+status: false
+dependencies: {  }
+id: tenant_overrides
+label: 'Tenant Overrides'
+description: 'Additional configuration overrides to apply just to this instance.'
+weight: -9
+storage: database
+folder: ''
+module: {  }
+theme: {  }
+complete_list: {  }
+partial_list: {  }

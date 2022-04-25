@@ -1,0 +1,12 @@
+uuid: c71003f6-75a8-4635-bee2-a9ed4ea01c4b
+langcode: en
+status: true
+dependencies:
+  module:
+    - perls_api
+id: rest_json_api_user
+label: 'Rest JSON:API User'
+weight: 10005
+is_admin: null
+permissions:
+  - 'access jsonapi'

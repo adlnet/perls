@@ -1,0 +1,22 @@
+uuid: b09b9d42-ef27-4f01-a190-ba6018ee845f
+langcode: en
+status: false
+dependencies:
+  module:
+    - system
+  theme:
+    - perls
+_core:
+  default_config_hash: 8by5KRsb7ZpmjHj0ms1d7xAG_xH54AWsOX6spDLJ59U
+id: perls_breadcrumbs
+theme: perls
+region: content
+weight: -5
+provider: null
+plugin: system_breadcrumb_block
+settings:
+  id: system_breadcrumb_block
+  label: Breadcrumbs
+  label_display: '0'
+  provider: system
+visibility: {  }

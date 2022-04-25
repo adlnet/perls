@@ -1,0 +1,4 @@
+related-item-preview:
+  version: 1.x
+  js:
+    js/preview.js: {}

@@ -1,0 +1,6 @@
+name: 'Theme Switcher'
+description: 'Provides an interface for pick up path which use different theme and only available with a specific role.'
+type: module
+core: 8.x
+core_version_requirement: ^8 || ^9
+package: PERLS

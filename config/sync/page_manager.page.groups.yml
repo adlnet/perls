@@ -1,0 +1,21 @@
+uuid: b8740c6d-7876-49fc-b14b-81eb56ac719c
+langcode: en
+status: true
+dependencies:
+  module:
+    - user
+id: groups
+label: Groups
+description: 'Displays groups that are visible to the current user; includes groups where the user is a member and open groups that the user can join.'
+use_admin_theme: false
+path: /groups
+access_logic: and
+access_conditions:
+  -
+    id: user_role
+    negate: false
+    context_mapping:
+      user: '@user.current_user_context:current_user'
+    roles:
+      authenticated: authenticated
+parameters: {  }

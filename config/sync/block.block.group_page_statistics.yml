@@ -1,0 +1,20 @@
+uuid: 4902ed5f-46ce-454c-9470-35a9b0712429
+langcode: en
+status: true
+dependencies:
+  module:
+    - perls_group_management
+  theme:
+    - perls_content_manager
+id: group_page_statistics
+theme: perls_content_manager
+region: sidebar_second
+weight: -8
+provider: null
+plugin: group_statistics_block
+settings:
+  id: group_statistics_block
+  label: 'Group statistics'
+  label_display: visible
+  provider: perls_group_management
+visibility: {  }

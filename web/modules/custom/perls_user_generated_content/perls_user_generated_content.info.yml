@@ -1,0 +1,7 @@
+name: 'Perls user-generated content'
+type: module
+description: 'A module for changes related to user-generated content.'
+core: 8.x
+core_version_requirement: ^8 || ^9
+package: Perls
+dependencies: {}

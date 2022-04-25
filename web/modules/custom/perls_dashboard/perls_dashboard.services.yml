@@ -1,0 +1,21 @@
+services:
+  perls_dashboard.normalizer.dashboard:
+    class: Drupal\perls_dashboard\Normalizer\DashboardNormalizer
+    arguments:
+        - '@entity_type.manager'
+        - '@entity_type.repository'
+        - '@entity_field.manager'
+    tags:
+      - { name: normalizer, priority: 20 }
+  perls_dashboard.normalizer.layout_section:
+    class: Drupal\perls_dashboard\Normalizer\DashboardItemBlock
+    arguments:
+      - '@entity_type.manager'
+      - '@entity_type.repository'
+      - '@entity_field.manager'
+    tags:
+      - { name: normalizer }
+  perls_dashboard.helper:
+    class: Drupal\perls_dashboard\Services\NewDashboardHelper
+    arguments:
+      - '@plugin.manager.switches_additions.feature_flag'

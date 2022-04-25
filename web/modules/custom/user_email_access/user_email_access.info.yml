@@ -1,0 +1,8 @@
+name: 'User Email Access'
+type: module
+description: "Provides a user email address field that can be displayed in Views with more flexible control over which users can view their own and other user's email addresses."
+dependencies:
+  - user
+  - views
+core: 8.x
+core_version_requirement: ^8 || ^9

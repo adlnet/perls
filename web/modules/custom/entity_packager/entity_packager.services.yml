@@ -1,0 +1,30 @@
+services:
+  entity_packager.entity_packager:
+    class: Drupal\entity_packager\EntityPackager
+    arguments:
+      - '@entity_type.manager'
+      - '@file_system'
+      - '@request_stack'
+      - '@logger.factory'
+      - '@entity_packager.storage'
+      - '@state'
+      - '@cache_tags.invalidator'
+      - '@config.factory'
+      - '@event_dispatcher'
+  entity_packager.storage:
+    class: Drupal\entity_packager\NodePackagerStorageHelper
+    arguments: ['@file_system', '@config.factory', '@entity_type.manager']
+  entity_packager.batch_generator:
+    class: Drupal\entity_packager\NodePackageBatchGenerator
+    arguments: ['@config.factory', '@entity_type.manager']
+  entity_packager.color_scheme_changed:
+    class: Drupal\entity_packager\EventSubscriber\SiteColorChangedSubscriber
+    arguments: ['@queue', '@config.factory', '@entity_type.manager']
+    tags:
+      - { name: event_subscriber }
+  entity_packager.drush_commands:
+    class: Drupal\entity_packager\Commands\NodePackagerCommands
+    tags:
+      - { name: drush.command }
+    arguments:
+      ['@entity_packager.batch_generator','@messenger']

@@ -1,0 +1,7 @@
+name: Automatic registration approval
+description: "This module allows user accounts of specified top level domains to be approved automatically."
+configure: auto_account_approval.config_form
+type: module
+core_version_requirement: ^8.8.0 || ^9.0
+dependencies:
+  - drupal:multivalue_form_element

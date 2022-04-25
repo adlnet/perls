@@ -1,0 +1,12 @@
+services:
+  logger.channel.notifications_ui_additions:
+    parent: logger.channel_base
+    arguments: ['notifications_ui_additions']
+  notifications_ui_additions.default:
+    class: Drupal\notifications_ui_additions\ContentMessagingService
+    arguments: ['@notifications.firebase.message', '@logger.channel.notifications_ui_additions', '@image.factory']
+  notifications_ui_additions.actions.event_subscriber:
+    class: Drupal\notifications_ui_additions\EventSubscriber\ActionDefinitionEventSubscriber
+    arguments: []
+    tags:
+      - { name: event_subscriber }

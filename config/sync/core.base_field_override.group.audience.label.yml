@@ -1,0 +1,18 @@
+uuid: 74189412-1da4-4e66-bede-d7ff1b0e04e1
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.audience
+id: group.audience.label
+field_name: label
+entity_type: group
+bundle: audience
+label: Name
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

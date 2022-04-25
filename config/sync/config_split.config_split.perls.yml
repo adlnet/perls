@@ -1,0 +1,21 @@
+uuid: 2713e16c-ee68-494b-a027-e89621475346
+langcode: en
+status: false
+dependencies: {  }
+id: perls
+label: Perls
+description: 'Configuration defaults/overrides for Perls variations.'
+weight: 0
+stackable: false
+storage: folder
+folder: ../config/perls
+module: {  }
+theme: {  }
+complete_list: {  }
+partial_list:
+  - entity_packager.page_settings
+  - firebase.settings
+  - perls_api.settings
+  - switches.switch.achievements
+  - switches.switch.podcast_support
+  - system.site

@@ -1,0 +1,21 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - user
+id: push_notification_list
+label: 'Push Notification List'
+description: 'This page organizes the blocks of queued, sent and cancelled push notification messages on the cms.'
+use_admin_theme: false
+path: /manage/push-notifications
+access_logic: and
+access_conditions:
+  -
+    id: user_role
+    roles:
+      sysadmin: sysadmin
+      perls_system_admin: perls_system_admin
+    negate: false
+    context_mapping:
+      user: current_user
+parameters: {  }

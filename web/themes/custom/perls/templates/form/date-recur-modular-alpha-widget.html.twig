@@ -1,0 +1,28 @@
+{% set base_class = 'date-recur' %}
+<div{{ attributes }}>
+  <div class="{{base_class}}__mode inline-container">
+    {{ widget.mode }}
+    {{ widget.daily_count }}
+  </div>
+  <div class="{{base_class}}__dates  dates">
+    <div class="date">{{ widget.start }}</div>
+    <div class="date">{{ widget.end }}</div>
+    <div class="date">{{ widget.time_zone }}</div>
+  </div>
+  <div class="{{base_class}}__weekdays">
+    {{ widget.weekdays_help }}
+    {{ widget.weekdays }}
+  </div>
+  <div class="{{base_class}}__ordinals">
+    {{ widget.ordinals }}
+  </div>
+  <div class="{{base_class}}__ends ends">
+    <div class="{{base_class}}__end-mode">
+      {{ widget.ends_mode }}
+    </div>
+    <div class="{{base_class}}__end-details">
+      {{ widget.ends_count }}
+      {{ widget.ends_date }}
+    </div>
+  </div>
+</div>

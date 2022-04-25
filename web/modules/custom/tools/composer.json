@@ -1,0 +1,11 @@
+{
+    "name": "float/tools",
+    "description": "Tools - A collection of useful tools for drupal.",
+    "type": "drupal-module",
+    "version": "2.0.0-RC2",
+    "keywords": [
+        "Drupal",
+        "theme"
+    ],
+    "require": {}
+}

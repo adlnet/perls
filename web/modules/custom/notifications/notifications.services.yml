@@ -1,0 +1,16 @@
+services:
+  notifications.firebase.message:
+    class: Drupal\notifications\Service\ExtendedFirebaseMessageService
+    arguments: ["@config.factory", "@http_client", "@logger.channel.firebase"]
+  notifications.notifications_cameltospace:
+    class: Drupal\notifications\TwigExtension\CamelToSpace
+    tags:
+      - { name: twig.extension }
+  serializer.encoder.form:
+    class: Drupal\notifications\Encoder\FormJsonEncoder
+    tags:
+      - { name: encoder, format: form }
+  notifications.json_decode:
+    class: Drupal\notifications\TwigExtension\JsonDecode
+    tags:
+      - { name: twig.extension }

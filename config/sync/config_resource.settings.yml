@@ -1,0 +1,19 @@
+_core:
+  default_config_hash: mYgi5XvXFcNbI4WQCZql43oTPZsJ1NwqFw1kt_-hVzQ
+exposed_config_entities:
+  - color.theme.perls
+  - perls.settings
+  - xapi.settings
+exposed_config_entities_alters:
+  - 'color.theme.perls:stylesheets|hide_item'
+  - 'color.theme.perls:files|hide_item'
+  - 'color.theme.perls:logo|hide_item'
+  - color.theme.perls|rename_item|theme
+  - 'perls.settings:logo:path|rename_item|logo'
+  - 'perls.settings:app_logo:path|rename_item|app_logo'
+  - perls.settings|hide_item
+  - logo|url_full_path
+  - app_logo|url_full_path
+  - xapi.settings|rename_item|lrs
+  - 'lrs:lrs_username|hide_item'
+  - 'lrs:lrs_password|hide_item'

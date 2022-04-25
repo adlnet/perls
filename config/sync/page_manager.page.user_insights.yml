@@ -1,0 +1,24 @@
+uuid: 484c6d1b-faf8-4109-a523-90bed441ff1b
+langcode: en
+status: true
+dependencies:
+  module:
+    - entity_access_condition
+id: user_insights
+label: 'User Insights'
+description: 'Displays user-specific charts about their goals and progress.'
+use_admin_theme: false
+path: '/user/{user}/insights'
+access_logic: and
+access_conditions:
+  -
+    id: user_access
+    negate: false
+    context_mapping:
+      user: user
+    entity_operation: view
+parameters:
+  user:
+    machine_name: user
+    label: 'User from Route'
+    type: 'entity:user'

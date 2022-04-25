@@ -1,0 +1,25 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.content_moderation_state.field_reviewer
+id: content_moderation_state.content_moderation_state.field_reviewer
+field_name: field_reviewer
+entity_type: content_moderation_state
+bundle: content_moderation_state
+label: Reviewer
+description: ''
+required: true
+translatable: false
+default_value: {}
+default_value_callback: ''
+settings:
+  handler: 'default:user'
+  handler_settings:
+    include_anonymous: false
+    target_bundles: null
+    sort:
+      field: name
+      direction: ASC
+    auto_create: false
+field_type: entity_reference

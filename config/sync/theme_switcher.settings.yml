@@ -1,0 +1,129 @@
+spt_table:
+  0:
+    status: '1'
+    pages: "/*\r\n/user/interests\r\n/user/groups"
+    theme: perls_learner
+    roles:
+      authenticated: authenticated
+      anonymous: 0
+      rest_api_user: 0
+      content_manager: 0
+      perls_system_admin: 0
+      sysadmin: 0
+      packager: 0
+    weight: '-10'
+    language:
+      en: 0
+    remove: Remove
+  6:
+    status: '1'
+    pages: "/node/add/learn_article\r\n/node/add/*\r\n/node/*/edit\r\n/node/*/edit/*\r\n/node/*/delete\r\n"
+    theme: perls_content_manager
+    roles:
+      authenticated: authenticated
+      anonymous: 0
+      rest_api_user: 0
+      content_manager: 0
+      perls_system_admin: 0
+      sysadmin: 0
+      packager: 0
+    weight: '-9'
+    language:
+      en: 0
+    remove: Remove
+  1:
+    status: '1'
+    pages: "/dashboard\r\n/dashboard/*\r\n/user\r\n/user/*\r\n/group/*/*\r\n/manage-content/*\r\n/manage-content/\r\n/manage/\r\n/manage/*\r\n/manage-taxonomy/*\r\n/node/add\r\n/node/add/*\r\n/node/*/edit\r\n/node/*/edit/*\r\n/node/*/delete\r\n/node/*/revisions\r\n/node/*/course-stats/*\r\n/admin/content/node/delete\r\n/taxonomy/term/*/edit\r\n/admin/structure/taxonomy/manage/tags/add\r\n/admin/structure/taxonomy/manage/category/add\r\n/admin/structure/webform/*\r\n/admin/structure/webform\r\n/entity_clone/*\r\n/block/*\r\n/admin/people/create\r\n/views-bulk-operations/*\r\n/batch\r\n/analytics/summary-dashboards\r\n/analytics/overview\r\n/manage/theme\r\n/configuration-api/settings\r\n/reset/admin/config/system/xapi-content\r\n/achievements\r\n/achievement/*\r\n/manage/review"
+    theme: perls_content_manager
+    roles:
+      content_manager: content_manager
+      perls_system_admin: perls_system_admin
+      sysadmin: sysadmin
+      anonymous: 0
+      authenticated: 0
+      rest_api_user: 0
+      packager: 0
+    weight: '-8'
+    language:
+      en: 0
+    remove: Remove
+  2:
+    status: '1'
+    pages: "/admin\r\n/admin/*\r\n/views-bulk-operations/*\r\nviews-bulk-operations\r\n/analytics/overview/edit"
+    theme: adminimal_theme
+    roles:
+      sysadmin: sysadmin
+      anonymous: 0
+      authenticated: 0
+      rest_api_user: 0
+      content_manager: 0
+      perls_system_admin: 0
+      packager: 0
+    weight: '-7'
+    language:
+      en: 0
+    remove: Remove
+  4:
+    status: '1'
+    pages: "/views-bulk-operations/configure/send_notifications/*\r\n/views-bulk-operations/configure/send_notifications_by_group/*"
+    theme: perls_content_manager
+    roles:
+      perls_system_admin: perls_system_admin
+      sysadmin: sysadmin
+      anonymous: 0
+      authenticated: 0
+      rest_api_user: 0
+      content_manager: 0
+      packager: 0
+    weight: '-6'
+    language:
+      en: 0
+    remove: Remove
+  3:
+    status: '1'
+    pages: "/user/interests\r\n/user/groups\r\n/group/*/join\r\n/group/*/leave\r\n/group/*/topics/*"
+    theme: perls_learner
+    roles:
+      authenticated: authenticated
+      anonymous: 0
+      rest_api_user: 0
+      content_manager: 0
+      perls_system_admin: 0
+      sysadmin: 0
+      packager: 0
+    weight: '-5'
+    language:
+      en: 0
+    remove: Remove
+  5:
+    status: '1'
+    pages: /user/annotations
+    theme: perls_learner
+    roles:
+      authenticated: authenticated
+      anonymous: 0
+      rest_api_user: 0
+      content_manager: 0
+      perls_system_admin: 0
+      sysadmin: 0
+      packager: 0
+    weight: '-4'
+    language:
+      en: 0
+    remove: Remove
+  7:
+    status: '1'
+    pages: /user/content/my-content
+    theme: perls_learner
+    roles:
+      anonymous: anonymous
+      authenticated: authenticated
+      rest_api_user: rest_api_user
+      content_manager: content_manager
+      perls_system_admin: perls_system_admin
+      sysadmin: sysadmin
+      packager: packager
+    weight: '-3'
+    language:
+      en: 0
+    remove: Remove

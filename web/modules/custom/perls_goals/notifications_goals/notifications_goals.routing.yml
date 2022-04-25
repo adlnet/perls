@@ -1,0 +1,7 @@
+notifications_goals.settings:
+  path: '/admin/config/people/goals/notifications/settings'
+  defaults:
+    _form: 'Drupal\notifications_goals\Form\GoalNotificationsSettings'
+    _title: 'Goal notification settings'
+  requirements:
+    _permission: 'administer site configuration'

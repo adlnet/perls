@@ -1,0 +1,65 @@
+uuid: aecdd33d-2c22-4dcd-8ad9-78c966c6c2b7
+langcode: en
+status: true
+dependencies:
+  module:
+    - simple_block
+id: simple_block--simple_block
+disabled: true
+path: simple_block/simple_block
+resourceType: simple_block--simple_block
+resourceFields:
+  uuid:
+    disabled: false
+    fieldName: uuid
+    publicName: uuid
+    enhancer:
+      id: ''
+  langcode:
+    disabled: false
+    fieldName: langcode
+    publicName: langcode
+    enhancer:
+      id: ''
+  status:
+    disabled: false
+    fieldName: status
+    publicName: status
+    enhancer:
+      id: ''
+  dependencies:
+    disabled: false
+    fieldName: dependencies
+    publicName: dependencies
+    enhancer:
+      id: ''
+  third_party_settings:
+    disabled: false
+    fieldName: third_party_settings
+    publicName: third_party_settings
+    enhancer:
+      id: ''
+  _core:
+    disabled: false
+    fieldName: _core
+    publicName: _core
+    enhancer:
+      id: ''
+  id:
+    disabled: false
+    fieldName: id
+    publicName: id
+    enhancer:
+      id: ''
+  title:
+    disabled: false
+    fieldName: title
+    publicName: title
+    enhancer:
+      id: ''
+  content:
+    disabled: false
+    fieldName: content
+    publicName: content
+    enhancer:
+      id: ''

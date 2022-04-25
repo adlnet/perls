@@ -1,0 +1,19 @@
+uuid: ea99ac59-abba-4ac8-9037-36d5ec6e631e
+langcode: en
+status: true
+dependencies:
+  module:
+    - serialization
+    - simple_oauth
+    - notifications
+id: push_notification_tokens
+plugin_id: push_notification_tokens
+granularity: resource
+configuration:
+  methods:
+    - POST
+    - DELETE
+  formats:
+    - json
+  authentication:
+    - oauth2

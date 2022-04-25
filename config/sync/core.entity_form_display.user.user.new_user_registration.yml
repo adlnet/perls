@@ -1,0 +1,112 @@
+uuid: f8d8641a-e37e-4f03-99a3-2794d700b4cc
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_form_mode.user.new_user_registration
+    - field.field.user.user.field_add_groups
+    - field.field.user.user.field_goal_log
+    - field.field.user.user.field_goal_monthly_course_comp
+    - field.field.user.user.field_goal_weekly_completions
+    - field.field.user.user.field_goal_weekly_test_average
+    - field.field.user.user.field_goal_weekly_views
+    - field.field.user.user.field_interests
+    - field.field.user.user.field_name
+    - field.field.user.user.field_notification_days
+    - field.field.user.user.field_notification_time
+    - field.field.user.user.field_organization_homepage
+    - field.field.user.user.field_organization_identifier
+    - field.field.user.user.user_picture
+    - image.style.user_profile_circle
+  module:
+    - autocomplete_deluxe
+    - field_layout
+    - image
+    - layout_discovery
+    - user
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings:
+      label: ''
+_core:
+  default_config_hash: IiUTp1Z1vK4YvGt1rFZm_lg79Q6UKh9nU2B9nCsur5Y
+id: user.user.new_user_registration
+targetEntityType: user
+bundle: user
+mode: new_user_registration
+content:
+  account:
+    weight: 1
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  contact:
+    weight: 5
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_add_groups:
+    type: options_buttons
+    weight: 2
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_interests:
+    type: autocomplete_deluxe
+    weight: 3
+    region: content
+    settings:
+      match_operator: CONTAINS
+      autocomplete_route_name: autocomplete_deluxe.autocomplete
+      size: 60
+      selection_handler: default
+      limit: 10
+      min_length: 2
+      delimiter: ''
+      not_found_message_allow: false
+      not_found_message: 'The term ''@term'' will be added'
+      new_terms: false
+      no_empty_message: 'No terms could be found. Please type in order to add a new term.'
+    third_party_settings: {  }
+  field_name:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  simplesamlphp_auth_user_enable:
+    weight: 6
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  timezone:
+    weight: 5
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  user_picture:
+    type: image_image
+    weight: 4
+    region: content
+    settings:
+      progress_indicator: throbber
+      preview_image_style: user_profile_circle
+    third_party_settings: {  }
+hidden:
+  entitygroupfield: true
+  field_goal_log: true
+  field_goal_monthly_course_comp: true
+  field_goal_weekly_completions: true
+  field_goal_weekly_test_average: true
+  field_goal_weekly_views: true
+  field_notification_days: true
+  field_notification_time: true
+  field_organization_homepage: true
+  field_organization_identifier: true
+  group_content: true
+  langcode: true
+  language: true
+  path: true

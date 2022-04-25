@@ -1,0 +1,202 @@
+/* ------------------------------------*\
+    $MIXINS
+\*------------------------------------ */
+
+/**
+ * Standard paragraph
+ */
+@mixin p {
+  font-size: var(--font-size-s, $font-size-s);
+  line-height: 1.6;
+  font-family: $ff-font;
+}
+
+p {
+  @include p;
+}
+
+@mixin u-center-block {
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  position: relative;
+}
+
+.u-center-block {
+  @include u-center-block;
+}
+
+@mixin visually-hidden {
+  position: absolute !important;
+  overflow: hidden;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  border: 0;
+  clip: rect(1px, 1px, 1px, 1px);
+}
+
+@mixin u-hidden {
+  opacity: 0;
+  visibility: hidden;
+  transition: $transition;
+}
+
+@mixin u-visible {
+  opacity: 1;
+  visibility: visible;
+  transition: $transition;
+}
+
+@mixin u-middle-block {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.u-middle-block {
+  @include u-middle-block;
+}
+
+@mixin multi-select-map($selector-map) {
+  @each $selector in $selector-map {
+    .#{$selector} {
+      @content;
+    }
+  }
+}
+
+@mixin u-spacing($space) {
+  & > * + * {
+    margin-top: $space;
+  }
+}
+
+@mixin u-break-word {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+}
+
+@mixin make-row($gutter: 0) {
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: -1 * calc($gutter / 2);
+  margin-left: -1 * calc($gutter / 2);
+}
+
+@mixin make-col-ready($gutter: 0) {
+  position: relative;
+  // Prevent columns from becoming too narrow when at smaller grid tiers by
+  // always setting `width: 100%;`. This works because we use `flex` values
+  // later on to override this initial width.
+  width: 100%;
+  padding-right: $gutter / 2;
+  padding-left: $gutter / 2;
+}
+
+@mixin make-col($size, $columns: 12) {
+  flex: 0 0 percentage($size / $columns);
+  // Add a `max-width` to ensure content within each column does not blow out
+  // the width of the column. Applies to IE10+ and Firefox. Chrome and Safari
+  // do not appear to require this.
+  max-width: percentage($size / $columns);
+}
+
+@mixin make-col-auto() {
+  flex: 0 0 auto;
+  width: auto;
+  max-width: 100%; // Reset earlier grid tiers
+}
+
+// Row columns
+//
+// Specify on a parent element(e.g., .row) to force immediate children into NN
+// numberof columns. Supports wrapping to new lines, but does not do a Masonry
+// style grid.
+@mixin row-cols($count, $gutters: 0) {
+  & > * {
+    flex: 0 0 calc(100% / $count);
+    max-width: calc(100% / $count);
+    padding-right: calc($gutters / 2);
+    padding-left: calc($gutters / 2);
+  }
+}
+
+@mixin scrollbars {
+  &::-webkit-scrollbar {
+    height: 8px;
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background-color: $c-gray--light;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: $c-gray;
+  }
+}
+
+@mixin avatar {
+  border-radius: 50%;
+  overflow: hidden;
+  text-align: center;
+  height: $icon-large;
+  width: $icon-large;
+
+  img {
+    display: inline;
+    max-width: none;
+    height: 100%;
+    width: 100%;
+  }
+
+  @include media("<=small") {
+    height: $icon-medium;
+    width: $icon-medium;
+  }
+}
+
+@mixin card-icon-button {
+  width: $icon-xlarge;
+  height: $icon-xlarge;
+  min-height: $icon-xlarge;
+  // Buttons have a border-radius set which effects the icon.
+  border-radius: 0;
+  background: url("data:image/svg+xml;charset=utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20142.64%20142.64%22%3E%3Cdefs%3E%3Cstyle%3E.cls-1%7Bfill%3A%23fff%3B%7D%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22Layer_2%22%20data-name%3D%22Layer%202%22%3E%3Cg%20id%3D%22Layer_1-2%22%20data-name%3D%22Layer%201%22%3E%3Cg%20id%3D%22Group_997%22%20data-name%3D%22Group%20997%22%3E%3Cpath%20class%3D%22cls-1%22%20d%3D%22M87.06%2C70.66A16.36%2C16.36%2C0%2C0%2C1%2C70.71%2C87h0A16.35%2C16.35%2C0%2C1%2C1%2C87.06%2C70.66Z%22%2F%3E%3Cpath%20class%3D%22cls-1%22%20d%3D%22M71.32%2C0a71.32%2C71.32%2C0%2C1%2C0%2C71.32%2C71.32A71.32%2C71.32%2C0%2C0%2C0%2C71.32%2C0Zm34.59%2C73.54C101%2C79.94%2C87.66%2C94.79%2C70.72%2C94.79S40.45%2C79.9%2C35.51%2C73.52a4.68%2C4.68%2C0%2C0%2C1%2C0-5.72c4.88-6.39%2C18.06-21.26%2C35.22-21.26%2C17%2C0%2C30.26%2C14.85%2C35.2%2C21.25A4.67%2C4.67%2C0%2C0%2C1%2C105.91%2C73.54Z%22%2F%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E") center center no-repeat;
+  opacity: 0.9;
+  transition: $transition;
+  transform: scale(1);
+
+  &:hover,
+  &:focus {
+    transform: scale(1.05);
+  }
+}
+
+// Provide uniform styles for description elements.
+@mixin description-container {
+  margin: 0 0 $space;
+  padding: $space;
+  border-radius: $border-radius;
+  background: $c-admin-tip--background;
+  color: $c-black;
+  max-width: 1000px;
+}
+
+@mixin add-icon($icon-src, $icon-width, $icon-height) {
+  &::before {
+    content: "";
+    display: block;
+    width: $icon-width;
+    height: $icon-height;
+    min-height: $icon-height;
+    margin: $space auto;
+    background-image: url("../img/icons/#{$icon-src}");
+    background-size: $icon-width $icon-height;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+}

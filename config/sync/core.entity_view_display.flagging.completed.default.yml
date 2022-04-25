@@ -1,0 +1,61 @@
+uuid: c16d1e1e-f868-447c-a12d-efce71b1f2a0
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.flagging.completed.field_completion_source
+    - flag.flag.completed
+  module:
+    - field_layout
+    - layout_builder
+    - layout_discovery
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings:
+      label: ''
+  layout_builder:
+    enabled: true
+    sections:
+      -
+        layout_id: layout_onecol
+        layout_settings:
+          label: ''
+          context_mapping: {  }
+        components:
+          bce05074-09f1-42d8-8e6a-3b24f82a5e64:
+            uuid: bce05074-09f1-42d8-8e6a-3b24f82a5e64
+            region: content
+            configuration:
+              id: 'field_block:flagging:completed:field_completion_source'
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              formatter:
+                type: string
+                label: above
+                settings:
+                  link_to_entity: false
+                third_party_settings: {  }
+            weight: 0
+            additional: {  }
+            third_party_settings: {  }
+        third_party_settings: {  }
+id: flagging.completed.default
+targetEntityType: flagging
+bundle: completed
+mode: default
+content:
+  field_completion_source:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  search_api_excerpt: true

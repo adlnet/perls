@@ -1,0 +1,28 @@
+uuid: 237403c7-8b3c-4bc9-8b11-fabd9758160c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_course
+    - node.type.course
+    - node.type.learn_link
+id: node.learn_link.field_course
+field_name: field_course
+entity_type: node
+bundle: learn_link
+label: 'Related Courses'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      course: course
+    sort:
+      field: _none
+    auto_create: true
+    auto_create_bundle: ''
+field_type: entity_reference

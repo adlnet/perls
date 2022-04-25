@@ -1,0 +1,68 @@
+badges.award_badge:
+  path: '/badge/award/{achievement}/{user}'
+  defaults:
+    _controller: '\Drupal\badges\Controller\AwardBadgeController::award'
+  requirements:
+    _permission: 'administer achievements'
+    _csrf_token: 'TRUE'
+  options:
+    parameters:
+      user:
+        type: entity:user
+      achievement:
+        type: entity:achievement_entity
+
+badges.revoke_badge:
+  path: '/badge/revoke/{achievement}/{user}'
+  defaults:
+    _controller: '\Drupal\badges\Controller\AwardBadgeController::revoke'
+  requirements:
+    _permission: 'administer achievements'
+    _csrf_token: 'TRUE'
+  options:
+    parameters:
+      user:
+        type: entity:user
+      achievement:
+        type: entity:achievement_entity
+
+badges.reset_badge:
+  path: '/badge/reset/{achievement}/{user}'
+  defaults:
+    _controller: '\Drupal\badges\Controller\AwardBadgeController::reset'
+  requirements:
+    _permission: 'administer achievements'
+    _csrf_token: 'TRUE'
+  options:
+    parameters:
+      user:
+        type: entity:user
+      achievement:
+        type: entity:achievement_entity
+badges.user_badges:
+  path: '/badges'
+  defaults:
+    _controller: '\Drupal\badges\Controller\UserBadgePage::badges'
+    _title: 'Badges'
+  requirements:
+    _permission: 'earn achievements'
+badges.user_certificates:
+  path: '/certificates'
+  defaults:
+    _controller: '\Drupal\badges\Controller\UserBadgePage::certificates'
+    _title: 'Certificates'
+  requirements:
+    _permission: 'earn achievements'
+badges.view_certificate:
+  path: '/achievements/{achievement}/{user}'
+  defaults:
+    _controller: '\Drupal\badges\Controller\UserBadgePage::viewCertificate'
+  requirements:
+    _permission: 'earn achievements'
+    _custom_access: '\Drupal\badges\Controller\UserBadgePage::accessAchievement'
+  options:
+    parameters:
+      user:
+        type: entity:user
+      achievement:
+        type: entity:achievement_entity

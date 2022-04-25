@@ -1,0 +1,439 @@
+<?php
+
+/**
+ * @file
+ * Contains content_moderation_additions.module.
+ */
+
+use Drupal\comment\CommentInterface;
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityForm;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Link;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\node\Entity\Node;
+use Drupal\node\NodeInterface;
+use Drupal\content_moderation_additions\Event\ModerationEvent;
+use Drupal\content_moderation_additions\Form\EntityModerationAssignmentForm;
+use Drupal\content_moderation_additions\ModerationAccess;
+use Drupal\user\Entity\User;
+use Drupal\workflows\Transition;
+
+/**
+ * Implements hook_entity_view().
+ *
+ * Customizes the content moderation control.
+ */
+function content_moderation_additions_entity_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+
+  if ($entity->getEntityTypeId() !== 'node') {
+    return;
+  }
+
+  // Hide Moderation field for users without permission to workflow.
+  $userCanModerateNodes = \Drupal::currentUser()->hasPermission('use editorial transition create_new_draft');
+  if ((!$userCanModerateNodes) && isset($build['field_moderation_comments'])) {
+    $build['field_moderation_comments']['#access'] = FALSE;
+  }
+
+  $storage = \Drupal::entityTypeManager()->getStorage($entity->getEntityTypeId());
+  $latest_revision_id = $storage->getLatestTranslationAffectedRevisionId($entity->id(),
+    $entity->language()->getId());
+  if (empty($latest_revision_id) && !isset($build['content_moderation_control'])) {
+    return;
+  }
+
+  // Hide moderation control on the preview/edit page.
+  if (
+    \Drupal::routeMatch()->getRouteName() === 'entity.node.edit_form'
+    && isset($build['content_moderation_control'])) {
+    $build['content_moderation_control']['#access'] = FALSE;
+    return;
+  }
+
+  $moderation_info = \Drupal::service('content_moderation.moderation_information');
+
+  if (isset($build['content_moderation_control'])) {
+    // If the content moderation control has already been set up,
+    // replace it with our custom moderation form.
+    $build['content_moderation_control'] = \Drupal::formBuilder()->getForm(EntityModerationAssignmentForm::class, $entity);
+  }
+  elseif ($entity->isDefaultRevision() && !$entity->isLatestRevision($entity) && $moderation_info->hasPendingRevision($entity) && $view_mode === 'full') {
+    // If there is no moderation control, but there is a pending revision,
+    // show a link to take the user to the pending revision.
+    $moderation_link = Link::createFromRoute(t('pending approval'), 'entity.node.latest_version', ['node' => $entity->id()]);
+
+    if ($moderation_link->getUrl()->access()) {
+      $message = t('There is a new version of @title @link', [
+        '@title' => $entity->getTitle(),
+        '@link' => $moderation_link->toString(),
+      ]);
+
+      $build['content_moderation_control'] = [
+        '#type' => 'html_tag',
+        '#tag' => 'div',
+        '#name' => 'moderation_notice',
+        '#value' => $message,
+        '#attributes' => [
+          'class' => 'entity-moderation entity-moderation-notice',
+        ],
+      ];
+    }
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_update().
+ *
+ * Adds the revision log message as a moderation comment.
+ */
+function content_moderation_additions_node_update(NodeInterface $entity) {
+  _content_moderation_additions_dispatch_event($entity);
+  $comments_enabled = \Drupal::configFactory()->get('content_moderation_additions.settings')->get('enable_moderation_comments') ?: 0;
+  if (!$comments_enabled) {
+    return;
+  }
+  $message = $entity->getRevisionLogMessage();
+  $account = $entity->getRevisionUser();
+
+  \Drupal::service('content_moderation_additions.comment_storage')->postComment($entity, $account, $message, $entity->getRevisionId(), $entity->moderation_state->value);
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for content moderation form.
+ */
+function content_moderation_additions_form_comment_moderation_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $form['actions']['submit']['#value'] = t('Add comment');
+  $form['actions']['submit']['#submit'][] = 'content_moderation_additions_comment_moderation_form_submit';
+
+  $entity = \Drupal::routeMatch()->getParameter('entity');
+
+  if ($entity instanceof Node) {
+    $vid = $entity->getLoadedRevisionId();
+    $form['comment_revision']['widget'][0]['value']['#default_value'] = $vid;
+  }
+
+  $form['comment_revision']['#access'] = FALSE;
+}
+
+/**
+ * Submit handler for adjusting the language of the comment.
+ */
+function content_moderation_additions_comment_moderation_form_submit(&$form, FormStateInterface $form_state) {
+  $entity = $form_state->getFormObject();
+  if ($entity instanceof EntityForm) {
+    $comment = $entity->getEntity();
+    if ($comment instanceof CommentInterface) {
+      $langcode = \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)->getId();
+      if ($langcode != $comment->language()->getId()) {
+        $comment->set('langcode', $langcode);
+        $comment->save();
+      }
+    }
+  }
+
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for node standard edit form.
+ *
+ * This form alter adds submit buttons for moderation tasks to the form.
+ */
+function content_moderation_additions_form_node_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $entity = $form_state->getFormObject()->getEntity();
+  $moderation_info = \Drupal::service('content_moderation.moderation_information');
+  $config = \Drupal::configFactory()->get('content_moderation_additions.settings');
+
+  // If this entity is not of moderated type we should just return form without
+  // making changes.
+  if (!$moderation_info->isModeratedEntity($entity)) {
+    return;
+  }
+  // Find out what state the document is currently in.
+  $current_state = $entity->moderation_state->value;
+  $validation = \Drupal::service('content_moderation.state_transition_validation');
+  $transitions = $validation->getValidTransitions($entity, \Drupal::currentUser());
+
+  // Exclude self-transitions.
+  $transitions = array_filter($transitions, function (Transition $transition) use ($current_state) {
+    return $transition->to()->id() != $current_state;
+  });
+
+  // We want each button to save and continue editing as well as update
+  // moderation status. So we copy the save and edit submit handlers.
+  if ($config->get('enable_reviewer')) {
+    $form['actions']['submit']['#submit'][] = 'content_moderation_additions_moderation_reviewer_submit_handler';
+  }
+  $submit_handlers = $form['actions']['submit']['#submit'];
+
+  // Find position of the save handler so that we can inject new moderation
+  // state.
+  $saveindex = array_search('::save', $submit_handlers);
+  array_splice($submit_handlers, $saveindex, 0, 'content_moderation_additions_moderation_state_submit_handler');
+
+  foreach (array_values($transitions) as $i => $transition) {
+    $form['actions'][$transition->id()] = [
+      '#type' => 'submit',
+      '#weight' => 5,
+      '#name' => $transition->to()->id(),
+      '#value' => $transition->label(),
+    ];
+    $form['actions'][$transition->id()]['#submit'] = $submit_handlers;
+    // Copy ajax handlers if they exist.
+    if (isset($form['actions']['submit']['#ajax'])) {
+      $form['actions'][$transition->id()]['#ajax'] = $form['actions']['submit']['#ajax'];
+    }
+  }
+  // If this node is already published, the user must create a new draft.
+  if ($entity->isPublished() && !$entity->isNew() && !$config->get('allow_save_on_published')) {
+    $form['actions']['save_edit']['#access'] = FALSE;
+    $form['actions']['create_new_draft']['#attributes']['class'][] = 'primary';
+  }
+
+  // Make save_edit primary.
+  $form['actions']['save_edit']['#attributes']['class'][] = 'primary';
+  // Remove drop down from view.
+  $form['moderation_state']['widget'][0]['state']['#access'] = FALSE;
+  // To avoid validation errors we need to set a default value to moderation
+  // states.
+  // This happens automatically if the element is rendered.
+  $options = $form['moderation_state']['widget'][0]['state']['#options'];
+  $default_value = $form['moderation_state']['widget'][0]['state']['#default_value'];
+  $form['moderation_state']['widget'][0]['state']['#value'] = isset($options[$default_value]) ? $default_value : array_keys($options)[0];
+
+  // Move revision comment section out of tabbed container reviesion info.
+  $form['revision']['#access'] = FALSE;
+  if ($config->get('enable_moderation_comments')) {
+    $form['revision_information']['#access'] = FALSE;
+    // Need to place in footer to get below advanced block.
+    $form['revision_log']['#group'] = 'footer';
+    $form['revision_log']['#weight'] = 99;
+
+    // Remove revision log description.
+    unset($form['revision_log']['widget'][0]['value']['#description']);
+    // Add placeholder text to comment box.
+    $form['revision_log']['widget'][0]['value']['#placeholder'] = t('Revision Log (add a note)');
+  }
+  // Add reviewer Information.
+  if ($config->get('enable_reviewer')) {
+    $reviewer_service = \Drupal::service('content_moderation_additions.node_reviewer');
+    // Prepare options for the reviewer select field.
+    $options = [t('No one')];
+    $accounts = User::loadMultiple($reviewer_service->getValidReviewers($entity));
+
+    $options += array_map(function ($account) {
+      return $account->getDisplayName();
+    }, $accounts);
+
+    $form['reviewer'] = [
+      '#type' => 'container',
+      '#attributes' => [
+        'class' => [
+          '0' => 'field--name-reviewer',
+          '1' => 'field--type-container',
+        ],
+      ],
+    ];
+    $form['reviewer']['reviewer_id'] = [
+      '#type' => 'select',
+      '#title' => t('Reviewer'),
+      '#options' => $options,
+      '#default_value' => $reviewer_service->getCurrentReviewer($entity) ?: 0,
+      '#weight' => 20,
+    ];
+
+    if (empty($accounts)) {
+      hide($form['footer']['reviewer_id']);
+    }
+    // Add submission handler to save buttons to save reviewer id.
+    $form['actions']['save_edit']['#submit'][] = 'content_moderation_additions_moderation_reviewer_submit_handler';
+
+    // Add a new validation $handler.
+    $form['#validate'][] = 'content_moderation_additions_reviewer_validateform';
+
+  }
+}
+
+/**
+ * A validation check for reviewer)id.
+ */
+function content_moderation_additions_reviewer_validateform(array &$form, FormStateInterface $form_state) {
+  /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
+  $entity = $form_state->getFormObject()->getEntity();
+  $submit_button_pressed = $form_state->getTriggeringElement()['#name'];
+  // Validate reviewer details.
+  $reviewer_service = \Drupal::service('content_moderation_additions.node_reviewer');
+  $form_state->setValue('new_state', $submit_button_pressed);
+  $reviewer_id = $form_state->getValue('reviewer_id');
+  // Allow users to not set reviewer during draft however if it is set check it.
+  if ($reviewer_id) {
+    if (!$reviewer_service->isValidReviewer($entity, $reviewer_id)) {
+      $form_state->setError($form['reviewer']['reviewer_id'], t('Choose a valid reviewer'));
+    }
+  }
+  elseif (empty($reviewer_id) && ($submit_button_pressed === 'review' || $entity->moderation_state->value === 'review')) {
+    if (!empty($reviewer_service->getValidReviewers($entity))) {
+      $form_state->setError($form['reviewer']['reviewer_id'], t('You need to choose someone to review this content'));
+    }
+  }
+}
+
+/**
+ * This function implements a custom submit handler for the node form.
+ *
+ * This submit handler is run if one of the moderation event submit buttons are
+ * pressed. It updates the entity with the details of the moderation transition
+ * to be executed on this save.
+ * * This must be invoked _before_ the node has been saved.
+ */
+function content_moderation_additions_moderation_state_submit_handler(&$form, FormStateInterface $form_state) {
+  /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
+  $entity = $form_state->getFormObject()->getEntity();
+  // The button pressed gives us the name of our new modration state.
+  $new_state = $form_state->getTriggeringElement()['#name'];
+  // If this is a save or save_edit button we don't update moderation state.
+  if (in_array($new_state, ['op', 'save_edit'])) {
+    return;
+  }
+  // Add this to the entitity before we save.
+  $entity->moderation_state->value = $new_state;
+  \Drupal::messenger()->addStatus(t('The moderation state has been updated.'));
+}
+
+/**
+ * This function implements a custom submit handler for the node edit form.
+ *
+ * This submit handler is always run and updates the reviewer.
+ * This must be invoked _after_ the node has been saved.
+ */
+function content_moderation_additions_moderation_reviewer_submit_handler(&$form, FormStateInterface $form_state) {
+  /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
+  $entity = $form_state->getFormObject()->getEntity();
+
+  // Update reviewer information.
+  $reviewer_service = \Drupal::service('content_moderation_additions.node_reviewer');
+  $reviewer_service->setCurrentReviewer($entity, $form_state->getValue('reviewer_id'));
+}
+
+/**
+ * Implements hook_comment_view().
+ */
+function content_moderation_additions_comment_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+  $comment = $entity;
+  $renderer = \Drupal::service('renderer');
+
+  // Only generate links if comment type is moderation.
+  if ($comment->bundle() !== 'moderation') {
+    return;
+  }
+
+  $entity_revision = $comment->comment_revision->getString();
+
+  if (!empty($entity_revision)) {
+    $node = \Drupal::routeMatch()->getParameter('node');
+    $current_revision = $node instanceof Node ? $node->getLoadedRevisionId() : \Drupal::routeMatch()->getRawParameter('node_revision');
+
+    $link = Link::createFromRoute(t('View this version'), 'entity.node.revision', [
+      'node' => $comment->getCommentedEntityId(),
+      'node_revision' => $entity_revision,
+    ],
+    [
+      'language' => $comment->language(),
+    ]);
+
+    if ($current_revision == $entity_revision) {
+      $build['comment_revision'][0]['#context']['value'] = t('Current version');
+    }
+    else {
+      $build['comment_revision'][0]['#context']['value'] = $link->toString();
+    }
+
+    $renderer->addCacheableDependency($build, $entity_revision);
+  }
+}
+
+/**
+ * Implements hook_node_access_records().
+ *
+ * Permissions can be rebuilt at /admin/reports/status/rebuild.
+ */
+function content_moderation_additions_node_access_records(NodeInterface $node) {
+  // Generally, Drupal core maintains node access for published nodes.
+  // Or, a contrib module (such as Permissions by Term) may provide
+  // additional restrictions.
+  // So we'll let those modules do their jobs and we'll only worry about
+  // nodes that have yet to be published--for these nodes we'll ensure
+  // that the owner and reviewer are able to view it before it gets published.
+  if ($node->isPublished()) {
+    return;
+  }
+
+  // The node owner can _always_ view the node.
+  $users = [$node->getOwnerId()];
+
+  // If there is a reviewer, make sure they can view the node.
+  $reviewer_service = \Drupal::service('content_moderation_additions.node_reviewer');
+  if (
+    \Drupal::configFactory()->get('content_moderation_additions.settings')->get('enable_reviewer') &&
+    $reviewer = $reviewer_service->getCurrentReviewer($node)
+    ) {
+    $users[] = $reviewer;
+  }
+
+  // In some cases, the reviewer might also be the author.
+  $users = array_unique($users);
+
+  $grants = array_map(function ($uid) use ($node) {
+    return [
+      'realm' => ModerationAccess::GRANT_REALM,
+      'gid' => $uid,
+      'grant_view' => 1,
+      'grant_update' => 0,
+      'grant_delete' => 0,
+      'nid' => $node->id(),
+    ];
+  }, $users);
+
+  return $grants;
+}
+
+/**
+ * Implements hook_node_grants().
+ */
+function content_moderation_additions_node_grants(AccountInterface $account, $op) {
+  if ($op === 'view') {
+    $grants[ModerationAccess::GRANT_REALM][] = $account->id();
+    return $grants;
+  }
+}
+
+/**
+ * Implements hook_entity_access().
+ */
+function content_moderation_additions_entity_access(EntityInterface $entity, $operation, AccountInterface $account) {
+  // Restrict access to entity if no workflow permission.
+  if (!($account->hasPermission('use editorial transition create_new_draft'))
+    && ($entity->getEntityType()->getProvider() == 'moderation')) {
+    return AccessResult::forbidden();
+  }
+}
+
+/**
+ * Implements hook_node_insert().
+ */
+function content_moderation_additions_node_insert(NodeInterface $node) {
+  _content_moderation_additions_dispatch_event($node);
+}
+
+/**
+ * Dispatch content_moderation_additions event.
+ */
+function _content_moderation_additions_dispatch_event(EntityInterface $entity) {
+  $moderation_info = \Drupal::service('content_moderation.moderation_information');
+  if ($moderation_info->shouldModerateEntitiesOfBundle($entity->getEntityType(), $entity->bundle())) {
+    \Drupal::service('event_dispatcher')->dispatch(ModerationEvent::SL_MODERATION_STATE_UPDATE, new ModerationEvent($entity));
+  }
+}

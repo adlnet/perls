@@ -1,0 +1,5 @@
+content_moderation_additions.admin_settings_form:
+  title: 'Moderation Additions Settings'
+  parent: system.admin_config_system
+  description: 'Configure moderation additions settings'
+  route_name: content_moderation_additions.admin_settings_form

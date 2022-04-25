@@ -1,0 +1,6 @@
+_core:
+  default_config_hash: Io7BnIgfxte7j-gj-JicEmXV41lbJ9bvb3Ju5Gf_7xg
+enable_scheduler: true
+debug_screen: false
+clear_render_cache: false
+enable_safemode: true

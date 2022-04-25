@@ -1,0 +1,14 @@
+services:
+  externalauth_additions.request_subcriber:
+    class: Drupal\externalauth_additions\EventSubscriber\RequestSubscriber
+    arguments: ['@string_translation', '@externalauth_additions.manager', '@current_route_match', '@current_user', '@page_cache_kill_switch', '@messenger']
+    tags:
+      - { name: event_subscriber }
+  externalauth_additions.register_subscriber:
+    class: Drupal\externalauth_additions\EventSubscriber\UserRegisterSubscriber
+    arguments: ['@string_translation', '@current_user']
+    tags:
+      - { name: event_subscriber }
+  externalauth_additions.manager:
+    class: Drupal\externalauth_additions\SSOConfigurationManager
+    arguments: ['@simplesamlphp_auth.manager', '@config.factory']

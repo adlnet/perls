@@ -1,0 +1,9 @@
+id: configuration_settings_resource
+plugin_id: configuration_settings_resource
+granularity: method
+configuration:
+  GET:
+    supported_formats:
+      - json
+    supported_auth:
+      - oauth2

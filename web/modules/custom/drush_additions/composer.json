@@ -1,0 +1,17 @@
+{
+  "name": "drupal/drush_additions",
+  "description": "Drush commands for Perls projects.",
+  "type": "drupal-module",
+  "autoload": {
+    "psr-4": {
+      "Drupal\\drush_additions\\": "src/"
+    }
+  },
+  "extra": {
+    "drush": {
+      "services": {
+        "drush.services.yml": "^9"
+      }
+    }
+  }
+}

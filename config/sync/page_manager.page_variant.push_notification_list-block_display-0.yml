@@ -1,0 +1,59 @@
+uuid: f4123c44-7c7a-44d6-ba43-1e220f9c3c6c
+langcode: en
+status: true
+dependencies:
+  config:
+    - page_manager.page.push_notification_list
+    - views.view.push_notification_list
+  module:
+    - views
+_core:
+  default_config_hash: 6J0pCmqcSo-3cndKEqyt7d70Cmqr9GkE4DHDemegRbs
+id: push_notification_list-block_display-0
+label: 'page layout'
+weight: 0
+variant: block_display
+variant_settings:
+  id: block_display
+  label: null
+  weight: 0
+  uuid: 939026df-bed2-401a-8e90-894b7b5a06aa
+  blocks:
+    8da44e29-0252-42da-bf99-c30a3d4a198a:
+      id: 'views_block:push_notification_list-block_1'
+      label: ''
+      label_display: visible
+      provider: views
+      context_mapping: {  }
+      views_label: ''
+      items_per_page: none
+      region: top
+      weight: -10
+      uuid: 8da44e29-0252-42da-bf99-c30a3d4a198a
+    7a16b1af-1e24-40a9-ba10-f939f8a5792e:
+      id: 'views_block:push_notification_list-block_2'
+      label: ''
+      label_display: visible
+      provider: views
+      context_mapping: {  }
+      views_label: ''
+      items_per_page: none
+      region: top
+      weight: -9
+      uuid: 7a16b1af-1e24-40a9-ba10-f939f8a5792e
+    e2dabcec-c258-4b6c-a6c5-ac0c4d11047d:
+      id: 'views_block:push_notification_list-block_3'
+      label: ''
+      label_display: visible
+      provider: views
+      context_mapping: {  }
+      views_label: ''
+      items_per_page: none
+      region: top
+      weight: -8
+      uuid: e2dabcec-c258-4b6c-a6c5-ac0c4d11047d
+  page_title: 'Push Notifications'
+page: push_notification_list
+selection_criteria: {  }
+selection_logic: and
+static_context: {  }

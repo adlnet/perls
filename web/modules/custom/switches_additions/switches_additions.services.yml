@@ -1,0 +1,18 @@
+services:
+  plugin.manager.switches_additions.feature_flag:
+    class: Drupal\switches_additions\FeatureFlagPluginManager
+    arguments: ['@container.namespaces', '@cache.discovery', '@module_handler']
+  switch.normalizer:
+    class: Drupal\switches_additions\EntityNormalizer\SwitchNormalizer
+    tags:
+      - { name: normalizer, priority: 10 }
+  switches_additions.route_subscriber:
+    class: Drupal\switches_additions\Routing\RouteSubscriber
+    arguments: ['@plugin.manager.switches_additions.feature_flag']
+    tags:
+      - { name: event_subscriber }
+  switches_additions.switch_access_checker:
+    class: Drupal\switches_additions\Access\SwitchAccessCheck
+    arguments: ['@plugin.manager.switches_additions.feature_flag']
+    tags:
+      - { name: access_check, applies_to: _switch_access_check }

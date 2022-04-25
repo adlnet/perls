@@ -1,0 +1,18 @@
+uuid: 2fd101e7-86e0-4ec7-a827-fabc9db26dc5
+langcode: en
+status: true
+dependencies:
+  module:
+    - perls_learner_browse
+    - serialization
+    - simple_oauth
+id: browse_resource
+plugin_id: browse_resource
+granularity: resource
+configuration:
+  methods:
+    - GET
+  formats:
+    - json
+  authentication:
+    - oauth2

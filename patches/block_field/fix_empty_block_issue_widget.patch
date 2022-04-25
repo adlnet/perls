@@ -1,0 +1,20 @@
+diff --git a/src/Plugin/Field/FieldWidget/BlockFieldWidget.php b/src/Plugin/Field/FieldWidget/BlockFieldWidget.php
+index 933135e..82c658c 100644
+--- a/src/Plugin/Field/FieldWidget/BlockFieldWidget.php
++++ b/src/Plugin/Field/FieldWidget/BlockFieldWidget.php
+@@ -211,9 +211,12 @@ class BlockFieldWidget extends WidgetBase implements ContainerFactoryPluginInter
+ 
+     // Set the label #value to the default block instance's label.
+     $plugin_id = $trigger_element['#value'];
+-    /** @var \Drupal\Core\Block\BlockPluginInterface $block_instance */
+-    if ($block_instance = $this->blockManager->createInstance($plugin_id)) {
+-      $settings_element['label']['#value'] = $block_instance->label();
++    $settings_element['label']['#value'] = '';
++    if (!empty($plugin_id)) {
++      /** @var \Drupal\Core\Block\BlockPluginInterface $block_instance */
++      if ($block_instance = $this->blockManager->createInstance($plugin_id)) {
++        $settings_element['label']['#value'] = $block_instance->label();
++      }
+     }
+ 
+     return $settings_element;

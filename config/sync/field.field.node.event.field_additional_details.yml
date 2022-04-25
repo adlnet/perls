@@ -1,0 +1,31 @@
+uuid: 60dad7a0-c429-437d-b017-0495877b57a8
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_additional_details
+    - node.type.event
+  module:
+    - allowed_formats
+    - text
+third_party_settings:
+  allowed_formats:
+    inline_styling: inline_styling
+    basic_filter: '0'
+    card_styling: '0'
+    custom_view_header: '0'
+    list: '0'
+    table: '0'
+    plain_text: '0'
+id: node.event.field_additional_details
+field_name: field_additional_details
+entity_type: node
+bundle: event
+label: 'Additional Details'
+description: 'Provide any additional information about the event. Useful for an agenda, lists, or other formatted information.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

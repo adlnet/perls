@@ -1,0 +1,15 @@
+recommender.recommendation_serviceation_plugins:
+  js:
+    js/recommender.plugins.js: {}
+  dependencies:
+    - core/drupal
+    - core/jquery
+    - core/jquery.once
+recommendation-tip-box:
+  version: 1.x
+  js:
+    js/recommendation-tip.js: {}
+build_recommendations_with_ajax:
+  version: 1.x
+  js:
+    js/build_recommendations_with_ajax.js: {}

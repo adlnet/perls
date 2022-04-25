@@ -1,0 +1,16 @@
+uuid: 77c9e9a9-5c2e-4eb4-a17d-961f2df1e5b6
+langcode: en
+status: true
+dependencies:
+  module:
+    - perls_group_management
+third_party_settings:
+  perls_group_management:
+    unique_group_title: 1
+id: audience
+label: Group
+description: 'Learners can be placed into groups (or an "audience") to target content to specific types of people.'
+new_revision: false
+creator_membership: false
+creator_wizard: false
+creator_roles: {  }

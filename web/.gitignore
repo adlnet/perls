@@ -1,0 +1,13 @@
+/INSTALL.txt
+/README.txt
+/example.gitignore
+/README.md
+
+/core/
+/libraries/
+/modules/contrib/
+/sites/default/files/
+/themes/contrib/
+/themes/custom/perls/js/
+/themes/custom/perls/css/
+/themes/custom/perls/node_modules/

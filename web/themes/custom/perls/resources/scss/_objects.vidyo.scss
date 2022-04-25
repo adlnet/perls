@@ -1,0 +1,25 @@
+/**
+ *  Vidyo styling.
+ */
+
+.vidyo-client {
+  .toolbar {
+    background-color: $c-primary;
+  }
+
+  #toolbarLeft {
+    text-align: left;
+  }
+
+  #toolbarCenter {
+    text-align: center;
+  }
+
+  #toolbarRight {
+    text-align: right;
+  }
+
+  .toolbarButton {
+    background-color: $c-primary;
+  }
+}

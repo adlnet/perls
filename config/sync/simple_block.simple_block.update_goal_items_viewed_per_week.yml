@@ -1,0 +1,11 @@
+uuid: e5aadc78-b7fe-4496-8a13-ab98b843d451
+langcode: en
+status: true
+dependencies:
+  config:
+    - filter.format.unrestricted
+id: update_goal_items_viewed_per_week
+title: 'Update Goal: Items Viewed Per Week'
+content:
+  value: '<a href="[site:url]goal#viewarticlesperweek" class="o-button-reverse update-goal-button" data-dialog-type="modal">Update Goal</a>'
+  format: unrestricted

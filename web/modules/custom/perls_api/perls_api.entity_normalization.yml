@@ -1,0 +1,427 @@
+user.base:
+  type: user
+  bundle: user
+  fields:
+    uuid:
+      name: id
+    url:
+      type: pseudo
+      normalizer: entity_url.normalizer
+    field_name:
+      name: name
+    user_picture:
+      name: avatar
+      type: user_profile_circle
+      normalizer: image_style.normalizer
+    field_notification_days:
+      group: goals
+      name: notification_days
+    field_goal_weekly_test_average:
+      group: goals
+      name: weekly_test_average
+    field_goal_monthly_course_comp:
+      group: goals
+      name: monthly_course_completions
+    field_goal_weekly_completions:
+      group: goals
+      name: weekly_completions
+    field_goal_weekly_views:
+      group: goals
+      name: weekly_views
+    field_notification_time:
+      group: goals
+      name: notification_time
+      normalizer: perls_api.time_field.normalizer
+    mail:
+    name:
+      name: username
+    status:
+      name: is_enabled
+    roles:
+    preferred_langcode:
+    changed:
+      normalizer: datetime_to_iso8601.normalizer
+    access:
+      name: last_access
+      normalizer: datetime_to_iso8601.normalizer
+    login:
+      name: last_login
+      normalizer: datetime_to_iso8601.normalizer
+
+term.base:
+  type: taxonomy_term
+  bundle: [category, tags]
+  fields:
+    uuid:
+      name: id
+    revision_id:
+      name: vid
+    tid:
+    url:
+      type: pseudo
+      normalizer: entity_url.normalizer
+    name:
+    vid:
+      name: type
+      normalizer: entity_id.normalizer
+    changed:
+      normalizer: datetime_to_iso8601.normalizer
+
+term.category:
+  type: taxonomy_term
+  bundle: category
+  extends: term.base
+  fields:
+    field_description:
+      name: description
+
+node.course:
+  type: node
+  extends: node.top_node
+  bundle: course
+  fields:
+    field_description:
+      name: description
+      normalizer: entity_rich_text.normalizer
+    field_learning_content:
+      name: learning_objects
+    field_media_image:
+      name: image
+      image_style: large
+      normalizer: media_image.normalizer
+
+node.test:
+  type: node
+  extends: node.tagged_node
+  bundle: test
+  fields:
+    field_quiz:
+      name: questions
+    field_pass_mark:
+      name: pass_mark
+      normalizer: precentage_to_fraction.normalizer
+
+node.tip_card:
+  type: node
+  extends: node.top_node
+  bundle: tip_card
+  fields:
+    field_card_front:
+      name: contents
+      normalizer: renderered_html.normalizer
+    body:
+      type: pseudo
+      normalizer: perls_paragraph_card_front.normalizer
+
+node.flash_card:
+  type: node
+  extends: node.top_node
+  bundle: flash_card
+  fields:
+    field_card_front:
+      name: contents
+      normalizer: renderered_html.normalizer
+    field_card_back:
+      name: back_contents
+      normalizer: renderered_html.normalizer
+    body:
+      type: pseudo
+      normalizer: perls_paragraph_card_front.normalizer
+    body_back:
+      type: pseudo
+      normalizer: perls_paragraph_card_back.normalizer
+
+node.learning_object:
+  type: node
+  extends: node.top_node
+  bundle: [learn_article, learn_link, learn_file, learn_package]
+  fields:
+    field_description:
+      name: description
+      normalizer: entity_rich_text.normalizer
+    field_media_image:
+      name: image
+      image_style: large
+      normalizer: media_image.normalizer
+
+node.learn_article:
+  type: node
+  extends: node.learning_object
+  bundle: learn_article
+  fields:
+    field_comments:
+      name: discussion_status
+      type: pseudo
+      normalizer: node_comment_status.normalizer
+
+node.learn_file:
+  type: node
+  extends: node.learning_object
+  bundle: learn_file
+  fields:
+    file:
+      type: pseudo
+      normalizer: paragraph_document_url.normalizer
+
+paragraph.quiz_option:
+  type: paragraph
+  bundle: quiz_option
+  fields:
+    uuid:
+    field_answer:
+      name: answer
+      normalizer: entity_rich_text.normalizer
+    field_rationale:
+      name: rationale
+      normalizer: entity_rich_text.normalizer
+    field_correct:
+      name: correct
+
+node.quiz:
+  type: node
+  extends: node.top_node
+  bundle: quiz
+  fields:
+    title:
+      name: question
+    field_option:
+      name: options
+
+node.learn_package:
+  type: node
+  weight: 1
+  extends: node.learning_object
+  bundle: learn_package
+  fields:
+    url:
+      type: pseudo
+      normalizer: perls_node_learn_package_url.normalizer
+    field_learning_package:
+      name: file
+      normalizer: file.normalizer
+
+node.top_node:
+  type: node
+  extends: node.tagged_node
+  weight: -1
+  fields:
+    field_topic:
+      name: topic
+
+node.tagged_node:
+  type: node
+  extends: node.base
+  weight: -1
+  fields:
+    field_tags:
+      name: tags
+
+node.podcast:
+  type: node
+  extends: node.base
+  bundle: podcast
+  fields:
+    field_artwork:
+      name: image
+      image_style: large
+      normalizer: media_image.normalizer
+    field_tags:
+      name: tags
+    field_description:
+      name: description
+      normalizer: entity_rich_text.normalizer
+    field_episodes:
+      name: number_episodes
+      type: pseudo
+      normalizer: node_reference_counter.normalizer
+
+node.podcast_episode:
+  type: node
+  extends: node.base
+  bundle: podcast_episode
+  fields:
+    field_tags:
+      name: tags
+    field_description:
+      name: description
+      normalizer: entity_rich_text.normalizer
+    field_audio_file:
+      name: file
+      normalizer: file.normalizer
+    field_duration:
+      name: duration
+    field_release_date:
+      name: release_date
+    image:
+      type: inherited
+      parent: podcast
+      reference_field: field_episodes
+      inheritated_field: field_artwork
+      image_style: large
+      normalizer: media_image.normalizer
+
+node.base:
+  type: node
+  bundle:
+    [
+      course,
+      flash_card,
+      learn_article,
+      learn_link,
+      learn_file,
+      learn_package,
+      quiz,
+      tip_card,
+      test,
+      podcast_episode,
+      podcast,
+      event,
+    ]
+  weight: -2
+  fields:
+    uuid:
+      name: id
+    nid:
+    vid:
+    url:
+      type: pseudo
+      normalizer: entity_url.normalizer
+    title:
+      name: name
+    type:
+      normalizer: node_type.normalizer
+    changed:
+      normalizer: datetime_to_iso8601.normalizer
+    promote:
+      name: is_promoted
+    sticky:
+      name: is_sticky
+    file:
+      type: pseudo
+      normalizer: perls_api.node_package_url
+
+node.learn_link:
+  type: node
+  extends: node.learning_object
+  bundle: learn_link
+  weight: 1
+  fields:
+    url:
+      type: pseudo
+      normalizer: learn_link_url.normalizer
+
+node.event:
+  type: node
+  extends: node.base
+  bundle: event
+  fields:
+    field_media_image:
+      name: image
+      image_style: large
+      normalizer: media_image.normalizer
+
+flag.recommendation:
+  type: flagging
+  extends: flag.base
+  bundle: recommendation
+  fields:
+    field_recommendation_reason:
+      name: reason
+    field_recommendation_score:
+      name: score
+
+paragraph.test_attempt:
+  type: paragraph
+  bundle: test_attempt
+  fields:
+    field_test_complete:
+      name: complete
+    field_test_passed:
+      name: passed
+    field_test_feedback:
+      name: feedback
+      normalizer: entity_rich_text.normalizer
+    field_test_question_count:
+      name: max
+    field_correctly_answered_count:
+      name: raw
+    field_test_result:
+      name: scaled
+
+flag.test_results:
+  type: flagging
+  extends: flag.base
+  bundle: test_results
+  fields:
+    result:
+      type: pseudo
+      normalizer: test_attempt.normalizer
+
+flag.following:
+  type: flagging
+  extends: flag.base
+  bundle: following
+  fields:
+    entity_id:
+      name: tid
+
+flag.base:
+  type: flagging
+  bundle: [bookmark, completed, recommendation, test_results, following]
+  weight: -1
+  fields:
+    uuid:
+      name: id
+    flag_id:
+      name: type
+      normalizer: entity_id.normalizer
+    entity_id:
+      name: nid
+    created:
+      normalizer: datetime_to_iso8601.normalizer
+
+group.audience:
+  type: group
+  bundle: audience
+  fields:
+    uuid:
+      name: id
+    id:
+      name: gid
+    url:
+      type: pseudo
+      normalizer: entity_url.normalizer
+    label:
+      name: name
+    changed:
+      normalizer: datetime_to_iso8601.normalizer
+    field_description:
+      name: description
+    field_media_image:
+      name: image
+      image_style: large
+      normalizer: media_image.normalizer
+    field_visibility:
+      name: visibility
+      normalizer: group_visibility.normalizer
+
+group_content.audience_membership:
+  type: group_content
+  bundle: audience-group_membership
+  fields:
+    uuid:
+      name: id
+    url:
+      type: pseudo
+      normalizer: entity_url.normalizer
+    label:
+      name: name
+    created:
+      normalizer: datetime_to_iso8601.normalizer
+    status:
+      type: pseudo
+      normalizer: group_membership_status.normalizer
+    gid:
+      name: group
+    entity_id:
+      name: user

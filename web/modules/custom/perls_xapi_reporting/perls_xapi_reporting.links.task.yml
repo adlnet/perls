@@ -1,0 +1,4 @@
+perls_xapi_reporting.admin_settings_form:
+  route_name: perls_xapi_reporting.admin_settings_form
+  title: 'xAPI Reporting Settings'
+  base_route: perls_xapi_reporting.admin_settings_form

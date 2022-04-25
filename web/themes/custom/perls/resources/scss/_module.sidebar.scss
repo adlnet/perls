@@ -1,0 +1,29 @@
+/* ------------------------------------ *\
+    $SIDEBAR
+\* ------------------------------------ */
+
+.l-sidebar {
+  z-index: 2;
+
+  &--first {
+    background-color: $c-admin-nav--background;
+    border-radius: $border-radius--card 0 0 $border-radius--card;
+    margin-top: $space-double;
+    padding: $space;
+    align-self: flex-start;
+  }
+
+  &--second {
+    background: $c-admin-sidebar--background;
+    color: $c-admin--foreground;
+    padding: $space;
+    border-top: $border--standard;
+
+    @include media(">xlarge") {
+      padding: $space-double;
+      border-top: 0;
+      border-left: $border--standard;
+      height: 100%;
+    }
+  }
+}

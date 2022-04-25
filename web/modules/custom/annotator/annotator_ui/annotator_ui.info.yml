@@ -1,0 +1,9 @@
+name: Annotation UI
+description: 'Allows annotations to be viewed in the web interface.'
+type: module
+core: 8.x
+core_version_requirement: ^8 || ^9
+dependencies:
+  - pdb_vue
+  - annotator
+  - xapi_reporting

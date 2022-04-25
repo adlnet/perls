@@ -1,0 +1,18 @@
+uuid: 7e334107-dc16-4235-b026-4818688a55ad
+langcode: en
+status: true
+dependencies:
+  module:
+    - flag
+id: flagging.field_recommendation_score
+field_name: field_recommendation_score
+entity_type: flagging
+type: float
+settings: {  }
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

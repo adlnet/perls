@@ -1,0 +1,104 @@
+<?php
+
+/**
+ * @file
+ * Module specific hooks.
+ */
+
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\node\Entity\Node;
+use Drupal\user\Entity\User;
+
+/**
+ * Implements hook_ENTITY_TYPE_update().
+ */
+function entity_packager_node_update(Node $entity) {
+  entity_packager_add_items_queue($entity);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_insert().
+ */
+function entity_packager_node_insert(Node $entity) {
+  entity_packager_add_items_queue($entity);
+}
+
+/**
+ * Add node to offline_page_queue queue.
+ *
+ * @param \Drupal\node\Entity\Node $entity
+ *   A drupal entity.
+ */
+function entity_packager_add_items_queue(Node $entity) {
+  $config = \Drupal::service('config.factory')->get('entity_packager.page_settings');
+  $content_types = array_filter($config->get('content_types'));
+  if (!empty($content_types) && !in_array($entity->bundle(), $content_types)) {
+    return;
+  }
+
+  if ($entity->isPublished()) {
+    $queue = \Drupal::service('queue')->get('node_package_generate_queue');
+    $queue->createItem(['entity_type' => 'node', 'entity_id' => $entity->id()]);
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_delete().
+ */
+function entity_packager_node_delete(Node $entity) {
+  /** @var \Drupal\entity_packager\NodePackagerStorageHelper $storage_helper */
+  $storage_helper = \Drupal::service('entity_packager.storage');
+  $storage_helper->deletePackage($entity);
+}
+
+/**
+ * Implements hook_file_download().
+ */
+function entity_packager_file_download($uri) {
+  $config = \Drupal::configFactory()->get('entity_packager.page_settings');
+  if (strpos($uri, $config->get('save_directory')) !== FALSE) {
+    preg_match('#\d+#', $uri, $node);
+    if (!empty($node) && is_int((int) $node[0])) {
+      $node = Node::load($node[0]);
+      if ($node) {
+        if ($node->access('view')) {
+          $file = \Drupal::entityTypeManager()->getStorage('file')->loadByProperties(['uri' => $uri]);
+          if (!empty($file)) {
+            return file_get_content_headers(reset($file));
+          }
+        }
+      }
+    }
+    return -1;
+  }
+
+  return NULL;
+}
+
+/**
+ * Implements hook_page_attachments().
+ */
+function entity_packager_page_attachments(array &$attachments) {
+  /** @var \Drupal\user\Entity\User $current_user */
+  $current_user = User::load(\Drupal::service('current_user')->id());
+  $node = Drupal::routeMatch()->getParameter('node');
+  $state = \Drupal::state();
+
+  if ($node && $current_user->id() === $state->get('wget_user')) {
+    $attachments['#attached']['library'][] = 'entity_packager/node_packager';
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_access().
+ */
+function entity_packager_user_access(EntityInterface $entity, $operation, AccountInterface $account) {
+  $wget_user = \Drupal::state()->get('wget_user');
+  if ($account->id() != 1 && $account->id() != $wget_user &&
+  (in_array($operation, ['update', 'delete']) &&
+  $entity->id() === $wget_user)) {
+    return AccessResult::forbidden();
+  }
+}

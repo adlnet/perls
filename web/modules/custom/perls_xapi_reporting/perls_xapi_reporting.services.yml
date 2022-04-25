@@ -1,0 +1,53 @@
+services:
+  perls_xapi_reporting.send_feedback_statement:
+    class: Drupal\perls_xapi_reporting\PerlsXapiReportingSendFeedbackStatement
+    arguments: ['@plugin.manager.state_manager']
+  perls_xapi_reporting.feedback_received_subscriber:
+    class: Drupal\perls_xapi_reporting\EventSubscriber\FeedbackXapiStatementSubscriber
+    arguments:
+      - '@xapi.xapi_statement_helper'
+      - '@entity_type.manager'
+      - '@request_stack'
+    tags:
+      - { name: event_subscriber }
+  perls_xapi_reporting.achieved_goal_subcsriber:
+    class: Drupal\perls_xapi_reporting\EventSubscriber\AchievedGoalSubscriber
+    arguments: ['@plugin.manager.state_manager', '@datetime.time']
+    tags:
+      - { name: 'event_subscriber' }
+  perls_xapi_reporting.group_event_subscriber:
+    class: Drupal\perls_xapi_reporting\EventSubscriber\GroupEventSubscriber
+    arguments: ['@lrs.request_generator', '@xapi_reporting.xapi_statement_creator']
+    tags:
+      - { name: event_subscriber }
+  perls_xapi_reporting.user_event_subscriber:
+    class: Drupal\perls_xapi_reporting\EventSubscriber\UserEventSubscriber
+    arguments: ['@lrs.request_generator', '@xapi_reporting.xapi_statement_creator', '@current_user', '@current_route_match', '@perls_content.entity_update_checker']
+    tags:
+      - { name: event_subscriber }
+  perls_xapi_reporting.push_notification_subscriber:
+    class: Drupal\perls_xapi_reporting\EventSubscriber\PushNotificationSubscriber
+    arguments: [ '@lrs.request_generator', '@xapi_reporting.xapi_statement_creator', '@current_user', '@current_route_match', '@logger.factory', '@config.factory' ]
+    tags:
+      - { name: event_subscriber }
+  perls_xapi_reporting.recommendation_event_subscriber:
+    class: Drupal\perls_xapi_reporting\EventSubscriber\RecommendationEventSubscriber
+    arguments: ['@lrs.request_generator', '@xapi_reporting.xapi_statement_creator']
+    tags:
+      - { name: event_subscriber }
+  perls_xapi_reporting.activity_completion_event_subscriber:
+    class: Drupal\perls_xapi_reporting\EventSubscriber\ActivityCompletionMonitor
+    arguments: ['@xapi.xapi_statement_helper', '@flag', '@current_user']
+    tags:
+      - { name: event_subscriber }
+  perls_xapi_reporting.xapi_catch_event_subscriber:
+    class: Drupal\perls_xapi_reporting\EventSubscriber\XapiEventSubscriber
+    arguments:
+      - '@xapi.xapi_statement_helper'
+    tags:
+      - { name: event_subscriber }
+  perls_xapi_reporting.xapi_user_goals:
+    class: Drupal\perls_xapi_reporting\EventSubscriber\XapiUserGoalEventSubscriber
+    arguments: ['@lrs.request_generator', '@xapi_reporting.xapi_statement_creator', '@current_user', '@perls_content.entity_update_checker']
+    tags:
+      - { name: event_subscriber }

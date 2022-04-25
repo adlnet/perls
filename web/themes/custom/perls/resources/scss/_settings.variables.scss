@@ -1,0 +1,315 @@
+/* ------------------------------------ *\
+    $VARIABLES
+\* ------------------------------------ */
+
+//
+// How to use this file
+// ====================
+// The PERLS appearance is highly customizable.
+//
+// * Palettes - define the colors to use around the app.
+// * Customizations - choose how the palettes are used.
+// * Mappings - fine-grain control over how specific colors map to interface elements.
+//
+// Note: Talk to developers before making significant changes to color names or how this file works.
+//
+
+//
+// Palettes
+// ========
+//
+
+//
+// Brand Palette
+// -------------
+// These colors must match those in dist/css/color.css for dynamic theming.
+// Do not use these colors directly.
+// These must all be colors; they cannot use CSS variables.
+//
+$-palette-primary: #006686;
+$-palette-secondary: #26a1c6;
+$-palette-tertiary: #d6e8ee;
+$-palette-tip: #dd031d;
+$-palette-flashcard: #fc990b;
+$-palette-quiz: #63378f;
+$-palette-course: #2588d0;
+$-palette-podcast: #5d5d5d;
+
+//
+// Neutral Palette
+// ----------------
+// Because who doesn't need some gray in their life.
+// Avoid using these colors directly.
+// These must all be colors; they cannot use CSS variables.
+//
+$c-white: #fff;     // Must be pure or off-white.
+$c-gray-1: #f5f5f5; // Used for light grays.
+$c-gray-2: #ccc;    // Used for disabled fields.
+$c-gray-3: #7a7b7a; // Used for empty messages.
+$c-gray-4: #707070; // Default gray.
+$c-gray-5: #606060; // Used for form text.
+$c-gray-6: #231f20; // Used for dark grays.
+$c-black: #000;     // Must be pure or off-black.
+
+//
+// Other Colors
+// ------------
+// These other colors are used for specific scenarios.
+// They may be directly referenced.
+//
+$c-error: #d60000;
+$c-valid: #089e00;
+$c-warning: #fff664;
+$c-information: #000db5;
+$c-overlay: rgba($c-black, 0.8);
+$c-disabled: $c-gray-2;
+$c-shadow: rgba($c-black, 0.16);
+
+//
+// Customizations
+// ==============
+// With the palette defined, now customize how those colors are used.
+// Some of this can be controlled with CSS variables (dynamic theming).
+//
+// While these can be used directly, consider instead adding a mapping below.
+//
+// Where CSS variables are used, SASS color functions cannot be used.
+// At some point, I'd like to have Drupal dynamically compile the SASS
+// and use SASS variables instead of CSS variables for dynamic theming.
+//
+
+$c-primary: var(--primary-color, $-palette-primary);
+$c-secondary: var(--secondary-color, $-palette-secondary);
+$c-secondary--light: var(--secondary-lighter, lighten($-palette-secondary, 20%));
+$c-secondary--dark: var(--secondary-darker, darken($-palette-secondary, 20%));
+$c-tertiary: var(--tertiary-color, $-palette-tertiary);
+
+$c-gray--light: $c-gray-1;
+$c-gray: $c-gray-4;
+$c-gray--dark: $c-gray-6;
+
+$c-primary--alt: $c-white;   // Color to use against the primary color for text and icons.
+$c-secondary--alt: $c-white; // Color to use against the secondary color for text and icons.
+
+$c-content--background: var(--background-color, $c-white);
+$c-content--foreground: var(--foreground-color, $c-gray--dark);
+
+$c-menu-background: var(--menu-background-color, #463e3f);
+
+$c-card: $c-gray;
+$c-card--tip: var(--tip-color, $-palette-tip);
+$c-card--quiz: var(--quiz-color, $-palette-quiz);
+$c-card--flashcard: var(--flashcard-color, $-palette-flashcard);
+$c-card--test: var(--test-color, $-palette-quiz);
+$c-card--course: var(--course-color, $-palette-course);
+$c-button--course: var(--course-color-darker, $-palette-course);
+$c-card--podcast: var(--podcast-color, $-palette-podcast);
+$c-card--results: $c-gray--light;
+$c-card--prompt: $c-primary;
+$c-teaser-gradient: linear-gradient(180deg, lighten($c-gray-3, 10%) 0%, $c-gray-5 100%);
+$c-tile-gradient: rgba($c-gray-6, 0);
+$c-course-gradient: linear-gradient(180deg, rgba(#000, 0) 0%, rgba(darken($-palette-course, 5%), 0.95) 75%, $-palette-course 100%);
+$c-podcast-gradient: linear-gradient(180deg, rgba(#000, 0) 0%, $c-tile-gradient 75%, #000000 100%);
+$c-event-gradient: $c-podcast-gradient;
+
+//
+// Mappings
+// ========
+// For even greater control, adjust how the colors are mapped
+// to various interface elements.
+//
+
+//
+// Interactivity
+//
+$c-link: $c-secondary;
+$c-link--hover: $c-secondary--dark;
+$c-button: $c-secondary;
+$c-button--alt: $c-secondary--alt;
+$c-button--hover: $c-secondary--dark;
+$c-input--background: $c-white;
+$c-input--text: $c-gray-5;
+$c-input--placeholder: $c-gray-5;
+$c-empty: $c-gray-3;
+$c-chip: $c-gray-3;
+$c-chip-hover: darken($c-chip, 20%);
+$c-chip-text: $c-primary--alt;
+
+//
+// Login
+//
+$c-login--background: $c-primary;
+$c-login--foreground: $c-primary--alt;
+$login--background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1022 745.56'%3E%3Cpath fill='%23e0e0e0' d='M511 62.86c36.11 6.47 66.81 17.24 92.62 31 60.85-7.55 114.62 5.54 151.91 41.64 58.43 56.58 57.75 160.65 15.52 273.43 92.6-26.41 181-34.27 251-25.43V0H522.33a426.75 426.75 0 00-37.71 58.76q12.74 1.67 26.38 4.1z'/%3E%3Cpath fill='%23e6f5fd' d='M1022 652.43v20'/%3E%3Cpath fill='%23B8B8B8' d='M83.58 180c125.29-56.5 121.85-104.9 99.49-126.62C151.17 22.38 55.32 28.36 0 61v130.71c19.32 6.73 46.52 5 83.58-11.71z'/%3E%3Cpath fill='%23ececec' d='M755.53 135.48c-37.29-36.1-91.06-49.19-151.91-41.64C682.91 136.05 715.94 206.4 716.93 267c1.32 80.34-126.44 191-262.1 101.42-2.18-1.45-4.34-2.89-6.49-4.34-54.85-37-97.81-75.69-127.36-112.25-143.23 146.11-195.09 319.94-105.85 416.89 61.84 67.19 159.1 93.21 256.78 66.5 59.71-16.33 119.59-52.38 171.63-110.77q14.52-16.29 28.17-34.9c43-58.82 77-120.95 99.34-180.64 42.23-112.78 42.95-216.85-15.52-273.43z'/%3E%3Cpath fill='%23B8B8B8' d='M716.93 267c-1-60.61-34-131-113.31-173.17-25.81-13.74-56.51-24.51-92.62-31q-13.67-2.45-26.38-4.1C356.14 41.9 298.2 82.6 279.66 122.13c-15 32 .15 78.77 41.32 129.71 29.55 36.56 72.51 75.28 127.36 112.25 2.15 1.45 4.31 2.89 6.49 4.34C590.49 458 718.25 347.35 716.93 267z'/%3E%3C/svg%3E");
+$login--background-blend: overlay;
+$login--background-repeat: no-repeat;
+$login--background-position: top -10vh center;
+$login--background-size: auto 200vh;
+//
+// Learner
+//
+$c-learner-header--background: $c-secondary;
+$c-learner-nav--icon: $c-secondary--alt; // Must be a color (cannot be dynamic).
+$c-learner-nav--icon--active: $c-primary;
+$c-learner-nav--active: $c-secondary--alt;
+$c-learner-nav--inactive: $c-secondary--alt;
+$c-learner-nav--hover: $c-secondary--alt;
+
+//
+// Admin / Content Manager
+//
+$c-admin--background: $c-white;
+$c-admin--foreground: $c-black;
+$c-admin-header--background: $c-secondary;
+$c-admin-header--foreground: $c-secondary--alt;
+$c-admin-nav--background: $c-menu-background;
+$c-admin-nav--foreground: $c-primary--alt;
+$c-admin-nav--background--active: $c-secondary;
+$c-admin-nav--foreground--active: $c-secondary--alt;
+$c-admin-sidebar--background: $c-gray--light;
+$c-admin-tip--background: $c-gray--light;
+$c-admin-tip--foreground: $c-admin--foreground;
+$c-admin-tip--border: darken($c-admin-tip--background, 5%);
+$c-admin-search--background: $c-gray--light;
+$c-admin-pager--hover: $c-gray--light;
+$c-admin-item--hover: $c-gray--light;
+$c-admin-toggle--on: $c-valid;
+$c-admin-toggle--off: $c-error;
+$c-taxonomy-term-card: #999;
+
+//
+// Account Menu (Dropdown)
+//
+$c-account-menu--background: $c-menu-background;
+$c-account-menu--foreground: $c-white;
+$c-account-menu--foreground--active: $c-secondary;
+
+//
+// Advanced Customizations
+// =====================
+//
+// Browser default px used for media queries
+$max-width-px: 1260px;
+$max-width: $max-width-px !default;
+$max-width-small: 700px;
+$sidebar-width: 300px;
+$body-min-height: 650px;
+
+/**
+ * Typography
+ */
+$ff-font: "Circular Std", sans-serif;
+
+// Theme typefaces
+$ff-font--primary: "Circular Std", sans-serif;
+$ff-font--secondary: "Open Sans", sans-serif;
+
+/**
+ * Icons
+ */
+$icon-xsmall: 15px;
+$icon-small: 20px;
+$icon-medium: 30px;
+$icon-large: 50px;
+$icon-xlarge: 70px;
+$icon-xxlarge: 100px;
+
+/**
+ * Animation
+ */
+$hard-ease-in: cubic-bezier(0.86, 0, 0.07, 1);
+$transition: all 0.25s $hard-ease-in;
+
+/**
+ * Border Styles
+ */
+$border-color: $c-gray;
+$border-color--light: $c-gray--light;
+$border-radius: 5px;
+$border-radius--card: 10px;
+$border-radius--button: 50px;
+$border--standard: 1px solid $border-color;
+$border--light: 1px solid $border-color--light;
+$box-shadow: 0 10px 10px $c-shadow;
+$box-shadow-reversed: 0 -10px 10px $c-shadow;
+
+/**
+ * Tables
+ */
+$table-row--background--even: $c-admin--background;
+$table-row--background--odd: $c-gray--light;
+
+/**
+ * Default Spacing/Padding
+ * Maintain a spacing system divisible by 10
+ */
+$space: 20px;
+$space-quarter: calc($space / 4);
+$space-half: calc($space / 2);
+$space-third: calc($space / 1.5);
+$space-and-half: $space * 1.5;
+$space-double: $space * 2;
+$space-double-half: $space * 2.5;
+$space-triple: $space * 3;
+$space-quad: $space * 4;
+
+/**
+ * Common Breakpoints
+ */
+$xsmall: 350px;
+$small: 500px;
+$medium: 700px;
+$large: 900px;
+$xlarge: 1100px;
+$xxlarge: 1300px;
+$xxxlarge: 1500px;
+$xxxxlarge: 1800px;
+$xxxxxlarge: 2200px;
+
+$breakpoints: ("xsmall": $xsmall, "small": $small, "medium": $medium, "large": $large, "xlarge": $xlarge, "xxlarge": $xxlarge, "xxxlarge": $xxxlarge, "xxxxlarge": $xxxxlarge, "xxxxxlarge": $xxxxxlarge);
+
+/**
+ * Font Sizes
+ */
+$font-size-xs: 12px;
+$font-size-s: 16px;
+$font-size-m: 21px;
+$font-size-l: 27px;
+$font-size-xl: 38px;
+$font-size-xxl: 42px;
+$l-sidebar-width: 20%;
+$l-main-width: 80%;
+
+/**
+ * Native Custom Properties
+ */
+:root {
+  --font-size-xs: 12px;
+  --font-size-s: 16px;
+  --font-size-m: 17px;
+  --font-size-l: 23px;
+  --font-size-xl: 34px;
+  --font-size-xxl: 38px;
+  --l-sidebar-width: 30%;
+  --l-main-width: 70%;
+}
+
+// XLarge Breakpoint
+@media screen and (min-width: $xlarge) {
+  :root {
+    --l-sidebar-width: 20%;
+    --l-main-width: 80%;
+  }
+}
+
+// XXLarge Breakpoint
+@media screen and (min-width: $xxlarge) {
+  :root {
+    --font-size-xs: 12px;
+    --font-size-s: 15px;
+    --font-size-m: 21px;
+    --font-size-l: 27px;
+    --font-size-xl: 38px;
+    --font-size-xxl: 42px;
+  }
+}

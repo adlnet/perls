@@ -1,0 +1,37 @@
+name: PERLS
+type: theme
+description: This is a perls sub theme of Classy
+core: 8.x
+core_version_requirement: ^8 || ^9
+# Defines the base theme
+base theme: classy
+# Defines libraries group in which we can add css/js.
+libraries:
+  - perls/perls-base
+  - perls/slick
+  - perls/color
+  - perls/clamp
+  - perls/sticky
+  - perls/select2
+ckeditor_stylesheets:
+  - 'css/main.min.css'
+# Regions
+regions:
+  header: Header
+  highlighted: Highlighted
+  content: Content
+  sidebar_first: First sidebar
+  sidebar_second: Second sidebar
+  footer: Footer
+  inactive: 'Inactive (this region is not printed, blocks here are placed programatically).'
+
+libraries-override:
+  formtips/formtips:
+    js:
+      js/formtips.js: js/formtips.altered.min.js
+  annotator/annotations.base:
+    css:
+      component:
+        css/annotator.1.2.10/annotator.min.css: css/annotator/annotator.min.css
+        css/annotator.touch.css: css/annotator/annotator.touch.min.css
+        css/style.css: false

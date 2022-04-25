@@ -1,0 +1,11 @@
+notifications.admin.config.people.push_notification_token:
+  title: Push Notification Tokens
+  description: 'See a list of currently active push notification tokens'
+  route_name: entity.push_notification_token.collection
+  parent: user.admin_index
+notifications.admin.send_push_notification:
+  title: Push Notifications
+  description: Manage Push Notifications
+  route_name: view.send_notifications.page_1
+  parent: system.admin
+  weight: -150

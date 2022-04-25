@@ -1,0 +1,12 @@
+uuid: e89571c2-a912-47a5-88e6-e7fc4db9b621
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: oor6hAZ4nd5IaBPdcpkRsNKRpBJFzkg5RZNfZWV-_Bw
+id: layout_two_column
+label: 'Two-column layout'
+icon_uuid: null
+icon_default: null
+description: 'Add a left and right column to display content side-by-side.'
+behavior_plugins: {  }

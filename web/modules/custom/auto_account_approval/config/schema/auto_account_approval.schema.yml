@@ -1,0 +1,7 @@
+auto_account_approval.settings:
+  type: config_object
+  label: 'Automatic registration approval settings'
+  mapping:
+    top_level_domains:
+      type: string
+      label: 'Top level domains'

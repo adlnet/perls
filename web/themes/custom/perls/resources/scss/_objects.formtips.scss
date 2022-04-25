@@ -1,0 +1,54 @@
+/* ------------------------------------ *\
+    $FORMTIPS
+\* ------------------------------------ */
+
+.formtip {
+  &:hover,
+  &:focus,
+  &:active {
+    background-color: $c-link--hover;
+    border-color: $c-link--hover;
+  }
+}
+
+div.description.formtips-processed,
+.form-item .description.formtips-processed {
+  padding: 10px;
+  color: $c-admin-tip--foreground;
+  background: $c-admin-tip--background;
+  box-shadow: none;
+  border: 2px solid $c-admin-tip--border;
+  border-radius: 4px;
+  top: calc(100% + 10px);
+  left: 5px;
+
+  &::before {
+    border-bottom-color: $c-admin-tip--border;
+    border-width: 8px;
+    top: -16px;
+  }
+}
+
+.field--widget-paragraphs,
+.field--widget-entity-reference-paragraphs {
+  .formtip {
+    font-size: $font-size-s;
+
+    &::before {
+      font-size: $font-size-xs;
+    }
+
+    .description {
+      top: 40px;
+      left: auto;
+      text-transform: initial;
+      font-size: 0.8em;
+      font-weight: normal;
+
+      &::before {
+        top: -17px;
+        left: -2px;
+      }
+    }
+  }
+}

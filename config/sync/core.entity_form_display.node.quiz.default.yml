@@ -1,0 +1,163 @@
+uuid: 5916d65c-1863-4d7c-b2f3-48dbb32ab9c2
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.quiz.field_difficulty
+    - field.field.node.quiz.field_media_image
+    - field.field.node.quiz.field_option
+    - field.field.node.quiz.field_parent_content
+    - field.field.node.quiz.field_tags
+    - field.field.node.quiz.field_topic
+    - field.field.node.quiz.field_type_description
+    - node.type.quiz
+  module:
+    - autocomplete_deluxe
+    - description_field
+    - entitygroupfield
+    - field_layout
+    - layout_discovery
+    - paragraphs
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings:
+      label: ''
+id: node.quiz.default
+targetEntityType: node
+bundle: quiz
+mode: default
+content:
+  entitygroupfield:
+    type: entitygroupfield_select_widget
+    weight: 7
+    region: content
+    settings:
+      help_text: ''
+      label: 'Group name'
+      multiple: true
+      required: false
+      orderable: true
+    third_party_settings: {  }
+  field_difficulty:
+    type: options_select
+    weight: 9
+    region: content
+    settings:
+      orderable: true
+    third_party_settings: {  }
+  field_option:
+    type: entity_reference_paragraphs
+    weight: 3
+    region: content
+    settings:
+      title: Paragraph
+      title_plural: Paragraphs
+      edit_mode: open
+      add_mode: dropdown
+      form_display_mode: default
+      default_paragraph_type: ''
+    third_party_settings: {  }
+  field_tags:
+    type: autocomplete_deluxe
+    weight: 4
+    region: content
+    settings:
+      match_operator: CONTAINS
+      autocomplete_route_name: autocomplete_deluxe.autocomplete
+      size: 60
+      selection_handler: default
+      limit: 10
+      min_length: 2
+      delimiter: '#'
+      not_found_message_allow: false
+      not_found_message: 'Create a new tag: #@term'
+      new_terms: true
+      no_empty_message: 'No terms could be found. Please type in order to add a new term.'
+      orderable: true
+    third_party_settings: {  }
+  field_topic:
+    type: options_select
+    weight: 1
+    region: content
+    settings:
+      orderable: true
+    third_party_settings: {  }
+  field_type_description:
+    type: description_field_standard
+    weight: 0
+    region: content
+    settings:
+      orderable: true
+    third_party_settings: {  }
+  promote:
+    type: boolean_checkbox
+    weight: 5
+    region: content
+    settings:
+      orderable: true
+      display_label: true
+    third_party_settings: {  }
+  publish_on:
+    type: datetime_timestamp_no_default
+    weight: 30
+    region: content
+    settings:
+      orderable: true
+    third_party_settings: {  }
+  publish_state:
+    type: scheduler_moderation
+    weight: 30
+    region: content
+    settings:
+      orderable: true
+    third_party_settings: {  }
+  status:
+    type: boolean_checkbox
+    weight: 8
+    region: content
+    settings:
+      orderable: true
+      display_label: true
+    third_party_settings: {  }
+  sticky:
+    type: boolean_checkbox
+    weight: 6
+    region: content
+    settings:
+      orderable: true
+      display_label: true
+    third_party_settings: {  }
+  title:
+    type: string_textfield
+    weight: 2
+    region: content
+    settings:
+      orderable: true
+      size: 60
+      placeholder: 'Type the question'
+    third_party_settings: {  }
+  unpublish_on:
+    type: datetime_timestamp_no_default
+    weight: 30
+    region: content
+    settings:
+      orderable: true
+    third_party_settings: {  }
+  unpublish_state:
+    type: scheduler_moderation
+    weight: 30
+    region: content
+    settings:
+      orderable: true
+    third_party_settings: {  }
+hidden:
+  created: true
+  field_media_image: true
+  field_parent_content: true
+  group_content: true
+  langcode: true
+  moderation_state: true
+  path: true
+  uid: true
+  url_redirects: true

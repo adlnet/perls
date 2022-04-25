@@ -1,0 +1,108 @@
+<?php
+
+/**
+ * @file
+ * This module implements basic hooks for search page.
+ */
+
+use Drupal\search_api\Query\QueryInterface;
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function perls_search_form_views_exposed_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if ($form['#id'] == 'views-exposed-form-search-page-3') {
+    // Remove submit buttons and stop actions based on this form.
+    unset($form['actions']);
+
+    // Get current values.
+    $currentType = $form_state->getValue('type');
+    $currentCategory = $form_state->getValue('field_category');
+
+    if ($currentType) {
+      $form['type']['#default_value'] = $currentType;
+    }
+
+    if ($currentCategory) {
+      $form['field_category']['#default_value'] = $currentCategory;
+    }
+
+    // Relabel default values.
+    $form['field_category']['#options']['All'] = t('Category');
+    $form['type']['#options']['All'] = t('Type');
+
+    // Give each element a unique ID.
+    $form['type']['#id'] = 'perls-search-page-type-dropdown';
+    $form['field_category']['#id'] = 'perls-search-page-field_category-dropdown';
+    // Add Javascript to automate submission.
+    $form['#attached'] = [
+      'library' => [
+        'perls_search/perls_search-lib',
+      ],
+    ];
+
+  }
+  if ($form['#id'] == 'views-exposed-form-search-search-page') {
+    $form['search_api_fulltext']['#attributes']['placeholder'] = t('Search...');
+  }
+}
+
+/**
+ * Implements hook_search_api_query_alter() for perls_search.
+ *
+ * This Method checks the query for # and redirects search api to only
+ * search tag field if one is found.
+ */
+function perls_search_search_api_query_alter(QueryInterface &$query) {
+  $search_text = $query->getOriginalKeys();
+  if (!empty($search_text)) {
+    // Check to see if $search text contains #.
+    // $keys = explode('#', $search_text);.
+    if (strpos($search_text, '#') !== FALSE) {
+      $currentKeys = $query->getKeys();
+      // Switch conjunction from OR to AND to allow multi word tags.
+      $currentKeys['#conjunction'] = "AND";
+      foreach ($currentKeys as $key => $value) {
+        $currentKeys[$key] = str_replace('#', '', $value);
+      }
+      // Since explode did something me must have tag Keys.
+      $query->keys($currentKeys);
+      $query->setFulltextFields(['field_tag_name' => 'field_tag_name']);
+
+    }
+  }
+}
+
+/**
+ * Implements hook_search_api_autocomplete_suggestions_alter() for perls_search.
+ */
+function perls_search_search_api_autocomplete_suggestions_alter(array &$suggestions, array $alter_params) {
+  /** @var \Drupal\search_api_autocomplete\SearchInterface $search */
+  $search = $alter_params['search'];
+  if ("search" === $search->id() && !empty($suggestions)) {
+    // Go through each of suggestions and remove any that don't start with
+    // user query.
+    foreach ($suggestions as $key => $suggestion) {
+
+      if ($suggestion->getUserInput() === strtolower($alter_params['user_input'])) {
+        // Querys in solr are always lowercase so we may need to make
+        // returned user input match actual user $input.
+        $suggestion->setUserInput($alter_params['user_input']);
+      }
+      else {
+        // This suggestion didn't match the user input so we delete it.
+        unset($suggestions[$key]);
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_page() for perls_search.
+ */
+function perls_search_preprocess_page(&$variables) {
+
+  $variables['#attached']['library'][] = 'perls_search/perls_search-lib';
+
+}

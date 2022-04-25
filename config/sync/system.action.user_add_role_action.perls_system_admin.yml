@@ -1,0 +1,14 @@
+uuid: 0bd41127-e603-4279-9af5-70ce5faf54bb
+langcode: en
+status: true
+dependencies:
+  config:
+    - user.role.perls_system_admin
+  module:
+    - user
+id: user_add_role_action.perls_system_admin
+label: 'Add the system admin role to the selected user(s)'
+type: user
+plugin: user_add_role_action
+configuration:
+  rid: perls_system_admin

@@ -1,0 +1,10 @@
+media-unsplash-js-library:
+  js:
+    js/media_unsplash.js: {}
+  dependencies:
+    - core/drupal.ajax
+    - core/jquery
+media-unsplash-css-library:
+  css:
+    theme:
+      css/media_unsplash.css: {}

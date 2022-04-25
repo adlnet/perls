@@ -1,0 +1,22 @@
+uuid: cbf6c9f9-3199-4948-9ae2-5458bbff8696
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - perls_adaptive_content
+id: node.field_adaptive_content
+field_name: field_adaptive_content
+entity_type: node
+type: adaptive_content_field
+settings:
+  max_length: '255'
+  is_ascii: false
+  case_sensitive: false
+module: perls_adaptive_content
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

@@ -1,0 +1,40 @@
+uuid: 31d60d6c-d060-4f5d-8e72-2d1a274b593d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.document.field_document
+    - paragraphs.paragraphs_type.document
+  module:
+    - field_layout
+    - file
+    - layout_discovery
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings:
+      label: ''
+_core:
+  default_config_hash: iGjG5j1RfL54gL3MW0etxMlZoaNEtmXJeSAryAb8ghM
+id: paragraph.document.default
+targetEntityType: paragraph
+bundle: document
+mode: default
+content:
+  field_document:
+    type: file_generic
+    weight: 101
+    region: content
+    settings:
+      progress_indicator: throbber
+    third_party_settings: {  }
+  moderation_state:
+    type: moderation_state_default
+    weight: 100
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  created: true
+  status: true
+  uid: true

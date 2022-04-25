@@ -1,0 +1,8 @@
+uuid: 3b93276e-f10d-4cea-99ba-392e1ad3ddde
+langcode: en
+status: true
+dependencies: {  }
+id: content-manager-user-menu
+label: 'Content Manager User menu'
+description: 'Account menu of the content manager'
+locked: false

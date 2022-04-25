@@ -1,0 +1,7 @@
+auto_account_approval.config_form:
+  path: 'admin/config/people/accounts/auto-approval'
+  defaults:
+    _form: Drupal\auto_account_approval\Form\AutoAccountApproveConfigForm
+    _title: 'Automatic registration approval settings'
+  requirements:
+    _custom_access: '\Drupal\auto_account_approval\Controller\AutoAccountApproveController::configFormAccess'

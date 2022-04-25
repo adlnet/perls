@@ -1,0 +1,30 @@
+uuid: 2ac36e24-00bb-4075-b4c2-a3b2efe49ced
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.corpus_activity
+  module:
+    - system
+    - views
+  theme:
+    - perls_content_manager
+id: views_block__corpus_activity
+theme: perls_content_manager
+region: content
+weight: -8
+provider: null
+plugin: 'views_block:corpus_activity-corpus_activity'
+settings:
+  id: 'views_block:corpus_activity-corpus_activity'
+  label: ''
+  label_display: visible
+  provider: views
+  views_label: ''
+  items_per_page: none
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    context_mapping: {  }
+    pages: /dashboard

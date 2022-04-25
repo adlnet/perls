@@ -1,0 +1,24 @@
+uuid: 420fc23f-c6d9-4255-be15-e58e53f67561
+langcode: en
+status: true
+dependencies:
+  module:
+    - field_permissions
+    - group
+    - user
+third_party_settings:
+  field_permissions:
+    permission_type: public
+id: user.field_add_groups
+field_name: field_add_groups
+entity_type: user
+type: entity_reference
+settings:
+  target_type: group
+module: core
+locked: false
+cardinality: -1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

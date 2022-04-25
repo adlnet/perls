@@ -1,0 +1,21 @@
+uuid: 3d767e88-ab8d-41d8-a6b5-f3ffe62d5c9b
+langcode: en
+status: true
+dependencies:
+  module:
+    - user
+id: new_dashboard
+label: Dashboard
+description: ''
+use_admin_theme: false
+path: /start
+access_logic: and
+access_conditions:
+  -
+    id: user_role
+    negate: true
+    context_mapping:
+      user: '@user.current_user_context:current_user'
+    roles:
+      anonymous: anonymous
+parameters: {  }

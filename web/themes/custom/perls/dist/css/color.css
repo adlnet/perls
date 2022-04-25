@@ -1,0 +1,19 @@
+:root,
+::before,
+::after {
+  --primary-color: #006686;
+  --secondary-color: #26a1c6;
+  --secondary-lighter: #47b9db;
+  --secondary-darker: #1e809e;
+  --tertiary-color: #d6e8ee;
+  --tip-color: #dd031d;
+  --flashcard-color: #fc990b;
+  --test-color: #63378f;
+  --quiz-color: #63378f;
+  --course-color: #2588d0;
+  --course-color-darker: #1d6ca6;
+  --podcast-color: #5d5d5d;
+  --foreground-color: #232323;
+  --background-color: #ffffff;
+  --menu-background-color: #0084ae;
+}

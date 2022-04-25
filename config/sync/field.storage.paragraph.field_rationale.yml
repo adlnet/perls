@@ -1,0 +1,19 @@
+uuid: 69a331ae-e296-4e05-be96-2b9fd34d6ade
+langcode: en
+status: true
+dependencies:
+  module:
+    - paragraphs
+    - text
+id: paragraph.field_rationale
+field_name: field_rationale
+entity_type: paragraph
+type: text_long
+settings: {  }
+module: text
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

@@ -1,0 +1,8 @@
+uuid: 6d1b3527-04f5-4d68-8ad3-9253d7eace98
+langcode: en
+status: true
+dependencies: {  }
+name: Tag
+vid: tags
+description: 'For tagging.'
+weight: 0

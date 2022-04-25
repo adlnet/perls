@@ -1,0 +1,370 @@
+<?php
+
+/**
+ * @file
+ * Allows uploading and launching xAPI content.
+ */
+
+use Drupal\Core\Link;
+use Drupal\Core\Url;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\file\FileInterface;
+use Drupal\xapi\XapiContentException;
+use Drupal\xapi\XapiContentUserActionableException;
+
+/**
+ * Implements hook_help().
+ */
+function xapi_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.xapi':
+      $output = '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('This module allows uploading and viewing xAPI content') . '</p>';
+      $output .= '<p>' . t('Settings for this module can be found on the <a href="@link">xAPI settings</a> page.', ['@link' => Url::fromRoute('xapi.admin_settings_form')->toString()]) . '</p>';
+      return $output;
+
+    case 'xapi.admin_settings_form':
+      return '<p>' . t('Configure xAPI content settings.') . '</p>';
+
+    default:
+      return NULL;
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function xapi_theme() {
+  return [
+    'xapi_content_file_formatter' => [
+      'variables' => [
+        'id' => NULL,
+        'name' => NULL,
+        'description' => NULL,
+        // `launch` and `file` are combined to create the `link`.
+        'launch' => NULL,
+        'file' => NULL,
+        // This will be created by the preprocessor.
+        'link' => NULL,
+      ],
+      'template' => 'xapi-content-file-formatter',
+    ],
+  ];
+}
+
+/**
+ * Prepares variables for xAPI content templates.
+ *
+ * Default template: xapi-content-file-formatter.html.twig.
+ *
+ * @param array $variables
+ *   An array of variables, defined by the formatter.
+ */
+function template_preprocess_xapi_content_file_formatter(array &$variables) {
+  if (!isset($variables['launch'])) {
+    return;
+  }
+
+  $launch = $variables['launch'];
+
+  if (empty($launch) || !$launch instanceof Url) {
+    return;
+  }
+
+  $launch->setOption('attributes', ['class' => 'xapi-content link']);
+  $variables['link'] = Link::fromTextAndUrl(t('Launch'), $launch);
+  $variables['#attached']['library'][] = 'xapi/xapi-content';
+}
+
+/**
+ * Custom validation for xAPI content.
+ *
+ * @param \Drupal\file\FileInterface $file
+ *   The file.
+ *
+ * @return array
+ *   An array of errors, will be empty if none were found.
+ */
+function file_validate_xapi_content(FileInterface $file) {
+  $errors = [];
+
+  try {
+    read_metadata_from_uri($file->getFileUri());
+  }
+  catch (XapiContentUserActionableException $exception) {
+    $errors[] = $exception->getMessage();
+    \Drupal::logger('xapi')->error('Validation error: ' . $exception->getMessage());
+  }
+  catch (XapiContentException $exception) {
+    $errors[] = 'An unexpected error occurred when uploading the course; please try again. If the problem persists, contact the system administrator.';
+    \Drupal::logger('xapi')->error('Validation error: ' . $exception->getMessage());
+  }
+
+  return $errors;
+}
+
+/**
+ * Parse a ZIP file at a given URI to get data from its `tincan.xml`.
+ *
+ * @param string $uri
+ *   The URI of the ZIP file to read.
+ *
+ * @return array
+ *   An array of data.
+ *
+ * @throws \Drupal\xapi\XapiContentException;
+ *   If a non-recoverable error occurs while parsing the file at the given URI.
+ * @throws \Drupal\xapi\XapiContentUserActionableException
+ *   If a recoverable error occurs while parsing the file at the given URI.
+ */
+function read_metadata_from_uri(string $uri) {
+  if (empty($uri)) {
+    throw new XapiContentException('Invalid URI');
+  }
+
+  $location = \Drupal::service('file_system')->realpath($uri);
+
+  if (empty($location)) {
+    throw new XapiContentException('Invalid location for URI: ' . $uri);
+  }
+
+  // We could use the Drupal archive service here, but that doesn't always work.
+  // The Drupal service is unable to open a ZIP file during upload.
+  $archive = new \ZipArchive();
+  $flag = $archive->open($location, \ZipArchive::CHECKCONS);
+
+  // The flag will be true or an error code.
+  if ($flag !== TRUE) {
+    switch ($flag) {
+      case \ZipArchive::ER_NOZIP:
+        throw new XapiContentUserActionableException(t('Not a zip archive.'));
+
+      case \ZipArchive::ER_INCONS:
+        throw new XapiContentUserActionableException(t('Archive is invalid.'));
+
+      case \ZipArchive::ER_EXISTS:
+        throw new XapiContentException('File already exists.');
+
+      case \ZipArchive::ER_INVAL:
+        throw new XapiContentException('Invalid argument.');
+
+      case \ZipArchive::ER_MEMORY:
+        throw new XapiContentException('Malloc failure.');
+
+      case \ZipArchive::ER_OPEN:
+        throw new XapiContentException('Can\'t open file.');
+
+      case \ZipArchive::ER_READ:
+        throw new XapiContentException('Read error.');
+
+      case \ZipArchive::ER_SEEK:
+        throw new XapiContentException('Seek error.');
+
+      case \ZipArchive::ER_NOENT:
+        throw new XapiContentException('No such file.');
+
+      default:
+        throw new XapiContentException('Unknown zip archive error.');
+
+    }
+  }
+
+  $xmlString = $archive->getFromName('tincan.xml');
+
+  if (empty($xmlString)) {
+    // Attempt to find an index.html file.
+    // Only read the first 100 bytes to avoid reading all of a huge file.
+    // This seems to work fine if the document is less than 100 bytes.
+    // We ignore case to allow "Index.Html" and so on.
+    $htmlString = $archive->getFromName('index.html', 100, \ZipArchive::FL_NOCASE);
+
+    // If we don't have a tincan or index file, bail.
+    if ($htmlString === FALSE) {
+      throw new XapiContentUserActionableException(t('No tincan.xml or index.html file in package.'));
+    }
+
+    // Also consider that the HTML file could be empty.
+    if (empty($htmlString)) {
+      throw new XapiContentUserActionableException(t('Package included an index.html file, but the file was empty'));
+    }
+
+    // Guess at a reasonable name based on the zip name.
+    $filename = str_replace(['-', '_'], ' ', pathinfo($uri, PATHINFO_FILENAME));
+    $name = ucwords(trim($filename));
+
+    // If the same file is uploaded multiple times, Drupal appends a number.
+    // If the filename is an empty string or only dashes/underscores,
+    // The name found here would be just that number.
+    if (empty($name) || is_numeric($name)) {
+      $name = t('Unnamed activity');
+    }
+
+    return [
+      'id' => NULL,
+      'name' => $name,
+      'description' => NULL,
+      'launch' => 'index.html',
+    ];
+  }
+
+  try {
+    $xmlElement = new \SimpleXMLElement($xmlString);
+  }
+  catch (\Exception $exception) {
+    throw new XapiContentException('Error when parsing XML: ' . $exception->getMessage());
+  }
+
+  // Eventually, we could store multiple activities, different languages, etc.
+  // For now, we assume one activity with one language.
+  $activity = $xmlElement->activities->activity;
+
+  if (empty($activity) || !$activity instanceof \SimpleXMLElement) {
+    throw new XapiContentUserActionableException(t('Unable to find an activity in tincan.xml file.'));
+  }
+
+  $launchUri = (string) $activity->launch;
+  $launchPath = parse_url($launchUri, PHP_URL_PATH);
+  $launchString = $archive->getFromName($launchPath);
+
+  if (empty($launchString)) {
+    throw new XapiContentUserActionableException(t('Unable to find launch path @path specified in tincan.xml file.', ['@path' => $launchPath]));
+  }
+
+  return [
+    // That the docs for SimpleXMLElement don't do this type casting.
+    // It's possible we don't need to?
+    // Without casting, many of these objects are themselves SimpleXMLElement.
+    'id' => (string) $activity['id'],
+    'name' => (string) $activity->name,
+    'description' => (string) $activity->description,
+    'launch' => $launchPath,
+  ];
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_predelete().
+ */
+function xapi_file_predelete(FileInterface $file) {
+  if (empty($file)) {
+    return;
+  }
+
+  // If the file isn't a zip file, there's nothing to do.
+  if ($file->getMimeType() !== 'application/zip') {
+    return;
+  }
+
+  // We could try read metadata from the ZIP archive at this point.
+  // However, predelete often gets called after the archive is deleted.
+  // Instead, we just see if there's a folder at the expected place.
+  // If so, we delete it.
+  $unzipped_uri = NULL;
+
+  try {
+    $unzipped_uri = unzip_destination_uri_for_entity_uri($file->getFileUri());
+  }
+  catch (XapiContentException $exception) {
+    // If the URI was empty, or the path name was invalid, bail.
+    return;
+  }
+
+  $filePath = \Drupal::service('file_system')
+    ->realPath($unzipped_uri);
+
+  if (empty($filePath) || !is_dir($filePath)) {
+    return;
+  }
+
+  $result = \Drupal::service('file_system')->deleteRecursive($filePath);
+
+  if ($result == FALSE) {
+    \Drupal::logger('xapi')
+      ->warning('Attempted to delete file ' . $filePath . ' but an error occurred.');
+  }
+}
+
+/**
+ * Get the unzip destination URI for a file entity.
+ *
+ * @param string $uri
+ *   The URI of a file for which to get an unzip destination path.
+ *
+ * @return string
+ *   URI that describes the location to which the given file could be unzipped.
+ *
+ * @throws \Drupal\xapi\XapiContentException
+ *   If the URI is invalid, or path information could not be determined.
+ */
+function unzip_destination_uri_for_entity_uri(string $uri) {
+  if (empty($uri)) {
+    throw new XapiContentException('Invalid URI');
+  }
+
+  $info = pathinfo($uri);
+
+  if (!isset($info['dirname']) || !isset($info['filename'])) {
+    throw new XapiContentException('Unable to get path info for URI');
+  }
+
+  return $info['dirname'] . '/' . $info['filename'];
+}
+
+/**
+ * Implements hook_file_download().
+ */
+function xapi_file_download(string $uri) {
+  if (empty($uri)) {
+    // Returning null indicates that this module doesn't impact permission.
+    return NULL;
+  }
+
+  // Determine if this is a private file.
+  $array = array_filter(explode('/', $uri));
+
+  if (empty($array)) {
+    return NULL;
+  }
+
+  $scheme = reset($array);
+
+  // If it's not a private scheme, this module doesn't enforce access.
+  if ($scheme !== 'private:') {
+    return NULL;
+  }
+
+  $top_level_folder = next($array);
+  $zip_file_name = next($array);
+
+  // Determine if there's an associated ZIP file with metadata.
+  $zip_file_uri = 'private://' . $top_level_folder . '/' . $zip_file_name . '.zip';
+
+  // Check zip file is exist or not befor unzip.
+  if (!file_exists($zip_file_uri)) {
+    return NULL;
+  }
+
+  try {
+    $meta = read_metadata_from_uri($zip_file_uri);
+  }
+  catch (XapiContentException $exception) {
+    // If we couldn't get metadata, it's not a folder with an associated ZIP.
+    return NULL;
+  }
+
+  // If we didn't get back metadata, we don't know what this file is.
+  if (empty($meta)) {
+    return NULL;
+  }
+
+  // Grant access based on this user's permissions for xAPI content.
+  $userHasViewPermission = \Drupal::currentUser()->hasPermission('view paragraph content xapi_package');
+
+  if ($userHasViewPermission) {
+    // It doesn't seem to matter what we return here, just any non-empty array.
+    return ['permission' => 'allowed'];
+  }
+  else {
+    // Returning -1 here specifically indicates that permission is denied.
+    return -1;
+  }
+}

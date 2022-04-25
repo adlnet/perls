@@ -1,0 +1,15 @@
+disable_messages_enable: '1'
+disable_messages_exclude_users: ''
+disable_messages_filter_by_page: 0
+disable_messages_page_filter_paths: ''
+disable_messages_enable_debug: '0'
+disable_messages_debug_visible_div: '0'
+disable_messages_ignore_patterns: "^There are no entities matching \"\\b[[:alnum:]]{1,}\".\r\nAn external client application is requesting access to your data in this site.*\r\nRegistration successful.*\r\n^Canceled \".*?\"\\."
+disable_messages_ignore_case: '1'
+disable_messages_ignore_regex:
+  - '/^^There are no entities matching "\b[[:alnum:]]{1,}".$/i'
+  - '/^An external client application is requesting access to your data in this site.*$/i'
+  - '/^Registration successful.*$/i'
+  - '/^^Canceled ".*?"\.$/i'
+_core:
+  default_config_hash: 1KtMq77r11Up8xB2acdeDhrNIlFzu-Edepx453c20Ws

@@ -1,0 +1,65 @@
+uuid: cc74c7a4-2a6e-44cd-aaa6-ee9063da880e
+langcode: en
+status: true
+dependencies:
+  module:
+    - recommender
+id: recommendation_plugin_score--recommendation_plugin_score
+disabled: true
+path: recommendation_plugin_score/recommendation_plugin_score
+resourceType: recommendation_plugin_score--recommendation_plugin_score
+resourceFields:
+  id:
+    disabled: false
+    fieldName: id
+    publicName: id
+    enhancer:
+      id: ''
+  nid:
+    disabled: false
+    fieldName: nid
+    publicName: nid
+    enhancer:
+      id: ''
+  user_id:
+    disabled: false
+    fieldName: user_id
+    publicName: user_id
+    enhancer:
+      id: ''
+  plugin_id:
+    disabled: false
+    fieldName: plugin_id
+    publicName: plugin_id
+    enhancer:
+      id: ''
+  status:
+    disabled: false
+    fieldName: status
+    publicName: status
+    enhancer:
+      id: ''
+  recommendation_reason:
+    disabled: false
+    fieldName: recommendation_reason
+    publicName: recommendation_reason
+    enhancer:
+      id: ''
+  score:
+    disabled: false
+    fieldName: score
+    publicName: score
+    enhancer:
+      id: ''
+  created:
+    disabled: false
+    fieldName: created
+    publicName: created
+    enhancer:
+      id: ''
+  changed:
+    disabled: false
+    fieldName: changed
+    publicName: changed
+    enhancer:
+      id: ''

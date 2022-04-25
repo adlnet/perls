@@ -1,0 +1,34 @@
+uuid: d75bd09e-4e88-4a97-b032-504999aa2f74
+langcode: en
+status: true
+dependencies:
+  module:
+    - badges
+third_party_settings:
+  badges:
+    bundle: badge
+    plugin_id: 'flag_count_badge_plugin:completed'
+    'flag_count_badge_plugin:completed':
+      required_count: '20'
+      selected_bundles:
+        course: course
+        flash_card: 0
+        learn_article: 0
+        learn_file: 0
+        learn_link: 0
+        learn_package: 0
+        podcast_episode: 0
+        quiz: 0
+        test: 0
+        tip_card: 0
+    badge_type: 'Completion Count Badge'
+id: courses_completed_20
+label: Adventurer
+description: 'Awarded to any user who completes 20 courses.'
+secret: false
+invisible: false
+manual_only: null
+points: 1
+use_default_image: false
+locked_image_path: 'public://badges/lockedBadge.png'
+unlocked_image_path: 'public://badges/adventurer.png'

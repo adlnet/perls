@@ -1,0 +1,25 @@
+<?php
+
+/**
+ * @file
+ * Module related hook.
+ */
+
+/**
+ * Implements hook_requirements().
+ */
+function perls_api_requirements($phase) {
+  $requirements = [];
+  $perls_api_settings = \Drupal::configFactory()->get('perls_api.settings');
+  if ($phase == 'runtime') {
+    if (empty($perls_api_settings->get('user_agent'))) {
+      $requirements['perls_api_user_agent'] = [
+        'title' => t('User agent'),
+        'severity' => REQUIREMENT_WARNING,
+        'value' => t('The user-agent is not configured, please visit the settings page of Perls API.'),
+      ];
+    }
+  }
+
+  return $requirements;
+}

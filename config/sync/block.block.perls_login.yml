@@ -1,0 +1,22 @@
+uuid: 02cb4558-d2bf-454f-98d5-df85ea1bb0fe
+langcode: en
+status: true
+dependencies:
+  module:
+    - user
+  theme:
+    - perls
+_core:
+  default_config_hash: 862sIulDdHmF0vBU1s2j2_a_CwkxursrL0pIrMDzzOg
+id: perls_login
+theme: perls
+region: content
+weight: 4
+provider: null
+plugin: user_login_block
+settings:
+  id: user_login_block
+  label: 'User login'
+  label_display: visible
+  provider: user
+visibility: {  }

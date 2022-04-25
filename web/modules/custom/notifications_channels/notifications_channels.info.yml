@@ -1,0 +1,9 @@
+name: 'Channels Push Notifications'
+description: 'Provides push notifications for user who follow channel content.'
+type: module
+core: 8.x
+core_version_requirement: ^8 || ^9
+package: 'PERLS'
+dependencies:
+  - drupal:node
+  - notifications

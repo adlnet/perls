@@ -1,0 +1,12 @@
+perls_user.notifications:
+  title: Notifications
+  route_name: view.notifications.recent
+  base_route: entity.user.canonical
+  weight: 11
+perls_user.my_task:
+  title: Custom Goals
+  route_name: user_task.my_list
+  base_route: entity.user.canonical
+  weight: 12
+  requirements:
+    _permission: 'create user_task task'

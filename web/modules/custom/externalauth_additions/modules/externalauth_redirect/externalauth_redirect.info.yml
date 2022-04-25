@@ -1,0 +1,8 @@
+name: Externalauth Redirect
+description: Redirect SSO logins on sites with multiple hosts to the host used in simple saml.
+type: module
+core: 8.x
+core_version_requirement: ^8 || ^9
+dependencies:
+  - simplesamlphp_auth
+package: PERLS

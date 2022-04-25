@@ -1,0 +1,17 @@
+perls_xapi_reporting.admin_settings_form:
+  path: '/admin/config/system/perls-xapi-reporting'
+  defaults:
+    _form: '\Drupal\perls_xapi_reporting\Form\PerlsXapiReportForm'
+    _title: 'xAPI Content'
+  requirements:
+    _permission: 'administer xapi content'
+perls_xapi_reporting.send_report:
+  path: '/perls-xapi/send-report'
+  options:
+    _auth: [ 'cookie' ]
+  defaults:
+    _controller: '\Drupal\perls_xapi_reporting\Controller\XapiReportingController::prepareSend'
+    _title: 'xAPI prepare statement'
+  requirements:
+    _permission: 'communicate lrs endpoint'
+  methods: [POST]

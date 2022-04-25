@@ -1,0 +1,33 @@
+uuid: ceb0df18-aab1-47fd-9700-8b1e703fc8df
+langcode: en
+status: true
+dependencies:
+  module:
+    - ctools
+    - perls_content_management
+  theme:
+    - perls_content_manager
+id: nodestatistics
+theme: perls_content_manager
+region: sidebar_second
+weight: -9
+provider: null
+plugin: node_statistics_block
+settings:
+  id: node_statistics_block
+  label: Statistics
+  label_display: visible
+  provider: perls_content_management
+visibility:
+  'entity_bundle:node':
+    id: 'entity_bundle:node'
+    negate: false
+    context_mapping:
+      node: '@node.node_route_context:node'
+    bundles:
+      course: course
+      event: event
+      learn_article: learn_article
+      learn_file: learn_file
+      learn_link: learn_link
+      learn_package: learn_package

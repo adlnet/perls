@@ -1,0 +1,12 @@
+uuid: 444ce818-87f1-4dfa-b348-cd4e56fd9658
+langcode: en
+status: true
+dependencies: {  }
+id: terms_of_use
+label: 'Terms of Use'
+description: 'Terms of use page.'
+use_admin_theme: false
+path: /terms-of-use
+access_logic: and
+access_conditions: {  }
+parameters: {  }

@@ -1,0 +1,4 @@
+weight:
+  '[rerank_candidates]': 100
+recommendation_reason: 'We picked this for you because it is related to your recent activity.'
+number_candidates_generated: '5'

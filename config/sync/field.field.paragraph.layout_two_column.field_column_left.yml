@@ -1,0 +1,88 @@
+uuid: 6d0848ec-c6b1-410c-8760-ce49cfe462a0
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_column_left
+    - paragraphs.paragraphs_type.goal_log
+    - paragraphs.paragraphs_type.layout_two_column
+    - paragraphs.paragraphs_type.quiz_option
+    - paragraphs.paragraphs_type.test_attempt
+    - paragraphs.paragraphs_type.test_question_answer
+  module:
+    - entity_reference_revisions
+_core:
+  default_config_hash: IK1aeXHnQLiuSQ0mCiAH0RYVnwH1060c4Hrx4FKoKus
+id: paragraph.layout_two_column.field_column_left
+field_name: field_column_left
+entity_type: paragraph
+bundle: layout_two_column
+label: 'Left column'
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:paragraph'
+  handler_settings:
+    target_bundles:
+      layout_two_column: layout_two_column
+      goal_log: goal_log
+      quiz_option: quiz_option
+      test_attempt: test_attempt
+      test_question_answer: test_question_answer
+    negate: 1
+    target_bundles_drag_drop:
+      audio:
+        weight: -22
+        enabled: false
+      callout:
+        weight: -21
+        enabled: false
+      checklist:
+        weight: 20
+        enabled: false
+      document:
+        weight: -20
+        enabled: false
+      goal_log:
+        weight: 22
+        enabled: true
+      heading:
+        weight: -19
+        enabled: false
+      image:
+        weight: -26
+        enabled: false
+      layout_two_column:
+        weight: -27
+        enabled: true
+      list_ordered:
+        weight: -23
+        enabled: false
+      list_unordered:
+        weight: -24
+        enabled: false
+      quiz_option:
+        weight: 28
+        enabled: true
+      references:
+        weight: -18
+        enabled: false
+      table:
+        weight: -17
+        enabled: false
+      test_attempt:
+        weight: 31
+        enabled: true
+      test_question_answer:
+        weight: 32
+        enabled: true
+      text:
+        weight: -25
+        enabled: false
+      video:
+        weight: -16
+        enabled: false
+field_type: entity_reference_revisions

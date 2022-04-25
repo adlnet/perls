@@ -1,0 +1,9 @@
+services:
+  theme_switcher.theme.path_helper:
+    class:  Drupal\theme_switcher\Theme\PathHelper
+    arguments: ['@router.admin_context', '@current_user', '@path.current', '@config.factory', '@path.matcher']
+  theme_switcher.theme.negotiatior:
+    class:  Drupal\theme_switcher\Theme\ThemeNegotiator
+    arguments: ['@config.factory', '@theme_switcher.theme.path_helper', '@current_user']
+    tags:
+      - { name: theme_negotiator, priority: -30 }

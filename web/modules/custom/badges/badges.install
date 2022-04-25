@@ -1,0 +1,64 @@
+<?php
+
+/**
+ * @file
+ * Contains install scripts for badges.
+ */
+
+use Drupal\Core\File\FileSystemInterface;
+
+/**
+ * Copy the badges to public directory.
+ */
+function badges_install() {
+  $cwd = dirname(__FILE__);
+  $logger = \Drupal::logger('badges');
+  $badge_directory = realpath($cwd . '/images/badges/');
+  if (!$filenames = scandir($badge_directory)) {
+    $logger->info('Failed to find any files in badges directory');
+    return FALSE;
+  }
+
+  // Lets load and move the files.
+  foreach ($filenames as $filename) {
+    if ($filename === '.' || $filename === '..') {
+      continue;
+    }
+    $path = 'public://badges/';
+    \Drupal::service('file_system')->prepareDirectory($path, FileSystemInterface::CREATE_DIRECTORY);
+    $file = \Drupal::service('file_system')->copy($badge_directory . '/' . $filename, $path . $filename, FileSystemInterface::EXISTS_REPLACE);
+    if ($file) {
+      $logger->info('Successfully updated %filename', ['%filename' => $filename]);
+    }
+    else {
+      $logger->info('Failed to open: %filename', ['%filename' => $filename]);
+    }
+  }
+
+  // Award touchpoint badges to users who already earned them.
+  $config = \Drupal::service('config.factory')->getEditable('achievements.settings');
+  // Disable Push notifications while updating badges.
+  $saved_push_notification_setting = $config->get('send_notification');
+  $config->set('send_notification', 0);
+  $config->save();
+  $users = \Drupal::service('entity_type.manager')->getStorage('user')->loadByProperties(
+    [
+      'status' => '1',
+    ]
+  );
+  // Remove anonomous user from list.
+  if (isset($users['0'])) {
+    unset($users['0']);
+  }
+
+  foreach ($users as $user) {
+    $badge_service = \Drupal::service('badges.badge_service');
+    if ($touchpoint_badge_plugin = $badge_service->getBadgePlugin('touchpoint_badge_plugin')) {
+      $touchpoint_badge_plugin->updateUserProgress($user);
+    }
+  }
+  // Reset push notification settings.
+  $config->set('send_notification', $saved_push_notification_setting);
+  $config->save();
+
+}

@@ -1,0 +1,18 @@
+uuid: 9c7efc30-6d57-499a-b3ea-fa6097650035
+langcode: en
+status: true
+dependencies: {  }
+third_party_settings:
+  textimage:
+    uri_scheme: public
+name: user_profile_portrait
+label: 'User profile portrait'
+effects:
+  d39f6616-f17e-40cd-8f3c-d364e33a2514:
+    uuid: d39f6616-f17e-40cd-8f3c-d364e33a2514
+    id: image_scale_and_crop
+    weight: 1
+    data:
+      width: 330
+      height: 430
+      anchor: center-center

@@ -1,0 +1,21 @@
+uuid: 94fd8e30-d787-4348-827d-7779d3512c1f
+langcode: en
+status: true
+dependencies:
+  module:
+    - flag
+id: flagging.field_completion_source
+field_name: field_completion_source
+entity_type: flagging
+type: string
+settings:
+  max_length: 255
+  case_sensitive: false
+  is_ascii: false
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

@@ -1,0 +1,10 @@
+services:
+  notifications_channels.push_notification_subscriber:
+    class: Drupal\notifications_channels\EventSubscriber\ChannelsNotificationSubscriber
+    arguments:
+      - '@flag'
+      - '@entity_type.manager'
+      - '@notifications.firebase.message'
+      - '@image.factory'
+    tags:
+      - { name: event_subscriber }

@@ -1,0 +1,56 @@
+<?php
+
+/**
+ * @file
+ * Contains install scripts for notifications.
+ */
+
+use Drupal\user\Entity\User;
+
+/**
+ * Set current push notifications sent status.
+ */
+function notifications_update_8001(&$sandbox) {
+  $query = \Drupal::entityQuery('push_notification');
+  $ids = $query->execute();
+  foreach ($ids as $id) {
+    $push_token_entity = \Drupal::entityTypeManager()->getStorage('push_notification')->load($id);
+    $push_token_entity->delete();
+  }
+}
+
+/**
+ * Update users with branch user attribute.
+ *
+ * This happens automatically when the user is saved so just load and save user.
+ */
+function notifications_update_8002(&$sandbox) {
+  $ids = \Drupal::entityQuery('user')
+    ->execute();
+  $users = User::loadMultiple($ids);
+  foreach ($users as $id => $user) {
+    $user->save();
+  }
+}
+
+/**
+ * Updates stale references to Drupal\node\Entity\Node::getCurrentUserId.
+ */
+function notifications_update_9001(&$sandbox) {
+  $edum = \Drupal::entityDefinitionUpdateManager();
+  /** @var \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager */
+  $entity_field_manager = \Drupal::service('entity_field.manager');
+  $fields = $entity_field_manager->getBaseFieldDefinitions('push_notification');
+  /** @var \Drupal\Core\Field\BaseFieldDefinition $auth_user_id */
+  $base_field = $fields['auth_user_id'];
+  if ($base_field->getDefaultValueCallback() === 'Drupal\node\Entity\Node::getCurrentUserId') {
+    $base_field->setDefaultValueCallback('Drupal\node\Entity\Node::getDefaultEntityOwner');
+  }
+
+  $fields = $entity_field_manager->getBaseFieldDefinitions('push_notification_token');
+  /** @var \Drupal\Core\Field\BaseFieldDefinition $auth_user_id */
+  $base_field = $fields['auth_user_id'];
+  if ($base_field->getDefaultValueCallback() === 'Drupal\node\Entity\Node::getCurrentUserId') {
+    $base_field->setDefaultValueCallback('Drupal\node\Entity\Node::getDefaultEntityOwner');
+  }
+}

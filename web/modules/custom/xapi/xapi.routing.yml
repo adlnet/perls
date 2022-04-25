@@ -1,0 +1,77 @@
+xapi.admin_settings_form:
+  path: '/admin/config/system/xapi-content'
+  defaults:
+    _form: '\Drupal\xapi\Form\XapiContentFileAdminSettingsForm'
+    _title: 'xAPI Content'
+  requirements:
+    _permission: 'administer xapi content'
+xapi.admin_settings_reset_form:
+  path: '/reset/admin/config/system/xapi-content'
+  defaults:
+    _form: '\Drupal\xapi\Form\XapiContentFileAdminSettingsResetForm'
+    _title: 'xAPI Content Settings Reset'
+  requirements:
+      _permission: 'administer xapi content'
+xapi.activities:
+  path: '/lrs/activities'
+  options:
+    _auth: [ 'cookie', 'basic_auth', 'oauth2' ]
+  defaults:
+    _controller: '\Drupal\xapi\Controller\LRSController::activities'
+  requirements:
+    _permission: 'communicate lrs endpoint'
+  methods: [GET]
+xapi.activities.profile:
+  path: '/lrs/activities/profile'
+  options:
+    _auth: [ 'cookie', 'basic_auth', 'oauth2' ]
+  defaults:
+    _controller: '\Drupal\xapi\Controller\LRSController::activitiesProfile'
+  requirements:
+    _permission: 'communicate lrs endpoint'
+  methods: [PUT, POST, GET, DELETE]
+xapi.activities.state:
+  path: '/lrs/activities/state'
+  options:
+    _auth: [ 'cookie', 'basic_auth', 'oauth2' ]
+  defaults:
+    _controller: '\Drupal\xapi\Controller\LRSController::activitiesState'
+  requirements:
+    _permission: 'communicate lrs endpoint'
+  methods: [PUT, POST, GET, DELETE]
+xapi.statements:
+  path: '/lrs/statements'
+  options:
+    _auth: [ 'cookie', 'basic_auth', 'oauth2' ]
+  defaults:
+    _controller: '\Drupal\xapi\Controller\LRSController::statements'
+  requirements:
+    _permission: 'communicate lrs endpoint'
+  methods: [GET, POST, PUT]
+xapi.agents:
+  path: '/lrs/agents'
+  options:
+    _auth: [ 'cookie', 'basic_auth', 'oauth2' ]
+  defaults:
+    _controller: '\Drupal\xapi\Controller\LRSController::agents'
+  requirements:
+    _permission: 'communicate lrs endpoint'
+  methods: [GET]
+xapi.agents.profile:
+  path: '/lrs/agents/profile'
+  options:
+    _auth: [ 'cookie', 'basic_auth', 'oauth2' ]
+  defaults:
+    _controller: '\Drupal\xapi\Controller\LRSController::agentsProfile'
+  requirements:
+    _permission: 'communicate lrs endpoint'
+  methods: [PUT, POST, GET, DELETE]
+xapi.about:
+  path: '/lrs/about'
+  options:
+    _auth: [ 'cookie', 'basic_auth', 'oauth2' ]
+  defaults:
+    _controller: '\Drupal\xapi\Controller\LRSController::about'
+  requirements:
+    _permission: 'communicate lrs endpoint'
+  methods: [GET]

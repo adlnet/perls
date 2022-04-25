@@ -1,0 +1,11 @@
+uuid: 78bd30c8-9859-4c07-927b-735868eebbf8
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.flash_card
+id: node.flash_card
+target_entity_type_id: node
+target_bundle: flash_card
+default_langcode: site_default
+language_alterable: false

@@ -1,0 +1,11 @@
+uuid: f1632ccd-4bf1-4dcc-84f4-e0406ac0de43
+langcode: en
+status: true
+dependencies: {  }
+id: thumbs_up_down
+label: 'Thumbs up/down'
+category: Rating
+likert: false
+options: |-
+  1: 'Yes'
+  -1: 'No'

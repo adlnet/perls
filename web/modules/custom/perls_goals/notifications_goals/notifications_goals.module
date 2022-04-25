@@ -1,0 +1,71 @@
+<?php
+
+/**
+ * @file
+ * Hook for notifications_goals module.
+ */
+
+use Drupal\Core\Entity\EntityFormInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\notifications_goals\UserNotificationTimeConverter;
+use Drupal\time_field\Time;
+use Drupal\user\UserInterface;
+
+/**
+ * Implements hook_cron().
+ */
+function notifications_goals_cron() {
+  /** @var \Drupal\Core\Queue\QueueInterface $queue */
+  $queue = \Drupal::queue('user_goal_notification');
+  $time = \Drupal::service('datetime.time');
+  /** @var \Drupal\notifications_goals\UserGoalNotificationHelper $notification_helper */
+  $notification_helper = \Drupal::service('notifications_goals.goal_notification');
+  $midnight = strtotime('today', $time->getRequestTime());
+  $cron_last_run = \Drupal::state()->get('system.cron_last');
+  // We need the seconds since midnight because time field store value
+  // like this. We don't want to set all user who requested to send notification
+  // today only those who passed the notification time since last run.
+  $last_run = $cron_last_run - $midnight;
+  $current_time = $time->getRequestTime() - $midnight;
+  $today = mb_strtolower(date('l', $time->getRequestTime()));
+  $user_list = $notification_helper->getUserList($last_run, $current_time, $today);
+  if (!empty($user_list)) {
+    foreach ($user_list as $uid) {
+      $queue->createItem(['uid' => $uid]);
+    }
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_presave().
+ */
+function notifications_goals_user_presave(UserInterface $user) {
+  if ($user->id() &&
+  $user->hasField('field_notification_time') &&
+  ($user->get('field_notification_time')->getString() !== '')) {
+    $notification_time = $user->get('field_notification_time')->getString();
+    $fixed_time = UserNotificationTimeConverter::convertTime($notification_time, $user);
+    $user->set('field_notification_time', $fixed_time);
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function notifications_goals_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if (isset($form['field_notification_time'])) {
+    $form_object = $form_state->getformObject();
+    if (!$form_object instanceof EntityFormInterface) {
+      return;
+    }
+
+    $user = $form_object->getEntity();
+    if ($user && !empty($form['field_notification_time']['widget'][0]['value']['#default_value'])) {
+      /** @var \Drupal\user\UserInterface $user */
+      $notification_time = $user->get('field_notification_time')->getString();
+      $fixed_time = UserNotificationTimeConverter::convertTime($notification_time, $user, TRUE);
+      $time = Time::createFromTimestamp($fixed_time);
+      $form['field_notification_time']['widget'][0]['value']['#default_value'] = $time->format('g:i A');
+    }
+  }
+}

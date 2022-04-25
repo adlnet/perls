@@ -1,0 +1,29 @@
+uuid: acc2005f-7b1e-4ffe-8f8d-5a7068faf714
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_topic
+    - node.type.quiz
+    - taxonomy.vocabulary.category
+id: node.quiz.field_topic
+field_name: field_topic
+entity_type: node
+bundle: quiz
+label: Topic
+description: 'Select the topic that best represents the quiz item''s content. Remember, only the groups assigned to that topic can see the quiz item.'
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      category: category
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

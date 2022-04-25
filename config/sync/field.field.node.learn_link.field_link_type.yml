@@ -1,0 +1,23 @@
+uuid: aa8c4a21-780f-4efb-aac6-fe06070836c0
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_link_type
+    - node.type.learn_link
+  module:
+    - options
+id: node.learn_link.field_link_type
+field_name: field_link_type
+entity_type: node
+bundle: learn_link
+label: 'Link Destination'
+description: 'Links generally refer to content published elsewhere on the Web, but they can also be used to link to a native app or experience. When linking to a native app, the format usually follows something like "scheme://path".'
+required: true
+translatable: false
+default_value:
+  -
+    value: web
+default_value_callback: ''
+settings: {  }
+field_type: list_string

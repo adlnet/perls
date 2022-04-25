@@ -1,0 +1,15 @@
+uuid: 109547d2-373f-4007-8521-78a9cead56e1
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.audience
+id: audience-anonymous
+label: Anonymous
+weight: -102
+internal: true
+audience: anonymous
+group_type: audience
+permissions_ui: true
+permissions:
+  - 'view group'

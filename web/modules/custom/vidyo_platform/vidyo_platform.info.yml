@@ -1,0 +1,5 @@
+name: 'VidyoPlatform'
+type: module
+description: 'Provides integration with VidyoPlatform.'
+core: 8.x
+package: 'Vidyo'

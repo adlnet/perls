@@ -1,0 +1,13 @@
+uuid: d0c94b74-83fe-4ca1-bac8-6a80e1106ef9
+langcode: en
+status: true
+dependencies:
+  module:
+    - flag
+id: flag_action.recommendation_flag
+label: recommend
+type: node
+plugin: 'flag_action:recommendation_flag'
+configuration:
+  flag_id: recommendation
+  flag_action: flag

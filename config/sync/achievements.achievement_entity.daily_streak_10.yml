@@ -1,0 +1,22 @@
+uuid: d10b9af8-9d0a-4766-abcd-f709d1ad9d60
+langcode: en
+status: true
+dependencies:
+  module:
+    - badges
+third_party_settings:
+  badges:
+    plugin_id: streak_badge_plugin
+    streak_badge_plugin:
+      days: '10'
+    badge_type: 'Log in Streak'
+id: daily_streak_10
+label: 'Daily Streak 10'
+description: 'Awarded to any user who achieves a 10 day streak.'
+secret: false
+invisible: false
+manual_only: null
+points: 1
+use_default_image: false
+locked_image_path: 'public://badges/lockedBadge.png'
+unlocked_image_path: 'public://badges/10daystreak.png'

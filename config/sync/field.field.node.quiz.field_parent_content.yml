@@ -1,0 +1,32 @@
+uuid: a4f99668-0c46-4a21-8398-0195857bc400
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_parent_content
+    - node.type.learn_article
+    - node.type.learn_link
+    - node.type.learn_package
+    - node.type.quiz
+id: node.quiz.field_parent_content
+field_name: field_parent_content
+entity_type: node
+bundle: quiz
+label: 'Parent Content'
+description: 'A list of learning content that consider this quiz a  child element.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      learn_article: learn_article
+      learn_link: learn_link
+      learn_package: learn_package
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: learn_article
+field_type: entity_reference

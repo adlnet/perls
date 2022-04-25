@@ -1,0 +1,7 @@
+media_unsplash.admin.config:
+  path: '/admin/config/media/unsplash'
+  defaults:
+    _form: '\Drupal\media_unsplash\Form\UnsplashApiConfigForm'
+    _title: 'Unsplash API key configuration'
+  requirements:
+    _permission: 'administer unsplash settings'

@@ -1,0 +1,5 @@
+recommendation_reason: 'something you might want to explore'
+number_candidates_generated: '20'
+weight:
+  '[alter_candidates]': 0
+  '[score_candidates]': 0

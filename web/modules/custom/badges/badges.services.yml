@@ -1,0 +1,27 @@
+services:
+  logger.channel.badges:
+    parent: logger.channel_base
+    arguments: ['badges']
+  badges.badge_service:
+    class: Drupal\badges\Service\BadgeService
+    arguments:
+      [
+        '@config.factory',
+        '@logger.channel.badges',
+        '@plugin.manager.badge',
+        '@date.formatter',
+        '@cache_tags.invalidator',
+        '@database',
+      ]
+  plugin.manager.badge:
+    class: Drupal\badges\BadgePluginManager
+    parent: default_plugin_manager
+  badges.config_event_subscriber:
+    class: Drupal\badges\EventSubscriber\AchievementConfigEventSubscriber
+    arguments: ['@badges.badge_service']
+    tags:
+      - { name: 'event_subscriber' }
+  badges.route_subscriber:
+    class: Drupal\badges\Routing\RouteSubscriber
+    tags:
+      - { name: event_subscriber }

@@ -1,0 +1,5 @@
+perls_content.category_add:
+  route_name: perls_content.manage.categories.add_form
+  title: 'Add category'
+  appears_on:
+    - perls_content.manage.categories

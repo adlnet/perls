@@ -1,0 +1,39 @@
+<?php
+
+/**
+ * @file
+ * Module file for switches_additions.
+ */
+
+/**
+ * @file
+ * Install hooks for switches_additions.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function switches_additions_install() {
+  // Set an explicit module weight, to ensure that the
+  // switches_additions hooks are
+  // always called after other hooks.
+  module_set_weight('switches_additions', 10000);
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function switches_additions_uninstall() {
+  $config = \Drupal::configFactory()->getEditable('switches.switch.offline_support');
+  if (isset($config)) {
+    $config->delete();
+  }
+  $config = \Drupal::configFactory()->getEditable('switches.switch.adaptive_learning');
+  if (isset($config)) {
+    $config->delete();
+  }
+  $config = \Drupal::configFactory()->getEditable('switches.switch.achievements');
+  if (isset($config)) {
+    $config->delete();
+  }
+}

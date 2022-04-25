@@ -1,0 +1,373 @@
+<?php
+
+/**
+ * @file
+ * Module related hooks.
+ */
+
+use Drupal\Component\Utility\Html;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Url;
+use Drupal\node\Entity\Node;
+use Drupal\node\NodeInterface;
+use Drupal\perls_learner_state\Plugin\XapiStateBase;
+use Drupal\perls_xapi_reporting\PerlsXapiVerb;
+use Drupal\search_api\Query\QueryInterface;
+use Drupal\xapi\XapiActivity;
+use Drupal\xapi\XapiStatement;
+use Drupal\taxonomy\TermInterface;
+use Drupal\user\UserInterface;
+use Drupal\webform\Entity\WebformSubmission;
+
+/**
+ * Implements hook_xapi_statement_template_alter().
+ *
+ * Adds context to xAPI statements.
+ */
+function perls_xapi_reporting_xapi_statement_template_alter(XapiStatement $statement, array $context) {
+  $entity = isset($context['entity']) ? $context['entity'] : NULL;
+  if ($entity instanceof FieldableEntityInterface && $entity->hasField('field_topic')) {
+    $topic = $entity->get('field_topic')->entity;
+    if ($topic) {
+      $statement->addGroupingContext($topic);
+    }
+  }
+
+  $current_request = \Drupal::requestStack()->getCurrentRequest();
+  if ($current_request->get('_route') !== 'vidyo_platform_client.room') {
+    return;
+  }
+
+  $node_id = $current_request->query->get('event-id');
+  if (empty($node_id) || (!($node = Node::load($node_id)))) {
+    return;
+  }
+
+  /** @var \Drupal\node\Entity\Node $node */
+  $statement->setActivity($node);
+  $statement->addParentContext($node);
+}
+
+/**
+ * Implements hook_entity_view().
+ *
+ * Adds the appropriate reporting library to the node.
+ */
+function perls_xapi_reporting_node_view(array &$build, NodeInterface $node, EntityViewDisplayInterface $display, $view_mode) {
+  if (!perls_xapi_reporting_user_needs_report() || $view_mode === 'teaser' || $view_mode === 'tile') {
+    return;
+  }
+
+  // Avoid attaching reporting if on node edit screen.
+  if (\Drupal::routeMatch()->getRouteName() === 'entity.node.edit_form' || $node->isNew()) {
+    return;
+  }
+
+  if ($view_mode === 'card') {
+    $build['#attached']['library'][] = 'perls_xapi_reporting/perls_xapi_reporting_cards';
+  }
+
+  switch ($node->bundle()) {
+    case 'learn_link':
+      if ($node->hasField('field_link_type') &&
+        $node->get('field_link_type')->getString() !== 'custom' &&
+        $view_mode === 'full') {
+        $build['#attached']['library'][] = 'perls_xapi_reporting/perls_xapi_reporting_link_completed';
+      }
+      break;
+
+    case 'learn_file':
+      $build['#attached']['library'][] = 'perls_xapi_reporting/perls_xapi_reporting_file_completed';
+      break;
+
+    case 'learn_article':
+      if ($view_mode === 'full') {
+        $build['#attached']['library'][] = 'perls_xapi_reporting/perls_xapi_reporting_article_completed';
+      }
+      break;
+  }
+}
+
+/**
+ * Implements hook_entity_view() for taxonomy_term.
+ */
+function perls_xapi_reporting_taxonomy_term_view(array &$build, TermInterface $term, EntityViewDisplayInterface $display, $view_mode) {
+  if ($view_mode === 'full') {
+    $build['#attached']['library'][] = 'perls_xapi_reporting/perls_xapi_reporting_taxonomy';
+  }
+}
+
+/**
+ * Implements hook_preprocess_node().
+ */
+function perls_xapi_reporting_preprocess_node(&$variables) {
+  $node = $variables['node'];
+
+  // Add to all node object.
+  $variables['attributes']['node-id'] = $node->id();
+
+  if ($node->bundle() === 'quiz') {
+    $variables['attributes']['quiz-uuid'] = \Drupal::service('uuid')->generate();
+  }
+
+  if ($node->bundle() === 'test') {
+    $variables['attributes']['test-uuid'] = \Drupal::service('uuid')->generate();
+  }
+  // We need to edit the activity ID of learn_packages.
+  if ($node->bundle() === 'learn_package') {
+    if (isset($variables['content']['_field_layout']['content']['field_learning_package'][0]['#id'])) {
+      $new_id = XapiActivity::createFromEntity($node)->getId();
+      $variables['content']['_field_layout']['content']['field_learning_package'][0]['#id'] = $new_id;
+      $query = $variables['content']['_field_layout']['content']['field_learning_package'][0]['#launch']->getOption('query');
+      $query['activity_id'] = $new_id;
+      $variables['content']['_field_layout']['content']['field_learning_package'][0]['#launch']->setOption('query', $query);
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_block__BLOCK_ID().
+ */
+function perls_xapi_reporting_preprocess_block__vidyo_room_block(&$variables) {
+  $node = \Drupal::routeMatch()->getParameter('node');
+  if ($node && $node->bundle() === 'event') {
+    if (isset($variables['content']['room']['link']['#url']) &&
+    $variables['configuration']['renderer'] != 'vidyo_app') {
+      $link_url =& $variables['content']['room']['link']['#url'];
+      $current_options = $link_url->getOptions();
+      $event_id = [
+        'event-id' => $node->id(),
+      ];
+      if (isset($current_options['query'])) {
+        $current_options['query'] += $event_id;
+      }
+      else {
+        $current_options['query'] = [$event_id];
+      }
+      $link_url->setOptions($current_options);
+    }
+  }
+}
+
+/**
+ * Help to decide which user roles need to send report to LRS server.
+ *
+ * @param Drupal\Core\Session\AccountInterface $user
+ *   The optional user, it not set current user is used.
+ *
+ * @return bool
+ *   If a user need to send report it gives back TRUE otherwise FALSE.
+ */
+function perls_xapi_reporting_user_needs_report(AccountInterface $user = NULL) {
+  if (!$user) {
+    $user = \Drupal::currentUser();
+  }
+  $needs_report = &drupal_static(__FUNCTION__);
+  if (!isset($needs_report)) {
+    $report_config = \Drupal::config('perls_xapi_reporting.settings');
+    $config_roles = array_filter($report_config->get('roles'));
+    $negate = $report_config->get('negate');
+    $user_roles = $user->getRoles();
+    if ($negate) {
+      $needs_report = !(bool) array_intersect($user_roles, $config_roles);
+    }
+    else {
+      $needs_report = (bool) array_intersect($user_roles, $config_roles);
+    }
+  }
+
+  return $needs_report;
+}
+
+/**
+ * Implements hook_search_api_query_alter().
+ *
+ * Sends an xAPI statement for searching.
+ */
+function perls_xapi_reporting_search_api_query_alter(QueryInterface $query) {
+  if ($query->getSearchId() === 'views_page:search__search_page') {
+    $statement = XapiStatement::create()
+      ->setActorToCurrentUser()
+      ->setVerb(PerlsXapiVerb::searched())
+      ->setActivityToSystem()
+      ->setResultResponse(Html::escape($query->getOriginalKeys()));
+
+    \Drupal::service('lrs.request_generator')->sendStatements([$statement]);
+  }
+}
+
+/**
+ * Implements hook_preprocess_views_view().
+ */
+function perls_xapi_reporting_preprocess_views_view(&$variables) {
+  if ($variables['view']->storage->id() == 'search') {
+    $variables['#attached']['library'][] = 'perls_xapi_reporting/perls_xapi_reporting_search';
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_update().
+ */
+function perls_xapi_reporting_webform_submission_update(WebformSubmission $entity) {
+  perls_xapi_resporting_send_feedback_statement($entity);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_insert().
+ */
+function perls_xapi_reporting_webform_submission_insert(WebformSubmission $entity) {
+  perls_xapi_resporting_send_feedback_statement($entity);
+}
+
+/**
+ * Sends an xapi statement when a webform submission was created/updated.
+ *
+ * @param \Drupal\webform\Entity\WebformSubmission $entity
+ *   A drupal entity.
+ */
+function perls_xapi_resporting_send_feedback_statement(WebformSubmission $entity) {
+  /** @var \Drupal\Core\Routing\RouteMatchInterface $current_route */
+  $current_request = \Drupal::service('current_route_match');
+  if ($entity->getWebform()->id() !== 'content_specific_webform' ||
+    $current_request->getRouteName() === 'xapi.statements') {
+    return;
+  }
+
+  /** @var \Drupal\perls_xapi_reporting\PerlsXapiReportingSendFeedbackStatement $feedback_xapi_helper */
+  $feedback_xapi_helper = \Drupal::service('perls_xapi_reporting.send_feedback_statement');
+  $feedback_xapi_helper->sendStatement($entity);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_update().
+ */
+function perls_xapi_reporting_user_update(EntityInterface $entity) {
+  if (perls_xapi_reporting_user_needs_report()) {
+    if (\Drupal::moduleHandler()->moduleExists('perls_goals')) {
+      perls_xapi_reporting_user_defined_goal($entity);
+    }
+    perls_xapi_reporting_user_changed_interest($entity);
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_insert().
+ */
+function perls_xapi_reporting_user_insert(EntityInterface $entity) {
+  if (perls_xapi_reporting_user_needs_report()) {
+    perls_xapi_reporting_user_changed_interest($entity);
+  }
+}
+
+/**
+ * Add to queue the new defined goals.
+ *
+ * @param \Drupal\user\UserInterface $entity
+ *   A user entity.
+ */
+function perls_xapi_reporting_user_defined_goal(UserInterface $entity) {
+  // Currently this function can run when we update and existing user, because
+  // the email_registration module has user_insert hook where it runs save for
+  // user entity so immediately it run the update hook above. The original
+  // entity field's wont be different so the defined xapi won't be sent when a
+  // a new user was created.
+  $queue = \Drupal::queue('xapi_send_defined_goal');
+  $goal_fields = \Drupal::service('perls_goals.goal_helper')
+    ->getGoalFieldList();
+  if ($goal_fields) {
+    foreach ($goal_fields as $field) {
+      // Update the user object.
+      if (isset($entity->original)) {
+        $original_entity = $entity->original;
+        if ($entity->hasField($field['drupal_field']) &&
+          $original_entity->hasField($field['drupal_field']) &&
+          ($entity->get($field['drupal_field'])
+            ->getString() !== $original_entity->get($field['drupal_field'])
+            ->getString())) {
+          $queue->createItem([
+            'field' => $field['api_field'],
+            'user' => $entity->id(),
+            'new_value' => $entity->get($field['drupal_field'])->getString(),
+          ]);
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Check that user has changes own interest set and send xapi about it.
+ *
+ * @param \Drupal\user\UserInterface $entity
+ *   A drupal user.
+ */
+function perls_xapi_reporting_user_changed_interest(UserInterface $entity) {
+  // Update the user object.
+  if ($entity->hasField('field_interests')) {
+    $queue = \Drupal::queue('xapi_send_changed_interest');
+    $old_interests = [];
+    $current_interest = perls_xapi_reporting_extract_ids($entity->get('field_interests')->getValue());
+    if (isset($entity->original)) {
+      $old_interests = perls_xapi_reporting_extract_ids($entity->original->get('field_interests')->getValue());
+    }
+    foreach (array_unique(array_merge($current_interest, $old_interests)) as $interest) {
+      if (in_array($interest, $current_interest) && !in_array($interest, $old_interests)) {
+        $queue->createItem([
+          'uid' => $entity->id(),
+          'content_id' => $interest,
+          'operation' => XapiStateBase::OPERATION_ADD,
+          'time' => \Drupal::time()->getRequestTime(),
+        ]);
+      }
+      elseif (!in_array($interest, $current_interest) && in_array($interest, $old_interests)) {
+        $queue->createItem([
+          'uid' => $entity->id(),
+          'content_id' => $interest,
+          'operation' => XapiStateBase::OPERATION_REMOVE,
+          'time' => \Drupal::time()->getRequestTime(),
+        ]);
+      }
+    }
+  }
+}
+
+/**
+ * Extract the referred entity ids from a entity reference list.
+ *
+ * You should use the getValue() method to get this list from field.
+ *
+ * @param array $ref_list
+ *   The list of entity ids.
+ *
+ * @return array
+ *   The list of entity ids.
+ */
+function perls_xapi_reporting_extract_ids(array $ref_list) {
+  $ids = [];
+  foreach ($ref_list as $item) {
+    $ids[] = $item['target_id'];
+  }
+  return $ids;
+}
+
+/**
+ * Implements template_preprocess_theme().
+ */
+function perls_xapi_reporting_preprocess_vidyo_client(&$variables) {
+  $variables['#attached']['library'][] = 'perls_xapi_reporting/perls_xapi_reporting_vidyo';
+  // This empty value is necessary that
+  // xapi_reporting_js_settings_alter method can fill up with values.
+  $variables['#attached']['drupalSettings'] = [
+    'Xapi' => [
+      'templateStatement' => [],
+    ],
+  ];
+  $variables['attributes']['call-url'] = Url::fromRoute('vidyo_platform_client.room', [
+    'room_key' => $variables['room_key'],
+  ], [
+    'absolute' => TRUE,
+  ])->toString();
+}

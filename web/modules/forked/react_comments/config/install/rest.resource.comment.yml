@@ -1,0 +1,19 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - react_comments
+    - serialization
+    - user
+id: comment
+plugin_id: comment
+granularity: resource
+configuration:
+  methods:
+    - PUT
+    - DELETE
+    - PATCH
+  formats:
+    - json
+  authentication:
+    - cookie

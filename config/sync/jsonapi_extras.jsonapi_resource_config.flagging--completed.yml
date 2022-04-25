@@ -1,0 +1,77 @@
+uuid: 436b4797-a463-4926-83f6-967105107b80
+langcode: en
+status: true
+dependencies:
+  config:
+    - flag.flag.completed
+id: flagging--completed
+disabled: true
+path: flagging/completed
+resourceType: flagging--completed
+resourceFields:
+  id:
+    disabled: false
+    fieldName: id
+    publicName: id
+    enhancer:
+      id: ''
+  uuid:
+    disabled: false
+    fieldName: uuid
+    publicName: uuid
+    enhancer:
+      id: ''
+  flag_id:
+    disabled: false
+    fieldName: flag_id
+    publicName: flag_id
+    enhancer:
+      id: ''
+  entity_type:
+    disabled: false
+    fieldName: entity_type
+    publicName: entity_type
+    enhancer:
+      id: ''
+  entity_id:
+    disabled: false
+    fieldName: entity_id
+    publicName: entity_id
+    enhancer:
+      id: ''
+  flagged_entity:
+    disabled: false
+    fieldName: flagged_entity
+    publicName: flagged_entity
+    enhancer:
+      id: ''
+  global:
+    disabled: false
+    fieldName: global
+    publicName: global
+    enhancer:
+      id: ''
+  uid:
+    disabled: false
+    fieldName: uid
+    publicName: uid
+    enhancer:
+      id: ''
+  session_id:
+    disabled: false
+    fieldName: session_id
+    publicName: session_id
+    enhancer:
+      id: ''
+  created:
+    disabled: false
+    fieldName: created
+    publicName: created
+    enhancer:
+      id: ''
+  field_completion_source:
+    disabled: false
+    fieldName: field_completion_source
+    publicName: field_completion_source
+    enhancer:
+      id: ''

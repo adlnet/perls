@@ -1,0 +1,6 @@
+node_live_preview-lib:
+  version: 1.x
+  js:
+    js/node_live_preview-lib.js: {}
+  dependencies:
+    - core/jQuery

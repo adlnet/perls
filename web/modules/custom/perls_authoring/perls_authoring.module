@@ -1,0 +1,196 @@
+<?php
+
+/**
+ * @file
+ * Provides paragraph types for authoring rich articles.
+ */
+
+use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\views\Plugin\views\query\QueryPluginBase;
+use Drupal\views\ViewExecutable;
+
+/**
+ * Implements hook_theme().
+ */
+function perls_authoring_theme($existing, $type, $theme, $path) {
+  $templates = [];
+
+  $templates['paragraph__alert'] = [
+    'path' => $path . '/templates',
+    'template' => 'paragraph--alert',
+    'base hook' => 'paragraph',
+  ];
+
+  $templates['paragraph__callout'] = [
+    'path' => $path . '/templates',
+    'template' => 'paragraph--callout',
+    'base hook' => 'paragraph',
+  ];
+
+  $templates['paragraph__section_header'] = [
+    'path' => $path . '/templates',
+    'template' => 'paragraph--heading',
+    'base hook' => 'paragraph',
+  ];
+
+  $templates['paragraph__heading'] = [
+    'path' => $path . '/templates',
+    'template' => 'paragraph--heading',
+    'base hook' => 'paragraph',
+  ];
+
+  $templates['field__field_checklist_item'] = [
+    'path' => $path . '/templates',
+    'template' => 'field--field-checklist-item',
+    'base hook' => 'field',
+  ];
+
+  return $templates;
+}
+
+/**
+ * Implements hook_page_attachments().
+ */
+function perls_authoring_page_attachments(array &$attachments) {
+  // @todo Consider conditionally attaching this to node pages.
+  $attachments['#attached']['library'][] = 'perls_authoring/components';
+}
+
+/**
+ * Implements hook_field_widget_WIDGET_TYPE_form_alter() for video_embed_field_textfield.
+ */
+function perls_authoring_field_widget_video_embed_field_textfield_form_alter(&$element, FormStateInterface $form_state, $context) {
+  $element['value']['#placeholder'] = t('e.g. https://youtu.be/uUIgcLJ-GxM');
+}
+
+/**
+ * Implements hook_field_widget_WIDGET_ID_form_alter() for the Image widget.
+ */
+function perls_authoring_field_widget_image_image_form_alter(&$element, FormStateInterface $form_state, $context) {
+  $element['#process'][] = 'perls_authoring_image_widget_process';
+}
+
+/**
+ * Implements hook_views_query_alter().
+ *
+ * Filters out the current node from the entity browser list to avoid the node
+ * being referenced to itself.
+ */
+function perls_authoring_views_query_alter(ViewExecutable $view, QueryPluginBase $query) {
+  if ($view->id() === 'entity_browser_lists') {
+    // Get path of the node edit page.
+    $path = \Drupal::request()->query->get('original_path');
+
+    // Get node ID from paths like /node/{NID}/edit or /node/{NID}.
+    if (preg_match('/node\/(\d+)\/*/', $path, $matches)) {
+      $query->addWhere('', 'node_field_data.nid', $matches[1], '!=');
+    }
+  }
+}
+
+/**
+ * Adds a placeholder to the image alt field.
+ */
+function perls_authoring_image_widget_process($element, FormStateInterface $form_state, $context) {
+  if (isset($element['alt'])) {
+    if (isset($element['#alt_field_required']) && $element['#alt_field_required']) {
+      $element['alt']['#placeholder'] = t('Add an image description for vision-impaired users');
+    }
+    else {
+      $element['alt']['#placeholder'] = t('Add an image description for vision-impaired users (optional)');
+    }
+  }
+
+  if ($context['#form_id'] === 'entity_browser_image_browser_form' && isset($context['widget']['inline_entity_form']['revision_log_message']['#access'])) {
+    $context['widget']['inline_entity_form']['revision_log_message']['#access'] = FALSE;
+  }
+
+  if ($context['#form_id'] === 'entity_browser_image_browser_form' && isset($context['widget']['inline_entity_form']['revision_log_message']['#access'])) {
+    $context['widget']['inline_entity_form']['revision_log_message']['#access'] = FALSE;
+  }
+
+  return $element;
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for field__field_checklist_item.
+ */
+function perls_authoring_preprocess_field__field_checklist_item(&$variables) {
+  $entity = $variables['element']['#object'];
+
+  $variables['entity_uuid'] = $entity->uuid();
+  $variables['attributes']['class'] = ['checklist'];
+}
+
+/**
+ * Set dynamic allowed values for the callout type field.
+ *
+ * @param \Drupal\field\Entity\FieldStorageConfig $definition
+ *   The field definition.
+ * @param \Drupal\Core\Entity\ContentEntityInterface|null $entity
+ *   The entity being created if applicable.
+ * @param bool $cacheable
+ *   Boolean indicating if the results are cacheable.
+ *
+ * @return array
+ *   An array of possible key and value options.
+ *
+ * @see options_allowed_values()
+ */
+function perls_authoring_callout_types(FieldStorageConfig $definition, ContentEntityInterface $entity = NULL, $cacheable) {
+  $options = $definition->getSetting('allowed_values');
+
+  $context = [
+    'entity' => clone $entity,
+  ];
+
+  \Drupal::moduleHandler()->alter('perls_authoring_callout_types', $options, $context);
+
+  return $options;
+}
+
+/**
+ * Implements hook_field_widget_form_alter().
+ *
+ * Pass current selection to entity browser widgets.
+ */
+function perls_authoring_field_widget_form_alter(&$element, FormStateInterface &$form_state, $context) {
+  if (!empty($element['entity_browser'])) {
+    $default_value = $element['entity_browser']['#default_value'];
+    $ids = [];
+    foreach ($default_value as $entity) {
+      $ids[] = $entity->id();
+    }
+    $element['entity_browser']['#widget_context']['current_ids'] = implode('+', $ids);
+  }
+}
+
+/**
+ * Implements hook_form_entity_browser_form_alter().
+ */
+function perls_authoring_form_entity_browser_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  // Here I try to aim entity browser displays where an item select list will
+  // appears.
+  if ($form_id === 'entity_browser_image_browser_form' && isset($form['widget']) && empty($form['widget']['inline_entity_form'])) {
+    if (isset($form['#attributes']['class'])) {
+      $form['#attributes']['class'][] = 'contain-selectable-element';
+    }
+    else {
+      $form['#attributes']['class'] = ['contain-selectable-element'];
+    }
+
+    // Add actions-bottom class to "Insert selected" buttons.
+    if (isset($form['widget']['actions']) && isset($form['widget']['actions']['#attributes']['class'])) {
+      $form['widget']['actions']['#attributes']['class'][] = 'actions-bottom';
+    }
+    elseif (isset($form['widget']['actions']) && empty($form['widget']['actions']['#attributes']['class'])) {
+      $form['widget']['actions']['#attributes'] = [
+        'class' => ['actions-bottom'],
+      ];
+    }
+
+    $form['#attached']['library'][] = 'perls_authoring/view';
+  }
+}

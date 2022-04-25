@@ -1,0 +1,3 @@
+allowed_tags: '<a><b><em><strong><i><p>'
+prefer_gravatar: false
+user_avatar_image_style: 'thumbnail'

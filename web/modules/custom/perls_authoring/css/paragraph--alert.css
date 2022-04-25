@@ -1,0 +1,26 @@
+.paragraph--type--alert {
+  border-radius: 5px;
+  color: #fff;
+  padding: 1em;
+}
+
+.paragraph--type--alert h3 {
+  font-size: 1em;
+  margin: 0;
+}
+
+.field--name-field-alert-body {
+  font-size: 16px;
+}
+
+.paragraph--color--red {
+  background-color: #bc473c;
+}
+
+.paragraph--color--yellow {
+  background-color: #daab3a;
+}
+
+.paragraph--color--green {
+  background-color: #467845;
+}

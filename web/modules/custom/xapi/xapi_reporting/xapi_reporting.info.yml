@@ -1,0 +1,7 @@
+name: xAPI Reporting
+type: module
+description: Adds support for reporting xAPI statements based on users browsing nodes.
+core: 8.x
+core_version_requirement: ^8 || ^9
+dependencies:
+  - xapi

@@ -1,0 +1,17 @@
+prompts.xapi_reporting:
+  version: 1.x
+  js:
+    js/prompt_xapi_reporting.js: {}
+  dependencies:
+    - core/drupal
+    - core/jquery
+    - core/jquery.once
+    - core/jquery.ui
+    - jquery_ui_effects/slide
+    - core/drupal.message
+    - xapi_reporting/xapi-reporting.lib-common
+
+prompts.ui:
+  version: 1.x
+  js:
+    js/prompts_dashboard.ui.js: {}

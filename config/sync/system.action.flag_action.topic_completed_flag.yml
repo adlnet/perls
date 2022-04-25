@@ -1,0 +1,13 @@
+uuid: 9c6c60b5-a590-41e2-b963-69baa0fc4f54
+langcode: en
+status: true
+dependencies:
+  module:
+    - flag
+id: flag_action.topic_completed_flag
+label: 'Flag this item'
+type: taxonomy_term
+plugin: 'flag_action:topic_completed_flag'
+configuration:
+  flag_id: topic_completed
+  flag_action: flag

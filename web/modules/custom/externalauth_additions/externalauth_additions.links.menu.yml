@@ -1,0 +1,7 @@
+externalauth_additions.manage_sso_config:
+  title: 'SSO Configuration'
+  description: 'Manage SSO configuration'
+  parent: perls_default_content.manage_sys_info
+  menu_name: content-management
+  route_name: externalauth_additions.sso_config
+  weight: 3

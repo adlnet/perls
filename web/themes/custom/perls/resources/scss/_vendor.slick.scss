@@ -1,0 +1,164 @@
+@charset "UTF-8";
+
+/* Slider */
+
+/**
+ * Custom slick styles
+ */
+
+.js-slick-slider {
+  position: relative;
+  margin-left: -$space-double;
+  margin-right: -$space-double;
+
+  .slick-list,
+  .slick-track,
+  .slick-slide {
+    height: auto;
+    width: 100%;
+    display: flex;
+  }
+
+  .slick-list {
+    overflow: hidden;
+    padding: 0 $space;
+  }
+
+  > ul:not(.slick-slider) {
+    padding: 0 $space;
+  }
+
+  > ul:not(.slick-slider),
+  .slick-track {
+    position: relative;
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding-bottom: $space;
+  }
+
+  > ul > li:not(.slick-slide),
+  .slick-slide {
+    padding: 0 $space;
+    outline: 0;
+    width: 70vw;
+    min-width: 70vw;
+
+    @include media(">medium") {
+      width: 33vw;
+      min-width: 33vw;
+    }
+
+
+    @include media(">xlarge") {
+      width: 25vw;
+      min-width: 25vw;
+    }
+
+
+    @include media(">xxlarge") {
+      width: 20vw;
+      min-width: 20vw;
+    }
+  }
+}
+
+/* Arrows */
+.slick-prev,
+.slick-next {
+  position: absolute;
+  display: block;
+  height: 50px;
+  width: 50px;
+  line-height: 1;
+  cursor: pointer;
+  color: transparent;
+  overflow: hidden;
+  text-indent: 9999px;
+  background: transparent;
+  top: 25px;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  border-radius: 50%;
+  z-index: 2;
+  box-shadow: $box-shadow;
+  transform: translateY(100%);
+  visibility: visible;
+  // Prevents text height from effecting psuedo element positioning.
+  font-size: 0;
+
+  &::after {
+    background: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='UTF-8'%3F%3E%3Csvg id='SVGDoc' width='25' height='24' xmlns='http://www.w3.org/2000/svg' version='1.1' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:avocode='https://avocode.com/' viewBox='0 0 25 24'%3E%3Cdefs%3E%3C/defs%3E%3Cdesc%3EGenerated with Avocode.%3C/desc%3E%3Cg%3E%3Cg%3E%3Ctitle%3EPath 792%3C/title%3E%3Cpath d='M12.13584,2v0l-10.13584,10.13574v0l10.13584,10.13575v0' fill-opacity='0' fill='%23ffffff' stroke-dashoffset='0' stroke-linejoin='round' stroke-linecap='round' stroke-opacity='1' stroke='%23ffffff' stroke-miterlimit='20' stroke-width='3'%3E%3C/path%3E%3C/g%3E%3Cg%3E%3Ctitle%3ELine 130%3C/title%3E%3Cpath d='M23.09743,11.84295h-20.6704' fill-opacity='0' fill='%23ffffff' stroke-dashoffset='0' stroke-linejoin='round' stroke-linecap='round' stroke-opacity='1' stroke='%23ffffff' stroke-miterlimit='20' stroke-width='3'%3E%3C/path%3E%3C/g%3E%3C/g%3E%3C/svg%3E") center center no-repeat;
+    background-size: 15px 15px;
+    position: relative;
+    width: 15px;
+    height: 15px;
+    display: block;
+    margin: auto;
+    height: 100%;
+    opacity: 1;
+    z-index: 1;
+    transform: translateY(-100%);
+    content: "";
+
+    @include media(">medium") {
+      width: 25px;
+      background-size: 25px 25px;
+    }
+  }
+
+  &::before {
+    position: relative;
+    content: "";
+    background: $c-secondary;
+    border-radius: 50%;
+    width: 100%;
+    display: block;
+    height: 100%;
+    z-index: 0;
+    opacity: 0.6;
+    transition: $transition;
+  }
+
+  &:hover::before {
+    transition: $transition;
+    opacity: 1;
+  }
+
+  @include media(">medium") {
+    top: 0;
+    height: 80px;
+    width: 80px;
+  }
+
+  &.slick-disabled {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+.slick-next {
+  right: $space;
+  // Arrow is rotated so we have to translate the other way to center in parent.
+  transform: rotate(180deg) translateY(-100%);
+  box-shadow: $box-shadow-reversed;
+}
+
+.slick-prev {
+  left: $space;
+}
+
+@include media("<medium") {
+  .slick-next {
+    top: $space-and-half;
+    right: $space-and-half;
+  }
+
+  .slick-prev {
+    top: $space-and-half;
+    left: $space-and-half;
+  }
+}

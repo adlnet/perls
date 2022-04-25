@@ -1,0 +1,22 @@
+uuid: 469f982e-0b43-40b4-9743-4e0379ecaf37
+langcode: en
+status: false
+dependencies:
+  module:
+    - system
+  theme:
+    - perls_content_manager
+_core:
+  default_config_hash: 8by5KRsb7ZpmjHj0ms1d7xAG_xH54AWsOX6spDLJ59U
+id: perls_content_manager_breadcrumbs
+theme: perls_content_manager
+region: inactive
+weight: -5
+provider: null
+plugin: system_breadcrumb_block
+settings:
+  id: system_breadcrumb_block
+  label: Breadcrumbs
+  label_display: '0'
+  provider: system
+visibility: {  }

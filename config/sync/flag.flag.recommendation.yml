@@ -1,0 +1,40 @@
+uuid: 5e5ca1b0-6f77-49e3-b5d3-6ab413c09688
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: recommendation
+label: Recommendation
+bundles:
+  - course
+  - event
+  - flash_card
+  - learn_article
+  - learn_file
+  - learn_link
+  - learn_package
+  - podcast
+  - podcast_episode
+  - quiz
+  - tip_card
+entity_type: node
+global: false
+flag_short: Recommend
+flag_long: ''
+flag_message: ''
+unflag_short: 'Remove Recommendation'
+unflag_long: ''
+unflag_message: ''
+unflag_denied_text: ''
+weight: 0
+flag_type: 'entity:node'
+link_type: ajax_link
+flagTypeConfig:
+  show_in_links: {  }
+  show_as_field: true
+  show_on_form: false
+  show_contextual_link: false
+  extra_permissions:
+    owner: '0'
+linkTypeConfig: {  }

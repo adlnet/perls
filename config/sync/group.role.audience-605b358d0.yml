@@ -1,0 +1,17 @@
+uuid: d8a434e0-b5cb-4308-b040-a00edb4cb016
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.audience
+  enforced:
+    config:
+      - user.role.packager
+id: audience-605b358d0
+label: packager
+weight: 10004
+internal: true
+audience: outsider
+group_type: audience
+permissions_ui: false
+permissions: {  }

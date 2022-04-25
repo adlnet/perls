@@ -1,0 +1,17 @@
+jQuery.timepicker:
+  remote: https://github.com/jonthornton/jquery-timepicker
+  version: 1.13.14
+  license:
+    name: MIT
+  js:
+    https://cdn.jsdelivr.net/npm/timepicker@1.13.14/jquery.timepicker.min.js: { type: external, minified: true }
+  css:
+    theme:
+      https://cdn.jsdelivr.net/npm/timepicker@1.13.14/jquery.timepicker.min.css: { type: external, minified: true }
+notifications_goals.timefield:
+  version: 1.x
+  js:
+    js/notifications_goals.timefield.js: { }
+  dependencies:
+    - notifications_goals/jQuery.timepicker
+    - core/drupalSettings

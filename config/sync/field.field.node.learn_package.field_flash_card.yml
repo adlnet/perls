@@ -1,0 +1,28 @@
+uuid: d5305f62-d29b-4505-9986-e25d72034a58
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_flash_card
+    - node.type.flash_card
+    - node.type.learn_package
+id: node.learn_package.field_flash_card
+field_name: field_flash_card
+entity_type: node
+bundle: learn_package
+label: 'Related Flashcards'
+description: 'Add a flashcard that is directly related to the content. The card should help test the learner''s knowledge.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      flash_card: flash_card
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

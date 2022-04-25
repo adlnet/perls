@@ -1,0 +1,19 @@
+name: 'Notifications'
+type: module
+description: 'A module for managing firebase notification keys.'
+core: 8.x
+core_version_requirement: ^8 || ^9
+dependencies:
+  - field
+  - firebase
+  - page_manager
+  - path
+  - rest
+  - serialization
+  - simple_oauth
+  - notifications
+  - taxonomy
+  - text
+  - user
+  - views
+  - views_bulk_operations

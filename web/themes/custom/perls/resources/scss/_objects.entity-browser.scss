@@ -1,0 +1,153 @@
+/* ------------------------------------ *\
+    $ENTITY BROWSER
+\* ------------------------------------ */
+
+/**
+ * Tab navigation. OVERRIDE
+ */
+.eb-tabs ul {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  margin: $space-double 0 $space;
+  border-bottom: $border--light;
+}
+
+.eb-tabs ul li.active {
+  border: 0;
+}
+
+.eb-tabs ul li a {
+  color: $c-gray;
+  font-weight: normal;
+  padding: $space-half $space;
+  margin-bottom: $space-half;
+  background-color: transparent;
+  transition: background 0.25s $hard-ease-in, color 0.25s $hard-ease-in;
+  display: block;
+  white-space: nowrap;
+
+  &:hover {
+    color: $c-secondary;
+
+    &::after {
+      opacity: 1;
+    }
+
+    &.active::after {
+      opacity: 0;
+    }
+  }
+
+  &::after {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 2px;
+    background-color: $c-secondary;
+    opacity: 0;
+    transition: $transition;
+  }
+
+  &.is-active {
+    background-color: $c-primary;
+    border-radius: $border-radius--card;
+    padding: $space-half $space;
+    color: $c-white;
+    font-weight: bold;
+    cursor: default;
+  }
+}
+
+.entities-list.entity-type--node {
+  @include make-row($space);
+  @include row-cols(2, $space);
+
+  .field--name-field-episodes & {
+    @include row-cols(1, $space);
+
+    counter-reset: row;
+    margin: $space-quarter 0;
+
+    > * {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+
+      &::before {
+        @include o-heading--s;
+
+        counter-increment: row;
+        content: counter(row) ". ";
+        margin-right: $space-quarter;
+      }
+    }
+
+    .o-input {
+      margin: 0 $space-quarter;
+    }
+
+    .item-container {
+      margin: $space-quarter 0;
+      border: $border--light;
+      border-radius: $border-radius--card;
+    }
+  }
+
+  .item-container {
+    margin: $space 0;
+    padding: 10px;
+
+    &:hover {
+      opacity: 1;
+      border-radius: 10px;
+      background-color: $c-admin-item--hover;
+    }
+
+    &,
+    .c-card a {
+      &:hover {
+        cursor: move;
+      }
+    }
+  }
+
+  .o-input {
+    display: inline-block;
+  }
+}
+
+.field--widget-entity-browser-entity-reference {
+  .o-input__submit {
+    .entity-browser-processed {
+      color: $c-white;
+      background-color: $c-black;
+      border-color: $c-black;
+    }
+
+    .ajax-progress-throbber {
+      .throbber {
+        padding: 1px 6px 2px;
+      }
+
+      .message {
+        display: none;
+      }
+    }
+  }
+}
+
+.disable-episode-reference-dg .item-container {
+  &:hover {
+    cursor: auto !important;
+  }
+}
+
+.entity-browser-learning-content-form {
+  .vertical-tabs__menu-item {
+    background: $c-gray-1;
+  }
+}

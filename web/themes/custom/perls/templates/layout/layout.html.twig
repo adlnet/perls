@@ -1,0 +1,23 @@
+{#
+/**
+ * @file
+ * Template for a generic layout.
+ */
+#}
+{%
+  set classes = [
+    'l-grid',
+    'l-grid__' ~ layout.id|clean_class,
+  ]
+%}
+{% if content %}
+  <div{{ attributes.addClass(classes) }}>
+    {% for region in layout.getRegionNames %}
+      {% if content[region] %}
+        <div {{ region_attributes[region].addClass('l-grid-item', 'l-grid-item__' ~ region|clean_class), 'u-spacing--double' }}>
+          {{ content[region] }}
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+{% endif %}

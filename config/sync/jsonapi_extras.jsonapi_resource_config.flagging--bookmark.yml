@@ -1,0 +1,71 @@
+uuid: 141afb18-c118-4586-b679-a10b36abf78f
+langcode: en
+status: true
+dependencies:
+  config:
+    - flag.flag.bookmark
+id: flagging--bookmark
+disabled: true
+path: flagging/bookmark
+resourceType: flagging--bookmark
+resourceFields:
+  id:
+    disabled: false
+    fieldName: id
+    publicName: id
+    enhancer:
+      id: ''
+  uuid:
+    disabled: false
+    fieldName: uuid
+    publicName: uuid
+    enhancer:
+      id: ''
+  flag_id:
+    disabled: false
+    fieldName: flag_id
+    publicName: flag_id
+    enhancer:
+      id: ''
+  entity_type:
+    disabled: false
+    fieldName: entity_type
+    publicName: entity_type
+    enhancer:
+      id: ''
+  entity_id:
+    disabled: false
+    fieldName: entity_id
+    publicName: entity_id
+    enhancer:
+      id: ''
+  flagged_entity:
+    disabled: false
+    fieldName: flagged_entity
+    publicName: flagged_entity
+    enhancer:
+      id: ''
+  global:
+    disabled: false
+    fieldName: global
+    publicName: global
+    enhancer:
+      id: ''
+  uid:
+    disabled: false
+    fieldName: uid
+    publicName: uid
+    enhancer:
+      id: ''
+  session_id:
+    disabled: false
+    fieldName: session_id
+    publicName: session_id
+    enhancer:
+      id: ''
+  created:
+    disabled: false
+    fieldName: created
+    publicName: created
+    enhancer:
+      id: ''

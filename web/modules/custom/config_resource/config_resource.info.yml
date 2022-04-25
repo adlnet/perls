@@ -1,0 +1,4 @@
+name: Configuration API
+description: 'Provides an API to expose configurations in JSON format.'
+type: module
+core: 8.x

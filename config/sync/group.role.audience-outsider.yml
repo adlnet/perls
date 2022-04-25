@@ -1,0 +1,16 @@
+uuid: b065c048-3c40-40a0-9c0c-541687244433
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.audience
+id: audience-outsider
+label: Outsider
+weight: -101
+internal: true
+audience: outsider
+group_type: audience
+permissions_ui: true
+permissions:
+  - 'join group'
+  - 'view group'

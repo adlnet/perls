@@ -1,0 +1,151 @@
+uuid: bc21b3e2-76a0-4b74-8c1c-3fd1026511df
+langcode: en
+status: true
+dependencies:
+  config:
+    - entity_browser.browser.quiz_browser
+    - field.field.node.test.field_adaptive_content
+    - field.field.node.test.field_pass_mark
+    - field.field.node.test.field_quiz
+    - field.field.node.test.field_tags
+    - field.field.node.test.field_test_course
+    - field.field.node.test.field_type_description
+    - node.type.test
+  module:
+    - autocomplete_deluxe
+    - description_field
+    - entity_browser
+    - field_layout
+    - layout_discovery
+    - perls_adaptive_content
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings:
+      label: ''
+id: node.test.default
+targetEntityType: node
+bundle: test
+mode: default
+content:
+  field_adaptive_content:
+    type: adaptive_content_widget
+    weight: 3
+    region: content
+    settings:
+      orderable: true
+      display: select
+    third_party_settings: {  }
+  field_pass_mark:
+    type: number
+    weight: 5
+    region: content
+    settings:
+      orderable: true
+      placeholder: ''
+    third_party_settings: {  }
+  field_quiz:
+    type: entity_browser_entity_reference
+    weight: 4
+    region: content
+    settings:
+      entity_browser: quiz_browser
+      field_widget_display: rendered_entity
+      field_widget_edit: true
+      field_widget_remove: true
+      field_widget_replace: false
+      open: true
+      field_widget_display_settings:
+        view_mode: tile
+      selection_mode: selection_append
+      orderable: true
+    third_party_settings: {  }
+  field_tags:
+    type: autocomplete_deluxe
+    weight: 2
+    region: content
+    settings:
+      match_operator: CONTAINS
+      autocomplete_route_name: autocomplete_deluxe.autocomplete
+      size: 60
+      selection_handler: default
+      limit: 10
+      min_length: 2
+      delimiter: '#'
+      not_found_message_allow: false
+      not_found_message: 'Create a new tag: #@term'
+      new_terms: true
+      no_empty_message: 'No terms could be found. Please type in order to add a new term.'
+      orderable: true
+    third_party_settings: {  }
+  field_type_description:
+    type: description_field_standard
+    weight: 0
+    region: content
+    settings:
+      orderable: true
+    third_party_settings: {  }
+  langcode:
+    type: language_select
+    weight: 6
+    region: content
+    settings:
+      orderable: true
+      include_locked: true
+    third_party_settings: {  }
+  publish_on:
+    type: datetime_timestamp_no_default
+    weight: 30
+    region: content
+    settings:
+      orderable: true
+    third_party_settings: {  }
+  publish_state:
+    type: scheduler_moderation
+    weight: 30
+    region: content
+    settings:
+      orderable: true
+    third_party_settings: {  }
+  status:
+    type: boolean_checkbox
+    weight: 7
+    region: content
+    settings:
+      orderable: true
+      display_label: true
+    third_party_settings: {  }
+  title:
+    type: string_textfield
+    weight: 1
+    region: content
+    settings:
+      orderable: true
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  unpublish_on:
+    type: datetime_timestamp_no_default
+    weight: 30
+    region: content
+    settings:
+      orderable: true
+    third_party_settings: {  }
+  unpublish_state:
+    type: scheduler_moderation
+    weight: 30
+    region: content
+    settings:
+      orderable: true
+    third_party_settings: {  }
+hidden:
+  created: true
+  entitygroupfield: true
+  field_test_course: true
+  group_content: true
+  moderation_state: true
+  path: true
+  promote: true
+  sticky: true
+  uid: true
+  url_redirects: true

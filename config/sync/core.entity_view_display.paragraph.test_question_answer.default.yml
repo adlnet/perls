@@ -1,0 +1,57 @@
+uuid: fa72bd13-4b4a-47dc-832c-03805cff5d45
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.test_question_answer.field_answer_correct
+    - field.field.paragraph.test_question_answer.field_quiz_card
+    - field.field.paragraph.test_question_answer.field_user_answer
+    - paragraphs.paragraphs_type.test_question_answer
+  module:
+    - field_layout
+    - layout_builder
+    - layout_discovery
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings:
+      label: ''
+  layout_builder:
+    enabled: false
+    allow_custom: false
+id: paragraph.test_question_answer.default
+targetEntityType: paragraph
+bundle: test_question_answer
+mode: default
+content:
+  field_answer_correct:
+    type: boolean
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_quiz_card:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_user_answer:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 1
+    region: content
+hidden:
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  search_api_excerpt: true

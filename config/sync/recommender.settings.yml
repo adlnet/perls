@@ -1,0 +1,14 @@
+cron_recommendations: '1'
+rerank_on_load: '0'
+recommendation_flag_id: recommendation
+score_combine_plugin: weighted_score_combine
+random_recommendation_plugin_enabled: 0
+trending_content_recommendation_plugin_enabled: 1
+new_content_recommendation_plugin_enabled: 1
+similar_content_recommendation_plugin_enabled: 1
+user_interests_recommendation_plugin_enabled: 1
+revision_recommendation_plugin_enabled: 1
+pad_results_recommendation_plugin_enabled: 1
+uncompleted_topics_recommendation_plugin_enabled: 1
+uncompleted_course_recommendation_plugin_enabled: 1
+user_feedback_recommendation_plugin_enabled: 1

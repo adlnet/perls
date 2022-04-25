@@ -1,0 +1,172 @@
+<?php
+
+/**
+ * @file
+ * Contains notifications_ui_additions.module.
+ */
+
+use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Element;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\notifications\Entity\PushNotification;
+
+/**
+ * Implements hook_help().
+ */
+function notifications_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the notifications_ui_additions module.
+    case 'help.page.notifications':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('A module for managing firebase notification keys.') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function notifications_theme($existing, $type, $theme, $path) {
+  return [
+    'push_notification' => [
+      'render element' => 'elements',
+    ],
+  ];
+}
+
+/**
+ * Prepares variables for push notification entity template.
+ *
+ * Default template: push-notification.html.twig.
+ */
+function template_preprocess_push_notification(&$variables) {
+  $variables['view_mode'] = $variables['elements']['#view_mode'];
+  $variables['teaser'] = $variables['view_mode'] == 'teaser';
+  $variables['push_notification'] = $variables['elements']['#push_notification'];
+  $message = $variables['push_notification'];
+
+  $variables += ['content' => []];
+  foreach (Element::children($variables['elements']) as $key) {
+    $variables['content'][$key] = $variables['elements'][$key];
+  }
+
+  $variables['site_name'] = \Drupal::config('system.site')->get('name');
+  $variables['send_time'] = empty($message->send_time->value) ? t('now') : \Drupal::service('date.formatter')->format($message->send_time->value, 'medium');
+  $variables['sent'] = $message->getSendStatus() === PushNotification::PUSH_NOTIFICATION_SENT;
+  $statuses = ['queued', 'sent', 'cancelled'];
+  $variables['status'] = $statuses[$message->getSendStatus()];
+
+  $variables += $message->getMessageNotification();
+  $variables['data'] = $message->getMessageData();
+  $variables['json'] = json_encode($message->getMessage(), JSON_PRETTY_PRINT);
+}
+
+/**
+ * Implements hook_page_attachments().
+ */
+function notifications_page_attachments(array &$attachments) {
+  $attachments['#attached']['library'][] = 'notifications/notifications';
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_delete().
+ *
+ * Remove push notification tokens when user is deleted.
+ */
+function notifications_user_delete(EntityInterface $entity) {
+  $user_id = $entity->id();
+  // Find all push notifications for this user and delete them.
+  $query = \Drupal::entityQuery('push_notification_token')
+    ->condition('auth_user_id', $user_id);
+  $ids = $query->execute();
+  if (!empty($ids)) {
+    $entity_storage = \Drupal::entityTypeManager()->getStorage('push_notification_token');
+    $entities_to_delete = $entity_storage->loadMultiple($ids);
+    $entity_storage->delete($entities_to_delete);
+  }
+
+  // Set sent messages to anonymous user.
+  $query = \Drupal::entityQuery('push_notification')
+    ->condition('auth_user_id', $user_id);
+  $ids = $query->execute();
+  if (!empty($ids)) {
+    $sent_messages = \Drupal::entityTypeManager()->getStorage('push_notification')->loadMultiple($ids);
+    foreach ($sent_messages as $message) {
+      $message->set('auth_user_id', 0);
+      $message->save();
+    }
+  }
+
+  // Remove all references to this user in sent message recipients.
+  // Since this is a list field we will just do a database query directly.
+  // This ensures if the message data is reused it does not contain users
+  // that have been removed.
+  $query = \Drupal::database()->delete('push_notification__recipients')
+    ->condition('recipients_target_id', $user_id);
+  $query->execute();
+}
+
+/**
+ * Implements  hook_cron().
+ *
+ * This corn job is used to send queued push notifications. This job gets called
+ * every time that cron is called. To avoid push notifications taking up too
+ * many resourses we enforce a interval (default 5 minutes) between each time
+ * this cron job runs. When it runs it searches database for unsent push
+ * notifications with a send time in teh past and attempts to send them.
+ */
+function notifications_cron() {
+  // We access our configuration.
+  $cron_config = \Drupal::configFactory()
+    ->getEditable('notifications.settings');
+
+  // We only want to run this test based on interval setting.
+  $interval = $cron_config->get('interval');
+  $interval = !empty($interval) ? $interval : 300;
+
+  // We usually don't want to act every time cron runs (which could be every
+  // minute) so keep a time for the next run in the site state.
+  $next_execution = \Drupal::state()
+    ->get('notifications.next_execution');
+  $next_execution = !empty($next_execution) ? $next_execution : 0;
+  if (\Drupal::time()->getRequestTime() >= $next_execution) {
+    \Drupal::logger('notifications')
+      ->notice('Checking for queued push notifications');
+    $query = \Drupal::entityQuery('push_notification')
+      ->condition('status', 1)
+      ->condition('sent', PushNotification::PUSH_NOTIFICATION_PENDING)
+      ->condition('send_time', \Drupal::time()->getRequestTime(), '<');
+    $ids = $query->execute();
+    $messageService = \Drupal::service('notifications.firebase.message');
+    foreach ($ids as $id) {
+      $push_notification_entity = \Drupal::entityTypeManager()->getStorage('push_notification')->load($id);
+      \Drupal::logger('notifications')
+        ->notice('Sending notification \'@title\' to all recipients', ['@title' => $push_notification_entity->label()]);
+      $messageService->sendMessage($push_notification_entity);
+    }
+    \Drupal::state()
+      ->set('notifications.next_execution', \Drupal::time()->getRequestTime() + $interval);
+  }
+}
+
+/**
+ * Appends the timezone to the time field when scheduling a notification.
+ *
+ * @see SendPushNotification::buildConfigurationForm
+ */
+function _notifications_datetime_time(array &$element, FormStateInterface $form_state, DrupalDateTime $date = NULL) {
+  // Not all regions have an abbreviation.
+  // In that case, we will use the UTC offset.
+  $abbreviation = date('T');
+  if (is_numeric($abbreviation)) {
+    $element['time']['#field_suffix'] = 'UTC' . date('P');
+  }
+  else {
+    $element['time']['#field_suffix'] = $abbreviation;
+  }
+}

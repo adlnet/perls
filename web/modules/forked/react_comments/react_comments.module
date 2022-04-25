@@ -1,0 +1,59 @@
+<?php
+
+use Drupal\node\NodeInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\react_comments\Model\Comments as CommentsModel;
+use Drupal\comment\Entity\Comment as CommentEntity;
+
+define('RC_COMMENT_PUBLISHED', 1);
+define('RC_COMMENT_UNPUBLISHED', 0);
+define('RC_COMMENT_FLAGGED', 2);
+define('RC_COMMENT_DELETED', 3);
+
+function react_comments_preprocess_field(&$vars) {
+  global $base_url;
+
+  if ($vars['field_type'] === 'comment') {
+    $vars['#attached']['library'][] = 'react_comments/react_comments';
+    $vars['config'] = json_encode([
+      'entity_id' => $vars['element']['#object'] ? $vars['element']['#object']->id() : NULL,
+      'origin' => $base_url
+    ]);
+  }
+}
+
+/**
+ * Implements hook_entity_delete().
+ */
+function react_comments_entity_delete(EntityInterface $entity) {
+  if ($entity->getEntityTypeId() == 'comment') {
+    $query = \Drupal::database()->delete('react_comments_status');
+    $query->condition('cid', $entity->id());
+    $query->execute();
+  }
+}
+
+/**
+ * Implements hook_node_links_alter().
+ */
+function react_comments_node_links_alter(array &$links, NodeInterface $entity, array &$context) {
+  unset($links['comment__comment']);
+}
+
+/**
+ * Implements hook_theme_registry_alter().
+ */
+function react_comments_theme_registry_alter(&$theme_registry) {
+  $theme_registry['field__comment']['path'] = drupal_get_path('module', 'react_comments') . '/templates';
+}
+
+/**
+ * Implements hook_theme().
+ */
+function react_comments_theme($existing, $type, $theme, $path) {
+  return [
+    'comments' => [
+      'variables' => ['entity_id' => NULL, 'origin' => NULL, 'is_hidden' => FALSE],
+    ],
+  ];
+}

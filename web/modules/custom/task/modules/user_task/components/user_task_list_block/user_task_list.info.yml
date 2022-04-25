@@ -1,0 +1,19 @@
+name: User Task List Block
+machine_name: user_task_list_block
+type: pdb
+description: 'This block lists task for the given user.'
+package: VueJS Blocks
+core: 8.x
+core_version_requirement: ^8 || ^9
+module_status: active
+presentation: vue
+add_js:
+  footer:
+    'user_task_list_block.js': {}
+add_css:
+  header:
+    component:
+      'user_task_list_block.css': {}
+template: template.html
+libraries:
+  - pdb_vue/vue.vuex

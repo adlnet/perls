@@ -1,0 +1,33 @@
+/* ------------------------------------ *\
+    $AUTOSAVE
+\* ------------------------------------ */
+
+// Dialog
+.c-draft {
+  @include u-spacing($space-half);
+
+  max-width: 400px;
+}
+
+.ui-dialog {
+  &.ui-corner-all {
+    border-radius: $border-radius--card;
+    overflow: hidden;
+  }
+
+  .ui-dialog-buttonpane {
+    background-color: $c-white;
+  }
+}
+
+
+// Buttons
+.autosave-form-resume-button,
+.autosave-form-reject-button {
+  &:hover,
+  &:focus,
+  &:active {
+    border: none;
+    font-weight: 700;
+  }
+}

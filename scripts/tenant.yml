@@ -1,0 +1,935 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Next-gen template; not yet widely used.
+Parameters:
+  TENANT:
+    Description: The name of the TENANT
+    Type: String
+  SMTPPASSWORDARN:
+    Description: ARN of secret containing the SMTP Password
+    Type: String
+  PRIORITY:
+    Description: Where to put the listener rule in the LB config
+    Type: Number
+  LRSHOST:
+    Description: Endpoint for TENANT's xapi statements to be sent
+    Type: String
+  LRSPASSWORDARN:
+    Description: ARN of secret containing the LRS Password
+    Type: String
+  SMTPUSERNAME:
+    Description: User for Email account
+    Type: String
+  SMTPHOST:
+    Description: Host for SMTP Connection
+    Type: String
+  SMTPFROM:
+    Description: Email to send from
+    Type: String
+  SMTPPORT:
+    Description: Port for SMTP connection
+    Type: String
+  SMTPPROTOCOL:
+    Description: Protocol for SMTP connections(SSL or TLS)
+    Type: String
+    Default: tls
+  VERSION:
+    Description: Version of the Container
+    Type: String
+  SIMPLESAMLAUTHSOURCE:
+    Description: SAML auth source
+    Type: String
+    Default: perls
+  SIMPLESAMLCONFIGDIR:
+    Description: Directory location of SAML config
+    Type: String
+    Default: "/var/www/html/private/saml_config"
+  Project:
+    Description: Lowercase name of the project for pulling the container
+    Type: String
+  BaseStack:
+    Description: Name of the initial base cloudformation stack
+    Type: String
+  ADDRESS:
+    Description: Address of the CMS
+    Type: String
+  BRAND:
+    Description: Which brand of CMS
+    AllowedValues: [PERLS]
+    Type: String
+    Default: PERLS
+  SNSTopic:
+    Description: ARN of the SNS Topic to send alerts to
+    Type: String
+  DBPASSWORDARN:
+    Description: ARN of secret containing the SMTP Password
+    Type: String
+  FIREBASEKEY:
+    Description: Key for sending push notifications
+    Type: String
+  FIREBASEID:
+    Description: ID for sending push notifications
+    Type: String
+  ALTHost:
+    Description: Additional hostname to add to trusted hosts in settings.php
+    Type: String
+    Default: ''
+  SIMPLESAMLHOST:
+    Description: URL for initiating SSO requests. Only needed if the site is accessible from multiple URLs.
+    Type: String
+    Default: ''
+
+Conditions:
+  NoAltName: !Equals
+    - !Ref ALTHost
+    - ''
+
+Resources:
+  TaskDefinitionPHP:
+    DependsOn: CloudWatchPHPLogGroup
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      ContainerDefinitions:
+        - Name: !Sub ${TENANT}-php
+          Secrets:
+            - Name: DB_PASSWORD
+              ValueFrom: !Sub ${DBPASSWORDARN}
+            - Name: LRS_PASSWORD
+              ValueFrom: !Sub ${LRSPASSWORDARN}
+            - Name: SMTP_PASSWORD
+              ValueFrom: !Sub ${SMTPPASSWORDARN}
+          Environment:
+            - Name: DB_DRIVER
+              Value: mysql
+            - Name: DB_HOST
+              Value:
+                Fn::ImportValue:
+                  !Sub ${BaseStack}-RDS
+            - Name: DB_NAME
+              Value: !Sub ${TENANT}_${BRAND}
+            - Name: DB_PORT
+              Value: 3306
+            - Name: DB_USER
+              Value: !Sub ${TENANT}
+            - Name: DRUPAL_SOLR_HOST
+              Value:
+                Fn::Join:
+                  - ''
+                  - - !Sub ${TENANT}.solr.
+                    - Fn::ImportValue:
+                        !Sub ${BaseStack}-InternalBaseURL
+            - Name: SMTP_USERNAME
+              Value: !Sub ${SMTPUSERNAME}
+            - Name: LRS_HOST
+              Value: !Sub ${LRSHOST}
+            - Name: LRS_USERNAME
+              Value: !Sub ${TENANT}
+            - Name: SMTP_FROM
+              Value: !Sub ${SMTPFROM}
+            - Name: SMTP_HOST
+              Value: !Sub ${SMTPHOST}
+            - Name: SMTP_PORT
+              Value: !Sub ${SMTPPORT}
+            - Name: SMTP_PROTOCOL
+              Value: !Sub ${SMTPPROTOCOL}
+            - Name: BRAND
+              Value: !Sub ${BRAND}
+            - Name: SIMPLESAML_AUTH_SOURCE
+              Value: !Sub ${SIMPLESAMLAUTHSOURCE}
+            - Name: SIMPLESAML_CONFIG_DIR
+              Value: !Sub ${SIMPLESAMLCONFIGDIR}
+            - Name: REDIS_HOST
+              Value: !Sub ${TENANT}-redis.internalservice
+            - Name: FIREBASE_SERVER_KEY
+              Value: !Sub ${FIREBASEKEY}
+            - Name: FIREBASE_SENDER_ID
+              Value: !Sub ${FIREBASEID}
+            - Name: ADDITIONAL_TRUSTED_HOST
+              Value:
+                Fn::If:
+                  - NoAltName
+                  - !Ref AWS::NoValue
+                  - !Sub ${ALTHost}
+            - Name: SIMPLESAML_HOST
+              Value:
+                Fn::If:
+                  - NoAltName
+                  - !Ref AWS::NoValue
+                  - !Sub ${SIMPLESAMLHOST}
+
+          MountPoints:
+            - SourceVolume: public
+              ContainerPath: /var/www/html/web/sites/default/files
+            - SourceVolume: private
+              ContainerPath: /var/www/html/private
+          Image: !Sub '${AWS::AccountId}.dkr.ecr.us-east-1.amazonaws.com/${Project}:${VERSION}'
+          PortMappings:
+            - ContainerPort: 80
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-region: us-east-1
+              awslogs-group: !Sub ${TENANT}-php
+              awslogs-stream-prefix: php
+      Cpu: 512
+      ExecutionRoleArn:
+        Fn::ImportValue:
+          !Sub ${BaseStack}-ECSTaskExecutionRole
+      Family: !Sub ${TENANT}-php-task
+      Memory: 1024
+      NetworkMode: awsvpc
+      RequiresCompatibilities:
+        - FARGATE
+      Volumes:
+        -
+          EFSVolumeConfiguration:
+              AuthorizationConfig:
+                AccessPointId: !Ref EFSPublicAP
+                IAM: DISABLED
+              FilesystemId:
+                Fn::ImportValue:
+                  !Sub ${BaseStack}-EFS
+              TransitEncryption: ENABLED
+          Name: public
+        -
+          EFSVolumeConfiguration:
+              AuthorizationConfig:
+                AccessPointId: !Ref EFSPrivateAP
+                IAM: DISABLED
+              FilesystemId:
+                Fn::ImportValue:
+                  !Sub ${BaseStack}-EFS
+              TransitEncryption: ENABLED
+          Name: private
+
+  TaskDefinitionPHPAdmin:
+    DependsOn: CloudWatchPHPLogGroup
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      ContainerDefinitions:
+        - Name: !Sub ${TENANT}-php
+          Secrets:
+            - Name: DB_PASSWORD
+              ValueFrom: !Sub ${DBPASSWORDARN}
+            - Name: LRS_PASSWORD
+              ValueFrom: !Sub ${LRSPASSWORDARN}
+            - Name: SMTP_PASSWORD
+              ValueFrom: !Sub ${SMTPPASSWORDARN}
+          Environment:
+            - Name: DB_DRIVER
+              Value: mysql
+            - Name: DB_HOST
+              Value:
+                Fn::ImportValue:
+                  !Sub ${BaseStack}-RDS
+            - Name: DB_NAME
+              Value: !Sub ${TENANT}_${BRAND}
+            - Name: DB_PORT
+              Value: 3306
+            - Name: DB_USER
+              Value: !Sub ${TENANT}
+            - Name: DRUPAL_SOLR_HOST
+              Value:
+                Fn::Join:
+                  - ''
+                  - - !Sub ${TENANT}.solr.
+                    - Fn::ImportValue:
+                        !Sub ${BaseStack}-InternalBaseURL
+            - Name: SMTP_USERNAME
+              Value: !Sub ${SMTPUSERNAME}
+            - Name: LRS_HOST
+              Value: !Sub ${LRSHOST}
+            - Name: LRS_USERNAME
+              Value: !Sub ${TENANT}
+            - Name: SMTP_FROM
+              Value: !Sub ${SMTPFROM}
+            - Name: SMTP_HOST
+              Value: !Sub ${SMTPHOST}
+            - Name: SMTP_PORT
+              Value: !Sub ${SMTPPORT}
+            - Name: BRAND
+              Value: !Sub ${BRAND}
+            - Name: SIMPLESAML_AUTH_SOURCE
+              Value: !Sub ${SIMPLESAMLAUTHSOURCE}
+            - Name: SIMPLESAML_CONFIG_DIR
+              Value: !Sub ${SIMPLESAMLCONFIGDIR}
+            - Name: REDIS_HOST
+              Value: !Sub ${TENANT}-redis.internalservice
+          MountPoints:
+            - SourceVolume: public
+              ContainerPath: /var/www/html/web/sites/default/files
+            - SourceVolume: private
+              ContainerPath: /var/www/html/private
+          Image: !Sub '${AWS::AccountId}.dkr.ecr.us-east-1.amazonaws.com/${Project}:${VERSION}'
+          PortMappings:
+            - ContainerPort: 80
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-region: us-east-1
+              awslogs-group: !Sub ${TENANT}-php-updates
+              awslogs-stream-prefix: php
+      Cpu: 512
+      ExecutionRoleArn:
+        Fn::ImportValue:
+          !Sub ${BaseStack}-ECSTaskExecutionRole
+      Family: !Sub ${TENANT}-php-admin-task
+      Memory: 1024
+      NetworkMode: awsvpc
+      RequiresCompatibilities:
+        - FARGATE
+      Volumes:
+        -
+          EFSVolumeConfiguration:
+              AuthorizationConfig:
+                AccessPointId: !Ref EFSPublicAP
+                IAM: DISABLED
+              FilesystemId:
+                Fn::ImportValue:
+                  !Sub ${BaseStack}-EFS
+              TransitEncryption: ENABLED
+          Name: public
+        -
+          EFSVolumeConfiguration:
+              AuthorizationConfig:
+                AccessPointId: !Ref EFSPrivateAP
+                IAM: DISABLED
+              FilesystemId:
+                Fn::ImportValue:
+                  !Sub ${BaseStack}-EFS
+              TransitEncryption: ENABLED
+          Name: private
+
+  TaskDefinitionRedis:
+    DependsOn: [EFSSolrAP, CloudWatchRedisLogGroup]
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      RequiresCompatibilities:
+        - FARGATE
+      Cpu: 256
+      Memory: 512
+      ExecutionRoleArn:
+        Fn::ImportValue:
+          !Sub ${BaseStack}-ECSTaskExecutionRole
+      NetworkMode: awsvpc
+      ContainerDefinitions:
+        - Name: !Sub ${TENANT}-redis
+          Image: redis:6
+          PortMappings:
+            - ContainerPort: 6379
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-region: us-east-1
+              awslogs-stream-prefix: redis
+              awslogs-group: !Sub ${TENANT}-redis
+      Family: !Sub ${TENANT}-redis-task
+
+  TaskDefinitionSOLR:
+    DependsOn: CloudWatchSOLRLogGroup
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      RequiresCompatibilities:
+        - FARGATE
+      Cpu: 256
+      Memory: 512
+      ExecutionRoleArn:
+        Fn::ImportValue:
+          !Sub ${BaseStack}-ECSTaskExecutionRole
+      NetworkMode: awsvpc
+      ContainerDefinitions:
+        - Name: !Sub ${TENANT}-solr
+          Environment:
+            - Name: SOLR_JAVA_MEM
+              Value: -Xms384m -Xmx384m
+          MountPoints:
+            - SourceVolume: solr
+              ContainerPath: /var/solr/data
+          Image: solr:8
+          PortMappings:
+            - ContainerPort: 8983
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-region: us-east-1
+              awslogs-group: !Sub ${TENANT}-solr
+              awslogs-stream-prefix: solr
+      Volumes:
+        -
+          EFSVolumeConfiguration:
+              AuthorizationConfig:
+                AccessPointId: !Ref EFSSolrAP
+                IAM: DISABLED
+              FilesystemId:
+                Fn::ImportValue:
+                  !Sub ${BaseStack}-EFS
+              TransitEncryption: ENABLED
+          Name: solr
+      Family: !Sub ${TENANT}-solr-task
+
+  ServicePHP:
+    DependsOn: ListenerRulePHP
+    Type: AWS::ECS::Service
+    Properties:
+      PlatformVersion: 1.4.0
+      ServiceName: !Sub ${TENANT}-php-svc
+      Cluster:
+        Fn::ImportValue:
+          !Sub ${BaseStack}-ECSCluster
+      TaskDefinition: !Ref TaskDefinitionPHP
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+            AssignPublicIp: ENABLED
+            SecurityGroups:
+              - Fn::ImportValue:
+                  !Sub ${BaseStack}-SGECS
+            Subnets:
+              - Fn::ImportValue:
+                  !Sub ${BaseStack}-PrivateSubnet1
+              - Fn::ImportValue:
+                  !Sub ${BaseStack}-PrivateSubnet2
+              - Fn::ImportValue:
+                  !Sub ${BaseStack}-PrivateSubnet3
+              - Fn::ImportValue:
+                  !Sub ${BaseStack}-PrivateSubnet4
+              - Fn::ImportValue:
+                  !Sub ${BaseStack}-PrivateSubnet5
+              - Fn::ImportValue:
+                  !Sub ${BaseStack}-PrivateSubnet6
+
+      DeploymentConfiguration:
+        MaximumPercent: 200
+        MinimumHealthyPercent: 50
+      SchedulingStrategy: REPLICA
+      DesiredCount: 1
+      LaunchType: FARGATE
+      EnableECSManagedTags: true
+      HealthCheckGracePeriodSeconds: 30
+      LoadBalancers:
+        - ContainerName: !Sub ${TENANT}-php
+          ContainerPort: 80
+          TargetGroupArn: !Ref TargetGroupPHP
+      Tags:
+        - Key: TENANT
+          Value: !Sub ${TENANT}
+
+  ServiceSOLR:
+    DependsOn: ListenerRuleSOLR
+    Type: AWS::ECS::Service
+    Properties:
+      PlatformVersion: 1.4.0
+      ServiceName: !Sub ${TENANT}-solr-svc
+      Cluster:
+        Fn::ImportValue:
+          !Sub ${BaseStack}-ECSCluster
+      TaskDefinition: !Ref TaskDefinitionSOLR
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+            AssignPublicIp: ENABLED
+            SecurityGroups:
+              - Fn::ImportValue:
+                  !Sub ${BaseStack}-SGSolr
+            Subnets:
+              - Fn::ImportValue:
+                  !Sub ${BaseStack}-PrivateSubnet1
+              - Fn::ImportValue:
+                  !Sub ${BaseStack}-PrivateSubnet2
+              - Fn::ImportValue:
+                  !Sub ${BaseStack}-PrivateSubnet3
+              - Fn::ImportValue:
+                  !Sub ${BaseStack}-PrivateSubnet4
+              - Fn::ImportValue:
+                  !Sub ${BaseStack}-PrivateSubnet5
+              - Fn::ImportValue:
+                  !Sub ${BaseStack}-PrivateSubnet6
+      DeploymentConfiguration:
+        MaximumPercent: 200
+        MinimumHealthyPercent: 50
+      SchedulingStrategy: REPLICA
+      DesiredCount: 1
+      LaunchType: FARGATE
+      EnableECSManagedTags: true
+      HealthCheckGracePeriodSeconds: 30
+      LoadBalancers:
+        - ContainerName: !Sub ${TENANT}-solr
+          ContainerPort: 8983
+          TargetGroupArn: !Ref TargetGroupSOLR
+      Tags:
+        - Key: TENANT
+          Value: !Sub ${TENANT}
+
+  RedisDiscoveryService:
+    Type: AWS::ServiceDiscovery::Service
+    Properties:
+      Description: Discovery Service for redis
+      DnsConfig:
+        RoutingPolicy: MULTIVALUE
+        DnsRecords:
+          - TTL: 60
+            Type: A
+      HealthCheckCustomConfig:
+        FailureThreshold: 1
+      Name: !Sub ${TENANT}-redis
+      NamespaceId:
+        Fn::ImportValue:
+          !Sub ${BaseStack}-ServiceDiscovery
+
+  ServiceRedis:
+    Type: AWS::ECS::Service
+    Properties:
+      PlatformVersion: 1.4.0
+      ServiceName: !Sub ${TENANT}-redis-svc
+      Cluster:
+        Fn::ImportValue:
+          !Sub ${BaseStack}-ECSCluster
+      TaskDefinition: !Ref TaskDefinitionRedis
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+            AssignPublicIp: ENABLED
+            SecurityGroups:
+              - Fn::ImportValue:
+                  !Sub ${BaseStack}-SGRedis
+            Subnets:
+              - Fn::ImportValue:
+                  !Sub ${BaseStack}-PrivateSubnet1
+              - Fn::ImportValue:
+                  !Sub ${BaseStack}-PrivateSubnet2
+              - Fn::ImportValue:
+                  !Sub ${BaseStack}-PrivateSubnet3
+              - Fn::ImportValue:
+                  !Sub ${BaseStack}-PrivateSubnet4
+              - Fn::ImportValue:
+                  !Sub ${BaseStack}-PrivateSubnet5
+              - Fn::ImportValue:
+                  !Sub ${BaseStack}-PrivateSubnet6
+      DeploymentConfiguration:
+        MaximumPercent: 200
+        MinimumHealthyPercent: 50
+      SchedulingStrategy: REPLICA
+      DesiredCount: 1
+      LaunchType: FARGATE
+      EnableECSManagedTags: true
+      ServiceRegistries:
+        - RegistryArn: !GetAtt RedisDiscoveryService.Arn
+      Tags:
+        - Key: TENANT
+          Value: !Sub ${TENANT}
+
+  ListenerRulePHP:
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    Properties:
+      Actions:
+        - Type: forward
+          TargetGroupArn: !Ref TargetGroupPHP
+      Conditions:
+        - Field: host-header
+          HostHeaderConfig:
+            Values:
+              - !Sub ${ADDRESS}
+      ListenerArn:
+        Fn::ImportValue:
+          !Sub ${BaseStack}-AppLBListener
+      Priority: !Sub ${PRIORITY}
+
+  ListenerRuleSOLR:
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    Properties:
+      Actions:
+        - Type: forward
+          TargetGroupArn: !Ref TargetGroupSOLR
+      Conditions:
+        - Field: host-header
+          HostHeaderConfig:
+            Values:
+              -
+                Fn::Join:
+                  - ''
+                  - - !Sub ${TENANT}.solr.
+                    - Fn::ImportValue:
+                        !Sub ${BaseStack}-InternalBaseURL
+      ListenerArn:
+        Fn::ImportValue:
+          !Sub ${BaseStack}-SolrLBListener
+      Priority: !Sub ${PRIORITY}
+
+
+  TargetGroupPHP:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      HealthCheckEnabled: true
+      HealthCheckIntervalSeconds: 45
+      HealthCheckPath: /ping
+      HealthCheckProtocol: HTTP
+      HealthCheckTimeoutSeconds: 30
+      HealthyThresholdCount: 2
+      Name: !Sub ${TENANT}-php-tg
+      Port: 80
+      Protocol: HTTP
+      TargetType: ip
+      TargetGroupAttributes:
+        - Key: stickiness.enabled
+          Value: true
+        - Key: stickiness.lb_cookie.duration_seconds
+          Value: 3600
+        - Key: deregistration_delay.timeout_seconds
+          Value: 30
+      UnhealthyThresholdCount: 2
+      VpcId:
+        Fn::ImportValue:
+          !Sub ${BaseStack}-VPCID
+
+  TargetGroupSOLR:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      HealthCheckEnabled: true
+      HealthCheckIntervalSeconds: 45
+      HealthCheckPath: /solr/#/
+      HealthCheckProtocol: HTTP
+      HealthCheckTimeoutSeconds: 30
+      HealthyThresholdCount: 2
+      Name: !Sub ${TENANT}-solr-tg
+      Port: 8983
+      Protocol: HTTP
+      TargetType: ip
+      UnhealthyThresholdCount: 2
+      VpcId:
+        Fn::ImportValue:
+          !Sub ${BaseStack}-VPCID
+
+  EFSPublicAP:
+      Type: AWS::EFS::AccessPoint
+      Properties:
+        FileSystemId:
+          Fn::ImportValue:
+            !Sub ${BaseStack}-EFS
+        PosixUser:
+          Uid: "1000"
+          Gid: "1000"
+        RootDirectory:
+          Path: !Sub "/${TENANT}/public"
+
+  EFSPrivateAP:
+      Type: AWS::EFS::AccessPoint
+      Properties:
+        FileSystemId:
+          Fn::ImportValue:
+            !Sub ${BaseStack}-EFS
+        PosixUser:
+          Uid: "1000"
+          Gid: "1000"
+        RootDirectory:
+          Path: !Sub "/${TENANT}/private"
+
+  EFSSolrAP:
+      Type: AWS::EFS::AccessPoint
+      Properties:
+        FileSystemId:
+          Fn::ImportValue:
+            !Sub ${BaseStack}-EFS
+        PosixUser:
+          Uid: "8983"
+          Gid: "8983"
+        RootDirectory:
+          Path: !Sub "/${TENANT}/solr"
+
+  ScalableTarget:
+    DependsOn: ServicePHP
+    Type: AWS::ApplicationAutoScaling::ScalableTarget
+    Properties:
+      MaxCapacity: 20
+      MinCapacity: 1
+      RoleARN:
+        Fn::ImportValue:
+          !Sub ${BaseStack}-AppAutoScalingRole
+      ServiceNamespace: ecs
+      ScalableDimension: ecs:service:DesiredCount
+      ResourceId:
+        Fn::Join:
+          - '/'
+          - - service
+            - Fn::ImportValue:
+                !Sub ${BaseStack}-ECSCluster
+            - !Sub ${TENANT}-php-svc
+
+  ECSCPUAutoscaling:
+    DependsOn: [ServicePHP, ScalableTarget]
+    Type: AWS::ApplicationAutoScaling::ScalingPolicy
+    Properties:
+      PolicyName: !Sub ${TENANT}-CPU-AutoScaling
+      PolicyType: TargetTrackingScaling
+      ScalableDimension: ecs:service:DesiredCount
+      ServiceNamespace: ecs
+      TargetTrackingScalingPolicyConfiguration:
+        ScaleInCooldown: 300
+        ScaleOutCooldown: 120
+        TargetValue: 50
+        PredefinedMetricSpecification:
+          PredefinedMetricType: ECSServiceAverageCPUUtilization
+      ResourceId:
+        Fn::Join:
+          - '/'
+          - - service
+            - Fn::ImportValue:
+                !Sub ${BaseStack}-ECSCluster
+            - !Sub ${TENANT}-php-svc
+
+  ECSMEMAutoscaling:
+    DependsOn: [ServicePHP, ScalableTarget]
+    Type: AWS::ApplicationAutoScaling::ScalingPolicy
+    Properties:
+      PolicyName: !Sub ${TENANT}-MEM-AutoScaling
+      PolicyType: TargetTrackingScaling
+      ScalableDimension: ecs:service:DesiredCount
+      ServiceNamespace: ecs
+      TargetTrackingScalingPolicyConfiguration:
+        ScaleInCooldown: 300
+        ScaleOutCooldown: 120
+        TargetValue: 50
+        PredefinedMetricSpecification:
+          PredefinedMetricType: ECSServiceAverageMemoryUtilization
+      ResourceId:
+        Fn::Join:
+          - '/'
+          - - service
+            - Fn::ImportValue:
+                !Sub ${BaseStack}-ECSCluster
+            - !Sub ${TENANT}-php-svc
+
+  CloudWatchPHPLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub ${TENANT}-php
+      RetentionInDays: 365
+
+  CloudWatchPHPAdminLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub ${TENANT}-php-updates
+      RetentionInDays: 365
+
+  CloudWatchSOLRLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub ${TENANT}-solr
+      RetentionInDays: 365
+
+  CloudWatchRedisLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub ${TENANT}-redis
+      RetentionInDays: 365
+
+  SearchAPIMetric:
+    Type: AWS::Logs::MetricFilter
+    Properties:
+      FilterPattern: "ERROR search_api"
+      LogGroupName: !Ref CloudWatchPHPLogGroup
+      MetricTransformations:
+        - MetricName: !Sub ${TENANT}-SOLR-error
+          MetricNamespace: !Sub ${TENANT}
+          MetricValue: 1
+
+  SearchAPIAlarm:
+    Type: AWS::CloudWatch::Alarm
+    DependsOn: SearchAPIMetric
+    Properties:
+      AlarmActions:
+        - !Sub ${SNSTopic}
+      AlarmDescription: "SOLR has triggered an error.  Check Watchdog and Status Report"
+      AlarmName: !Sub ${TENANT}-SOLR-Error-Alarm
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      DatapointsToAlarm: 1
+      EvaluationPeriods: 1
+      Threshold: 0
+      MetricName: !Sub ${TENANT}-SOLR-error
+      Namespace: !Sub ${TENANT}
+      Period: 60
+      Statistic: Sum
+      TreatMissingData: notBreaching
+
+  LRSMetric:
+    Type: AWS::Logs::MetricFilter
+    Properties:
+      FilterPattern: "ERROR xapi"
+      LogGroupName: !Ref CloudWatchPHPLogGroup
+      MetricTransformations:
+        - MetricName: !Sub ${TENANT}-LRS-error
+          MetricNamespace: !Sub ${TENANT}
+          MetricValue: 1
+
+  LRSAlarm:
+    Type: AWS::CloudWatch::Alarm
+    DependsOn: LRSMetric
+    Properties:
+      AlarmActions:
+        - !Sub ${SNSTopic}
+      AlarmDescription: "LRS has triggered an error.  Check Watchdog and Status Report"
+      AlarmName: !Sub ${TENANT}-LRS-Error-Alarm
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      DatapointsToAlarm: 1
+      EvaluationPeriods: 1
+      Threshold: 0
+      MetricName: !Sub ${TENANT}-LRS-error
+      Namespace: !Sub ${TENANT}
+      Period: 60
+      Statistic: Sum
+      TreatMissingData: notBreaching
+
+  5xxMetric:
+    Type: AWS::Logs::MetricFilter
+    Properties:
+      FilterPattern: "[ip, id, user, timestamp, request, status_code=5*, size]"
+      LogGroupName: !Ref CloudWatchPHPLogGroup
+      MetricTransformations:
+        - MetricName: !Sub ${TENANT}-5xx-error
+          MetricNamespace: !Sub ${TENANT}
+          MetricValue: 1
+
+  5xxAlarm:
+    Type: AWS::CloudWatch::Alarm
+    DependsOn: 5xxMetric
+    Properties:
+      AlarmActions:
+        - !Sub ${SNSTopic}
+      AlarmDescription: "Internal Server Error has occured."
+      AlarmName: !Sub ${TENANT}-5xx-Error-Alarm
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      DatapointsToAlarm: 1
+      EvaluationPeriods: 1
+      Threshold: 0
+      MetricName: !Sub ${TENANT}-5xx-error
+      Namespace: !Sub ${TENANT}
+      Period: 60
+      Statistic: Sum
+      TreatMissingData: notBreaching
+
+  ELB5xxAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmActions:
+        - !Sub ${SNSTopic}
+      AlarmDescription: "5xx error has occured on Load Balancer level."
+      AlarmName: !Sub ${TENANT}-ELB-5xx-Error-Alarm
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      DatapointsToAlarm: 1
+      EvaluationPeriods: 5
+      Threshold: 0
+      MetricName: HTTPCode_ELB_5XX_Count
+      Namespace: AWS/ApplicationELB
+      Dimensions:
+        - Name: LoadBalancer
+          Value: !Sub ${BaseStack}AppLB
+      Period: 60
+      Statistic: Sum
+      TreatMissingData: notBreaching
+
+  HealthCheck:
+    Type: 'AWS::Route53::HealthCheck'
+    Properties:
+      HealthCheckConfig:
+        Port: 443
+        Type: HTTPS
+        ResourcePath: '/user/login'
+        FullyQualifiedDomainName: !Sub ${ADDRESS}
+        RequestInterval: 30
+        FailureThreshold: 2
+      HealthCheckTags:
+        -
+          Key: Name
+          Value: !Sub ${TENANT}-HealthCheck
+
+  HealthCheckAlarm :
+    Type: AWS::CloudWatch::Alarm
+    DependsOn: ServicePHP
+    Properties:
+      AlarmDescription : "Health Check Alarm"
+      AlarmName: !Sub ${TENANT}-HealthCheck-Alarm
+      Namespace: AWS/Route53
+      MetricName: HealthCheckStatus
+      Dimensions:
+        - Name: HealthCheckId
+          Value: !Ref HealthCheck
+      ComparisonOperator: LessThanThreshold
+      Period: 60
+      EvaluationPeriods: 5
+      Statistic: Minimum
+      Threshold: 1.0
+      AlarmActions:
+        - !Sub ${SNSTopic}
+
+  CPUAlarm:
+    Type: AWS::CloudWatch::Alarm
+    DependsOn: ServicePHP
+    Properties:
+      AlarmActions:
+        - !Sub ${SNSTopic}
+      AlarmDescription: "CPU utilitzation alarm"
+      AlarmName: !Sub ${TENANT}-CPU-Alarm
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      DatapointsToAlarm: 3
+      Dimensions:
+        - Name: ClusterName
+          Value:
+            Fn::ImportValue:
+              !Sub ${BaseStack}-ECSCluster
+        - Name: ServiceName
+          Value: !Sub ${TENANT}-php-svc
+      EvaluationPeriods: 5
+      Threshold: 65
+      MetricName: CPUUtilization
+      Namespace: AWS/ECS
+      Period: 60
+      Statistic: Average
+      TreatMissingData: notBreaching
+
+  MemoryAlarm:
+    Type: AWS::CloudWatch::Alarm
+    DependsOn: ServicePHP
+    Properties:
+      AlarmActions:
+        - !Sub ${SNSTopic}
+      AlarmDescription: "Memory utilitzation alarm"
+      AlarmName: !Sub ${TENANT}-MEM-Alarm
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      DatapointsToAlarm: 3
+      Dimensions:
+        - Name: ClusterName
+          Value:
+            Fn::ImportValue:
+              !Sub ${BaseStack}-ECSCluster
+        - Name: ServiceName
+          Value: !Sub ${TENANT}-php-svc
+
+      EvaluationPeriods: 5
+      Threshold: 65
+      MetricName: MemoryUtilization
+      Namespace: AWS/ECS
+      Period: 60
+      Statistic: Average
+      TreatMissingData: notBreaching
+
+  CronEvent:
+    Type: AWS::Events::Rule
+    Properties:
+      Description: "Scheduled Cloudwatch Event for Tenant Cron runs"
+      Name: !Sub ${TENANT}
+      ScheduleExpression: "rate(10 minutes)"
+      Targets:
+        -
+          Arn:
+            Fn::ImportValue:
+              "api-CronFunction"
+          Id: "cron_function"
+          Input:
+            Fn::Sub:
+              '{"tenant": "${TENANT}"}'
+
+  PermissionForEventsToInvokeLambda:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: "cron_function"
+      Action: "lambda:InvokeFunction"
+      Principal: "events.amazonaws.com"
+      SourceArn:
+        Fn::GetAtt:
+          - "CronEvent"
+          - "Arn"

@@ -1,0 +1,7 @@
+bulk_user_upload.user_import:
+  path: '/admin/people/import'
+  defaults:
+    _form: '\Drupal\bulk_user_upload\Form\ImportUsersForm'
+    _title: 'Bulk Import Users'
+  requirements:
+    _permission: 'bulk upload users'

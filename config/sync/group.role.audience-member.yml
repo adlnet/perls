@@ -1,0 +1,26 @@
+uuid: a07cd95d-26ba-4768-bd95-dd4b70860faf
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.audience
+id: audience-member
+label: Member
+weight: -100
+internal: true
+audience: member
+group_type: audience
+permissions_ui: true
+permissions:
+  - 'leave group'
+  - 'view group'
+  - 'view group_node:course entity'
+  - 'view group_node:event entity'
+  - 'view group_node:flash_card entity'
+  - 'view group_node:learn_article entity'
+  - 'view group_node:learn_file entity'
+  - 'view group_node:learn_link entity'
+  - 'view group_node:learn_package entity'
+  - 'view group_node:podcast entity'
+  - 'view group_node:quiz entity'
+  - 'view group_node:tip_card entity'

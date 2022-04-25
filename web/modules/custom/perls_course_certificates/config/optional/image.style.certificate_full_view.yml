@@ -1,0 +1,189 @@
+uuid: 86432724-35d7-4918-ab88-2a178160249a
+langcode: en
+status: true
+dependencies:
+  module:
+    - image_effects
+    - textimage
+third_party_settings:
+  textimage:
+    uri_scheme: private
+name: certificate_full_view
+label: 'Certificate full view'
+effects:
+  6c327c57-db04-4e1a-8c58-88408c5a9eee:
+    uuid: 6c327c57-db04-4e1a-8c58-88408c5a9eee
+    id: image_effects_text_overlay
+    weight: 1
+    data:
+      font:
+        name: 'Great Vibes'
+        uri: themes/custom/perls/fonts/GreatVibes-Regular.ttf
+        size: 180
+        angle: 0
+        color: '#000000FF'
+        stroke_mode: outline
+        stroke_color: '#000000FF'
+        outline_top: 0
+        outline_right: 0
+        outline_bottom: 0
+        outline_left: 0
+        shadow_x_offset: 1
+        shadow_y_offset: 1
+        shadow_width: 0
+        shadow_height: 0
+      layout:
+        padding_top: 0
+        padding_right: 300
+        padding_bottom: 0
+        padding_left: 350
+        x_pos: center
+        y_pos: center
+        x_offset: 0
+        y_offset: -250
+        overflow_action: scaletext
+        extended_color: ''
+        background_color: ''
+      text:
+        strip_tags: true
+        decode_entities: true
+        maximum_width: 0
+        fixed_width: false
+        align: center
+        case_format: ''
+        line_spacing: 0
+        maximum_chars: null
+        excess_chars_text: …
+      text_string: '***USER NAME ***'
+  3f3f149f-bc1d-43a3-bbe3-6210e4635ef2:
+    uuid: 3f3f149f-bc1d-43a3-bbe3-6210e4635ef2
+    id: image_effects_text_overlay
+    weight: 2
+    data:
+      font:
+        name: CircularStd-Black
+        uri: themes/custom/perls/fonts/CircularStd-Black.woff
+        size: 100
+        angle: 0
+        color: '#000000FF'
+        stroke_mode: outline
+        stroke_color: '#000000FF'
+        outline_top: 0
+        outline_right: 0
+        outline_bottom: 0
+        outline_left: 0
+        shadow_x_offset: 1
+        shadow_y_offset: 1
+        shadow_width: 0
+        shadow_height: 0
+      layout:
+        padding_top: 0
+        padding_right: 300
+        padding_bottom: 0
+        padding_left: 350
+        x_pos: center
+        y_pos: center
+        x_offset: 0
+        y_offset: 250
+        overflow_action: scaletext
+        extended_color: ''
+        background_color: ''
+      text:
+        strip_tags: true
+        decode_entities: true
+        maximum_width: 0
+        fixed_width: false
+        align: left
+        case_format: ''
+        line_spacing: 0
+        maximum_chars: null
+        excess_chars_text: …
+      text_string: '*** Completed Content ***'
+  e6c3b23d-2ae6-4bfb-b100-d87c563782fe:
+    uuid: e6c3b23d-2ae6-4bfb-b100-d87c563782fe
+    id: image_effects_text_overlay
+    weight: 3
+    data:
+      font:
+        name: CircularStd-Black
+        uri: themes/custom/perls/fonts/CircularStd-Black.woff
+        size: 24
+        angle: 0
+        color: '#000000FF'
+        stroke_mode: outline
+        stroke_color: '#000000FF'
+        outline_top: 0
+        outline_right: 0
+        outline_bottom: 0
+        outline_left: 0
+        shadow_x_offset: 1
+        shadow_y_offset: 1
+        shadow_width: 0
+        shadow_height: 0
+      layout:
+        padding_top: 0
+        padding_right: 0
+        padding_bottom: 0
+        padding_left: 0
+        x_pos: center
+        y_pos: bottom
+        x_offset: 205
+        y_offset: -550
+        overflow_action: extend
+        extended_color: ''
+        background_color: ''
+      text:
+        strip_tags: true
+        decode_entities: true
+        maximum_width: 0
+        fixed_width: false
+        align: left
+        case_format: ''
+        line_spacing: 0
+        maximum_chars: null
+        excess_chars_text: …
+      text_string: '*** Date ***'
+  1647ff3d-b9f6-46eb-8c7f-523f4668af52:
+    uuid: 1647ff3d-b9f6-46eb-8c7f-523f4668af52
+    id: image_effects_text_overlay
+    weight: 4
+    data:
+      font:
+        name: CircularStd-Black
+        uri: themes/custom/perls/fonts/CircularStd-Black.woff
+        size: 24
+        angle: 0
+        color: '#000000FF'
+        stroke_mode: outline
+        stroke_color: '#000000FF'
+        outline_top: 0
+        outline_right: 0
+        outline_bottom: 0
+        outline_left: 0
+        shadow_x_offset: 1
+        shadow_y_offset: 1
+        shadow_width: 0
+        shadow_height: 0
+      layout:
+        padding_top: 0
+        padding_right: 0
+        padding_bottom: 0
+        padding_left: 0
+        x_pos: center
+        y_pos: bottom
+        x_offset: 900
+        y_offset: -550
+        overflow_action: scaletext
+        extended_color: ''
+        background_color: ''
+      text:
+        strip_tags: true
+        decode_entities: true
+        maximum_width: 0
+        fixed_width: false
+        align: left
+        case_format: ''
+        line_spacing: 0
+        maximum_chars: null
+        excess_chars_text: …
+      text_string: '*** UUID ****'

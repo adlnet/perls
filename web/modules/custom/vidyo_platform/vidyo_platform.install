@@ -1,0 +1,45 @@
+<?php
+
+/**
+ * @file
+ * Install scripts and requirements for vidyo_platform module.
+ */
+
+/**
+ * Implements hook_requirements().
+ */
+function vidyo_platform_requirements($phase) {
+  $requirements = [];
+
+  if ($phase == 'runtime') {
+    $requirements['vidyo_platform'] = [
+      'title' => t('Vidyo Platform'),
+    ];
+
+    // If the values are not entered in the form/not configured.
+    if (!\Drupal::service('vidyo_platform.rooms')->isConfigured()) {
+      $requirements['vidyo_platform']['value'] = t('Not Connected');
+      $requirements['vidyo_platform']['description'] = t('Vidyo Platform not configured. Please ensure you have added values to configure Vidyo Platform.');
+      $requirements['vidyo_platform']['severity'] = REQUIREMENT_INFO;
+      return $requirements;
+    }
+
+    // If there is some exception.
+    try {
+      \Drupal::service('vidyo_platform.rooms')->getClient()->getPortalVersion();
+    }
+    catch (\Exception $e) {
+      $requirements['vidyo_platform']['value'] = t('Error Connecting to VidyoPortal');
+      $requirements['vidyo_platform']['description'] = t('Error connecting to VidyoPortal: %error', ['%error' => $e->getMessage()]);
+      $requirements['vidyo_platform']['severity'] = REQUIREMENT_ERROR;
+      return $requirements;
+    }
+
+    // If connected properly.
+    $requirements['vidyo_platform']['value'] = t('Connected Successfully');
+    $requirements['vidyo_platform']['description'] = t('Vidyo Platform is configured successfully.');
+    $requirements['vidyo_platform']['severity'] = REQUIREMENT_OK;
+  }
+
+  return $requirements;
+}

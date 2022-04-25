@@ -1,0 +1,11 @@
+uuid: 7d3d2c8e-02b4-4b41-a68d-1dde4ad83686
+langcode: en
+status: true
+dependencies:
+  config:
+    - filter.format.unrestricted
+id: update_goal_items_completed_per_week
+title: 'Update Goal: Items Completed Per Week'
+content:
+  value: '<a href="[site:url]goal#completearticlesperweek" class="o-button-reverse update-goal-button" data-dialog-type="modal">Update Goal</a>'
+  format: unrestricted

@@ -1,0 +1,13 @@
+{
+    "name": "float/badges",
+    "description": "Grants achievements to users.",
+    "type": "drupal-module",
+    "version": "2.0.0-rc1",
+    "keywords": [
+        "Drupal",
+        "badges"
+    ],
+    "require": {
+        "drupal/achievements": "*"
+    }
+}

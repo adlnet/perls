@@ -1,0 +1,30 @@
+uuid: d64d08b7-1770-4fb6-8f46-aad2a5fd3af3
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: attended
+label: Attended
+bundles:
+  - event
+entity_type: node
+global: false
+flag_short: 'Mark as attended'
+flag_long: ''
+flag_message: ''
+unflag_short: 'Mark as did not attend'
+unflag_long: ''
+unflag_message: ''
+unflag_denied_text: ''
+weight: 0
+flag_type: 'entity:node'
+link_type: ajax_link
+flagTypeConfig:
+  show_in_links: {  }
+  show_as_field: false
+  show_on_form: false
+  show_contextual_link: false
+  extra_permissions:
+    owner: '0'
+linkTypeConfig: {  }

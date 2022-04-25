@@ -1,0 +1,4 @@
+xapi.admin_settings_form:
+  route_name: xapi.admin_settings_form
+  title: 'xAPI Content Settings'
+  base_route: xapi.admin_settings_form

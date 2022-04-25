@@ -1,0 +1,16 @@
+id: podcast_support
+entity_type: switch
+label: Podcast feature
+description: Switch for podcast feature
+status: true
+weight: 0
+langcode: en
+dependencies:
+  enforced:
+    module:
+      - switches
+activationMethod: manual
+manualActivationStatus: false
+defaultValue: null
+overrideable: null
+activationConditions: []

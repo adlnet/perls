@@ -1,0 +1,59 @@
+uuid: 66f43cb8-50c9-4eb3-9b22-7f0fe9c26c86
+langcode: en
+status: true
+dependencies:
+  module:
+    - entity_print
+id: print_engine--print_engine
+disabled: true
+path: print_engine/print_engine
+resourceType: print_engine--print_engine
+resourceFields:
+  uuid:
+    disabled: false
+    fieldName: uuid
+    publicName: uuid
+    enhancer:
+      id: ''
+  langcode:
+    disabled: false
+    fieldName: langcode
+    publicName: langcode
+    enhancer:
+      id: ''
+  status:
+    disabled: false
+    fieldName: status
+    publicName: status
+    enhancer:
+      id: ''
+  dependencies:
+    disabled: false
+    fieldName: dependencies
+    publicName: dependencies
+    enhancer:
+      id: ''
+  third_party_settings:
+    disabled: false
+    fieldName: third_party_settings
+    publicName: third_party_settings
+    enhancer:
+      id: ''
+  _core:
+    disabled: false
+    fieldName: _core
+    publicName: _core
+    enhancer:
+      id: ''
+  id:
+    disabled: false
+    fieldName: id
+    publicName: id
+    enhancer:
+      id: ''
+  settings:
+    disabled: false
+    fieldName: settings
+    publicName: settings
+    enhancer:
+      id: ''

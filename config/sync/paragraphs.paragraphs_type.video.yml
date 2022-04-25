@@ -1,0 +1,12 @@
+uuid: 16de54ae-048c-4dc7-acb7-415189cdd044
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: KaEDYslTJHIT-z6PWd-d0CZLBtQH9m5_xgijzUJscmI
+id: video
+label: Video
+icon_uuid: null
+icon_default: null
+description: 'Embed a video from an external service such as YouTube or Vimeo'
+behavior_plugins: {  }

@@ -1,0 +1,7 @@
+config_resource.settings:
+  path: '/configuration-api/settings'
+  defaults:
+    _form: '\Drupal\config_resource\Form\SettingsForm'
+    _title: 'Exposed Configs'
+  requirements:
+    _permission: 'administer perls'

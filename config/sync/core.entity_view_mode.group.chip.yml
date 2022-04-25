@@ -1,0 +1,10 @@
+uuid: da173a89-34bd-4e26-9ab5-d6733f700460
+langcode: en
+status: true
+dependencies:
+  module:
+    - group
+id: group.chip
+label: Chip
+targetEntityType: group
+cache: true

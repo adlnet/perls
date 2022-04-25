@@ -1,0 +1,852 @@
+AWSTemplateFormatVersion: 2010-09-09
+Parameters:
+  AdminUUID:
+    Description: Admin UUID of the LRS
+    Type: String
+  Role:
+    Description: IAM Role for the funcitons to use
+    Type: String
+  BaseStack:
+    Description: Base Stack to pull info from
+    Type: String
+  FunctionsBucket:
+    Description: S3 Bucket name to pull the functions from
+    Type: String
+  CodeBucket:
+    Description: Bucket to access CMS Versions
+    Type: String
+  LRSAdminURL:
+    Description: Url of the LRS admin api
+    Type: String
+  LRSBaseURL:
+    Description: Base url of the LRS
+    Type: String
+  LRSAPIKey:
+    Description: API key for the admin functions of the lrs
+    Type: String
+  CMSBaseURL:
+    Description: base url for cms
+    Type: String
+    Default: usalearning.net
+  Project:
+    Description: Project for tenant cloudformation script
+    Type: String
+    Default: perls
+  SNSTopic:
+    Description: SNS topic to send alerts and notifications
+    Type: String
+  FIREBASEKEY:
+    Description: Key for sending push notifications
+    Type: String
+  FIREBASEID:
+    Description: ID for sending push notifications
+    Type: String
+  SecurityGroup:
+    Description: Security Group ID to use for Lambda functions
+    Type: String
+
+Resources:
+  EFSSolrAP:
+      Type: 'AWS::EFS::AccessPoint'
+      Properties:
+        FileSystemId:
+          Fn::ImportValue:
+            !Sub ${BaseStack}-EFS
+        PosixUser:
+          Uid: "8983"
+          Gid: "8983"
+          SecondaryGids:
+            - "1000"
+        RootDirectory:
+          CreationInfo:
+            OwnerGid: "1000"
+            OwnerUid: "1000"
+            Permissions: "0755"
+          Path: /
+
+  EFSFilesAP:
+      Type: 'AWS::EFS::AccessPoint'
+      Properties:
+        FileSystemId:
+          Fn::ImportValue:
+            !Sub ${BaseStack}-EFS
+        PosixUser:
+          Uid: "1000"
+          Gid: "1000"
+        RootDirectory:
+          Path: /
+
+  RootAP:
+      Type: 'AWS::EFS::AccessPoint'
+      Properties:
+        FileSystemId:
+          Fn::ImportValue:
+            !Sub ${BaseStack}-EFS
+        PosixUser:
+          Uid: "1000"
+          Gid: "1000"
+        RootDirectory:
+          CreationInfo:
+            OwnerGid: "1000"
+            OwnerUid: "1000"
+            Permissions: "0755"
+          Path: /
+
+  AdminFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: admin_function
+      Handler: admin_container.lambda_handler
+      Role: !Sub ${Role}
+      Code:
+        S3Bucket: !Sub ${FunctionsBucket}
+        S3Key: functions/admin_container.zip
+      Runtime: python3.8
+      Timeout: 600
+      Environment:
+        Variables:
+          base_stack: !Sub ${BaseStack}
+      VpcConfig:
+        SecurityGroupIds:
+          -
+            !Sub ${SecurityGroup}
+        SubnetIds:
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet1
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet2
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet3
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet4
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet5
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet6
+
+  ConfigExportFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: config_export
+      Handler: config_export.lambda_handler
+      Role: !Sub ${Role}
+      Code:
+        S3Bucket: !Sub ${FunctionsBucket}
+        S3Key: functions/config_export.zip
+      Runtime: python3.8
+      Timeout: 600
+      Environment:
+        Variables:
+          base_stack: !Sub ${BaseStack}
+      VpcConfig:
+        SecurityGroupIds:
+          -
+            !Sub ${SecurityGroup}
+        SubnetIds:
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet1
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet2
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet3
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet4
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet5
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet6
+
+  CreateSolrFSFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: create_solr_fs
+      Handler: create_solr_fs.lambda_handler
+      Role: !Sub ${Role}
+      Code:
+        S3Bucket: !Sub ${FunctionsBucket}
+        S3Key: functions/create_solr_fs.zip
+      Runtime: python3.8
+      Timeout: 180
+      Environment:
+        Variables:
+          base_stack: !Sub ${BaseStack}
+      FileSystemConfigs:
+        -
+          Arn: !GetAtt EFSSolrAP.Arn
+          LocalMountPath: /mnt/efs
+      VpcConfig:
+        SecurityGroupIds:
+          -
+            !Sub ${SecurityGroup}
+        SubnetIds:
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet1
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet2
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet3
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet4
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet5
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet6
+
+  CreateFilesDirectoriesFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: create_files_directories
+      Handler: create_files_directories.lambda_handler
+      Role: !Sub ${Role}
+      Code:
+        S3Bucket: !Sub ${FunctionsBucket}
+        S3Key: functions/create_files_directories.zip
+      Runtime: python3.8
+      Timeout: 600
+      Environment:
+        Variables:
+          base_stack: !Sub ${BaseStack}
+      FileSystemConfigs:
+        -
+          Arn: !GetAtt EFSFilesAP.Arn
+          LocalMountPath: /mnt/efs
+      VpcConfig:
+        SecurityGroupIds:
+          -
+            !Sub ${SecurityGroup}
+        SubnetIds:
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet1
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet2
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet3
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet4
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet5
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet6
+
+  CronFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: cron_function
+      Handler: cron.lambda_handler
+      Role: !Sub ${Role}
+      Code:
+        S3Bucket: !Sub ${FunctionsBucket}
+        S3Key: functions/cron.zip
+      Runtime: python3.8
+      Timeout: 60
+      VpcConfig:
+        SecurityGroupIds:
+          -
+            !Sub ${SecurityGroup}
+        SubnetIds:
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet1
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet2
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet3
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet4
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet5
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet6
+
+  InvokeDeleteFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: invoke_delete
+      Handler: invoke_delete.lambda_handler
+      Role: !Sub ${Role}
+      Code:
+        S3Bucket: !Sub ${FunctionsBucket}
+        S3Key: functions/invoke_delete.zip
+      Runtime: python3.8
+      Timeout: 30
+      VpcConfig:
+        SecurityGroupIds:
+          -
+            !Sub ${SecurityGroup}
+        SubnetIds:
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet1
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet2
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet3
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet4
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet5
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet6
+
+  DeleteTenantFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: delete_tenant
+      Handler: delete_tenant.lambda_handler
+      Role: !Sub ${Role}
+      Code:
+        S3Bucket: !Sub ${FunctionsBucket}
+        S3Key: functions/delete_tenant.zip
+      Environment:
+        Variables:
+          lrs_url: !Sub ${LRSAdminURL}
+          lrs_api_key: !Sub ${LRSAPIKey}
+      FileSystemConfigs:
+        -
+          Arn: !GetAtt RootAP.Arn
+          LocalMountPath: /mnt/efs
+      Runtime: python3.8
+      Timeout: 600
+      VpcConfig:
+        SecurityGroupIds:
+          -
+            !Sub ${SecurityGroup}
+        SubnetIds:
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet1
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet2
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet3
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet4
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet5
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet6
+
+  GetVersionsFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: get_versions
+      Handler: get_versions.lambda_handler
+      Role: !Sub ${Role}
+      Code:
+        S3Bucket: !Sub ${FunctionsBucket}
+        S3Key: functions/get_versions.zip
+      Environment:
+        Variables:
+          s3_bucket: !Sub ${CodeBucket}
+          lrs_api_key: !Sub ${LRSAPIKey}
+      Runtime: python3.8
+      Timeout: 60
+      VpcConfig:
+        SecurityGroupIds:
+          -
+            !Sub ${SecurityGroup}
+        SubnetIds:
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet1
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet2
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet3
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet4
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet5
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet6
+
+  CreateDBFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: create_db
+      Handler: create_db.lambda_handler
+      Role: !Sub ${Role}
+      Code:
+        S3Bucket: !Sub ${FunctionsBucket}
+        S3Key: functions/create_db.zip
+      FileSystemConfigs:
+        -
+          Arn: !GetAtt RootAP.Arn
+          LocalMountPath: /mnt/efs
+      MemorySize: 512
+      Runtime: python3.8
+      Timeout: 300
+      VpcConfig:
+        SecurityGroupIds:
+          -
+            !Sub ${SecurityGroup}
+        SubnetIds:
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet1
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet2
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet3
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet4
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet5
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet6
+
+  CreateLRSFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: create_lrs
+      Handler: create_lrs.lambda_handler
+      Role: !Sub ${Role}
+      Code:
+        S3Bucket: !Sub ${FunctionsBucket}
+        S3Key: functions/create_lrs.zip
+      Environment:
+        Variables:
+          lrs_base_url: !Sub ${LRSBaseURL}
+          lrs_api_key: !Sub ${LRSAPIKey}
+          admin_uuid: !Sub ${AdminUUID}
+      Runtime: python3.8
+      Timeout: 180
+      VpcConfig:
+        SecurityGroupIds:
+          -
+            !Sub ${SecurityGroup}
+        SubnetIds:
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet1
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet2
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet3
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet4
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet5
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet6
+
+  CreatePasswordFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: create_passwords
+      Handler: create_passwords.lambda_handler
+      Role: !Sub ${Role}
+      Code:
+        S3Bucket: !Sub ${FunctionsBucket}
+        S3Key: functions/create_passwords.zip
+      Environment:
+        Variables:
+          s3_bucket: !Sub ${CodeBucket}
+          base_stack: !Sub ${BaseStack}
+      Runtime: python3.8
+      Timeout: 180
+      VpcConfig:
+        SecurityGroupIds:
+          -
+            !Sub ${SecurityGroup}
+        SubnetIds:
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet1
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet2
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet3
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet4
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet5
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet6
+
+  CreateStackFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: create_stack
+      Handler: create_stack.lambda_handler
+      Role: !Sub ${Role}
+      Code:
+        S3Bucket: !Sub ${FunctionsBucket}
+        S3Key: functions/create_stack.zip
+      Environment:
+        Variables:
+          s3_bucket: !Sub ${CodeBucket}
+          base_stack: !Sub ${BaseStack}
+          cms_base_url: !Sub ${CMSBaseURL}
+          lrs_base_url: !Sub ${LRSBaseURL}
+          project: !Sub ${Project}
+          snstopic: !Sub ${SNSTopic}
+          firebase_key: !Sub ${FIREBASEKEY}
+          firebase_id: !Sub ${FIREBASEID}
+      FileSystemConfigs:
+        -
+          Arn: !GetAtt RootAP.Arn
+          LocalMountPath: /mnt/efs
+      Runtime: python3.8
+      Timeout: 600
+      VpcConfig:
+        SecurityGroupIds:
+          -
+            !Sub ${SecurityGroup}
+        SubnetIds:
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet1
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet2
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet3
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet4
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet5
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet6
+
+  TenantStatusFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: tenant_status
+      Handler: tenant_status.lambda_handler
+      Role: !Sub ${Role}
+      Code:
+        S3Bucket: !Sub ${FunctionsBucket}
+        S3Key: functions/tenant_status.zip
+      Runtime: python3.8
+      Timeout: 30
+      VpcConfig:
+        SecurityGroupIds:
+          -
+            !Sub ${SecurityGroup}
+        SubnetIds:
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet1
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet2
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet3
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet4
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet5
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet6
+
+  TenantStatusListFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: tenant_status_list
+      Handler: tenant_list.lambda_handler
+      Role: !Sub ${Role}
+      Code:
+        S3Bucket: !Sub ${FunctionsBucket}
+        S3Key: functions/tenant_list.zip
+      Runtime: python3.8
+      Timeout: 30
+      VpcConfig:
+        SecurityGroupIds:
+          -
+            !Sub ${SecurityGroup}
+        SubnetIds:
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet1
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet2
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet3
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet4
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet5
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet6
+
+  UpdateFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: update
+      Handler: update.lambda_handler
+      Role: !Sub ${Role}
+      Code:
+        S3Bucket: !Sub ${FunctionsBucket}
+        S3Key: functions/update.zip
+      Environment:
+        Variables:
+          s3_bucket: !Sub ${CodeBucket}
+      Runtime: python3.8
+      Timeout: 30
+      VpcConfig:
+        SecurityGroupIds:
+          -
+            !Sub ${SecurityGroup}
+        SubnetIds:
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet1
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet2
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet3
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet4
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet5
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet6
+
+  UpdateStackFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: update_stack
+      Handler: update_stack.lambda_handler
+      Role: !Sub ${Role}
+      Code:
+        S3Bucket: !Sub ${FunctionsBucket}
+        S3Key: functions/update_stack.zip
+      Environment:
+        Variables:
+          s3_bucket: !Sub ${CodeBucket}
+      Runtime: python3.8
+      Timeout: 600
+      VpcConfig:
+        SecurityGroupIds:
+          -
+            !Sub ${SecurityGroup}
+        SubnetIds:
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet1
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet2
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet3
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet4
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet5
+          - Fn::ImportValue:
+              !Sub ${BaseStack}-PrivateSubnet6
+
+  apiGateway:
+    Type: AWS::ApiGateway::RestApi
+    DependsOn: [AdminFunction, ConfigExportFunction, CreateSolrFSFunction, CronFunction, InvokeDeleteFunction, DeleteTenantFunction, GetVersionsFunction, CreateDBFunction, CreateLRSFunction, CreatePasswordFunction, CreateStackFunction, TenantStatusFunction, TenantStatusListFunction, UpdateFunction, UpdateStackFunction]
+    Properties:
+      Description: API for managing tenants
+      EndpointConfiguration:
+        Types:
+          - REGIONAL
+      Name: tenant-api
+
+  CreateTenantResource:
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      RestApiId: !Ref apiGateway
+      ParentId: !GetAtt
+        - apiGateway
+        - RootResourceId
+      PathPart: tenant
+
+  TenantResource:
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      RestApiId: !Ref apiGateway
+      ParentId: !Ref CreateTenantResource
+      PathPart: '{tenant}'
+
+  TenantListResource:
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      RestApiId: !Ref apiGateway
+      ParentId: !GetAtt
+        - apiGateway
+        - RootResourceId
+      PathPart: tenant-list
+
+  VersionsResource:
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      RestApiId: !Ref apiGateway
+      ParentId: !GetAtt
+        - apiGateway
+        - RootResourceId
+      PathPart: versions
+
+  CreateTenantMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      ApiKeyRequired: true
+      AuthorizationType: NONE
+      HttpMethod: POST
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub
+          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+          - lambdaArn: !GetAtt CreatePasswordFunction.Arn
+      ResourceId: !Ref CreateTenantResource
+      RestApiId: !Ref apiGateway
+
+  DeleteTenantMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      ApiKeyRequired: true
+      AuthorizationType: NONE
+      HttpMethod: DELETE
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub
+          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+          - lambdaArn: !GetAtt InvokeDeleteFunction.Arn
+      ResourceId: !Ref TenantResource
+      RestApiId: !Ref apiGateway
+
+  UpdateTenantMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      ApiKeyRequired: true
+      AuthorizationType: NONE
+      HttpMethod: PATCH
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub
+          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+          - lambdaArn: !GetAtt UpdateFunction.Arn
+      ResourceId: !Ref TenantResource
+      RestApiId: !Ref apiGateway
+
+  GetTenantStatusMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      ApiKeyRequired: true
+      AuthorizationType: NONE
+      HttpMethod: GET
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub
+          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+          - lambdaArn: !GetAtt TenantStatusFunction.Arn
+      ResourceId: !Ref TenantResource
+      RestApiId: !Ref apiGateway
+
+  GetVersionsMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      ApiKeyRequired: true
+      AuthorizationType: NONE
+      HttpMethod: GET
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub
+          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+          - lambdaArn: !GetAtt GetVersionsFunction.Arn
+      ResourceId: !Ref VersionsResource
+      RestApiId: !Ref apiGateway
+
+  TenantListMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      ApiKeyRequired: true
+      AuthorizationType: NONE
+      HttpMethod: GET
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub
+          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+          - lambdaArn: !GetAtt TenantStatusListFunction.Arn
+      ResourceId: !Ref TenantListResource
+      RestApiId: !Ref apiGateway
+
+  apiGatewayDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn: [GetVersionsMethod, CreateTenantMethod, TenantListMethod, GetTenantStatusMethod, UpdateTenantMethod, DeleteTenantMethod]
+    Properties:
+      RestApiId: !Ref apiGateway
+      StageName: api
+
+  apiKey:
+    Type: AWS::ApiGateway::ApiKey
+    DependsOn: apiGatewayDeployment
+    Properties:
+      Name: AdminAPIKey
+      Description: Admin API Key
+      Enabled: 'true'
+      StageKeys:
+        - RestApiId: !Ref apiGateway
+          StageName: api
+
+  usagePlan:
+    Type: AWS::ApiGateway::UsagePlan
+    DependsOn: apiGatewayDeployment
+    Properties:
+      ApiStages:
+        - ApiId: !Ref apiGateway
+          Stage: api
+      Description: Tenant API usage plan
+      Quota:
+        Limit: 100
+        Period: MONTH
+      Throttle:
+        BurstLimit: 1
+        RateLimit: 1
+      UsagePlanName: tenant_api_usage_plan
+
+  usagePlanKey:
+    Type: AWS::ApiGateway::UsagePlanKey
+    Properties:
+      KeyId: !Ref apiKey
+      KeyType: API_KEY
+      UsagePlanId: !Ref usagePlan
+
+  CreateTenantInvoke:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !GetAtt CreatePasswordFunction.Arn
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${apiGateway}/*/POST/tenant
+
+  TenantStatusInvoke:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !GetAtt TenantStatusFunction.Arn
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${apiGateway}/*/GET/tenant/{tenant}
+
+  DeleteTenantApiGatewayInvoke:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !GetAtt InvokeDeleteFunction.Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${apiGateway}/*/DELETE/tenant/{tenant}
+
+  UpdateTenantApiGatewayInvoke:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !GetAtt UpdateFunction.Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${apiGateway}/*/PATCH/tenant/{tenant}
+
+  GetVersionsApiGatewayInvoke:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !GetAtt GetVersionsFunction.Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${apiGateway}/*/GET/versions
+
+  TenantListApiGatewayInvoke:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !GetAtt TenantStatusListFunction.Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${apiGateway}/*/GET/tenant-list
+
+Outputs:
+  CronFunction:
+    Value: !GetAtt CronFunction.Arn
+    Export:
+      Name: !Sub "${AWS::StackName}-CronFunction"

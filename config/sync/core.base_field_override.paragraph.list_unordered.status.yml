@@ -1,0 +1,24 @@
+uuid: 124603bf-b388-4bd6-9265-4e553abdfd98
+langcode: en
+status: true
+dependencies:
+  config:
+    - paragraphs.paragraphs_type.list_unordered
+_core:
+  default_config_hash: _084BUnzP4-_EJ_rnYhYWVUV82wMFzSqSd6VX8kCq8Y
+id: paragraph.list_unordered.status
+field_name: status
+entity_type: paragraph
+bundle: list_unordered
+label: Published
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: 1
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

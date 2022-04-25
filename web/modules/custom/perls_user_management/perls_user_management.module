@@ -1,0 +1,54 @@
+<?php
+
+/**
+ * @file
+ * Hooks and alters related to user management.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\user\UserInterface;
+
+/**
+ * Implements hook_form_alter().
+ */
+function perls_user_management_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  // Alter the user cancel form for non sysadmin users.
+  $account = \Drupal::currentUser();
+  if (
+    !$account->hasPermission('administer users')
+    && (
+      $form_id === 'user_cancel_form'
+      || (
+        $form_id === 'views_bulk_operations_configure_action'
+        && isset($form['user_cancel_method'])
+      )
+    )
+  ) {
+    // User cancel form being shown to non sysadmin user.
+    if (isset($form['user_cancel_method'])) {
+      $form['user_cancel_method']['#access'] = $account->hasPermission('select account cancellation method');
+    }
+    if (isset($form['user_cancel_confirm'])) {
+      $form['user_cancel_confirm']['#access'] = $account->hasPermission('administer users');
+    }
+    if (isset($form['user_cancel_notify'])) {
+      $form['user_cancel_notify']['#default_value'] = \Drupal::config('user.settings')->get('notify.status_canceled');
+    }
+
+    // Bulk operations form has no message by default.
+    if ($form_id !== 'user_cancel_form' && !$account->hasPermission('select account cancellation method')) {
+      $form['description']['#markup'] = $form['user_cancel_method']['#options'][$form['user_cancel_method']['#default_value']];
+    }
+
+    $form['description']['#weight'] = -10;
+  }
+
+  // Enable cancel account button for own account if user can register.
+  if (($form_id === 'user_form') && !empty($form['actions']['delete'])) {
+    // Load the user that is being edited.
+    $user = isset($form_state->getStorage()['user']) ? $form_state->getStorage()['user'] : FALSE;
+    if ($user instanceof UserInterface) {
+      $form['actions']['delete']['#access'] = \Drupal::service('perls_user_management.registration_access_check')->isAccountCancelAllowed($user);
+    }
+  }
+}

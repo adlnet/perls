@@ -1,0 +1,200 @@
+uuid: a6c15fcf-fc73-4a64-83d4-d62239b800bf
+langcode: en
+status: true
+dependencies:
+  config:
+    - page_manager.page.new_dashboard
+id: new_dashboard-layout_builder-0
+label: Dashboard
+weight: 0
+variant: layout_builder
+variant_settings:
+  id: layout_builder
+  label: null
+  weight: 0
+  uuid: ceb5adfb-09b0-40a2-93cc-e4d9a8ffbaf1
+  sections:
+    -
+      layout_id: layout_onecol
+      layout_settings:
+        label: 'My groups'
+        layout_section_id: my_groups
+      components:
+        b5a1ccad-2b10-4137-94c5-28a841f2dfa5:
+          uuid: b5a1ccad-2b10-4137-94c5-28a841f2dfa5
+          region: content
+          configuration:
+            id: 'views_block:group_index-my_groups_block'
+            label: 'My Groups'
+            label_display: visible
+            provider: views
+            context_mapping: {  }
+            views_label: 'My Groups'
+            items_per_page: none
+            more_url: /groups
+          weight: 0
+          additional: {  }
+          third_party_settings: {  }
+      third_party_settings: {  }
+    -
+      layout_id: tabs
+      layout_settings:
+        label: 'First tab'
+        layout_section_id: first_tab
+      components:
+        cc897985-5a8b-407a-b1a9-5a793ea0a661:
+          uuid: cc897985-5a8b-407a-b1a9-5a793ea0a661
+          region: tabs
+          configuration:
+            id: 'views_block:recommended_content-recommended_block'
+            label: 'For You'
+            label_display: '0'
+            provider: views
+            context_mapping: {  }
+            views_label: 'For You'
+            items_per_page: none
+            more_url: ''
+          weight: 5
+          additional: {  }
+          third_party_settings: {  }
+        eabbdf19-b052-4d28-984a-445a1f016e87:
+          uuid: eabbdf19-b052-4d28-984a-445a1f016e87
+          region: tabs
+          configuration:
+            id: 'views_block:content_recent-new_content_block'
+            label: New
+            label_display: '0'
+            provider: views
+            context_mapping: {  }
+            views_label: New
+            items_per_page: '20'
+            more_url: ''
+          weight: 6
+          additional: {  }
+          third_party_settings: {  }
+        4f65e86e-82e1-488e-87d1-1cc7e4f99486:
+          uuid: 4f65e86e-82e1-488e-87d1-1cc7e4f99486
+          region: tabs
+          configuration:
+            id: 'views_block:trending_content-trending_block'
+            label: Trending
+            label_display: '0'
+            provider: views
+            context_mapping: {  }
+            views_label: Trending
+            items_per_page: none
+            more_url: ''
+          weight: 7
+          additional: {  }
+          third_party_settings: {  }
+      third_party_settings: {  }
+    -
+      layout_id: layout_onecol
+      layout_settings:
+        label: Prompts
+      components:
+        2196cda1-0fcd-45f0-9e37-043ce0b389c8:
+          uuid: 2196cda1-0fcd-45f0-9e37-043ce0b389c8
+          region: content
+          configuration:
+            id: prompt_dashboard_block
+            label: 'Dashboard prompt block'
+            label_display: '0'
+            provider: prompts
+            context_mapping: {  }
+            block_text: 'Take a moment to improve your recommendations'
+          weight: 0
+          additional: {  }
+          third_party_settings: {  }
+      third_party_settings: {  }
+    -
+      layout_id: layout_onecol
+      layout_settings:
+        label: Events
+        context_mapping: {  }
+      components:
+        af29f16f-1edb-4d80-8ef0-95aa82ad4852:
+          uuid: af29f16f-1edb-4d80-8ef0-95aa82ad4852
+          region: content
+          configuration:
+            id: 'views_block:upcoming_events-upcoming_events_block'
+            label: ''
+            label_display: visible
+            provider: views
+            context_mapping: {  }
+            views_label: ''
+            items_per_page: none
+          weight: 0
+          additional: {  }
+          third_party_settings: {  }
+      third_party_settings: {  }
+    -
+      layout_id: layout_onecol
+      layout_settings:
+        label: Following
+        layout_section_id: following
+      components:
+        ba9f4c0d-8397-41a6-b35b-0dddf32377a0:
+          uuid: ba9f4c0d-8397-41a6-b35b-0dddf32377a0
+          region: content
+          configuration:
+            id: 'views_block:dashboard_tags-following_tags_block'
+            label: Following
+            label_display: visible
+            provider: views
+            context_mapping: {  }
+            views_label: Following
+            items_per_page: none
+            more_url: /following
+          weight: 0
+          additional: {  }
+          third_party_settings: {  }
+      third_party_settings: {  }
+    -
+      layout_id: layout_onecol
+      layout_settings:
+        label: 'Recently viewed '
+        layout_section_id: recently_viewed
+      components:
+        8ddc297c-04d3-4a75-a68a-4f9cdd1d82ed:
+          uuid: 8ddc297c-04d3-4a75-a68a-4f9cdd1d82ed
+          region: content
+          configuration:
+            id: 'views_block:history-recent_viewed_block'
+            label: 'Recently Viewed '
+            label_display: visible
+            provider: views
+            context_mapping: {  }
+            views_label: 'Recently Viewed '
+            items_per_page: none
+            more_url: /history
+          weight: 2
+          additional: {  }
+          third_party_settings: {  }
+      third_party_settings: {  }
+    -
+      layout_id: layout_onecol
+      layout_settings:
+        label: Bookmarks
+        layout_section_id: favorites
+      components:
+        6d71e4fc-6256-499f-a857-4df788ebea6a:
+          uuid: 6d71e4fc-6256-499f-a857-4df788ebea6a
+          region: content
+          configuration:
+            id: 'views_block:bookmarks-favorites_block'
+            label: Bookmarks
+            label_display: visible
+            provider: views
+            context_mapping: {  }
+            views_label: Bookmarks
+            items_per_page: none
+            more_url: /bookmarks
+          weight: 0
+          additional: {  }
+          third_party_settings: {  }
+      third_party_settings: {  }
+page: new_dashboard
+selection_criteria: {  }
+selection_logic: and
+static_context: {  }

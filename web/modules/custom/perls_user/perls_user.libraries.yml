@@ -1,0 +1,19 @@
+isotope:
+  js:
+    js/search_field_filter.js: { }
+    /libraries/isotope/dist/isotope.pkgd.js: { }
+  dependencies:
+    - core/jquery
+    - core/jquery.once
+    - core/drupal
+color_form_override:
+  version: 1.x
+  css:
+    theme:
+      css/color.override.css: {}
+prevent_multiple_submit:
+  js:
+    js/prevent_multi_submit.js: { }
+  dependencies:
+    - core/jquery
+    - core/drupal

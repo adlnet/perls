@@ -1,0 +1,42 @@
+<?php
+
+/**
+ * @file
+ * Install tasks for perls user generated content module.
+ */
+
+use Drupal\Core\File\FileSystemInterface;
+
+/**
+ * Set default user cancel to reassign.
+ */
+function perls_user_generated_content_install() {
+  $config = \Drupal::configFactory()->getEditable('user.settings');
+  $config->set('cancel_method', 'user_cancel_reassign');
+  $config->save();
+
+  // Install badge images.
+  $cwd = dirname(__FILE__);
+  $logger = \Drupal::logger('badges');
+  $badge_directory = realpath($cwd . '/images');
+  if (!$filenames = scandir($badge_directory)) {
+    $logger->info('Failed to find any files in badges directory');
+    return FALSE;
+  }
+
+  // Lets load and move the files.
+  foreach ($filenames as $filename) {
+    if ($filename === '.' || $filename === '..') {
+      continue;
+    }
+    $path = 'public://badges/';
+    \Drupal::service('file_system')->prepareDirectory($path, FileSystemInterface::CREATE_DIRECTORY);
+    $file = \Drupal::service('file_system')->copy($badge_directory . '/' . $filename, $path . $filename, FileSystemInterface::EXISTS_REPLACE);
+    if ($file) {
+      $logger->info('Successfully updated %filename', ['%filename' => $filename]);
+    }
+    else {
+      $logger->info('Failed to open: %filename', ['%filename' => $filename]);
+    }
+  }
+}

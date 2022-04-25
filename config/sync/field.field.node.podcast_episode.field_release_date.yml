@@ -1,0 +1,24 @@
+uuid: 41fdaba6-3fa5-4478-8e2b-0595944f0881
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_release_date
+    - node.type.podcast_episode
+  module:
+    - datetime
+id: node.podcast_episode.field_release_date
+field_name: field_release_date
+entity_type: node
+bundle: podcast_episode
+label: 'Release date'
+description: 'Episodes are displayed to learners in descending order by release date—the most recent podcast will display first. Episodes cannot be given a release date in the future.'
+required: true
+translatable: false
+default_value:
+  -
+    default_date_type: now
+    default_date: now
+default_value_callback: ''
+settings: {  }
+field_type: datetime

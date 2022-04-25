@@ -1,0 +1,15 @@
+uuid: a00b087c-1902-4f5f-b546-67e9c2396ff2
+langcode: en
+status: true
+dependencies:
+  config:
+    - flag.flag.attended
+  module:
+    - flag
+id: flag_action.attended_unflag
+label: 'Mark as did not attend'
+type: node
+plugin: 'flag_action:attended_unflag'
+configuration:
+  flag_id: attended
+  flag_action: unflag

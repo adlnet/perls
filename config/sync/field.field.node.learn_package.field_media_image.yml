@@ -1,0 +1,29 @@
+uuid: ff7dc9e3-42ad-49ca-b766-b958328deb2a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_media_image
+    - media.type.image
+    - node.type.learn_package
+id: node.learn_package.field_media_image
+field_name: field_media_image
+entity_type: node
+bundle: learn_package
+label: 'Featured Image'
+description: 'Add an image that is appropriate and best represents the content. Use an image that learners will easily associate with the topic.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      image: image
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

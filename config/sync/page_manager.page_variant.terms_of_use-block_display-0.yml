@@ -1,0 +1,37 @@
+uuid: 948df589-58a9-491d-a4ca-04fab80ffea0
+langcode: en
+status: true
+dependencies:
+  config:
+    - page_manager.page.terms_of_use
+  content:
+    - 'block_content:text_block:8f19aeb0-1f1e-4409-b7e0-db5272ff7f29'
+  module:
+    - block_content
+id: terms_of_use-block_display-0
+label: 'Block page'
+variant: block_display
+variant_settings:
+  blocks:
+    984a5097-ff31-46ba-b0f0-5023bae8f4a1:
+      id: 'block_content:8f19aeb0-1f1e-4409-b7e0-db5272ff7f29'
+      label: 'Terms of Use'
+      provider: block_content
+      label_display: '0'
+      status: true
+      info: ''
+      view_mode: full
+      region: top
+      weight: 0
+      uuid: 984a5097-ff31-46ba-b0f0-5023bae8f4a1
+      context_mapping: {  }
+  id: block_display
+  uuid: 537a4f6a-91af-45c7-b446-fdd2f23d44fe
+  label: null
+  weight: 0
+  page_title: 'Terms Of Use'
+page: terms_of_use
+weight: 0
+selection_criteria: {  }
+selection_logic: and
+static_context: {  }

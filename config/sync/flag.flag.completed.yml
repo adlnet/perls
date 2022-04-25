@@ -1,0 +1,45 @@
+uuid: 839f3c56-9da8-4c67-acf5-255c4533da74
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - perls_learner_browse
+id: completed
+label: Completion
+bundles:
+  - course
+  - event
+  - flash_card
+  - learn_article
+  - learn_file
+  - learn_link
+  - learn_package
+  - podcast_episode
+  - quiz
+  - test
+  - tip_card
+entity_type: node
+global: false
+flag_short: Complete
+flag_long: ''
+flag_message: ''
+unflag_short: 'Uncomplete '
+unflag_long: ''
+unflag_message: ''
+unflag_denied_text: ''
+weight: 0
+flag_type: 'entity:node'
+link_type: plain_text
+flagTypeConfig:
+  show_in_links: {  }
+  show_as_field: true
+  show_on_form: false
+  show_contextual_link: false
+  extra_permissions:
+    owner: '0'
+linkTypeConfig:
+  markup_text_flag: complete
+  markup_text_unflag: completed
+  markup_text_unflagged: uncompleted
+  markup_text_flagged: completed

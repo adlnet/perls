@@ -1,0 +1,14 @@
+{#
+/**
+ * @file
+ * Theme override for an 'input' #type form element.
+ *
+ * Available variables:
+ * - attributes: A list of HTML attributes for the input element.
+ * - children: Optional additional rendered elements.
+ *
+ * @see template_preprocess_input()
+ */
+#}
+<label class="input--file__label o-button o-button--file" for="{{ attributes.id }}">Choose file</label>
+<input{{ attributes.addClass('input--file') }} />{{ children }}

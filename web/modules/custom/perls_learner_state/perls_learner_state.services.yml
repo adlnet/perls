@@ -1,0 +1,62 @@
+services:
+  perls_learner_state.flag_subscriber:
+    arguments:
+     - '@plugin.manager.state_manager'
+     - '@path.current'
+     - '@router.route_provider'
+     - '@lrs.request_generator'
+     - '@perls_learner_state.flagging_helper'
+     - '@xapi.xapi_statement_helper'
+    class: Drupal\perls_learner_state\EventSubscriber\FlagEventSubscriber
+    tags:
+      - { name: 'event_subscriber' }
+  perls_learner_state.history_route_subcsriber:
+    arguments:
+      - '@plugin.manager.state_manager'
+      - '@current_route_match'
+      - '@cache_tags.invalidator'
+      - '@current_user'
+      - '@lrs.request_generator'
+      - '@xapi.xapi_statement_helper'
+      - '@perls_core.history_helper'
+      - '@perls_learner_state.flagging_helper'
+    class: Drupal\perls_learner_state\EventSubscriber\HistoryRouteSubscriber
+    tags:
+      - { name: 'event_subscriber' }
+  plugin.manager.state_manager:
+    class: Drupal\perls_learner_state\Plugin\XapiStateManager
+    parent: default_plugin_manager
+  perls_learner_state.completion_tracking:
+    class: Drupal\perls_learner_state\EventSubscriber\CompletionSubscriber
+    arguments: ['@perls_learner_state.info']
+    tags:
+      - { name: event_subscriber }
+  perls_learner_state.moderation_state_subscriber:
+    class: Drupal\perls_learner_state\EventSubscriber\ModerationStateSubscriber
+    arguments: ['@plugin.manager.state_manager']
+    tags:
+      - { name: event_subscriber }
+  perls_learner_state.node_crud_subscriber:
+    class: Drupal\perls_learner_state\EventSubscriber\NodeCrudSubscriber
+    arguments: ['@plugin.manager.state_manager']
+    tags:
+      - { name: event_subscriber }
+  perls_learner_state.info:
+    class: Drupal\perls_learner_state\LearnerInfo
+    arguments:
+      - '@database'
+      - '@current_user'
+      - '@flag'
+      - '@entity_type.manager'
+  perls_learner_state.quiz_per_user:
+    class: Drupal\perls_learner_state\UserQuizQuestion
+    arguments: ['@current_user']
+  perls_learner_state.flagged_user_statistics:
+    class: Drupal\perls_learner_state\FlaggedUserStatistics
+    arguments: ['@database', '@current_user']
+  perls_learner_state.flagging_helper:
+    class: Drupal\perls_learner_state\PerlsLearnerStatementFlag
+    arguments:
+      - '@plugin.manager.state_manager'
+      - '@xapi.xapi_statement_helper'
+      - '@flag'

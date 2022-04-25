@@ -1,0 +1,6 @@
+services:
+  perls_core.history_helper:
+    class: Drupal\perls_core\HistoryHelper
+    arguments:
+      - '@database'
+      - '@xapi.xapi_statement_helper'

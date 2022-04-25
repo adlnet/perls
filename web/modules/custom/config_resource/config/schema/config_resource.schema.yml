@@ -1,0 +1,9 @@
+config_resource.settings:
+  type: config_object
+  label: 'Configuration API Settings'
+  mapping:
+    exposed_config_entities:
+      type: sequence
+      label: 'List of exposed configurations'
+      sequence:
+        type: string

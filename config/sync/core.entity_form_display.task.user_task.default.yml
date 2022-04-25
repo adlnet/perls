@@ -1,0 +1,34 @@
+uuid: 153b720c-4542-4479-bae8-31b0dcaa404e
+langcode: en
+status: true
+dependencies:
+  config:
+    - task.type.user_task
+  module:
+    - field_layout
+    - layout_discovery
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings:
+      label: ''
+id: task.user_task.default
+targetEntityType: task
+bundle: user_task
+mode: default
+content:
+  name:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      orderable: true
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  completion_date: true
+  langcode: true
+  path: true
+  user_id: true
+  weight: true

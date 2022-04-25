@@ -1,0 +1,45 @@
+uuid: 5b06885d-5f2d-4635-8da3-78359a375a25
+langcode: en
+status: true
+dependencies:
+  config:
+    - webform.webform.content_specific_webform
+  module:
+    - ctools
+    - system
+    - webform
+  theme:
+    - perls_learner
+id: content_specific_feedback
+theme: perls_learner
+region: content
+weight: 0
+provider: null
+plugin: webform_block
+settings:
+  id: webform_block
+  label: Feedback
+  label_display: '0'
+  provider: webform
+  webform_id: content_specific_webform
+  default_data: ''
+  redirect: false
+visibility:
+  'entity_bundle:node':
+    id: 'entity_bundle:node'
+    negate: true
+    context_mapping:
+      node: '@node.node_route_context:node'
+    bundles:
+      event: event
+      flash_card: flash_card
+      learn_link: learn_link
+      learn_package: learn_package
+      quiz: quiz
+      test: test
+      tip_card: tip_card
+  request_path:
+    id: request_path
+    negate: true
+    context_mapping: {  }
+    pages: '/node/*/discussion'

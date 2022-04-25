@@ -1,0 +1,26 @@
+diff --git a/src/TwigExtension/SwitchExtension.php b/src/TwigExtension/SwitchExtension.php
+index 12452f1..9e15d01 100644
+--- a/src/TwigExtension/SwitchExtension.php
++++ b/src/TwigExtension/SwitchExtension.php
+@@ -46,7 +46,7 @@ class SwitchExtension extends \Twig_Extension {
+    */
+   public function getFunctions() {
+     return [
+-      'switch_is_active' => new \Twig_Function_Function([$this, 'isSwitchActive']),
++      'switch_is_active' => new \Twig\TwigFunction('switch_is_active', [$this, 'isSwitchActive']),
+     ];
+   }
+ 
+diff --git a/switches.services.yml b/switches.services.yml
+index 46bc5fa..dcb68a0 100644
+--- a/switches.services.yml
++++ b/switches.services.yml
+@@ -2,7 +2,7 @@ services:
+   switches.manager:
+     class: Drupal\switches\SwitchManager
+     arguments:
+-      - '@entity.manager'
++      - '@entity_type.manager'
+       - '@logger.channel.switches'
+   logger.channel.switches:
+       parent: logger.channel_base

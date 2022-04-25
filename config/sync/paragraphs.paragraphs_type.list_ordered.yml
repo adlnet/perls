@@ -1,0 +1,12 @@
+uuid: 167c54cb-44c0-45b8-a88c-ed0f91217dc7
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: xD5AtlbMTwJPfxpdH2xcsANpkM7uiLIm0zEpl9VBM2U
+id: list_ordered
+label: 'Number list'
+icon_uuid: null
+icon_default: null
+description: 'Add a list of numbered items'
+behavior_plugins: {  }

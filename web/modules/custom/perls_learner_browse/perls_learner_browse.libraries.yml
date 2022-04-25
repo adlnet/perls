@@ -1,0 +1,6 @@
+n_course_content_block:
+  version: 1.x
+  js:
+    js/n-course-content-block.js: {}
+  dependencies:
+    - core/drupal.ajax

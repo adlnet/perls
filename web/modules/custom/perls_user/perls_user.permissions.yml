@@ -1,0 +1,4 @@
+administer perls theme:
+  title: 'Customize Perls theming'
+disable email autofill from browser:
+  title: 'Disable Email field autofill from browser'

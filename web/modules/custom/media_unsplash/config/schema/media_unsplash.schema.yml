@@ -1,0 +1,10 @@
+media_unsplash.media_unsplash.admin.config:
+  type: config_object
+  label: 'Unsplash API keys form'
+  mapping:
+    media_unsplash_access_key:
+      type: string
+      label: 'Unsplash access key'
+    media_unsplash_secret_key:
+      type: string
+      label: 'Unsplash secret key'

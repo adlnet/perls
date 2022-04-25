@@ -1,0 +1,31 @@
+uuid: 800710be-eb46-4292-88dc-188ce2166a4a
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.taxonomy_term.chip
+    - taxonomy.vocabulary.tags
+  module:
+    - field_layout
+    - layout_builder
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings:
+      label: ''
+  layout_builder:
+    enabled: false
+    allow_custom: false
+id: taxonomy_term.tags.chip
+targetEntityType: taxonomy_term
+bundle: tags
+mode: chip
+content: {  }
+hidden:
+  description: true
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  flag_following: true
+  langcode: true
+  search_api_excerpt: true

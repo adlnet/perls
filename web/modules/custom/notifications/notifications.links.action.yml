@@ -1,0 +1,12 @@
+notifications.send_user:
+  route_name: view.send_notifications.page_1
+  title: 'Send Notification by User'
+  appears_on:
+    - page_manager.page_view_push_notification_list_push_notification_list-block_display-0
+
+notifications.send_group:
+  route_name: view.send_notifications_by_group.page_1
+  title: 'Send Notification by Group'
+  appears_on:
+    - page_manager.page_view_push_notification_list_push_notification_list-block_display-0
+

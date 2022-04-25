@@ -1,0 +1,15 @@
+{
+    "name": "float/recommender",
+    "description": "The Recommendation Engine.",
+    "type": "drupal-module",
+    "version": "2.0.0-rc3",
+    "keywords": [
+        "Drupal",
+        "theme"
+    ],
+    "require": {
+        "drupal/flag": "^4.0",
+        "drupal/views_autocomplete_filters": "^1.3",
+        "float/tools": "^2.0"
+    }
+}

@@ -1,0 +1,5 @@
+administer_user_flags:
+  title: Flag Content
+  description: 'Allow to administrator to manage different user flags.'
+  route_name: view.administer_all_content_flags.administer_user_flags
+  parent: system.admin_content

@@ -1,0 +1,330 @@
+body.perls-content-manager {
+  background-color: $c-admin-header--background;
+  min-height: $body-min-height;
+
+  .page-title,
+  .o-page-title {
+    color: $c-admin-header--foreground;
+  }
+
+  .c-search-block {
+    &__toggle {
+      svg path {
+        fill: $c-admin-header--foreground;
+      }
+    }
+  }
+
+  .l-wrap {
+    padding-right: 0;
+  }
+
+  .l-main {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+
+    > *:first-child {
+      width: var(--l-sidebar-width, $l-sidebar-width);
+    }
+
+    > *:last-child {
+      width: var(--l-main-width, $l-main-width);
+    }
+
+    > *:first-child:last-child {
+      width: 100%;
+    }
+  }
+
+  /**
+   * Content Manager theme responsive menu and layout changes.
+   */
+  @include media("<medium") {
+    .l-sidebar--first {
+      padding-right: 0;
+      margin-top: $space;
+    }
+
+    .l-wrap {
+      padding: 0;
+    }
+
+    header {
+      position: relative;
+
+      .c-header {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .c-header__content,
+      .c-header__logo {
+        width: 100%;
+      }
+
+      .c-header__content--left {
+        padding-left: $space-triple;
+      }
+    }
+    /**
+     * Content Manager responsive menu styles.
+     */
+    &.cm-menu-open .l-main {
+      padding: 0 0 0 $space-quarter;
+
+      & > *:last-child {
+        margin-left: 0;
+      }
+    }
+
+    &.cm-menu-open .c-tabs {
+      margin-left: 300px;
+    }
+
+    .c-menu li a {
+      padding: $space $space-half 0 $space-half;
+      margin-bottom: $space;
+    }
+
+    .c-submenu {
+      padding: 0;
+
+      li a,
+      li span.is-active {
+        padding: $space-half $space;
+        margin-bottom: $space-half;
+      }
+    }
+
+    .c-tabs {
+      margin-left: 0;
+      transition: $transition;
+      left: $space-quad;
+    }
+
+    .l-main {
+      > *:first-child {
+        width: 300px;
+      }
+
+      > *:last-child {
+        width: 100vw;
+        margin-left: -300px;
+        transition: $transition;
+      }
+    }
+  }
+
+  .l-body {
+    display: flex;
+    flex-direction: column;
+    z-index: 2;
+
+    @include media(">xlarge") {
+      flex-direction: row;
+      flex-wrap: nowrap;
+    }
+
+    &__content {
+      background-color: $c-admin--background;
+      border-top-left-radius: $border-radius--card;
+      color: $c-admin--foreground;
+      width: 100%;
+      height: 100%;
+      display: block;
+      z-index: 1;
+    }
+
+    &__sidebar {
+      width: 100%;
+      position: relative;
+
+      @include media(">xlarge") {
+        margin-right: 0;
+        width: 40%;
+      }
+    }
+
+    &.has-sidebar {
+      .l-body__content {
+        width: 100%;
+        box-shadow: 0 10px 20px rgba($c-black, 0.2);
+        position: relative;
+
+        @include media(">xlarge") {
+          width: 60%;
+        }
+
+        .l-content {
+          @include media(">xlarge") {
+            overflow: visible;
+          }
+        }
+
+        .o-input.edit-top-preview-button {
+          display: none;
+
+          .ajax-progress-throbber {
+            position: relative;
+            height: 0;
+            top: -30px;
+            padding: 0;
+            left: 105%;
+
+            [dir="rtl"] & {
+              left: unset;
+              right: 105%;
+            }
+          }
+
+          @include media(">xlarge") {
+            display: flex;
+            flex-direction: column;
+            position: absolute;
+            left: auto;
+            width: 180px;
+            top: $space-double;
+            right: calc(-180px - #{$space-double});
+            pointer-events: none;
+
+            [dir="rtl"] & {
+              right: unset;
+              left: calc(-180px - #{$space-double});
+            }
+          }
+
+          input {
+            @include o-button--small;
+
+            text-indent: 9999px;
+            position: relative;
+            pointer-events: all;
+
+            &:focus {
+              background-color: $c-white;
+              border-color: $c-secondary;
+            }
+
+            &:focus:hover {
+              background-color: $c-admin--foreground;
+              border-color: $c-admin--foreground;
+            }
+          }
+
+          &::before {
+            content: "Preview";
+            margin-bottom: $space;
+            font-weight: bold;
+
+            @include o-heading--m;
+          }
+
+          &::after {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            text-align: center;
+            color: $c-secondary;
+            font-weight: bold;
+            content: "Refresh Preview";
+            pointer-events: none;
+            cursor: pointer;
+            transition: $transition;
+            height: 36px;
+            width: 100%;
+            line-height: 36px;
+          }
+
+          &:hover,
+          &:focus {
+            &::after {
+              color: $c-white;
+            }
+          }
+        }
+      }
+
+      .l-sidebar--second {
+        padding-top: $space-double;
+        padding-bottom: $space-double;
+      }
+    }
+  }
+
+  &.l-page--batch .l-body {
+    margin-right: 40px;
+
+    &__content {
+      border-radius: $border-radius--card;
+    }
+  }
+
+  .l-content {
+    padding: $space-double $space;
+
+    @include media(">xlarge") {
+      padding: $space-double;
+    }
+
+    .c-view__banner .c-view__content {
+      overflow: hidden;
+    }
+  }
+
+  .c-node--card,
+  .c-node--full {
+    .c-node__header {
+      z-index: 0;
+      position: relative;
+    }
+
+    .c-node__content {
+      z-index: 1;
+      position: relative;
+      background-color: $c-content--background;
+      border-radius: $border-radius--card;
+      box-shadow: $box-shadow;
+      padding: $space;
+      margin-top: -15px !important;
+    }
+
+    .c-card__footer {
+      padding-bottom: 25px;
+    }
+  }
+
+  .c-node--card--course {
+    width: 100%;
+
+    .c-field--name-field-learning-content {
+      max-height: 100%;
+      overflow: visible;
+    }
+  }
+
+  &.l-page--manage-webform-submissions {
+    .c-block-system-main-block {
+      overflow-x: scroll;
+      overflow-y: auto;
+      -ms-overflow-style: none;
+    }
+  }
+
+  &.l-page--node-add-learn-link {
+    .l-body {
+      &.has-sidebar {
+        .l-sidebar--second {
+          // Adding more contrast to learn_link preview section.
+          background-color: #f5f5f5;
+        }
+      }
+    }
+  }
+}
+
+.l--entity-browser--iframe {
+  background-color: $c-white;
+  color: $c-admin--foreground;
+}

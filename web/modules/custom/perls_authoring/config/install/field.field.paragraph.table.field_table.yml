@@ -1,0 +1,32 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_table
+    - paragraphs.paragraphs_type.table
+  module:
+    - allowed_formats
+    - text
+third_party_settings:
+  allowed_formats:
+    table: table
+    advanced: '0'
+    basic_filter: '0'
+    inline_styling: '0'
+    list: '0'
+    plain_text: '0'
+id: paragraph.table.field_table
+field_name: field_table
+entity_type: paragraph
+bundle: table
+label: Table
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: "<table border=\"1\" cellpadding=\"1\" cellspacing=\"1\" style=\"width: 500px;\">\r\n\t<thead>\r\n\t\t<tr>\r\n\t\t\t<th scope=\"col\">&nbsp;</th>\r\n\t\t\t<th scope=\"col\">&nbsp;</th>\r\n\t\t\t<th scope=\"col\">&nbsp;</th>\r\n\t\t</tr>\r\n\t</thead>\r\n\t<tbody>\r\n\t\t<tr>\r\n\t\t\t<td>&nbsp;</td>\r\n\t\t\t<td>&nbsp;</td>\r\n\t\t\t<td>&nbsp;</td>\r\n\t\t</tr>\r\n\t\t<tr>\r\n\t\t\t<td>&nbsp;</td>\r\n\t\t\t<td>&nbsp;</td>\r\n\t\t\t<td>&nbsp;</td>\r\n\t\t</tr>\r\n\t</tbody>\r\n</table>\r\n\r\n<p>&nbsp;</p>\r\n"
+    format: table
+default_value_callback: ''
+settings: {  }
+field_type: text_long

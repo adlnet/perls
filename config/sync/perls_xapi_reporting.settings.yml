@@ -1,0 +1,9 @@
+langcode: en
+roles:
+  authenticated: authenticated
+  content_manager: content_manager
+  perls_system_admin: perls_system_admin
+  sysadmin: sysadmin
+  rest_api_user: 0
+  packager: 0
+negate: 0

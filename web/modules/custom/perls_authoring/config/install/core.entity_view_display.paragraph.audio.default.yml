@@ -1,0 +1,41 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.audio.field_audio
+    - paragraphs.paragraphs_type.audio
+  module:
+    - audiofield
+    - field_layout
+    - layout_discovery
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings: {  }
+id: paragraph.audio.default
+targetEntityType: paragraph
+bundle: audio
+mode: default
+content:
+  field_audio:
+    weight: 0
+    label: hidden
+    settings:
+      audio_player: default_mp3_player
+      audio_player_jplayer_theme: none
+      audio_player_wavesurfer_combine_files: false
+      audio_player_wordpress_combine_files: false
+      audio_player_wordpress_animation: true
+      audio_player_soundmanager_theme: default
+      audio_player_initial_volume: 8
+      audio_player_autoplay: false
+      audio_player_lazyload: false
+      download_button: false
+      download_link: false
+    third_party_settings: {  }
+    type: audiofield_audioplayer
+    region: content
+hidden:
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true

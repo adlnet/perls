@@ -1,0 +1,65 @@
+uuid: 3c0c56e9-c60a-4bf0-a86f-9688ab16be7a
+langcode: en
+status: true
+dependencies:
+  module:
+    - recommender
+id: sl_user_recommendation_status--sl_user_recommendation_status
+disabled: true
+path: sl_user_recommendation_status/sl_user_recommendation_status
+resourceType: sl_user_recommendation_status--sl_user_recommendation_status
+resourceFields:
+  id:
+    disabled: false
+    fieldName: id
+    publicName: id
+    enhancer:
+      id: ''
+  uuid:
+    disabled: false
+    fieldName: uuid
+    publicName: uuid
+    enhancer:
+      id: ''
+  user_id:
+    disabled: false
+    fieldName: user_id
+    publicName: user_id
+    enhancer:
+      id: ''
+  status:
+    disabled: false
+    fieldName: status
+    publicName: status
+    enhancer:
+      id: ''
+  created:
+    disabled: false
+    fieldName: created
+    publicName: created
+    enhancer:
+      id: ''
+  changed:
+    disabled: false
+    fieldName: changed
+    publicName: changed
+    enhancer:
+      id: ''
+  recommendations_updated:
+    disabled: false
+    fieldName: recommendations_updated
+    publicName: recommendations_updated
+    enhancer:
+      id: ''
+  recommendations_priority:
+    disabled: false
+    fieldName: recommendations_priority
+    publicName: recommendations_priority
+    enhancer:
+      id: ''
+  recommendations_retrieved:
+    disabled: false
+    fieldName: recommendations_retrieved
+    publicName: recommendations_retrieved
+    enhancer:
+      id: ''

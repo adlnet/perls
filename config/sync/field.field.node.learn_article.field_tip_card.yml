@@ -1,0 +1,28 @@
+uuid: 4e4f71e7-e84b-4584-9e41-21111bdc0d25
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_tip_card
+    - node.type.learn_article
+    - node.type.tip_card
+id: node.learn_article.field_tip_card
+field_name: field_tip_card
+entity_type: node
+bundle: learn_article
+label: 'Related Tips'
+description: 'Add a tip card that is related to the article content. The tip card should aid the learner in understanding the article.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      tip_card: tip_card
+    sort:
+      field: _none
+    auto_create: true
+    auto_create_bundle: ''
+field_type: entity_reference

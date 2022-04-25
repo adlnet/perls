@@ -1,0 +1,22 @@
+uuid: 2b47df97-bd45-445b-a105-e41444e72fc0
+langcode: en
+status: true
+dependencies:
+  module:
+    - react_comments
+    - serialization
+    - user
+_core:
+  default_config_hash: PbcoYD9uRuCMln3tgrkhQjflrqFhlg4qQCROPsOzB6Y
+id: comment
+plugin_id: comment
+granularity: resource
+configuration:
+  methods:
+    - PUT
+    - DELETE
+    - PATCH
+  formats:
+    - json
+  authentication:
+    - cookie

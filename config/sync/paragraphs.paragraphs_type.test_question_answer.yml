@@ -1,0 +1,10 @@
+uuid: eacfcefe-8966-4b23-a60e-78dbf31c82b5
+langcode: en
+status: true
+dependencies: {  }
+id: test_question_answer
+label: 'Test question answer'
+icon_uuid: null
+icon_default: null
+description: 'This paragraph is being used to track quiz answers for tests.'
+behavior_plugins: {  }

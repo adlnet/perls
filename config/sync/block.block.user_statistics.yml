@@ -1,0 +1,26 @@
+uuid: fc72a975-9093-4e58-8fe9-fdfccf78bc74
+langcode: en
+status: true
+dependencies:
+  module:
+    - perls_user
+    - system
+  theme:
+    - perls_content_manager
+id: user_statistics
+theme: perls_content_manager
+region: sidebar_second
+weight: -11
+provider: null
+plugin: user_statistics_block
+settings:
+  id: user_statistics_block
+  label: 'User Statistics'
+  label_display: visible
+  provider: perls_user
+visibility:
+  request_path:
+    id: request_path
+    negate: false
+    context_mapping: {  }
+    pages: '/user/*/edit'

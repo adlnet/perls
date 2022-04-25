@@ -1,0 +1,19 @@
+uuid: 521291c6-7500-4a9f-90ab-1de44cd91d20
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_custom_uri
+    - node.type.learn_link
+id: node.learn_link.field_custom_uri
+field_name: field_custom_uri
+entity_type: node
+bundle: learn_link
+label: URI
+description: 'Provide an absolute URI for the native app or experience.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long

@@ -1,0 +1,70 @@
+uuid: 087d085a-bc65-4733-9b33-70cc619f5909
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.tile
+    - field.field.node.quiz.field_difficulty
+    - field.field.node.quiz.field_media_image
+    - field.field.node.quiz.field_option
+    - field.field.node.quiz.field_parent_content
+    - field.field.node.quiz.field_tags
+    - field.field.node.quiz.field_topic
+    - field.field.node.quiz.field_type_description
+    - node.type.quiz
+  module:
+    - field_layout
+    - layout_builder
+    - user
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings:
+      label: ''
+  layout_builder:
+    enabled: false
+    allow_custom: false
+id: node.quiz.tile
+targetEntityType: node
+bundle: quiz
+mode: tile
+content:
+  field_tags:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  flag_bookmark:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  flag_completed:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  recommendation_reason:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  entitygroupfield: true
+  field_difficulty: true
+  field_media_image: true
+  field_option: true
+  field_parent_content: true
+  field_topic: true
+  field_type_description: true
+  flag_recommendation: true
+  group_content: true
+  langcode: true
+  links: true
+  search_api_excerpt: true

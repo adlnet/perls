@@ -1,0 +1,111 @@
+uuid: f3fed729-0184-4931-931c-4699ddd7a218
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.test_attempt.field_attempted_answers
+    - field.field.paragraph.test_attempt.field_correctly_answered_count
+    - field.field.paragraph.test_attempt.field_registration_id
+    - field.field.paragraph.test_attempt.field_test_complete
+    - field.field.paragraph.test_attempt.field_test_feedback
+    - field.field.paragraph.test_attempt.field_test_passed
+    - field.field.paragraph.test_attempt.field_test_question_count
+    - field.field.paragraph.test_attempt.field_test_result
+    - paragraphs.paragraphs_type.test_attempt
+  module:
+    - entity_reference_revisions
+    - field_layout
+    - layout_builder
+    - layout_discovery
+    - text
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings:
+      label: ''
+  layout_builder:
+    enabled: false
+    allow_custom: false
+id: paragraph.test_attempt.default
+targetEntityType: paragraph
+bundle: test_attempt
+mode: default
+content:
+  field_attempted_answers:
+    type: entity_reference_revisions_entity_view
+    label: above
+    settings:
+      view_mode: default
+      link: ''
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_correctly_answered_count:
+    type: number_integer
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    weight: 6
+    region: content
+  field_registration_id:
+    type: string
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_test_complete:
+    type: boolean
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_test_feedback:
+    type: text_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_test_passed:
+    type: boolean
+    label: above
+    settings:
+      format: default
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_test_question_count:
+    type: number_integer
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    weight: 5
+    region: content
+  field_test_result:
+    type: number_decimal
+    label: above
+    settings:
+      thousand_separator: ''
+      decimal_separator: .
+      scale: 2
+      prefix_suffix: true
+    third_party_settings: {  }
+    weight: 7
+    region: content
+hidden:
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  search_api_excerpt: true

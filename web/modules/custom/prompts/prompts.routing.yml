@@ -1,0 +1,13 @@
+prompts.api:
+  path: '/api/prompts'
+  defaults:
+    _controller: '\Drupal\prompts\Controller\PromptsController::getPromptForm'
+  requirements:
+    _permission: 'access content'
+  methods: [GET]
+prompts.new_dashboard_prompts:
+  path: '/user/my-prompts'
+  defaults:
+    _controller: '\Drupal\prompts\Controller\MyPromptsPage::inModal'
+  requirements:
+    _permission: 'access content'

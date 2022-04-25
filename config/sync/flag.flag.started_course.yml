@@ -1,0 +1,33 @@
+uuid: 0cb4b76e-34f1-4268-8846-e4932ea7e02e
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - perls_learner_browse
+id: started_course
+label: 'Started course'
+bundles:
+  - course
+entity_type: node
+global: false
+flag_short: 'Flag this item'
+flag_long: ''
+flag_message: ''
+unflag_short: 'Unflag this item'
+unflag_long: ''
+unflag_message: ''
+unflag_denied_text: ''
+weight: 0
+flag_type: 'entity:node'
+link_type: plain_text
+flagTypeConfig:
+  show_in_links: {  }
+  show_as_field: false
+  show_on_form: false
+  show_contextual_link: false
+  extra_permissions:
+    owner: '0'
+linkTypeConfig:
+  markup_text_flag: ''
+  markup_text_unflag: ''

@@ -1,0 +1,38 @@
+uuid: b6494c5e-6106-4548-b6aa-9637afa876cb
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.checklist.field_checklist_item
+    - paragraphs.paragraphs_type.checklist
+  module:
+    - field_layout
+    - layout_builder
+    - layout_discovery
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings: {  }
+  layout_builder:
+    enabled: false
+    allow_custom: false
+_core:
+  default_config_hash: _pBxNvmhxm_lXK3CZ-m1W3zoIK26CviJ7BWwi2kS2tg
+id: paragraph.checklist.default
+targetEntityType: paragraph
+bundle: checklist
+mode: default
+content:
+  field_checklist_item:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  search_api_excerpt: true

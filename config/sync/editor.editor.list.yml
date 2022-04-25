@@ -1,0 +1,39 @@
+uuid: 77984b9c-5317-4193-a4a7-51352c0ad7e1
+langcode: en
+status: true
+dependencies:
+  config:
+    - filter.format.list
+  module:
+    - ckeditor
+_core:
+  default_config_hash: hDkMngDmvqAW880wvQHt23O3a7ygL8GgVXrn7cfWrBk
+format: list
+editor: ckeditor
+settings:
+  toolbar:
+    rows:
+      -
+        -
+          name: Formatting
+          items:
+            - Bold
+            - Italic
+        -
+          name: Links
+          items:
+            - DrupalLink
+            - DrupalUnlink
+  plugins:
+    stylescombo:
+      styles: ''
+    language:
+      language_list: un
+image_upload:
+  status: false
+  scheme: public
+  directory: inline-images
+  max_size: ''
+  max_dimensions:
+    width: null
+    height: null

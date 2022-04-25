@@ -1,0 +1,25 @@
+uuid: 0fe45549-87e7-45fd-9b4b-b64b7b2da3a9
+langcode: en
+status: true
+dependencies:
+  config:
+    - system.menu.learner
+  module:
+    - system
+  theme:
+    - perls_learner
+id: learner_tabs
+theme: perls_learner
+region: header
+weight: -8
+provider: null
+plugin: 'system_menu_block:learner'
+settings:
+  id: 'system_menu_block:learner'
+  label: 'Learner Tabs'
+  label_display: visible
+  provider: system
+  level: 2
+  depth: 0
+  expand_all_items: false
+visibility: {  }

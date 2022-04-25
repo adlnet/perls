@@ -1,0 +1,8 @@
+name: 'Simple Oauth Sessions'
+type: module
+description: 'Provide session handling for an outer app.'
+dependencies:
+  - simple_oauth:simple_oauth
+package: PERLS
+core: 8.x
+core_version_requirement: ^8 || ^9

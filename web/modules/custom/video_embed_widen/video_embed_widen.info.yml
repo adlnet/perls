@@ -1,0 +1,5 @@
+name: Video Embed Widen
+type: module
+description: Embed Widen videos into your website using Video Embed Field.
+core: '8.x'
+core_version_requirement: ^8 || ^9

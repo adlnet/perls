@@ -1,0 +1,10 @@
+uuid: 6c10b85a-784e-420b-82a3-a5248886b373
+langcode: en
+status: true
+dependencies: {  }
+id: test_attempt
+label: 'Test Attempt'
+icon_uuid: null
+icon_default: null
+description: 'This paragraph is being used to track test attempts made by a user. These paragraphs are used with the Test Results flag.'
+behavior_plugins: {  }

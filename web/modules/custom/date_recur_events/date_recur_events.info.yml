@@ -1,0 +1,8 @@
+name: 'Recurring Dates Events'
+type: module
+description: 'Dispatches events when a recurring date field is about to begin and end.'
+core_version_requirement: ^9
+php: 7.3
+package: 'Custom'
+dependencies:
+  - date_recur

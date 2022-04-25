@@ -1,0 +1,29 @@
+uuid: 80e7020b-03dc-4787-af7f-1a6c84fd1441
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group.field_media_image
+    - group.type.audience
+    - media.type.image
+id: group.audience.field_media_image
+field_name: field_media_image
+entity_type: group
+bundle: audience
+label: Image
+description: 'Select/Upload an image for this group.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      image: image
+    sort:
+      field: changed
+      direction: DESC
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

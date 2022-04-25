@@ -1,0 +1,116 @@
+<?php
+
+use Drupal\user\Entity\Role;
+
+/**
+ * Implements hook_schema().
+ */
+function react_comments_schema() {
+  $schema['react_comments_status'] = [
+    'description' => 'Comment statuses.',
+    'fields' => [
+      'cid' => [
+        'description' => 'Comment ID',
+        'type'        => 'int',
+        'length'      => 15,
+        'unsigned'    => TRUE,
+        'not null'    => TRUE,
+        'default'     => 0,
+      ],
+      'uid' => [
+        'description' => 'User ID',
+        'type'        => 'int',
+        'length'      => 15,
+        'unsigned'    => TRUE,
+        'not null'    => TRUE,
+        'default'     => 0,
+      ],
+      'status' => [
+        'description' => 'Status.',
+        'type'        => 'int',
+        'unsigned'    => TRUE,
+        'not null'    => TRUE,
+        'default'     => 0,
+      ],
+      'created_at' => [
+        'description' => 'Status timestamp.',
+        'type'        => 'int',
+        'unsigned'    => TRUE,
+        'not null'    => TRUE,
+        'default'     => 0,
+      ],
+    ],
+    'indexes' => [
+      'cid' => ['cid'],
+      'uid' => ['uid'],
+    ],
+  ];
+  return $schema;
+}
+
+/**
+ * Implements hook_install().
+ */
+function react_comments_install() {
+  $roles = [
+    'authenticated' => [
+      'restful get comments',
+      'restful post comments',
+      'restful get me',
+      'restful get comment',
+      'restful delete comment',
+      'restful patch comment',
+      'restful put comment'
+    ],
+    'anonymous' => [
+      'restful get comments',
+      'restful post comments',
+      'restful get me',
+    ],
+  ];
+  foreach ($roles as $role => $permissions) {
+    $role = Role::load($role);
+    foreach ($permissions as $permission) {
+      $role->grantPermission($permission);
+    }
+    $role->save();
+  }
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function react_comments_uninstall() {
+  // Since this module treats deleted comments as "published" (so that we can see
+  // replies, and note where in the comment tree deleted comments were) we need to
+  // set the status of all RC_STATUS_DELETED comments to 0 so that they don't show
+  // up once the module is turned off. Additionally we're choosing to change the status
+  // rather than actually delete the comments, because deleting comments in drupal will
+  // delete all replies, something that may not be immediately obvious to someone
+  // uninstalling this module.
+  $query = $query = \Drupal::database()->select('comment_field_data', 'c');
+  $query->join('react_comments_status', 's', 'c.cid = s.cid');
+  $query->fields('c', ['cid']);
+  $query->condition('s.status', RC_COMMENT_DELETED);
+  $deleted_comments = (array) $query->execute()->fetchAllKeyed(0, 0);
+
+  var_dump($deleted_comments);
+
+  if (!empty($deleted_comments)) {
+    $result = $result = \Drupal::database()->update('comment_field_data')
+      // let's also set the least important field to something identifiable in case someone has regrets
+      ->fields(['status' => 0, 'homepage' => 'react_comments_deleted'])
+      ->condition('comment_field_data.cid', $deleted_comments, 'IN')
+      ->execute();
+
+    echo "React comments wants deleted comments to have a status of 1 in the database to preserve replies. On uninstall we unpublish these deleted comments so they won't show up on the front end. $result comments have been unpublished.";
+  }
+}
+
+/**
+ * Install default config
+ */
+function react_comments_update_8001() {
+  // This is okay cause there hasn't been any config up to this point.
+  \Drupal::service('config.installer')->installDefaultConfig('module', 'react_comments');
+}

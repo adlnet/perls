@@ -1,0 +1,29 @@
+uuid: 1c1e8e2b-076f-4c8b-8246-5832971806cd
+langcode: en
+status: true
+dependencies:
+  module:
+    - entity_browser_entity_form
+name: podcast_episode_browser
+label: 'Add Episode'
+display: modal
+display_configuration:
+  width: ''
+  height: ''
+  link_text: 'Add episode'
+  auto_open: false
+selection_display: no_display
+selection_display_configuration: {  }
+widget_selector: tabs
+widget_selector_configuration: {  }
+widgets:
+  627ddb21-dbda-4f13-b136-b8a28e0ed575:
+    id: entity_form
+    uuid: 627ddb21-dbda-4f13-b136-b8a28e0ed575
+    label: 'New episode'
+    weight: 2
+    settings:
+      submit_text: 'Create new episode'
+      entity_type: node
+      bundle: podcast_episode
+      form_mode: default

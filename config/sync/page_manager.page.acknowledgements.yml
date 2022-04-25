@@ -1,0 +1,12 @@
+uuid: aa887968-3c8a-4eb4-a8d7-51102b688708
+langcode: en
+status: true
+dependencies: {  }
+id: acknowledgements
+label: Acknowledgements
+description: 'Acknowledgements page'
+use_admin_theme: false
+path: /acknowledgements
+access_logic: and
+access_conditions: {  }
+parameters: {  }

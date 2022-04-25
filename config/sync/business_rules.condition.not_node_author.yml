@@ -1,0 +1,20 @@
+uuid: ffc0f61d-2470-483d-bb85-914a02673fc3
+langcode: en
+status: true
+dependencies:
+  config:
+    - business_rules.variable.current_user
+id: not_node_author
+label: 'Not node author'
+type: variable_data_comparison
+reverse: false
+description: 'Evaluates to true when the current user is not the node author.'
+target_entity_type: null
+target_bundle: null
+success_items: {  }
+fail_items: {  }
+tags: {  }
+settings:
+  value_1: '{{current_user->uid}}'
+  operator: '!='
+  value_2: '[node:author:uid]'

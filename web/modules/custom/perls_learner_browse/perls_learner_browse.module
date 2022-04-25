@@ -1,0 +1,54 @@
+<?php
+
+/**
+ * @file
+ * Contains perls_learner_browse.module.
+ */
+
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\views\Plugin\views\query\QueryPluginBase;
+use Drupal\views\ViewExecutable;
+
+/**
+ * Implements hook_views_query_alter().
+ */
+function perls_learner_browse_views_query_alter(ViewExecutable $view, QueryPluginBase $query) {
+  if ($view->id() === 'content_for_you') {
+    $our_helper = \Drupal::service('perls_learner_browser.view_topics_check');
+    if (!$our_helper->userHasTopics($view->args[0])) {
+      // Removed the relationships if user doesn't choose topics or the topics
+      // doesn't have any related content.
+      $tableQueue = &$query->getTableQueue();
+      // Remove the joins.
+      unset($tableQueue['taxonomy_term_field_data_node__field_topic__user__field_interests']);
+      unset($tableQueue['field_interests_taxonomy_term_field_data']);
+      // Remove the relationship to the user.
+      unset($query->view->relationship['reverse__user__field_interests']);
+      unset($query->where[0]);
+    }
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function perls_learner_browse_theme($existing, $type, $theme, $path) {
+  return [
+    'next_course_content_block' => [
+      'template' => 'block--next-course-content',
+      'render element' => 'elements',
+      'variables' => ['course_content' => []],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_view().
+ */
+function perls_learner_browse_node_view(array &$build, EntityInterface $node, EntityViewDisplayInterface $display, $view_mode) {
+  // Loading the library on article and test pages.
+  if (in_array($node->bundle(), ['learn_article', 'test']) && $view_mode === 'full') {
+    $build['#attached']['library'][] = 'perls_learner_browse/n_course_content_block';
+  }
+}

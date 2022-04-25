@@ -1,0 +1,24 @@
+uuid: 2b05069a-ce25-40e3-bcf5-5b9bf68c86ff
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_type_description
+    - node.type.quiz
+  module:
+    - description_field
+id: node.quiz.field_type_description
+field_name: field_type_description
+entity_type: node
+bundle: quiz
+label: 'Type Description'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  long_description:
+    value: 'A <strong>quiz</strong> is a single question to more formally measure a learner''s understanding. When you create a course, you can combine multiple questions to create a <strong>test</strong> and track individual attempts from each learner.'
+    format: basic_filter
+field_type: description_field

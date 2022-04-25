@@ -1,0 +1,24 @@
+uuid: 307fb298-b082-4fe1-9be1-fcfdae39b937
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_type_description
+    - node.type.event
+  module:
+    - description_field
+id: node.event.field_type_description
+field_name: field_type_description
+entity_type: node
+bundle: event
+label: 'Type Description'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  long_description:
+    value: 'Use an <strong>event</strong> to schedule a virtual event (such as a webinar or conference call) or promotion of selected content.'
+    format: basic_filter
+field_type: description_field

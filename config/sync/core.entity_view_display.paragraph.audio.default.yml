@@ -1,0 +1,63 @@
+uuid: 3349f483-0e74-4fcb-ac0e-2f9c3219105e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.audio.field_audio
+    - paragraphs.paragraphs_type.audio
+  module:
+    - audiofield
+    - field_layout
+    - layout_builder
+    - layout_discovery
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings: {  }
+  layout_builder:
+    enabled: false
+    allow_custom: false
+_core:
+  default_config_hash: JCRr8SPYM28PeNAqQN_du9Fv7U2l2fwqb4eIuebFojU
+id: paragraph.audio.default
+targetEntityType: paragraph
+bundle: audio
+mode: default
+content:
+  field_audio:
+    type: audiofield_audioplayer
+    label: hidden
+    settings:
+      audio_player: default_mp3_player
+      audio_player_jplayer_theme: none
+      audio_player_wavesurfer_combine_files: false
+      audio_player_wavesurfer_audiorate: 1
+      audio_player_wavesurfer_autocenter: true
+      audio_player_wavesurfer_bargap: 0
+      audio_player_wavesurfer_barheight: 1
+      audio_player_wavesurfer_barwidth: null
+      audio_player_wavesurfer_cursorcolor: '#333'
+      audio_player_wavesurfer_cursorwidth: 1
+      audio_player_wavesurfer_forcedecode: false
+      audio_player_wavesurfer_normalize: false
+      audio_player_wavesurfer_playnexttrack: true
+      audio_player_wavesurfer_progresscolor: '#555'
+      audio_player_wavesurfer_responsive: false
+      audio_player_wavesurfer_use_peakfile: false
+      audio_player_wavesurfer_wavecolor: '#999'
+      audio_player_wordpress_combine_files: false
+      audio_player_wordpress_animation: true
+      audio_player_soundmanager_theme: default
+      audio_player_initial_volume: 8
+      audio_player_autoplay: false
+      audio_player_lazyload: false
+      download_button: false
+      download_link: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  search_api_excerpt: true

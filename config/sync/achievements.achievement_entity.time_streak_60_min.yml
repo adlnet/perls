@@ -1,0 +1,22 @@
+uuid: 54c06bfe-28f0-4951-9b58-fdeeb24d2849
+langcode: en
+status: true
+dependencies:
+  module:
+    - badges
+third_party_settings:
+  badges:
+    plugin_id: time_based_badge_plugin
+    time_based_badge_plugin:
+      minutes: '60'
+    badge_type: 'Time Attack'
+id: time_streak_60_min
+label: 'Time Streak 60 min'
+description: 'Awarded to any user who uses the app for 60 minutes.'
+secret: false
+invisible: false
+manual_only: null
+points: 1
+use_default_image: false
+locked_image_path: 'public://badges/lockedBadge.png'
+unlocked_image_path: 'public://badges/1hour.png'

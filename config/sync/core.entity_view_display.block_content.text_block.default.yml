@@ -1,0 +1,60 @@
+uuid: d014fa97-f2d0-4dda-94dc-67d4e1f62303
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.text_block
+    - field.field.block_content.text_block.body
+  module:
+    - field_layout
+    - layout_builder
+    - layout_discovery
+    - text
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings: {  }
+  layout_builder:
+    enabled: true
+    sections:
+      -
+        layout_id: layout_onecol
+        layout_settings:
+          label: ''
+          context_mapping: {  }
+        components:
+          5dbbba6b-b3df-41ca-9258-1b7da94d5d3f:
+            uuid: 5dbbba6b-b3df-41ca-9258-1b7da94d5d3f
+            region: content
+            configuration:
+              id: 'field_block:block_content:text_block:body'
+              label_display: '0'
+              context_mapping:
+                entity: layout_builder.entity
+              formatter:
+                type: text_default
+                label: hidden
+                settings: {  }
+                third_party_settings: {  }
+            weight: 0
+            additional: {  }
+            third_party_settings: {  }
+        third_party_settings: {  }
+id: block_content.text_block.default
+targetEntityType: block_content
+bundle: text_block
+mode: default
+content:
+  body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  entity_print_view_epub: true
+  entity_print_view_pdf: true
+  entity_print_view_word_docx: true
+  langcode: true
+  search_api_excerpt: true

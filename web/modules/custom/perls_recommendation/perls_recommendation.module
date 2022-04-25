@@ -1,0 +1,55 @@
+<?php
+
+/**
+ * @file
+ * Hooks and stuff for perls recommendation engine.
+ */
+
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
+
+/**
+ * Implements hook_entity_extra_field_info().
+ */
+function perls_recommendation_entity_extra_field_info() {
+  $extra = [];
+  $node_bundles = \Drupal::entityTypeManager()
+    ->getStorage('node_type')
+    ->loadMultiple();
+  $node_bundles = array_keys($node_bundles);
+
+  foreach ($node_bundles as $bundle) {
+    $extra['node'][$bundle]['display']['recommendation_reason'] = [
+      'label' => t('Recommendation reason'),
+      'description' => t('Provides more info about why this content is recommended'),
+      'weight' => 100,
+      'visible' => FALSE,
+    ];
+  }
+
+  return $extra;
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_view().
+ */
+function perls_recommendation_node_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+  if (\Drupal::currentUser()->isAuthenticated() && $display->getComponent('recommendation_reason')) {
+    /** @var \Drupal\flag\FlagService $flag */
+    $flag = \Drupal::service('flag');
+    $recommendation_flag = $flag->getFlagById('recommendation');
+    $flagging = $flag->getFlagging($recommendation_flag, $entity);
+    if (isset($flagging) &&
+    $flagging->hasField('field_recommendation_reason') &&
+    !empty($flagging->get('field_recommendation_reason')->getString())) {
+      $build['recommendation_reason'] = [
+        '#type' => 'item',
+        '#title' => t('Why are you seeing this?'),
+        '#markup' => $flagging->get('field_recommendation_reason')->getString(),
+        '#attached' => [
+          'library' => ['perls_recommendation/recommendation-tip-box'],
+        ],
+      ];
+    }
+  }
+}

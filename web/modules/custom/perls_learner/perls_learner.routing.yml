@@ -1,0 +1,12 @@
+perls_learner.node_public_stats:
+  path: '/node/{node}/render-stats'
+  defaults:
+    _controller: '\Drupal\perls_learner\Controller\NodePublicStatsController::renderStats'
+    _title: 'Render comments statistics'
+  methods:  [POST]
+  options:
+    parameters:
+      node:
+        type: entity:node
+  requirements:
+    _permission: 'access comments'

@@ -1,0 +1,18 @@
+uuid: 81176cc8-e98c-4cd7-ab1f-e56c104eee6c
+langcode: en
+status: true
+dependencies:
+  module:
+    - serialization
+    - simple_oauth
+    - badges
+id: available_badges_api
+plugin_id: available_badges_api
+granularity: resource
+configuration:
+  methods:
+    - GET
+  formats:
+    - json
+  authentication:
+    - oauth2

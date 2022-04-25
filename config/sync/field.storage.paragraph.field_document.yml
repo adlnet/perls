@@ -1,0 +1,25 @@
+uuid: 84de15f8-8b99-4ab9-9ef4-7191792cd8c6
+langcode: en
+status: true
+dependencies:
+  module:
+    - file
+    - paragraphs
+_core:
+  default_config_hash: QegL9TOt0vt6FBYLd33Qc969dJUU981Capxc6SFgUyE
+id: paragraph.field_document
+field_name: field_document
+entity_type: paragraph
+type: file
+settings:
+  target_type: file
+  display_field: false
+  display_default: false
+  uri_scheme: private
+module: file
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

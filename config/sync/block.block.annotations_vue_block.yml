@@ -1,0 +1,21 @@
+uuid: 64608689-7f8c-426d-b960-8e78a6ab56a4
+langcode: en
+status: true
+dependencies:
+  module:
+    - pdb_vue
+  theme:
+    - perls_learner
+id: annotations_vue_block
+theme: perls_learner
+region: inactive
+weight: 0
+provider: null
+plugin: 'vue_component:annotations_block'
+settings:
+  id: 'vue_component:annotations_block'
+  label: 'Annotations Block'
+  label_display: 0
+  provider: pdb_vue
+  pdb_configuration: null
+visibility: {  }

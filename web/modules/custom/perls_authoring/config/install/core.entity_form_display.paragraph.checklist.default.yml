@@ -1,0 +1,30 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.paragraph.checklist.field_checklist_item
+    - paragraphs.paragraphs_type.checklist
+  module:
+    - field_layout
+    - layout_discovery
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings: {  }
+id: paragraph.checklist.default
+targetEntityType: paragraph
+bundle: checklist
+mode: default
+content:
+  field_checklist_item:
+    weight: 0
+    settings:
+      size: 60
+      placeholder: 'Add a checklist item...'
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+hidden:
+  created: true
+  status: true
+  uid: true

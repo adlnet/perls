@@ -1,0 +1,10 @@
+services:
+  private_file_server.route_subscriber:
+    class: Drupal\private_file_server\Routing\RouteSubscriber
+    tags:
+      - { name: event_subscriber }
+  private_file_server.event_subscriber:
+    class: Drupal\private_file_server\EventSubscriber\FileResponseEventSubscriber
+    arguments: ['@file.mime_type.guesser']
+    tags:
+      - { name: event_subscriber }

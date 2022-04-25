@@ -1,0 +1,23 @@
+{#
+/**
+ * @file
+ * Results card.
+ *
+ * Available variables:
+ * - result_title: The title to display on the results card.
+ * - result_status: The status of the test (e.g. "Completed").
+ * - result_type: The type of results being shown (e.g. "Test").
+ * - feedback: The feedback to display to the user.
+ */
+#}
+
+<div{{ attributes }}>
+  <h3>{{ result_title }}</h3>
+  <h5>{{ result_type }}</h5>
+  <p class="status">{{ result_status }}</p>
+
+  <div class="feedback">
+    {{ feedback }}
+  </div>
+</div>
+

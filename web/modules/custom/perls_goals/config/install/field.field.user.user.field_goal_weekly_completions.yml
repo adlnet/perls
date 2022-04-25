@@ -1,0 +1,25 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.user.field_goal_weekly_completions
+  module:
+    - user
+id: user.user.field_goal_weekly_completions
+field_name: field_goal_weekly_completions
+entity_type: user
+bundle: user
+label: 'Learning objects completed per week'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 5
+default_value_callback: ''
+settings:
+  min: 0
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

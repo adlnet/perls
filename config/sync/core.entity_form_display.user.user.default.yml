@@ -1,0 +1,226 @@
+uuid: b4eecaec-4788-495e-a5ad-2a864e41a95f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.user.user.field_add_groups
+    - field.field.user.user.field_goal_log
+    - field.field.user.user.field_goal_monthly_course_comp
+    - field.field.user.user.field_goal_weekly_completions
+    - field.field.user.user.field_goal_weekly_test_average
+    - field.field.user.user.field_goal_weekly_views
+    - field.field.user.user.field_interests
+    - field.field.user.user.field_name
+    - field.field.user.user.field_notification_days
+    - field.field.user.user.field_notification_time
+    - field.field.user.user.field_organization_homepage
+    - field.field.user.user.field_organization_identifier
+    - field.field.user.user.user_picture
+    - image.style.user_profile_circle
+  module:
+    - autocomplete_deluxe
+    - field_group
+    - field_layout
+    - image
+    - layout_discovery
+    - notifications_goals
+    - user
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings:
+      label: ''
+  field_group:
+    group_user_profile:
+      children:
+        - group_user_data
+        - group_goals
+      label: 'User profile'
+      region: content
+      parent_name: ''
+      weight: 0
+      format_type: tabs
+      format_settings:
+        classes: ''
+        id: ''
+        direction: horizontal
+    group_user_data:
+      children:
+        - user_picture
+        - field_name
+        - field_add_groups
+        - field_interests
+        - account
+        - timezone
+      label: 'User profile'
+      region: content
+      parent_name: group_user_profile
+      weight: 20
+      format_type: tab
+      format_settings:
+        classes: user-profile-tabs
+        id: ''
+        formatter: open
+        description: ''
+        required_fields: true
+    group_goals:
+      children:
+        - field_goal_weekly_views
+        - field_goal_weekly_completions
+        - field_goal_weekly_test_average
+        - field_goal_monthly_course_comp
+        - field_notification_days
+        - field_notification_time
+      label: Goals
+      region: content
+      parent_name: group_user_profile
+      weight: 21
+      format_type: tab
+      format_settings:
+        classes: goals-tab
+        id: ''
+        formatter: closed
+        description: ''
+        required_fields: true
+_core:
+  default_config_hash: IiUTp1Z1vK4YvGt1rFZm_lg79Q6UKh9nU2B9nCsur5Y
+id: user.user.default
+targetEntityType: user
+bundle: user
+mode: default
+content:
+  account:
+    weight: 6
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  contact:
+    weight: 5
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_add_groups:
+    type: options_buttons
+    weight: 4
+    region: content
+    settings:
+      orderable: true
+    third_party_settings: {  }
+  field_goal_monthly_course_comp:
+    type: number
+    weight: 25
+    region: content
+    settings:
+      orderable: true
+      placeholder: ''
+    third_party_settings: {  }
+  field_goal_weekly_completions:
+    type: number
+    weight: 23
+    region: content
+    settings:
+      orderable: true
+      placeholder: ''
+    third_party_settings: {  }
+  field_goal_weekly_test_average:
+    type: number
+    weight: 24
+    region: content
+    settings:
+      orderable: true
+      placeholder: ''
+    third_party_settings: {  }
+  field_goal_weekly_views:
+    type: number
+    weight: 22
+    region: content
+    settings:
+      orderable: true
+      placeholder: ''
+    third_party_settings: {  }
+  field_interests:
+    type: autocomplete_deluxe
+    weight: 5
+    region: content
+    settings:
+      match_operator: CONTAINS
+      autocomplete_route_name: autocomplete_deluxe.autocomplete
+      size: 60
+      selection_handler: default
+      limit: 10
+      min_length: 2
+      delimiter: ''
+      not_found_message_allow: false
+      not_found_message: 'The term ''@term'' will be added'
+      new_terms: false
+      no_empty_message: 'No terms could be found. Please type in order to add a new term.'
+      orderable: true
+    third_party_settings: {  }
+  field_name:
+    type: string_textfield
+    weight: 3
+    region: content
+    settings:
+      orderable: true
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_notification_days:
+    type: options_buttons
+    weight: 26
+    region: content
+    settings:
+      orderable: true
+    third_party_settings: {  }
+  field_notification_time:
+    type: time_picker
+    weight: 27
+    region: content
+    settings:
+      orderable: true
+      step: '60'
+    third_party_settings: {  }
+  field_organization_homepage:
+    type: string_textfield
+    weight: 3
+    region: content
+    settings:
+      orderable: true
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_organization_identifier:
+    type: string_textfield
+    weight: 2
+    region: content
+    settings:
+      orderable: true
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  simplesamlphp_auth_user_enable:
+    weight: 1
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  timezone:
+    weight: 7
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  user_picture:
+    type: image_image
+    weight: 2
+    region: content
+    settings:
+      orderable: true
+      progress_indicator: throbber
+      preview_image_style: user_profile_circle
+    third_party_settings: {  }
+hidden:
+  entitygroupfield: true
+  field_goal_log: true
+  group_content: true
+  langcode: true
+  language: true
+  path: true

@@ -1,0 +1,4 @@
+bulk upload users:
+  title: 'Bulk upload users'
+  description: 'Import multiple users at once'
+  restrict access: TRUE

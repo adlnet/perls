@@ -1,0 +1,16 @@
+uuid: d30c4b5b-17f3-4eea-b0cb-afa882fe79fa
+langcode: en
+status: true
+dependencies: {  }
+id: learning_content_to_flash_card
+label: 'Learning Content to flash card'
+enabled: true
+first_field: field_flash_card
+second_field: field_parent_content
+bundles:
+  node:
+    - flash_card
+    - learn_article
+    - learn_file
+    - learn_link
+    - learn_package

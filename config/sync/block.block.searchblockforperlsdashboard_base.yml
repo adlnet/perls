@@ -1,0 +1,26 @@
+uuid: ba084429-c192-4ffd-b146-78e580c5925c
+langcode: en
+status: true
+dependencies:
+  module:
+    - perls_search
+    - system
+  theme:
+    - perls
+id: searchblockforperlsdashboard_base
+theme: perls
+region: content
+weight: -4
+provider: null
+plugin: perls_dashboard_search_block
+settings:
+  id: perls_dashboard_search_block
+  label: 'Search Block for Perls Dashboard'
+  label_display: '0'
+  provider: perls_search
+visibility:
+  request_path:
+    id: request_path
+    negate: true
+    context_mapping: {  }
+    pages: /search

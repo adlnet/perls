@@ -1,0 +1,28 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.paragraph.field_list_items
+    - paragraphs.paragraphs_type.list_ordered
+  module:
+    - allowed_formats
+    - text
+third_party_settings:
+  allowed_formats:
+    advanced: '0'
+    basic_filter: '0'
+    inline_styling: '0'
+    list: '0'
+    plain_text: '0'
+id: paragraph.list_ordered.field_list_items
+field_name: field_list_items
+entity_type: paragraph
+bundle: list_ordered
+label: Items
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long
