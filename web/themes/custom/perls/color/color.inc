@@ -83,6 +83,25 @@ $info = [
         'base' => '#121325',
         'menu' => '#3c3d62',
       ],
+      'castle' => [
+      'title' => t('Castle Mode'),
+      'colors' => [
+        'primary' => '#1e1f31',
+        'secondary' => '#03bf9c',
+        'secondary_lighter' => '#03e5bb',
+        'secondary_darker' => '#02987c',
+        'tertiary' => '#70727c',
+        'tip' => '#e63349',
+        'flash' => '#541edb',
+        'quiz' => '#0098ce',
+        'course' => '#109980',
+        'course_darker' => '#0c7a66',
+        'podcast' => '#ffa632',
+        // https://www.drupal.org/project/drupal/issues/1236098#comment-13215759
+        'text' => '#ffffff',
+        'base' => '#121325',
+        'menu' => '#3c3d62',
+	],
     ],
   ],
   'css' => [
